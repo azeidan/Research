@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="FW_GeoMatch" />
+        <module name="FW_Simba" />
+        <module name="FW_Simba_Source" />
+        <module name="Common" />
+        <module name="GeoMatch" />
+        <module name="Spark_kNN" />
+        <module name="LocalRunFiles" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="Common" target="1.8" />
+      <module name="FW_GeoMatch" target="1.8" />
+      <module name="FW_Simba" target="1.8" />
+      <module name="FW_Simba_Source" target="1.8" />
+      <module name="GeoMatch" target="1.8" />
+      <module name="LocalRunFiles" target="1.8" />
+      <module name="Spark_kNN" target="1.8" />
+    </bytecodeTargetLevel>
+  </component>
+</project>

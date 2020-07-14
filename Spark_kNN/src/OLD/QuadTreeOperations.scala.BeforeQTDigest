@@ -1,0 +1,266 @@
+package org.cusp.bdi.sknn
+
+import scala.collection.mutable.ListBuffer
+import scala.collection.mutable.Queue
+
+import org.cusp.bdi.util.Helper
+
+import com.insightfullogic.quad_trees.Box
+import com.insightfullogic.quad_trees.Point
+import com.insightfullogic.quad_trees.QuadTree
+
+private case class PointWithUniquId(uniqueIdentifier: Int, point: Point) extends Comparable[PointWithUniquId] {
+
+    override def compareTo(other: PointWithUniquId) =
+        this.point.compareTo(other.point)
+}
+
+private trait SortSetObjFactory {
+    def apply(uniqueIdentifier: Int, point: Point): Comparable[_]
+}
+
+private object SortSetObjFactoryRange extends SortSetObjFactory {
+    override def apply(uniqueIdentifier: Int, point: Point) =
+        PointWithUniquId(uniqueIdentifier, point)
+}
+
+private object SortSetObjFactoryNN extends SortSetObjFactory {
+    override def apply(uniqueIdentifier: Int, point: Point) =
+        point
+}
+
+object QuadTreeOperations extends Serializable {
+
+    private def contains(qTree: QuadTree, xy: (Double, Double), k: Int) =
+        qTree != null && qTree.getTotalPoints > k && qTree.boundary.contains(xy._1, xy._2)
+
+    def getBestQuadrant(qtInf: QuadTreeInfo, searchPoint: Point, k: Int): QuadTree =
+        getBestQuadrant(qtInf, searchPoint.xy, k)
+
+    def nearestNeighbor(lstQTInf: ListBuffer[QuadTreeInfo], searchPoint: Point, sortSetSqDist: SortSetObj, k: Int, allQTMBR: (Double, Double, Double, Double)) {
+
+        //        if (searchPoint.userData1 != null && searchPoint.userData1.toString().equalsIgnoreCase("taxi_b_9711"))
+        //            println
+
+        val searchRegion = buildSearchRegion(lstQTInf.head, searchPoint, sortSetSqDist, k)
+
+        var prevHalfDim = new Point(searchRegion.halfDimension)
+
+        var continueFlag = true
+
+        do {
+
+            lstQTInf.foreach(qtInf => pointsWithinRegion(qtInf, searchRegion, sortSetSqDist, SortSetObjFactoryNN))
+
+            if (prevHalfDim.x == searchRegion.halfDimension.x && prevHalfDim.y == searchRegion.halfDimension.y)
+                if (sortSetSqDist.size >= k || searchRegion.contains(allQTMBR))
+                    continueFlag = false
+                else {
+
+                    searchRegion.halfDimension.x *= 1.5
+                    searchRegion.halfDimension.y *= 1.5
+                }
+            else
+                prevHalfDim = new Point(searchRegion.halfDimension)
+        } while (continueFlag)
+    }
+
+    def getPartitionsInRange(arrQTInf: Array[QuadTreeInfo], allQTMBR: (Double, Double, Double, Double), searchPoint: Point, k: Int) = {
+
+        //        if (searchPoint.userData1 != null && searchPoint.userData1.toString().equalsIgnoreCase("taxi_b_9711"))
+        //            println
+
+        val qtIndex = binarySearchOrBest(arrQTInf, searchPoint.x)
+
+        val qtInf = arrQTInf(qtIndex)
+
+        val sortSetSqDist = SortSetObj(k)
+
+        val searchRegion = buildSearchRegion(qtInf, searchPoint, sortSetSqDist, k)
+
+        val ptBestQT = getBestQuadrant(qtInf, searchPoint, k)
+        var totalPoints = ptBestQT.getTotalPoints
+
+        // sorts quads by distance from the search point
+        lazy val byDist = (0 until arrQTInf.size).filter(_ != qtIndex).map(idx => {
+
+            val qtInf = arrQTInf(idx)
+
+            val minDist = math.min(math.abs(searchPoint.x - qtInf.quadTree.boundary.left), math.abs(searchPoint.x - qtInf.quadTree.boundary.right))
+
+            (minDist, qtInf)
+        })
+            .sortBy(_._1)
+
+        var expandBy = 0.0
+        var idx = 0
+        while (totalPoints < k && idx < byDist.size) {
+
+            expandBy += byDist(idx)._1
+            totalPoints += byDist(idx)._2.quadTree.getTotalPoints
+        }
+
+        searchRegion.halfDimension.x += expandBy
+        searchRegion.halfDimension.y += expandBy
+
+        var continueFlag = true
+
+        //        if (searchPoint.userData1 != null && searchPoint.userData1.toString().equalsIgnoreCase("taxi_b_702111"))
+        //            println
+
+        var prevHalfDim = new Point(searchRegion.halfDimension)
+
+        do {
+
+            pointsWithinRegion(qtInf, searchRegion, sortSetSqDist, SortSetObjFactoryRange)
+
+            (1 until math.max(qtIndex, arrQTInf.size - qtIndex) + 1)
+                .foreach(i => {
+
+                    if (qtIndex - i >= 0)
+                        pointsWithinRegion(arrQTInf(qtIndex - i), searchRegion, sortSetSqDist, SortSetObjFactoryRange)
+
+                    if (qtIndex + i < arrQTInf.size)
+                        pointsWithinRegion(arrQTInf(qtIndex + i), searchRegion, sortSetSqDist, SortSetObjFactoryRange)
+                })
+
+            if (prevHalfDim.x == searchRegion.halfDimension.x && prevHalfDim.y == searchRegion.halfDimension.y)
+                if (sortSetSqDist.size >= k || searchRegion.contains(allQTMBR))
+                    continueFlag = false
+                else {
+
+                    searchRegion.halfDimension.x *= 1.5
+                    searchRegion.halfDimension.y *= 1.5
+                }
+            else
+                prevHalfDim = new Point(searchRegion.halfDimension)
+        } while (continueFlag)
+
+        sortSetSqDist
+            .map(_.data match { case pUId: PointWithUniquId => pUId.uniqueIdentifier }).toSet
+    }
+
+    private def intersects(qTree: QuadTree, searchRegion: Box) =
+        qTree != null && searchRegion.intersects(qTree.boundary)
+
+    private def getBestQuadrant(qtInf: QuadTreeInfo, xy: (Double, Double), k: Int) = {
+
+        // find leaf containing point
+        var done = false
+        var qTree = qtInf.quadTree //lstChainQT.head
+
+        while (!done)
+            if (contains(qTree.topLeft, xy, k))
+                qTree = qTree.topLeft
+            else if (contains(qTree.topRight, xy, k))
+                qTree = qTree.topRight
+            else if (contains(qTree.bottomLeft, xy, k))
+                qTree = qTree.bottomLeft
+            else if (contains(qTree.bottomRight, xy, k))
+                qTree = qTree.bottomRight
+            else
+                done = true
+
+        qTree
+    }
+
+    private def pointsWithinRegion(qtInf: QuadTreeInfo, searchRegion: Box, sortSetSqDist: SortSetObj, sortSetObjFactory: SortSetObjFactory) {
+
+        if (intersects(qtInf.quadTree, searchRegion)) {
+
+            val queueQT = Queue(qtInf.quadTree)
+
+            var prevMaxDist = if (sortSetSqDist.isEmpty()) -1 else sortSetSqDist.last.distance
+
+            //        if (searchRegion.center.userData1 != null && searchRegion.center.userData1.toString().equalsIgnoreCase("taxi_b_428559"))
+            //            println()
+
+            while (!queueQT.isEmpty) {
+
+                val qTree = queueQT.dequeue()
+
+                //            if (temp != null && qTree.boundary.center == temp.boundary.center && searchRegion.center.userData1 != null && searchRegion.center.userData1.toString().equalsIgnoreCase("taxi_b_269552"))
+                //                println(qTree == temp)
+
+                qTree.getPoints
+                    .foreach(qtPoint => {
+
+                        //                    if (qtPoint.userData1 != null &&
+                        //                        qtPoint.userData1.toString().equalsIgnoreCase("Taxi_A_41736"))
+                        //                        //                        searchRegion.center.userData1.toString().equalsIgnoreCase("taxi_b_305491"))
+                        //                        println()
+
+                        val sqDist = Helper.squaredDist(searchRegion.center.xy, qtPoint.xy)
+
+                        sortSetSqDist.add(sqDist, sortSetObjFactory(qtInf.uniqueIdentifier, qtPoint))
+
+                        if (sortSetSqDist.isFull && prevMaxDist != sortSetSqDist.last.distance) {
+
+                            prevMaxDist = sortSetSqDist.last.distance
+
+                            val newDim = math.sqrt(prevMaxDist)
+
+                            searchRegion.halfDimension.x = newDim
+                            searchRegion.halfDimension.y = newDim
+                        }
+                    })
+
+                if (intersects(qTree.topLeft, searchRegion))
+                    queueQT += qTree.topLeft
+                if (intersects(qTree.topRight, searchRegion))
+                    queueQT += qTree.topRight
+                if (intersects(qTree.bottomLeft, searchRegion))
+                    queueQT += qTree.bottomLeft
+                if (intersects(qTree.bottomRight, searchRegion))
+                    queueQT += qTree.bottomRight
+            }
+        }
+    }
+
+    private def buildSearchRegion(qtInf: QuadTreeInfo, searchPoint: Point, sortSetSqDist: SortSetObj, k: Int) = {
+
+        val searchDim = if (sortSetSqDist.isEmpty()) {
+
+            val ptBestQT = getBestQuadrant(qtInf, searchPoint, k)
+
+            (ptBestQT.boundary.halfDimension.x + math.abs(searchPoint.x - ptBestQT.boundary.center.x), ptBestQT.boundary.halfDimension.y + math.abs(searchPoint.y - ptBestQT.boundary.center.y))
+        }
+        else {
+
+            val maxDist = math.sqrt(sortSetSqDist.last.distance)
+
+            (maxDist, maxDist)
+        }
+
+        new Box(searchPoint, new Point(searchDim))
+    }
+
+    private def binarySearchOrBest(arrQTInf: Array[QuadTreeInfo], pointX: Double): Int = {
+
+        var topIdx = 0
+        var botIdx = arrQTInf.length - 1
+        var approximateMatch = -1
+
+        if (pointX < arrQTInf.head.quadTree.boundary.left)
+            return 0
+        else if (pointX > arrQTInf.last.quadTree.boundary.right)
+            return arrQTInf.length - 1
+        else
+            while (botIdx >= topIdx) {
+
+                val midIdx = (topIdx + botIdx) / 2
+                val midQT = arrQTInf(midIdx)
+
+                approximateMatch = midIdx
+
+                if (pointX > midQT.quadTree.boundary.left && pointX < midQT.quadTree.boundary.right)
+                    return midIdx
+                else if (pointX < midQT.quadTree.boundary.left)
+                    botIdx = midIdx - 1
+                else
+                    topIdx = midIdx + 1
+            }
+
+        approximateMatch
+    }
+}

@@ -1,0 +1,65 @@
+package org.cusp.bdi.sknn.util
+
+import org.locationtech.jts.index.strtree.ItemBoundable
+import org.cusp.bdi.sknn.SortSetObj
+import org.locationtech.jts.index.strtree.STRtree
+import org.locationtech.jts.geom.GeometryFactory
+import org.cusp.bdi.gm.geom.GMGeomBase
+import org.locationtech.jts.index.strtree.ItemDistance
+import org.locationtech.jts.geom.Point
+import org.locationtech.jts.index.strtree.AbstractNode
+import scala.collection.mutable.ListBuffer
+import org.locationtech.jts.geom.Geometry
+import org.locationtech.jts.index.quadtree.Quadtree
+import org.locationtech.jts.index.kdtree.KdTree
+
+object STRtreeOperations {
+
+    private val jtsGeomFact = new GeometryFactory
+
+    import scala.collection.JavaConversions._
+    private def itemDist = new ItemDistance() with Serializable {
+        override def distance(item1: ItemBoundable, item2: ItemBoundable) =
+            item1.getItem.asInstanceOf[(GMGeomBase, SortSetObj)]._1.toJTS(jtsGeomFact)(0).distance(
+                item2.getItem.asInstanceOf[Geometry])
+    }
+
+//    def rTreeNearestNeighbor(jtsGeomFact: GeometryFactory, gmGeom: GMGeomBase, gmGeomSet: SortSetObj, kParam: Int, sTRtree: STRtree) = {
+//
+//        if (!sTRtree.isEmpty()) {
+//
+//            val jtsGeom = gmGeom.toJTS(jtsGeomFact)(0)
+//            val jtsEnv = jtsGeom.getEnvelopeInternal
+//
+//            sTRtree.nearestNeighbour(jtsEnv, jtsGeom, itemDist, kParam)
+//                .foreach(treeMatch => {
+//
+//                    val (gmGeomTree, gmGeomSetTree) = treeMatch.asInstanceOf[(GMGeomBase, SortSetObj)]
+//
+//                    //if(gmGeomTree.payload.equalsIgnoreCase("Ra_215433") || gmGeomTree.payload.equalsIgnoreCase("Ra_764863"))
+//                    //    println
+//                    val dist = gmGeomTree.toJTS(jtsGeomFact)(0).distance(jtsGeom)
+//
+//                    gmGeomSet.add((dist, gmGeomTree))
+//                    gmGeomSetTree.add((dist, gmGeom))
+//                })
+//        }
+//    }
+
+    def getTreeItems(sTRtree: STRtree) = {
+
+        val lst = ListBuffer[(GMGeomBase, SortSetObj)]()
+
+        iterativeTreeItems(sTRtree.getRoot, lst)
+
+        lst
+    }
+
+    private def iterativeTreeItems(node: AbstractNode, lst: ListBuffer[(GMGeomBase, SortSetObj)]) {
+        node.getChildBoundables.foreach(item =>
+            item match {
+                case an: AbstractNode => iterativeTreeItems(an, lst)
+                case ib: ItemBoundable => lst.append(ib.getItem().asInstanceOf[(GMGeomBase, SortSetObj)])
+            })
+    }
+}

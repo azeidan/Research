@@ -1,0 +1,423 @@
+//package org.cusp.bdi.sknn
+//
+//import scala.collection.mutable.HashMap
+//import scala.collection.mutable.ListBuffer
+//import scala.collection.mutable.SortedSet
+//
+//import org.apache.hadoop.io.compress.GzipCodec
+//import org.apache.spark.Partitioner
+//import org.apache.spark.SparkConf
+//import org.apache.spark.SparkContext
+//import org.apache.spark.mllib.clustering.DistanceMeasure
+//import org.apache.spark.mllib.clustering.KMeans
+//import org.apache.spark.mllib.linalg.Vector
+//import org.apache.spark.mllib.linalg.Vectors
+//import org.apache.spark.serializer.KryoSerializer
+//import org.cusp.bdi.gm.GeoMatch
+//import org.cusp.bdi.gm.geom.GMGeomBase
+//import org.cusp.bdi.gm.geom.GMPoint
+//import org.cusp.bdi.sknn.util.RDD_Store
+//import org.cusp.bdi.sknn.util.STRtreeOperations
+//import org.cusp.bdi.sknn.util.SparkKNN_Arguments
+//import org.cusp.bdi.sknn.util.SparkKNN_Local_CLArgs
+//import org.cusp.bdi.util.Helper
+//import org.locationtech.jts.geom.GeometryFactory
+//import org.locationtech.jts.geom.Point
+//import org.locationtech.jts.index.strtree.AbstractNode
+//import org.locationtech.jts.index.strtree.ItemBoundable
+//import org.locationtech.jts.index.strtree.ItemDistance
+//import org.locationtech.jts.index.strtree.STRtree
+//
+//         val l = sparkConf.getSizeAsBytes("spark.driver.memory", JavaUtils.byteStringAsBytes("1g"))
+//        val systemMemory = Runtime.getRuntime.maxMemory
+//         fixed amount of memory for non-storage, non-execution purposes
+//        val reservedMemory = 300 * 1024 * 1024
+//         minimum system memory required
+//        val minSystemMemory = (reservedMemory * 1.5).ceil.toLong
+//        val usableMemory = systemMemory - reservedMemory
+//        val memoryFraction = sc.getConf.getDouble("spark.memory.fraction", 0.6)
+//        val maxMemory = (usableMemory * memoryFraction).toLong
+//object SparkKNN {
+//
+//    def main(args: Array[String]): Unit = {
+//
+//        val startTime = System.currentTimeMillis()
+//
+//        val clArgs = SparkKNN_Local_CLArgs.busPoint_busPointShift
+//        //        val clArgs = SparkKNN_Local_CLArgs.busPoint_taxiPoint
+//        //        val clArgs = CLArgsParser(args, SparkKNN_Arguments())
+//
+//        val sparkConf = new SparkConf()
+//            .setAppName(this.getClass.getName)
+//            .set("spark.serializer", classOf[KryoSerializer].getName)
+//            .registerKryoClasses(GeoMatch.getGeoMatchClasses())
+//            .registerKryoClasses(Array(classOf[KeyBase]))
+//
+//        if (clArgs.getParamValueBoolean(SparkKNN_Arguments.local))
+//            sparkConf.setMaster("local[*]")
+//
+//        val sc = new SparkContext(sparkConf)
+//
+//        val kParam = clArgs.getParamValueInt(SparkKNN_Arguments.k)
+//        val numIter = clArgs.getParamValueInt(SparkKNN_Arguments.numIter)
+//        val minPartitions = clArgs.getParamValueInt(SparkKNN_Arguments.minPartitions)
+//        val outDir = clArgs.getParamValueString(SparkKNN_Arguments.outDir)
+//
+//        // delete output dir if exists
+//        Helper.delDirHDFS(sc, clArgs.getParamValueString(SparkKNN_Arguments.outDir))
+//
+//        val gridSize = Int.MaxValue - 1
+//
+//        val rddDS1Plain = RDD_Store.getRDDPlain(sc, clArgs.getParamValueString(SparkKNN_Arguments.firstSet), minPartitions)
+//            .mapPartitions(_.map(RDD_Store.getLineParser(clArgs.getParamValueString(SparkKNN_Arguments.firstSetObj))))
+//            .reduceByKey((x, y) => x)
+//            .persist()
+//
+//        val rddDS2Plain = RDD_Store.getRDDPlain(sc, clArgs.getParamValueString(SparkKNN_Arguments.secondSet), minPartitions)
+//        val numParts = rddDS2Plain.getNumPartitions
+//        val maxPartRowCount = (sc.runJob(rddDS2Plain, getIteratorSize _, Array(0, numParts / 2, numParts - 1)).sum / 3)
+//
+//        var rddDS1_XYCount = rddDS1Plain
+//            .mapPartitions(_.map(row => ((row._2._1.toInt % gridSize, row._2._2.toInt % gridSize), 1L)))
+//            .reduceByKey(_ + _) // grid cells and its counts ((x, y), count)
+//            .persist()
+//
+//        var kmeans = new KMeans().setK(numParts).setSeed(1L).setDistanceMeasure(DistanceMeasure.EUCLIDEAN)
+//        val kmModel = kmeans.run(rddDS1_XYCount.mapPartitions(_.map(row => Vectors.dense(row._1._1, row._1._2))))
+//        var arrCentersInfo = kmModel.clusterCenters.map(row => (kmModel.predict(row), row))
+//            .map(row => (row._1, (row._2, SortedSet[(Double, Int)]())))
+//
+//        kmeans = null
+//
+//        // fore each K, compute the list of nearest K
+//        (0 until arrCentersInfo.length).foreach(i =>
+//            (0 until arrCentersInfo.length).foreach(j =>
+//                if (i != j)
+//                    arrCentersInfo(i)._2._2.add((euclideanDist(arrCentersInfo(i)._2._1, arrCentersInfo(j)._2._1), arrCentersInfo(j)._1))))
+//
+//        val mapInfoK = arrCentersInfo
+//            .map(row => (row._1, (row._2._1, row._2._2.toArray.map(_._2))))
+//            .toMap
+//        arrCentersInfo = null
+//
+//        val partitionerByK = new Partitioner() {
+//            override def numPartitions = numParts
+//            override def getPartition(key: Any): Int =
+//                key match {
+//                    case keyBase: KeyBase => keyBase.k
+//                    case _ => key.asInstanceOf[(Int, Double)]._1
+//                }
+//        }
+//
+//        val partitionerEquaCount = new Partitioner() {
+//            override def numPartitions = numParts
+//            override def getPartition(key: Any): Int = key match { case k: Long => (k / maxPartRowCount % numPartitions).toInt }
+//        }
+//
+//        var mapGlobalIndex = rddDS1_XYCount.mapPartitions(_.map(row => {
+//
+//            val vect = Vectors.dense(row._1._1, row._1._2)
+//            val k = kmModel.predict(vect)
+//            val dist = euclideanDist(vect, mapInfoK.get(k).get._1)
+//
+//            ((k, dist), row)
+//        }))
+//            .repartitionAndSortWithinPartitions(partitionerByK) // each K on a separate partition. i.e. #K=numParts
+//            .zipWithIndex()
+//            .mapPartitions(_.map(row => (row._2, row._1)))
+//            .partitionBy(partitionerEquaCount)
+//            .mapPartitions(_.map(row => (row._2._2._1, row._2._1._1)))
+//            .collect
+//            .toMap
+//
+//        rddDS1_XYCount.unpersist(false)
+//        rddDS1_XYCount = null
+//        /*
+// * iter => { // equal-count partitioning
+//
+//                var partRowCount = 0L
+//                var fullFlag = false
+//
+//                iter.map(row => {
+//
+//                    if (!fullFlag && partRowCount > maxPartRowCount)
+//                        fullFlag = true
+//
+//                    val xy = row._2._1
+//
+//                    var rowCount = row._2._2
+//
+//                    if (fullFlag)
+//                        rowCount = -rowCount
+//                    else
+//                        partRowCount += row._2._2
+//
+//                    (row._1._1, (xy, rowCount))
+//                })
+//            }
+// */
+//        //        val mapInfoOpenKCounts = HashMap() ++ arrInfoXYCounts
+//        //            .map(x => if (x._2._2 < 0) null else (x._1, x._2._2))
+//        //            .filter(_ != null)
+//        //            .groupBy(_._1)
+//        //            .map(x => (x._1, x._2.map(_._2).sum))
+//        //            .filter(_._2 < maxPartRowCount)
+//        //
+//        //        val mapGlobalIndex = HashMap[(Int, Int), Int]()
+//        //
+//        //        // assign unassigned rows to the nearest open K
+//        //        (0 until arrInfoXYCounts.length).foreach(i => {
+//        //
+//        //            val row = arrInfoXYCounts(i)
+//        //
+//        //            var assignedK = row._1
+//        //
+//        //            if (row._2._2 < 0) {
+//        //
+//        //                val setOpenClosest = mapInfoK.get(row._1).get._2.filter(x => mapInfoOpenKCounts.get(x._2) != None)
+//        //
+//        //                if (setOpenClosest.size == 0)
+//        //                    assignedK = row._1
+//        //                else {
+//        //
+//        //                    assignedK = setOpenClosest.head._2
+//        //
+//        //                    // update open K list
+//        //                    val newCount = mapInfoOpenKCounts.get(assignedK).get + -row._2._2
+//        //
+//        //                    if (newCount > maxPartRowCount)
+//        //                        mapInfoOpenKCounts.remove(assignedK)
+//        //                    else
+//        //                        mapInfoOpenKCounts.update(assignedK, newCount)
+//        //                }
+//        //            }
+//        //
+//        //            mapGlobalIndex.put(row._2._1, assignedK)
+//        //        })
+//        //
+//        //        arrInfoXYCounts = null
+//
+//        val rddDS1 = rddDS1Plain
+//            .mapPartitionsWithIndex((pIdx, iter) => {
+//
+//                val lineParser = RDD_Store.getLineParser(clArgs.getParamValueString(SparkKNN_Arguments.firstSetObj))
+//
+//                iter.map(row => {
+//
+//                    val xy = (row._2._1.toInt % gridSize, row._2._2.toInt % gridSize)
+//
+//                    val gmGeom: GMGeomBase = new GMPoint(row._1, (row._2._1.toInt, row._2._2.toInt))
+//
+//                    val keyBase: KeyBase = Key0(mapGlobalIndex.get(xy).get)
+//
+//                    (keyBase, gmGeom)
+//                })
+//            })
+//            .partitionBy(partitionerByK)
+//
+//        rddDS1Plain.unpersist(false)
+//
+//        val rddDS2 = rddDS2Plain
+//            .mapPartitionsWithIndex((pIdx, iter) => {
+//
+//                val lineParser = RDD_Store.getLineParser(clArgs.getParamValueString(SparkKNN_Arguments.secondSetObj))
+//
+//                iter.map(line => {
+//
+//                    val lineParts = lineParser(line)
+//
+//                    val xy = (lineParts._2._1.toInt % gridSize, lineParts._2._2.toInt % gridSize)
+//
+//                    val kOpt = mapGlobalIndex.get(xy)
+//
+//                    val k = if (kOpt == None)
+//                        kmModel.predict(Vectors.dense(xy._1, xy._2))
+//                    else
+//                        kOpt.get
+//
+//                    val gmGeom: GMGeomBase = new GMPoint(lineParts._1, (lineParts._2._1.toInt, lineParts._2._2.toInt))
+//
+//                    val keyBase: KeyBase = Key1(k)
+//
+//                    (keyBase, gmGeom)
+//                })
+//            })
+//            .partitionBy(partitionerByK)
+//
+//        val itemDist = new ItemDistance() with Serializable {
+//            override def distance(item1: ItemBoundable, item2: ItemBoundable) = {
+//
+//                val jtsGeomFact = new GeometryFactory
+//                item1.getItem.asInstanceOf[(GMGeomBase, SortSetObj)]._1.toJTS(jtsGeomFact)(0).distance(
+//                    item2.getItem.asInstanceOf[Point])
+//            }
+//        }
+//
+//        val mapNextIterationKeys = HashMap[Int, Int]()
+//
+//        mapInfoK.map(row => {
+//
+//            var newK = row._2._2.head
+//
+//            if (mapNextIterationKeys.size == 0)
+//                newK = row._2._2.head
+//            else {
+//
+//                val iter = row._2._2.iterator
+//
+//                while (newK == -1 && iter.hasNext) {
+//
+//                    val x = iter.next
+//
+//                    if (mapNextIterationKeys.values.find(_ == x) == None)
+//                        newK = x
+//                }
+//            }
+//
+//            mapNextIterationKeys.put(row._1, newK)
+//        })
+//
+//        var rdd = rddDS1.union(rddDS2)
+//            .mapPartitionsWithIndex((pIdx, iter) => {
+//
+//                val sTRtree = new STRtree
+//                val jtsGeomFact = new GeometryFactory
+//
+//                iter.map(row => {
+//
+//                    row._1 match {
+//                        case _: Key0 => {
+//
+//                            val env = row._2.toJTS(jtsGeomFact)(0).getEnvelopeInternal
+//
+//                            sTRtree.insert(env, (row._2, SortSetObj(kParam)))
+//
+//                            if (iter.hasNext)
+//                                null
+//                            else
+//                                Iterator((row._1, sTRtree))
+//                        }
+//                        case _: Key1 => {
+//
+//                            val (gmGeom, gmGeomSet) = (row._2, SortSetObj(kParam))
+//
+//                            if (sTRtree != null)
+//                                STRtreeOperations.rTreeNearestNeighbor(jtsGeomFact, gmGeom, gmGeomSet, kParam, sTRtree)
+//
+//                            row._1.k = mapNextIterationKeys.get(row._1.k).get
+//                            val ds2Row: (KeyBase, Any) = (row._1, (gmGeom, gmGeomSet))
+//
+//                            if (iter.hasNext)
+//                                Iterator(ds2Row)
+//                            else
+//                                Iterator(ds2Row, (Key0(pIdx), sTRtree))
+//                        }
+//                    }
+//                })
+//                    .filter(_ != null)
+//                    .flatMap(_.seq)
+//            }, true)
+//
+//        (0 until 1 /*numIter*/ ).foreach(i => {
+//            rdd = rdd.repartitionAndSortWithinPartitions(partitionerByK)
+//                .mapPartitions(iter => {
+//
+//                    var sTRtree: STRtree = null
+//                    var rTreeKey: KeyBase = null
+//                    val jtsGeomFact = new GeometryFactory
+//
+//                    iter.map(row => {
+//
+//                        row._1 match {
+//                            case _: Key0 => {
+//
+//                                sTRtree = row._2 match { case rt: STRtree => rt }
+//                                rTreeKey = row._1
+//
+//                                if (iter.hasNext)
+//                                    null
+//                                else
+//                                    Iterator((row._1, sTRtree))
+//                            }
+//                            case _: Key1 => {
+//
+//                                val (gmGeom, gmGeomSet) = row._2.asInstanceOf[(GMGeomBase, SortSetObj)]
+//
+//                                if (sTRtree != null)
+//                                    STRtreeOperations.rTreeNearestNeighbor(jtsGeomFact, gmGeom, gmGeomSet, kParam, sTRtree)
+//
+//                                // row._1.k = mapNextIterationKeys.get(row._1.k).get
+//                                val ds2Row: (KeyBase, Any) = (row._1, (gmGeom, gmGeomSet))
+//
+//                                if (iter.hasNext)
+//                                    Iterator(ds2Row)
+//                                else
+//                                    Iterator((rTreeKey, sTRtree), ds2Row)
+//                            }
+//                        }
+//                    })
+//
+//                        .filter(_ != null)
+//                        .flatMap(_.seq)
+//                }, true)
+//        })
+//
+//        rdd.mapPartitions(_.map(row => {
+//
+//            row._2 match {
+//                case sTRtree: STRtree => {
+//
+//                    val lst = ListBuffer[(GMGeomBase, SortSetObj)]()
+//
+//                    getTreeItems(sTRtree.getRoot, lst)
+//
+//                    lst.iterator
+//                }
+//                case _ => Iterator(row._2.asInstanceOf[(GMGeomBase, SortSetObj)])
+//            }
+//        })
+//            .flatMap(_.seq))
+//            .mapPartitions(_.map(row => {
+//
+//                StringBuilder.newBuilder
+//                    .append(row._1.payload)
+//                    .append(row._2.toString())
+//                    .toString()
+//            }))
+//            .saveAsTextFile(outDir, classOf[GzipCodec])
+//
+//        printf("Total Time: %,.2f Sec%n", (System.currentTimeMillis() - startTime) / 1000.0)
+//
+//        println(outDir)
+//    }
+//
+//    import scala.collection.JavaConversions._
+//    private def getTreeItems(node: AbstractNode, lst: ListBuffer[(GMGeomBase, SortSetObj)]) {
+//
+//        node.getChildBoundables.foreach(item => {
+//
+//            item match {
+//                case an: AbstractNode => getTreeItems(an, lst)
+//                case ib: ItemBoundable => lst.append(ib.getItem().asInstanceOf[(GMGeomBase, SortSetObj)])
+//            }
+//        })
+//    }
+//
+//    private def getIteratorSize(iter: Iterator[_]): Long = {
+//        var count = 0
+//        var size = 0
+//        while (iter.hasNext) {
+//            count += 1
+//            iter.next()
+//        }
+//        count
+//    }
+//
+//    private def euclideanDist(vect0: Vector, vect1: Vector) = {
+//
+//        val arr0 = vect0.toArray
+//        val arr1 = vect1.toArray
+//
+//        Helper.euclideanDist((arr0(0), arr1(0)), (arr0(1), arr1(1)))
+//    }
+//}

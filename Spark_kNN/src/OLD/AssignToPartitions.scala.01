@@ -1,0 +1,67 @@
+package org.cusp.bdi.sknn.util
+
+import scala.collection.mutable.ListBuffer
+
+/**
+  * Based on Maximum Subarray algorithm (Kadane's)
+  */
+case class AssignToPartitions(arrQTInf: Array[QuadTreeDigestInfo], maxSum: Long) {
+
+    private var partCounter = 0
+
+    // group of quadtrees adding to the maximum sum
+    private val lstGroup = ListBuffer[QuadTreeDigestInfo]()
+
+    def getPartitionCount = partCounter
+
+    // 1st, assign quadtrees with maximum total points
+    arrQTInf.foreach(qtInf =>
+        if (qtInf.quadTreeDigest.getTotalPoints >= maxSum) {
+
+            qtInf.assignedPart = partCounter
+            partCounter += 1
+        })
+
+    // remaining unassigned quadtrees
+    var arrUnassigned = arrQTInf.filter(_.assignedPart == -1).sortBy(_.quadTreeDigest.getTotalPoints)
+
+    while (!arrUnassigned.isEmpty) {
+
+        var maxSoFar = 0
+        var maxSumEndingHere = 0
+        var idx = 0
+
+        while (idx < arrUnassigned.size) {
+
+            if (maxSumEndingHere + arrUnassigned(idx).quadTreeDigest.getTotalPoints <= maxSum && lstGroup.size != arrUnassigned.size) {
+
+                maxSumEndingHere += arrUnassigned(idx).quadTreeDigest.getTotalPoints
+
+                lstGroup += arrUnassigned(idx)
+
+                // TODO: remove, for negative values
+                if (maxSumEndingHere < 0) {
+
+                    lstGroup.clear()
+                    maxSumEndingHere = 0
+                }
+                else if (maxSoFar < maxSumEndingHere)
+                    maxSoFar = maxSumEndingHere
+            }
+            else {
+
+                lstGroup.foreach(_.assignedPart = partCounter)
+
+                lstGroup.clear()
+
+                partCounter += 1
+
+                idx = arrUnassigned.size
+            }
+
+            idx += 1
+        }
+
+        arrUnassigned = arrQTInf.filter(_.assignedPart == -1).sortBy(_.quadTreeDigest.getTotalPoints)
+    }
+}

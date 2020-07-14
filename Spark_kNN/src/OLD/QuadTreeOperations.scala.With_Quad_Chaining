@@ -1,0 +1,166 @@
+package org.cusp.bdi.sknn
+
+import scala.collection.mutable.ListBuffer
+
+import org.cusp.bdi.util.Helper
+
+import com.insightfullogic.quad_trees.Box
+import com.insightfullogic.quad_trees.Circle
+import com.insightfullogic.quad_trees.Point
+import com.insightfullogic.quad_trees.QuadTree
+
+case class QuadTreeOperations() extends Serializable {
+
+    var assignedPart = -1
+    var uniqueIdentifier = -9999
+    //    val lstChainQT = ListBuffer[QuadTree]()
+    var quadTree: QuadTree = null
+
+    //    def boundary = lstChainQT.head.boundary
+
+    //    def totalPoints = lstChainQT.map(_.totalPoints).sum
+
+    def this(boundary: Box) = {
+
+        this()
+
+        //        this.lstChainQT.append(new QuadTree(boundary))
+        quadTree = QuadTree(boundary)
+    }
+
+    def this(other: QuadTreeOperations) = {
+
+        this()
+
+        this.assignedPart = other.assignedPart
+        this.uniqueIdentifier = other.uniqueIdentifier
+
+        //        other.lstChainQT.foreach(qt => this.lstChainQT.append(new QuadTree(qt)))
+        this.quadTree = new QuadTree(other.quadTree)
+    }
+
+    def insert(lstPoint: List[Point]) =
+        lstPoint.foreach(quadTree.insert)
+    //        lstPoint.foreach(pt =>
+    //            lstChainQT.filter(qt => {
+    //
+    //                val res = qt.insert(pt)
+    //
+    //                //                if (!res && qt == lstChainQT.last)
+    //                //                    lstChainQT.append(new QuadTree(qt.boundary))
+    //
+    //                res
+    //            })
+    //                .take(1))
+
+    private def contains(qTree: QuadTree, xy: (Double, Double), k: Int) =
+        qTree != null && qTree.totalPoints > k && qTree.boundary.contains(xy._1, xy._2) && qTree.totalPoints > k
+
+    def getBestQuadrant(point: Point, k: Int): QuadTree =
+        getBestQuadrant(point.xy, k)
+
+    private def intersects(qTree: QuadTree, searchRegion: Circle) =
+        qTree != null && searchRegion.intersects(qTree.boundary)
+
+    private def getBestQuadrant(xy: (Double, Double), k: Int) = {
+
+        // find leaf containing point
+        var done = false
+        var qTree = this.quadTree //lstChainQT.head
+
+        while (!done)
+            if (contains(qTree.topLeft, xy, k))
+                qTree = qTree.topLeft
+            else if (contains(qTree.topRight, xy, k))
+                qTree = qTree.topRight
+            else if (contains(qTree.bottomLeft, xy, k))
+                qTree = qTree.bottomLeft
+            else if (contains(qTree.bottomRight, xy, k))
+                qTree = qTree.bottomRight
+            else
+                done = true
+
+        qTree
+    }
+
+    def pointsWithinRegion(searchRegion: Circle) = {
+
+        var count = 0
+
+        //        lstChainQT.foreach(quadTree => {
+
+        val lstQT = ListBuffer(quadTree)
+
+        lstQT.foreach(qTree => {
+
+            count += qTree.points.filter(searchRegion.contains).size
+
+            if (intersects(qTree.topLeft, searchRegion))
+                lstQT.append(qTree.topLeft)
+            if (intersects(qTree.topRight, searchRegion))
+                lstQT.append(qTree.topRight)
+            if (intersects(qTree.bottomLeft, searchRegion))
+                lstQT.append(qTree.bottomLeft)
+            if (intersects(qTree.bottomRight, searchRegion))
+                lstQT.append(qTree.bottomRight)
+        })
+        //        })
+
+        count
+    }
+
+    def nearestNeighbor(k: Int, searchPoint: Point) {
+
+        var bestQT = getBestQuadrant(searchPoint, k)
+
+        val searchPointRegion = new Circle(searchPoint, math.max(bestQT.boundary.halfDimension.x, bestQT.boundary.halfDimension.y))
+
+        //        lstChainQT.foreach(quadTree => {
+
+        val lstQT = ListBuffer(quadTree)
+
+        var sqRadius = math.pow(searchPointRegion.getRadius(), 2)
+
+        val searchPointSet = searchPoint.userData2 match { case sSet: SortSetObj => sSet }
+
+        lstQT.foreach(qTree => {
+
+            qTree.points
+                .foreach(qtPoint => {
+
+                    //                    if (searchPoint.userData1.toString().toLowerCase().equals("ra_377075"))
+                    //                        if (qtPoint.userData1.toString().toLowerCase().equals("rb_115374"))
+                    //                            println(">>")
+
+                    val sqDist = Helper.squaredDist(searchPoint.xy, qtPoint.xy)
+
+                    searchPointSet.add(sqDist, qtPoint.userData1.toString, (qtPoint.x, qtPoint.y))
+
+                    if (searchPointSet.size == k)
+                        searchPointRegion.setRadius(math.sqrt(searchPointSet.last.distance))
+                })
+
+            if (!qTree.isLeaf) {
+
+                if (intersects(qTree.topLeft, searchPointRegion))
+                    lstQT.append(qTree.topLeft)
+
+                if (intersects(qTree.topRight, searchPointRegion))
+                    lstQT.append(qTree.topRight)
+
+                if (intersects(qTree.bottomLeft, searchPointRegion))
+                    lstQT.append(qTree.bottomLeft)
+
+                if (intersects(qTree.bottomRight, searchPointRegion))
+                    lstQT.append(qTree.bottomRight)
+            }
+        })
+        //        })
+    }
+
+    override def toString() =
+        "%d\t%d\t%s".format(this.assignedPart, this.uniqueIdentifier, quadTree)
+    //        lstChainQT.map(quadTree =>
+    //            "%d\t%d\t%s".format(this.assignedPart, this.uniqueIdentifier, quadTree.toString()))
+    //            .toString
+}
