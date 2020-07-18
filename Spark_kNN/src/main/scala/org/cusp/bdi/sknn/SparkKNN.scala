@@ -126,24 +126,24 @@ case class SparkKNN(rddLeft: RDD[Point], rddRight: RDD[Point], k: Int) {
     //    arrPartInf.foreach(pInf => println(">1>\t%s\t%s\t%s\t%s\t%d\t%d\t%d".format(pInf.left._1, pInf.bottom._2, pInf.right._1, pInf.top._2, pInf.totalPoints, pInf.assignedPart, pInf.uniqueIdentifier)))
 
     val rddSpIdx = rddRight
-      .mapPartitions(_.map(point => (point, 0.toByte)))
+      .mapPartitions(_.map(point => (binarySearchPartInf(arrPartInf, point.x).assignedPart, point)))
       .partitionBy(new Partitioner() {
         override def numPartitions: Int = actualPartitionCount
 
         override def getPartition(key: Any): Int = key match {
-          case point: Point => binarySearchPartInf(arrPartInf, point.x).assignedPart
+          case pIdx: Int => pIdx
+          //          case point: Point => binarySearchPartInf(arrPartInf, point.x).assignedPart
         }
       })
       .mapPartitionsWithIndex((pIdx, iter) => {
 
         val mapSpIdx = HashMap[Int, QuadTreeInfo]()
-        var qtInf: QuadTreeInfo = null
 
         iter.foreach(row => {
 
-          val partInf = binarySearchPartInf(arrPartInf, row._1.x)
+          val partInf = binarySearchPartInf(arrPartInf, row._2.x)
 
-          val spIdx = mapSpIdx.getOrElse(partInf.uniqueIdentifier, {
+          mapSpIdx.getOrElse(partInf.uniqueIdentifier, {
 
             val minX = partInf.left._1.toLong
             val minY = partInf.bottom._2.toLong
@@ -160,8 +160,7 @@ case class SparkKNN(rddLeft: RDD[Point], rddRight: RDD[Point], k: Int) {
 
             newIdx
           })
-
-          spIdx.quadTree.insert(row._1)
+            .quadTree.insert(row._2)
         })
 
         mapSpIdx.valuesIterator
@@ -176,7 +175,6 @@ case class SparkKNN(rddLeft: RDD[Point], rddRight: RDD[Point], k: Int) {
     // (box#, Count)
     var arrGridAndSpIdxInf = rddSpIdx
       .mapPartitionsWithIndex((pIdx, iter) => {
-
 
         val gridOp = new GridOperation(mbrDS1, totalRowCount, k)
 
@@ -393,20 +391,10 @@ case class SparkKNN(rddLeft: RDD[Point], rddRight: RDD[Point], k: Int) {
     // deduct yarn overhead
     val exeOverheadMemory = math.ceil(math.max(384, 0.1 * execAvailableMemory)).toLong
 
-    val (maxRowSize, totalRowCount) = rddRight.mapPartitionsWithIndex((pIdx, iter) => {
-
-      val (maxRowSize: Int, totalRowCount: Long) = iter.fold(0, 0L)((tuple, point) => {
-
-        val (maxRowSize, totalRowCount) = tuple.asInstanceOf[(Int, Long)]
-        val pnt = point match {
-          case pt: Point => pt
-        }
-
-        (math.max(maxRowSize, pnt.userData.toString.length), totalRowCount + 1)
-      })
-
-      Iterator((maxRowSize, totalRowCount))
-    })
+    val (maxRowSize, totalRowCount) = rddRight.mapPartitionsWithIndex((pIdx, iter) =>
+      Iterator(iter.map(point => (point.userData.toString.length, 1L))
+        .fold(0, 0L)((param1, param2) => (math.max(param1._1, param2._1), param1._2 + param2._2)))
+    )
       .fold((0, 0L))((t1, t2) => (math.max(t1._1, t2._1), t1._2 + t2._2))
 
     //        val gmGeomDummy = GMPoint((0 until maxRowSize).map(_ => " ").mkString(""), (0, 0))
@@ -433,20 +421,20 @@ case class SparkKNN(rddLeft: RDD[Point], rddRight: RDD[Point], k: Int) {
     (execRowCapacity, totalRowCount)
   }
 
-  private def computeMBR(lstPoint: List[Point]) = {
-
-    val (minX: Double, minY: Double, maxX: Double, maxY: Double) = lstPoint.fold(Double.MaxValue, Double.MaxValue, Double.MinValue, Double.MinValue)((mbr, point) => {
-
-      val (a, b, c, d) = mbr.asInstanceOf[(Double, Double, Double, Double)]
-      val pt = point match {
-        case pt: Point => pt
-      }
-
-      (math.min(a, pt.x), math.min(b, pt.y), math.max(c, pt.x), math.max(d, pt.y))
-    })
-
-    (minX, minY, maxX, maxY)
-  }
+  //  private def computeMBR(lstPoint: List[Point]) = {
+  //
+  //    val (minX: Double, minY: Double, maxX: Double, maxY: Double) = lstPoint.fold(Double.MaxValue, Double.MaxValue, Double.MinValue, Double.MinValue)((mbr, point) => {
+  //
+  //      val (a, b, c, d) = mbr.asInstanceOf[(Double, Double, Double, Double)]
+  //      val pt = point match {
+  //        case pt: Point => pt
+  //      }
+  //
+  //      (math.min(a, pt.x), math.min(b, pt.y), math.max(c, pt.x), math.max(d, pt.y))
+  //    })
+  //
+  //    (minX, minY, maxX, maxY)
+  //  }
 
   private def computePartitionRanges(rddRight: RDD[Point], execRowCapacity: Int) = {
 

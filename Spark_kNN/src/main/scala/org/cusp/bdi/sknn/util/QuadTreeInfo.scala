@@ -1,34 +1,19 @@
 package org.cusp.bdi.sknn.util
 
-import com.insightfullogic.quad_trees.Box
-import com.insightfullogic.quad_trees.QuadTree
-import com.insightfullogic.quad_trees.QuadTreeDigest
+import com.insightfullogic.quad_trees.{Box, QuadTree}
 
-trait QuadTreeInfoBase extends Serializable {
+class QuadTreeInfo {
 
-    var uniqueIdentifier = -9999
+  var uniqueIdentifier = -9999
 
-    def copy(other: QuadTreeInfoBase) {
+  var quadTree: QuadTree = null
 
-        //        this.assignedPart = other.assignedPart
-        this.uniqueIdentifier = other.uniqueIdentifier
-    }
+  def this(boundary: Box) {
 
-    override def toString() =
-        "\t%d".format(uniqueIdentifier)
-}
+    this
 
-class QuadTreeInfo extends QuadTreeInfoBase {
-
-    var quadTree: QuadTree = null
-
-    def this(boundary: Box) {
-
-        this
-
-        quadTree = QuadTree(boundary)
-    }
-
-    override def toString() =
-        "%s\t%s".format(super.toString, quadTree.toString)
+    quadTree = QuadTree(boundary)
+  }
+  override def toString() =
+    "\t%d\t%s".format(uniqueIdentifier, quadTree.toString)
 }
