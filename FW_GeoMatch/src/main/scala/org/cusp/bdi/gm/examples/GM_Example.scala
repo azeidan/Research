@@ -1,21 +1,5 @@
 package org.cusp.bdi.gm.examples
 
-import org.apache.hadoop.io.compress.GzipCodec
-import org.apache.spark.SparkConf
-import org.apache.spark.SparkContext
-import org.apache.spark.rdd.RDD
-import org.apache.spark.serializer.KryoSerializer
-import org.cusp.bdi.gm.GeoMatch
-import org.cusp.bdi.gm.geom.GMGeomBase
-import org.cusp.bdi.gm.geom.GMLineString
-import org.cusp.bdi.gm.geom.GMPoint
-import org.cusp.bdi.gm.geom.GMPolygon
-import org.cusp.bdi.gm.geom.GMRectangle
-import org.cusp.bdi.util.Arguments_QueryType
-import org.cusp.bdi.util.CLArgsParser
-import org.cusp.bdi.util.Helper
-import org.cusp.bdi.util.InputFileParsers
-
 object QueryType {
     val distance = "distance"
     val kNN = "knn"

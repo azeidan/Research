@@ -1,9 +1,4 @@
-import org.cusp.bdi.gm.GeoMatch
-import org.apache.spark.SparkConf
-import org.apache.spark.SparkContext
-import org.apache.spark.serializer.KryoSerializer
-import org.cusp.bdi.gm.geom.GMPoint
-import org.cusp.bdi.gm.geom.GMLineString
+
 
 object GitHub_Example {
     def main(args: Array[String]): Unit = {

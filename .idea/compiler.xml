@@ -6,13 +6,13 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="FW_GeoMatch" />
         <module name="FW_Simba" />
         <module name="FW_Simba_Source" />
         <module name="Common" />
         <module name="GeoMatch" />
         <module name="Spark_kNN" />
         <module name="LocalRunFiles" />
+        <module name="SpatialBenchmark" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
@@ -23,6 +23,7 @@
       <module name="GeoMatch" target="1.8" />
       <module name="LocalRunFiles" target="1.8" />
       <module name="Spark_kNN" target="1.8" />
+      <module name="SpatialBenchmark" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>

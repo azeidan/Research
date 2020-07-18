@@ -3,13 +3,13 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/Common/Common.iml" filepath="$PROJECT_DIR$/Common/Common.iml" />
-      <module fileurl="file://$PROJECT_DIR$/FW_GeoMatch/FW_GeoMatch.iml" filepath="$PROJECT_DIR$/FW_GeoMatch/FW_GeoMatch.iml" />
       <module fileurl="file://$PROJECT_DIR$/FW_Simba/FW_Simba.iml" filepath="$PROJECT_DIR$/FW_Simba/FW_Simba.iml" />
       <module fileurl="file://$PROJECT_DIR$/FW_Simba_Source/FW_Simba_Source.iml" filepath="$PROJECT_DIR$/FW_Simba_Source/FW_Simba_Source.iml" />
       <module fileurl="file://$PROJECT_DIR$/GeoMatch/GeoMatch.iml" filepath="$PROJECT_DIR$/GeoMatch/GeoMatch.iml" />
       <module fileurl="file://$PROJECT_DIR$/LocalRunFiles/LocalRunFiles.iml" filepath="$PROJECT_DIR$/LocalRunFiles/LocalRunFiles.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/Research.iml" filepath="$PROJECT_DIR$/.idea/Research.iml" />
       <module fileurl="file://$PROJECT_DIR$/Spark_kNN/Spark_kNN.iml" filepath="$PROJECT_DIR$/Spark_kNN/Spark_kNN.iml" />
+      <module fileurl="file://$PROJECT_DIR$/SpatialBenchmark/SpatialBenchmark.iml" filepath="$PROJECT_DIR$/SpatialBenchmark/SpatialBenchmark.iml" />
     </modules>
   </component>
 </project>
