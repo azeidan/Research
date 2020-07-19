@@ -1,0 +1,101 @@
+///**
+//  * @author
+//  */
+//package org.cusp.tools
+//
+//import org.apache.hadoop.io.compress.GzipCodec
+//import org.apache.spark.SparkConf
+//import org.apache.spark.SparkContext
+//import org.cusp.bdi.cmn.Helper
+//
+//object OutputComapre_Stats {
+//    def main(args: Array[String]): Unit = {
+//
+//        if (args.length != 3)
+//            println("Usage: <input file> <utput dir> <run local T/F>")
+//        else
+//            start(args(0), args(1), Helper.isBooleanStr(args(2)))
+//    }
+//
+//    def start(fileName: String, output: String, runLocal: Boolean) {
+//
+//        val startTime = System.currentTimeMillis()
+//
+//        val appName = this.getClass.getName + "_" + fileName
+//        var outputDir = output;
+//
+//        val conf = new SparkConf().setAppName(appName)
+//
+//        if (runLocal) {
+//
+//            conf.setMaster("local[*]")
+//
+//            // randomize output dir
+//            outputDir = Helper.randOutputDir(outputDir)
+//        }
+//
+//        val sc = new SparkContext(conf)
+//
+//        val arrStats = sc.textFile(fileName)
+//            .mapPartitions(_.map(line => {
+//
+//                val arr = line.substring(Helper.indexOf(line, ",", 6) + 1).split(',')
+//
+//                // arr of the three positions
+//                val arrPositions = arr.slice(2, 5)
+//
+//                val classify0 = arrPositions(0).toInt
+//                val classify1 = arrPositions(1).toInt
+//                val classify2 = arrPositions(2).toInt
+//
+//                var res = "err"
+//
+//                if (classify0 == -2 && classify1 == -2 && classify2 == -2)
+//                    res = "okNoMatch"
+//                else if (classify0 == -1 && classify1 == -1 && classify2 == -1)
+//                    res = "noMatch"
+//                else if ((0 <= classify0 && classify0 <= 2 && 0 <= classify1 && classify1 <= 2 && 0 <= classify2 && classify2 <= 2))
+//                    res = "3of3"
+//                else if ((0 <= classify0 && classify0 <= 2 && 0 <= classify1 && classify1 <= 2) ||
+//                    (0 <= classify0 && classify0 <= 2 && 0 <= classify2 && classify2 <= 2) ||
+//                    (0 <= classify1 && classify1 <= 2 && 0 <= classify2 && classify2 <= 2))
+//                    if (arr(1).toInt == 2)
+//                        res = "3of3"
+//                    else
+//                        res = "2of3"
+//                else if ((0 <= classify0 && classify0 <= 2) || (0 <= classify1 && classify1 <= 2) || (0 <= classify2 && classify2 <= 2))
+//                    if (arr(1).toInt == 1)
+//                        res = "3of3"
+//                    else if (arr(1).toInt == 2)
+//                        res = "2of3"
+//                    else
+//                        res = "1of3"
+//                else if ((0 <= classify0 && classify0 <= 4) || (0 <= classify1 && classify1 <= 4) || (0 <= classify2 && classify2 <= 4))
+//                    res = "3to4"
+//                else if ((0 <= classify0 && classify0 <= 6) || (0 <= classify1 && classify1 <= 6) || (0 <= classify2 && classify2 <= 6))
+//                    res = "5to6"
+//                else if ((0 <= classify0 && classify0 <= 9) || (0 <= classify1 && classify1 <= 9) || (0 <= classify2 && classify2 <= 9))
+//                    res = "7to9"
+//                else {
+//
+//                    Helper.logMessage(true, this, "ClassificationError: Cannot classify line (" + line + ")")
+//                    println("ClassificationError: Cannot classify line (" + line + ")")
+//                    res = "err" // error shouldn't happen
+//                }
+//
+//                //                line + "," + res
+//                (res, 1L)
+//            }), true)
+//            .reduceByKey(_ + _)
+//            .collect()
+//
+//        sc.parallelize(arrStats, 1)
+//            .saveAsTextFile(outputDir, classOf[GzipCodec])
+//
+//        if (runLocal) {
+//
+//            println("Total Time: " + (System.currentTimeMillis() - startTime))
+//            println("Output idr: " + outputDir)
+//        }
+//    }
+//}

@@ -1,0 +1,60 @@
+package org.cusp.tools.data
+
+import scala.io.Source
+import java.io.PrintWriter
+import java.io.File
+
+object SpatialHadoopPointExtract {
+
+    def main(args: Array[String]): Unit = {
+
+        val baseDIR = "/media/cusp/Data/GeoMatch_Files/OutputFiles/SpatialHadoop/GenTestFile"
+        val filenameArr = Array("/part-00000_data_00001",
+            "/part-00001_data_00001",
+            "/part-00002_data_00001",
+            "/part-00003_data_00001",
+            "/part-00004_data_00001",
+            "/part-00005_data_00001",
+            "/part-00006_data_00001",
+            "/part-00007_data_00001",
+            "/part-00008_data_00001",
+            "/part-00009_data_00001",
+            "/part-00010_data_00001",
+            "/part-00011_data_00001",
+            "/part-00012_data_00001",
+            "/part-00013_data_00001",
+            "/part-00014_data_00001",
+            "/part-00015_data_00001",
+            "/part-00016_data_00001",
+            "/part-00017_data_00001",
+            "/part-00018_data_00001",
+            "/part-00019_data_00001",
+            "/part-00020_data_00001",
+            "/part-00021_data_00001",
+            "/part-00022_data_00001",
+            "/part-00023_data_00001",
+            "/part-00024_data_00001",
+            "/part-00025_data_00001",
+            "/part-00026_data_00001",
+            "/part-00027_data_00001",
+            "/part-00028_data_00001",
+            "/part-00029_data_00001",
+            "/part-00030_data_00001",
+            "/part-00031_data_00001")
+
+        filenameArr.map(fname => {
+
+            val pw = new PrintWriter(new File(baseDIR + "_WKT" + fname))
+
+            Source.fromFile(baseDIR + fname).getLines.foreach(line => {
+
+                val arr = line.split(',')
+
+                pw.write("POINT (" + arr(0) + " " + arr(1) + ")\n")
+            })
+
+            pw.flush()
+            pw.close()
+        })
+    }
+}
