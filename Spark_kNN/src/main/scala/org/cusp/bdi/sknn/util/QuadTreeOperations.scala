@@ -11,135 +11,135 @@ import com.insightfullogic.quad_trees.QuadTree
 
 object QuadTreeOperations extends Serializable {
 
-    def nearestNeighbor(lstQTInf: ListBuffer[QuadTreeInfo], searchPoint: Point, sortSetSqDist: SortSetObj, k: Int) {
+  def nearestNeighbor(lstQTInf: ListBuffer[QuadTreeInfo], searchPoint: Point, sortSetSqDist: SortedList[Point], k: Int) {
 
-        //        if (searchPoint.userData != null && searchPoint.userData.toString().equalsIgnoreCase("taxi_a_894690"))
-        //            println
+    //    if (searchPoint.userData != null && searchPoint.userData.toString().equalsIgnoreCase("taxi_b_651809"))
+    //      println
 
-        var searchRegion: Box = null
+    var searchRegion: Box = null
 
-        if (sortSetSqDist.isEmpty()) {
+    if (sortSetSqDist.isEmpty()) {
 
-            val sPtBestQT = getBestQuadrant(lstQTInf.head, (searchPoint.x, searchPoint.y), k)
+      val sPtBestQT = getBestQuadrant(lstQTInf.head, (searchPoint.x, searchPoint.y), k)
 
-            //            val dim = math.max(sPtBestQT.boundary.halfDimension.x + math.abs(searchPoint.x - sPtBestQT.boundary.center.x), sPtBestQT.boundary.halfDimension.y + math.abs(searchPoint.y - sPtBestQT.boundary.center.y))
+      //            val dim = math.max(sPtBestQT.boundary.halfDimension.x + math.abs(searchPoint.x - sPtBestQT.boundary.center.x), sPtBestQT.boundary.halfDimension.y + math.abs(searchPoint.y - sPtBestQT.boundary.center.y))
 
-            val dim = math.ceil(math.sqrt(getFurthestCorner(searchPoint, sPtBestQT)._1))
+      val dim = math.ceil(math.sqrt(getFurthestCorner(searchPoint, sPtBestQT)._1))
 
-            searchRegion = new Box(searchPoint, new Point(dim, dim))
-        }
-        else {
+      searchRegion = new Box(searchPoint, new Point(dim, dim))
+    }
+    else {
 
-            val maxDist = math.sqrt(sortSetSqDist.last.distance)
+      val maxDist = math.sqrt(sortSetSqDist.last.distance)
 
-            searchRegion = new Box(searchPoint, new Point(maxDist, maxDist))
-        }
-
-        lstQTInf.foreach(qtInf => pointsWithinRegion(qtInf, searchRegion, sortSetSqDist))
+      searchRegion = new Box(searchPoint, new Point(maxDist, maxDist))
     }
 
-    private def getFurthestCorner(searchPoint: Point, sPtBestQT: QuadTree) = {
+    lstQTInf.foreach(qtInf => pointsWithinRegion(qtInf, searchRegion, sortSetSqDist))
+  }
 
-        val qtdLeft = sPtBestQT.boundary.left
-        val qtdRight = sPtBestQT.boundary.right
-        val qtdBottom = sPtBestQT.boundary.bottom
-        val qtdTop = sPtBestQT.boundary.top
+  private def getFurthestCorner(searchPoint: Point, sPtBestQT: QuadTree) = {
 
-        Array((qtdLeft, qtdBottom), (qtdRight, qtdBottom), (qtdRight, qtdTop), (qtdLeft, qtdTop))
-            .map(xy => (Helper.squaredDist(xy._1, xy._2, searchPoint.x, searchPoint.y), xy))
-            .maxBy(_._1)
-    }
+    val qtdLeft = sPtBestQT.boundary.left
+    val qtdRight = sPtBestQT.boundary.right
+    val qtdBottom = sPtBestQT.boundary.bottom
+    val qtdTop = sPtBestQT.boundary.top
 
-    private def contains(qTree: QuadTree, xy: (Double, Double), k: Int) =
-        qTree != null && qTree.getTotalPoints > k && qTree.boundary.contains(xy._1, xy._2)
+    Array((qtdLeft, qtdBottom), (qtdRight, qtdBottom), (qtdRight, qtdTop), (qtdLeft, qtdTop))
+      .map(xy => (Helper.squaredDist(xy._1, xy._2, searchPoint.x, searchPoint.y), xy))
+      .maxBy(_._1)
+  }
 
-    private def intersects(qTree: QuadTree, searchRegion: Box) =
-        qTree != null && searchRegion.intersects(qTree.boundary)
+  private def contains(qTree: QuadTree, xy: (Double, Double), k: Int) =
+    qTree != null && qTree.getTotalPoints > k && qTree.boundary.contains(xy._1, xy._2)
 
-    private def getBestQuadrant(qtInf: QuadTreeInfo, xy: (Double, Double), k: Int) = {
+  private def intersects(qTree: QuadTree, searchRegion: Box) =
+    qTree != null && searchRegion.intersects(qTree.boundary)
 
-        // find leaf containing point
-        var done = false
-        var qTree = qtInf.quadTree //lstChainQT.head
+  private def getBestQuadrant(qtInf: QuadTreeInfo, xy: (Double, Double), k: Int) = {
 
-        while (!done)
-            if (contains(qTree.topLeft, xy, k))
-                qTree = qTree.topLeft
-            else if (contains(qTree.topRight, xy, k))
-                qTree = qTree.topRight
-            else if (contains(qTree.bottomLeft, xy, k))
-                qTree = qTree.bottomLeft
-            else if (contains(qTree.bottomRight, xy, k))
-                qTree = qTree.bottomRight
-            else
-                done = true
+    // find leaf containing point
+    var done = false
+    var qTree = qtInf.quadTree //lstChainQT.head
 
-        qTree
-    }
+    while (!done)
+      if (contains(qTree.topLeft, xy, k))
+        qTree = qTree.topLeft
+      else if (contains(qTree.topRight, xy, k))
+        qTree = qTree.topRight
+      else if (contains(qTree.bottomLeft, xy, k))
+        qTree = qTree.bottomLeft
+      else if (contains(qTree.bottomRight, xy, k))
+        qTree = qTree.bottomRight
+      else
+        done = true
 
-    private def pointsWithinRegion(qtInf: QuadTreeInfo, searchRegion: Box, sortSetSqDist: SortSetObj) {
+    qTree
+  }
 
-        if (searchRegion.intersects(qtInf.quadTree.boundary)) {
+  private def pointsWithinRegion(qtInf: QuadTreeInfo, searchRegion: Box, sortSetSqDist: SortedList[Point]) {
 
-            val queueQT = Queue(qtInf.quadTree)
+    if (searchRegion.intersects(qtInf.quadTree.boundary)) {
 
-            var prevMaxSqrDist = if (sortSetSqDist.isEmpty()) -1 else sortSetSqDist.last.distance
+      val queueQT = Queue(qtInf.quadTree)
 
-            while (!queueQT.isEmpty) {
+      var prevMaxSqrDist = if (sortSetSqDist.isEmpty()) -1 else sortSetSqDist.last.distance
 
-                val qTree = queueQT.dequeue()
+      while (!queueQT.isEmpty) {
 
-                qTree.getPoints
-                    .foreach(qtPoint => {
+        val qTree = queueQT.dequeue()
 
-                        if (searchRegion.contains(qtPoint)) {
+        qTree.getPoints
+          .foreach(qtPoint => {
 
-                            //                            if (qtPoint.userData.toString().equalsIgnoreCase("taxi_b_601998"))
-                            //                                println()
+            if (searchRegion.contains(qtPoint)) {
 
-                            val sqDist = Helper.squaredDist(searchRegion.center.x, searchRegion.center.y, qtPoint.x, qtPoint.y)
+              //              if (qtPoint.userData.toString().equalsIgnoreCase("Taxi_A_27652"))
+              //                println()
 
-                            sortSetSqDist.add(sqDist, qtPoint)
+              val sqDist = Helper.squaredDist(searchRegion.center.x, searchRegion.center.y, qtPoint.x, qtPoint.y)
 
-                            if (sortSetSqDist.isFull && prevMaxSqrDist != sortSetSqDist.last.distance) {
+              sortSetSqDist.add(sqDist, qtPoint)
 
-                                prevMaxSqrDist = sortSetSqDist.last.distance
+              if (sortSetSqDist.isFull && prevMaxSqrDist != sortSetSqDist.last.distance) {
 
-                                val newDim = math.sqrt(prevMaxSqrDist)
+                prevMaxSqrDist = sortSetSqDist.last.distance
 
-                                searchRegion.halfDimension.x = newDim
-                                searchRegion.halfDimension.y = newDim
-                            }
-                        }
-                    })
+                val newDim = math.sqrt(prevMaxSqrDist)
 
-                if (intersects(qTree.topLeft, searchRegion))
-                    queueQT += qTree.topLeft
-                if (intersects(qTree.topRight, searchRegion))
-                    queueQT += qTree.topRight
-                if (intersects(qTree.bottomLeft, searchRegion))
-                    queueQT += qTree.bottomLeft
-                if (intersects(qTree.bottomRight, searchRegion))
-                    queueQT += qTree.bottomRight
+                searchRegion.halfDimension.x = newDim
+                searchRegion.halfDimension.y = newDim
+              }
             }
-        }
+          })
+
+        if (intersects(qTree.topLeft, searchRegion))
+          queueQT += qTree.topLeft
+        if (intersects(qTree.topRight, searchRegion))
+          queueQT += qTree.topRight
+        if (intersects(qTree.bottomLeft, searchRegion))
+          queueQT += qTree.bottomLeft
+        if (intersects(qTree.bottomRight, searchRegion))
+          queueQT += qTree.bottomRight
+      }
+    }
+  }
+
+  private def buildSearchRegion(qtInf: QuadTreeInfo, searchPoint: Point, sortSetSqDist: SortedList[Point], k: Int) = {
+
+    val searchDim = if (sortSetSqDist.isEmpty()) {
+
+      val sPtBestQT = getBestQuadrant(qtInf, (searchPoint.x, searchPoint.y), k)
+
+      (sPtBestQT.boundary.halfDimension.x + math.abs(searchPoint.x - sPtBestQT.boundary.center.x), sPtBestQT.boundary.halfDimension.y + math.abs(searchPoint.y - sPtBestQT.boundary.center.y))
+    }
+    else {
+
+      val maxDist = math.sqrt(sortSetSqDist.last.distance)
+
+      (maxDist, maxDist)
     }
 
-    private def buildSearchRegion(qtInf: QuadTreeInfo, searchPoint: Point, sortSetSqDist: SortSetObj, k: Int) = {
-
-        val searchDim = if (sortSetSqDist.isEmpty()) {
-
-            val sPtBestQT = getBestQuadrant(qtInf, (searchPoint.x, searchPoint.y), k)
-
-            (sPtBestQT.boundary.halfDimension.x + math.abs(searchPoint.x - sPtBestQT.boundary.center.x), sPtBestQT.boundary.halfDimension.y + math.abs(searchPoint.y - sPtBestQT.boundary.center.y))
-        }
-        else {
-
-            val maxDist = math.sqrt(sortSetSqDist.last.distance)
-
-            (maxDist, maxDist)
-        }
-
-        new Box(searchPoint, new Point(searchDim._1, searchDim._2))
-    }
+    new Box(searchPoint, new Point(searchDim._1, searchDim._2))
+  }
 }

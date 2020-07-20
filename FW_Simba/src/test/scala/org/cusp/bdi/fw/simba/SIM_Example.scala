@@ -76,6 +76,9 @@ object SIM_Example extends Serializable {
     //        import simbaSession.implicits._
     //        import simbaSession.simbaImplicits._
 
+    import simbaSession.implicits._
+    import simbaSession.simbaImplicits._
+
     val res1 = DS1.knnJoin(DS2, Array("x", "y"), Array("x", "y"), 10)
       .rdd
       .mapPartitions(_.map(processRow))

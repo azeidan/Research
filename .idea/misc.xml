@@ -10,6 +10,7 @@
         <option value="$PROJECT_DIR$/Spark_kNN/pom.xml" />
         <option value="$PROJECT_DIR$/GeoMatch/pom.xml" />
         <option value="$PROJECT_DIR$/SpatialBenchmark/pom.xml" />
+        <option value="$PROJECT_DIR$/DataSetTools/pom.xml" />
       </list>
     </option>
   </component>

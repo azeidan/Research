@@ -12,7 +12,7 @@ import org.cusp.bdi.sknn.util.GridOperation
 import org.cusp.bdi.sknn.util.QuadTreeDigestOperations
 import org.cusp.bdi.sknn.util.QuadTreeInfo
 import org.cusp.bdi.sknn.util.QuadTreeOperations
-import org.cusp.bdi.sknn.util.SortSetObj
+import org.cusp.bdi.sknn.util.SortedList
 import org.cusp.bdi.util.Helper
 import com.insightfullogic.quad_trees.Box
 import com.insightfullogic.quad_trees.Point
@@ -39,7 +39,7 @@ object SparkKNN {
       QuadTreeOperations.getClass,
       Helper.getClass,
       classOf[QuadTreeInfo],
-      classOf[SortSetObj],
+      classOf[SortedList[_]],
       classOf[Box],
       classOf[Point],
       classOf[QuadTree],
@@ -222,7 +222,7 @@ case class SparkKNN(rddLeft: RDD[Point], rddRight: RDD[Point], k: Int) {
           //            if (lstUId.size >= 11)
           //              println(QuadTreeDigestOperations.getPartitionsInRange(bvQTGlobalIndex.value, gridOp.computeBoxXY(point.x, point.y), k))
 
-          val tuple: Any = (point, SortSetObj(k, false), lstUId)
+          val tuple: Any = (point, SortedList[Point](k, false), lstUId)
 
           (bvMapUIdPartId.value.get(lstUId.head).get, tuple)
         })
@@ -284,7 +284,7 @@ case class SparkKNN(rddLeft: RDD[Point], rddRight: RDD[Point], k: Int) {
               }
               case _ => {
 
-                val (point, sortSetSqDist, lstUId) = row._2.asInstanceOf[(Point, SortSetObj, List[Int])]
+                val (point, sortSetSqDist, lstUId) = row._2.asInstanceOf[(Point, SortedList[Point], List[Int])]
 
                 //                                if (point.userData.toString().equalsIgnoreCase("taxi_b_601998"))
                 //                                    println(pIdx)
@@ -316,14 +316,12 @@ case class SparkKNN(rddLeft: RDD[Point], rddRight: RDD[Point], k: Int) {
 
     rddPoint.mapPartitions(_.map(row => {
 
-      val (point, sortSetSqDist, _) = row._2.asInstanceOf[(Point, SortSetObj, List[Int])]
+      val (point, sortSetSqDist, _) = row._2.asInstanceOf[(Point, SortedList[Point], List[Int])]
 
       //            val point = row._2._1 match { case pt: Point => pt }
       //            val sortSetSqDist = row._2._2
 
-      (point, sortSetSqDist.map(nd => (nd.distance, nd.data match {
-        case pt: Point => pt
-      })))
+      (point, sortSetSqDist.map(nd => (nd.distance, nd.data)))
     }))
   }
 
@@ -401,7 +399,7 @@ case class SparkKNN(rddLeft: RDD[Point], rddRight: RDD[Point], k: Int) {
     val userData = Array.fill[Char](maxRowSize)(' ').toString
     val pointDummy = new Point(0, 0, userData)
     val quadTreeEmptyDummy = new QuadTreeInfo(Box(new Point(pointDummy), new Point(pointDummy)))
-    val sortSetDummy = SortSetObj(k, false)
+    val sortSetDummy = SortedList[String](k, false)
 
     val pointCost = SizeEstimator.estimate(pointDummy)
     val sortSetCost = /* pointCost + */ SizeEstimator.estimate(sortSetDummy) + (k * pointCost)

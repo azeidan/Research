@@ -90,7 +90,7 @@ object OutputsComapre extends Serializable {
         def incrementInMap(classificationKey: String, row: (String, (Array[String], Array[String]))) = {
 
           if (!(classificationKey.equals(Classifications.recordsCount) || classificationKey.equals(Classifications.recordsBothNoMatch) || classificationKey.equals(Classifications.recordsFWCorrectMatched)))
-            println(">>\t%s: %s\n\t\t\t%s\n\t\t\t%s".format(classificationKey, row._1, row._2._1.mkString(","), row._2._2.mkString(",")))
+            println(">>\t%s: %s\n\t\t\t>>%s\n\t\t\t>>%s".format(classificationKey, row._1, row._2._1.mkString(","), row._2._2.mkString(",")))
 
           mapRowLevelClassify.update(classificationKey, mapRowLevelClassify.get(classificationKey).get + 1)
         }
