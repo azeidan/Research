@@ -12,7 +12,7 @@ object QuadTreeDigestOperations {
 
   private val dimExtend = 3 * math.sqrt(2) // accounts for the further points effected by precision loss when converting to gird
 
-  def getPartitionsInRange(quadTreeDigest: QuadTreeDigest, searchPointXY: (Long, Long), k: Int /*, gridBoxMaxDim: Double*/) = {
+  def getNeededSpIdxUId(quadTreeDigest: QuadTreeDigest, searchPointXY: (Long, Long), k: Int /*, gridBoxMaxDim: Double*/) = {
 
     //        if (searchPointXY._1.toString().startsWith("15221") && searchPointXY._2.toString().startsWith("3205"))
     //            //            //            //            //            //            //        if (searchPointXY._1.toString().startsWith("100648") && searchPointXY._2.toString().startsWith("114152"))
