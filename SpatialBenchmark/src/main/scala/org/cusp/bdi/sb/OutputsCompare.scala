@@ -3,7 +3,6 @@ package org.cusp.bdi.sb
 
 import scala.collection.mutable.HashMap
 import scala.collection.mutable.ListBuffer
-
 import org.apache.spark.Partitioner
 import org.apache.spark.rdd.RDD
 import org.apache.spark.rdd.RDD.rddToPairRDDFunctions
@@ -11,11 +10,14 @@ import org.cusp.bdi.util.Helper
 import org.cusp.bdi.sb.examples.BenchmarkInputFileParser
 import org.apache.commons.lang3.builder.HashCodeBuilder
 
-object OutputsComapre extends Serializable {
+import scala.collection.JavaConverters._
+import scala.collection.mutable
 
-  def apply(classificationCount: Int, rddKeyMatch: RDD[String], keyMatchFileParser: BenchmarkInputFileParser, rddTestFW: RDD[String], testFWFileParser: BenchmarkInputFileParser) = {
+object OutputsCompare extends Serializable {
 
-    var rddKeyMatchUnique = rddUnique(rddKeyMatch, keyMatchFileParser.parseLine)
+  def apply(classificationCount: Int, rddKeyMatch: RDD[String], keyMatchFileParser: BenchmarkInputFileParser, rddTestFW: RDD[String], testFWFileParser: BenchmarkInputFileParser): ListBuffer[String] = {
+
+    val rddKeyMatchUnique = rddUnique(rddKeyMatch, keyMatchFileParser.parseLine)
       .mapPartitions(_.map(x => {
 
         val arr: Array[String] = null
@@ -23,7 +25,7 @@ object OutputsComapre extends Serializable {
         (x._1, (x._2, arr))
       }))
 
-    var rddTestFWUnique = rddUnique(rddTestFW, testFWFileParser.parseLine)
+    val rddTestFWUnique = rddUnique(rddTestFW, testFWFileParser.parseLine)
       .mapPartitions(_.map(x => {
 
         val arr: Array[String] = null
@@ -51,7 +53,7 @@ object OutputsComapre extends Serializable {
       })
       .mapPartitions(iter => {
 
-        val mapRowLevelClassify = HashMap(Classifications.recordsBothNoMatch -> 0L,
+        val mapRowLevelClassify = mutable.HashMap(Classifications.recordsBothNoMatch -> 0L,
           Classifications.recordsCount -> 0L,
           Classifications.recordsFWCorrectMatched -> 0L,
           Classifications.recordsFWFailedToMatch -> 0L,
@@ -62,12 +64,12 @@ object OutputsComapre extends Serializable {
           Classifications.recordsInFWOnly -> 0L,
           Classifications.recordsInKMOnly -> 0L)
 
-        def incrementInMap(classificationKey: String, row: (String, (Array[String], Array[String]))) = {
+        def incrementInMap(classificationKey: String, row: (String, (Array[String], Array[String]))): Unit = {
 
           if (!(classificationKey.equals(Classifications.recordsCount) || classificationKey.equals(Classifications.recordsBothNoMatch) || classificationKey.equals(Classifications.recordsFWCorrectMatched)))
             println(">>\t%s: %s\n\t\t\t>>%s\n\t\t\t>>%s".format(classificationKey, row._1, row._2._1.mkString(","), row._2._2.mkString(",")))
 
-          mapRowLevelClassify.update(classificationKey, mapRowLevelClassify.get(classificationKey).get + 1)
+          mapRowLevelClassify.update(classificationKey, mapRowLevelClassify(classificationKey) + 1)
         }
 
         iter.foreach(row => {
@@ -90,23 +92,23 @@ object OutputsComapre extends Serializable {
 
           if (!done) {
 
-            val arrKMSize = row._2._1.size
-            val arrFWSize = row._2._2.size
+            val arrKMSize = row._2._1.length
+            val arrFWSize = row._2._2.length
 
             val arrMatchIdxs = row._2._2.map(_ => -1)
 
-            (0 until row._2._2.size).foreach(i => arrMatchIdxs(i) = row._2._1.indexOf(row._2._2(i)))
+            row._2._2.indices.foreach(i => arrMatchIdxs(i) = row._2._1.indexOf(row._2._2(i)))
 
             lazy val kmDistances = row._2._1.map(_.split(",")).map(_ (0))
 
-            (0 until row._2._2.size).filter(i => arrMatchIdxs(i) == -1)
+            row._2._2.indices.filter(i => arrMatchIdxs(i) == -1)
               .foreach(i => {
 
                 var counter = 0
                 var idxOf = -1
                 val dist = row._2._2(i).split(",")(0)
 
-                while (counter < kmDistances.size && idxOf == -1) {
+                while (counter < kmDistances.length && idxOf == -1) {
 
                   idxOf = kmDistances.indexOf(dist)
 
@@ -164,44 +166,44 @@ object OutputsComapre extends Serializable {
       .collect()
 
     // add percentages
-    val mapResults = HashMap[String, Long]()
+    val mapResults = mutable.HashMap[String, Long]()
 
     arrResults.foreach(x => mapResults += x._1 -> x._2)
 
-    val recordsCount = mapResults.get(Classifications.recordsCount).get.toString().toDouble
-    val recordsBothNoMatch = mapResults.get(Classifications.recordsBothNoMatch).get.toString().toDouble
-    val recordsFWOnlyMatched = mapResults.get(Classifications.recordsFWOnlyMatched).get.toString().toDouble
-    val recordsFWCorrectMatched = mapResults.get(Classifications.recordsFWCorrectMatched).get.toString().toDouble
-    val recordsFWFailedToMatch = mapResults.get(Classifications.recordsFWFailedToMatch).get.toString().toDouble
-    val recordsFWOverMatched = mapResults.get(Classifications.recordsFWOverMatched).get.toString().toDouble
-    val recordsFWUnderMatched = mapResults.get(Classifications.recordsFWUnderMatched).get.toString().toDouble
-    val recordsInFWOnly = mapResults.get(Classifications.recordsInFWOnly).get.toString().toDouble
-    val recordsInKMOnly = mapResults.get(Classifications.recordsInKMOnly).get.toString().toDouble
-    val recordsFWMismatch = mapResults.get(Classifications.recordsFWMismatch).get.toString().toDouble
+    val recordsCount = mapResults(Classifications.recordsCount).toDouble
+    val recordsBothNoMatch = mapResults(Classifications.recordsBothNoMatch).toDouble
+    val recordsFWOnlyMatched = mapResults(Classifications.recordsFWOnlyMatched).toDouble
+    val recordsFWCorrectMatched = mapResults(Classifications.recordsFWCorrectMatched).toDouble
+    val recordsFWFailedToMatch = mapResults(Classifications.recordsFWFailedToMatch).toDouble
+    val recordsFWOverMatched = mapResults(Classifications.recordsFWOverMatched).toDouble
+    val recordsFWUnderMatched = mapResults(Classifications.recordsFWUnderMatched).toDouble
+    val recordsInFWOnly = mapResults(Classifications.recordsInFWOnly).toDouble
+    val recordsInKMOnly = mapResults(Classifications.recordsInKMOnly).toDouble
+    val recordsFWMismatch = mapResults(Classifications.recordsFWMismatch).toDouble
 
     // list to display in a specific order
     ListBuffer(getFormatted(mapResults, Classifications.recordsCount, recordsCount),
       getFormatted(mapResults, Classifications.recordsFWCorrectMatched, recordsFWCorrectMatched),
-      getFormatted(mapResults, Classifications.percent, (recordsFWCorrectMatched / recordsCount * 100)),
+      getFormatted(mapResults, Classifications.percent, recordsFWCorrectMatched / recordsCount * 100),
       getFormatted(mapResults, Classifications.recordsBothNoMatch, recordsBothNoMatch),
-      getFormatted(mapResults, Classifications.percent, (recordsBothNoMatch / recordsCount * 100)),
+      getFormatted(mapResults, Classifications.percent, recordsBothNoMatch / recordsCount * 100),
       getFormatted(mapResults, Classifications.recordsFWOnlyMatched, recordsFWOnlyMatched),
-      getFormatted(mapResults, Classifications.percent, (recordsFWOnlyMatched / recordsCount * 100)),
+      getFormatted(mapResults, Classifications.percent, recordsFWOnlyMatched / recordsCount * 100),
       getFormatted(mapResults, Classifications.recordsFWFailedToMatch, recordsFWFailedToMatch),
-      getFormatted(mapResults, Classifications.percent, (recordsFWFailedToMatch / recordsCount * 100)),
+      getFormatted(mapResults, Classifications.percent, recordsFWFailedToMatch / recordsCount * 100),
       getFormatted(mapResults, Classifications.recordsFWOverMatched, recordsFWOverMatched),
-      getFormatted(mapResults, Classifications.percent, (recordsFWOverMatched / recordsCount * 100)),
+      getFormatted(mapResults, Classifications.percent, recordsFWOverMatched / recordsCount * 100),
       getFormatted(mapResults, Classifications.recordsFWUnderMatched, recordsFWUnderMatched),
-      getFormatted(mapResults, Classifications.percent, (recordsFWUnderMatched / recordsCount * 100)),
+      getFormatted(mapResults, Classifications.percent, recordsFWUnderMatched / recordsCount * 100),
       getFormatted(mapResults, Classifications.recordsInFWOnly, recordsInFWOnly),
-      getFormatted(mapResults, Classifications.percent, (recordsInFWOnly / recordsCount * 100)),
+      getFormatted(mapResults, Classifications.percent, recordsInFWOnly / recordsCount * 100),
       getFormatted(mapResults, Classifications.recordsInKMOnly, recordsInKMOnly),
-      getFormatted(mapResults, Classifications.percent, (recordsInKMOnly / recordsCount * 100)),
+      getFormatted(mapResults, Classifications.percent, recordsInKMOnly / recordsCount * 100),
       getFormatted(mapResults, Classifications.recordsFWMismatch, recordsFWMismatch),
-      getFormatted(mapResults, Classifications.percent, (recordsFWMismatch / recordsCount * 100)))
+      getFormatted(mapResults, Classifications.percent, recordsFWMismatch / recordsCount * 100))
   }
 
-  private def rddUnique(rdd: RDD[String], fileParser: (String => (String, Array[String]))) =
+  private def rddUnique(rdd: RDD[String], fileParser: String => (String, Array[String])) =
     rdd.mapPartitions(_.map(fileParser).filter(_ != null))
       .mapPartitions(_.map(x => {
 
@@ -223,34 +225,23 @@ object OutputsComapre extends Serializable {
     else {
 
       val lst = arrFilter0.to[ListBuffer]
-      var idx = 0
 
       arrFilter1.foreach(x => lst.append(x))
-
-      //            while (lst.size < classificationCount && idx < arrFilter1.size) {
-      //
-      //                val str = arrFilter1(idx)
-      //
-      //                if (!lst.contains(str))
-      //                    lst.append(str)
-      //
-      //                idx += 1
-      //            }
 
       lst.distinct.toArray
     }
   }
 
-  private def getFormatted(mapResults: HashMap[String, Long], key: String, default: Any) = {
+  private def getFormatted(mapResults: mutable.HashMap[String, Long], key: String, default: AnyVal) = {
 
     val opt = mapResults.get(key)
-    val value = if (opt == None) default else opt.get
+    val value = if (opt.isEmpty) default else opt.get
 
     // Long data type assumed a count
     // Double data type assumed a percentage
     value match {
-      case _: Long => "%41s".format(key) + ": " + "%,d".format(value)
-      case _: Double => "%41s".format(key) + ": " + "%.4f%%".format(value)
+      case l: Long => "%41s".format(key) + ": " + "%,d".format(l)
+      case d: Double => "%41s".format(key) + ": " + "%.4f%%".format(d)
       case _ => "%41s".format(key) + ": " + value
     }
   }

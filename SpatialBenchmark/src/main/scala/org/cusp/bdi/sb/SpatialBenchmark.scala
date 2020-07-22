@@ -13,7 +13,7 @@ import org.cusp.bdi.sb.examples.SB_CLArgs
 
 object SpatialBenchmark extends Serializable {
 
-    private val LOGGER = LogFactory.getLog(this.getClass())
+//    private val LOGGER = LogFactory.getLog(this.getClass())
 
     def main(args: Array[String]): Unit = {
 
@@ -30,15 +30,15 @@ object SpatialBenchmark extends Serializable {
         val clArgs = SB_CLArgs.SKNN_RandomPoint_RandomPoint
         //        val clArgs = CLArgsParser(args, SB_Arguments())
 
-        val keyMatchInFileParser = instansiateClass[BenchmarkInputFileParser](clArgs.getParamValueString(SB_Arguments.keyMatchInFileParser))
-        val testFWInFileParser = instansiateClass[BenchmarkInputFileParser](clArgs.getParamValueString(SB_Arguments.testFWInFileParser))
+        val keyMatchInFileParser = instantiateClass[BenchmarkInputFileParser](clArgs.getParamValueString(SB_Arguments.keyMatchInFileParser))
+        val testFWInFileParser = instantiateClass[BenchmarkInputFileParser](clArgs.getParamValueString(SB_Arguments.testFWInFileParser))
 
         val sparkConf = new SparkConf().setAppName("Spatial Benchmark")
 
         if (clArgs.getParamValueBoolean(SB_Arguments.local))
             sparkConf.setMaster("local[*]")
 
-        sparkConf.set("spark.serializer", classOf[KryoSerializer].getName);
+        sparkConf.set("spark.serializer", classOf[KryoSerializer].getName)
         sparkConf.registerKryoClasses(Array(classOf[String]))
 
         val sparkContext = new SparkContext(sparkConf)
@@ -50,7 +50,7 @@ object SpatialBenchmark extends Serializable {
 
         val rddTestFW = sparkContext.textFile(clArgs.getParamValueString(SB_Arguments.testFWInFile))
 
-        val compareResults = OutputsComapre(clArgs.getParamValueInt(SB_Arguments.classificationCount), rddKeyMatch, keyMatchInFileParser, rddTestFW, testFWInFileParser)
+        val compareResults = OutputsCompare(clArgs.getParamValueInt(SB_Arguments.classificationCount), rddKeyMatch, keyMatchInFileParser, rddTestFW, testFWInFileParser)
 
         compareResults.append("Total Runtime: " + "%,d".format(System.currentTimeMillis() - startTime) + " ms")
 
@@ -64,7 +64,7 @@ object SpatialBenchmark extends Serializable {
         }
     }
 
-    def instansiateClass[T](className: String) = {
+    def instantiateClass[T](className: String): T = {
 
         var loadClass = className
 

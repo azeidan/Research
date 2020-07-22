@@ -8,12 +8,12 @@ trait BenchmarkInputFileParser extends Serializable {
 
     // "matchNthComma" is the number of the comma separating the record from the street matches
     // e.g. matchNthComma=11, then the 11th comma is the one separating the point from the street matches
-    protected def commonParseLine = (line: String, latLonNthComma: Int, matchNthComma: Int) => {
+    protected def commonParseLine: (String, Int, Int) => (String, Array[String]) = (line: String, latLonNthComma: Int, matchNthComma: Int) => {
 
         var arrStreetMatches: Array[String] = null
 
         val idxStreet = Helper.indexOf(line, ",", matchNthComma)
-        var recordLine = StringBuilder.newBuilder.append(line)
+        val recordLine = StringBuilder.newBuilder.append(line)
 
         if (idxStreet != -1) {
 
@@ -66,7 +66,7 @@ case class SB_KeyMatchInputFileParser_TPEP() extends BenchmarkInputFileParser {
 
 case class SB_KeyMatchInputFileParser_RandomPoints() extends BenchmarkInputFileParser {
 
-    def parseLine(line: String) = {
+    def parseLine(line: String): (String, Array[String]) = {
 
         val arr = line.split(';')
 
@@ -88,7 +88,7 @@ case class SB_KeyMatchInputFileParser_RandomPoints() extends BenchmarkInputFileP
 
 case class SB_KeyMatchInputFileParser_Bus_Small() extends BenchmarkInputFileParser {
 
-    def parseLine(line: String) = {
+    def parseLine(line: String): (String, Array[String]) = {
 
         val arr = line.split(';')
 
@@ -101,7 +101,7 @@ case class KM_InputFileParser_OSM_Buildings() extends BenchmarkInputFileParser {
 
         val idx = Helper.indexOf(line, "))")
 
-        if (idx + 3 == line.size)
+        if (idx + 3 == line.length)
             (line, null)
         else
             (line.substring(0, idx + 3), line.substring(idx + 4).split(','))
