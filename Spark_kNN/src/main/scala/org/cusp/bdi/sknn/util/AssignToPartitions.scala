@@ -14,7 +14,7 @@ case class AssignToPartitions(arrAttrQT: Array[PartitionInfo], maxSum: Long) {
   // group of quadtrees adding to the maximum sum
   private val lstGroup = ListBuffer[PartitionInfo]()
 
-  def getPartitionCount() = partCounter
+  def getPartitionCount: Int = partCounter
 
   // 1st, assign quadtrees with maximum total points
   arrAttrQT.foreach(qtInf =>
@@ -25,7 +25,7 @@ case class AssignToPartitions(arrAttrQT: Array[PartitionInfo], maxSum: Long) {
     })
 
   //  unassigned regions
-  var arrUnassigned = arrAttrQT.filter(_.assignedPart == -1).sortBy(_.totalPoints)
+  var arrUnassigned: Array[PartitionInfo] = arrAttrQT.filter(_.assignedPart == -1).sortBy(_.totalPoints)
 
   while (!arrUnassigned.isEmpty) {
 
@@ -33,9 +33,9 @@ case class AssignToPartitions(arrAttrQT: Array[PartitionInfo], maxSum: Long) {
     var maxSumEndingHere = 0L
     var idx = 0
 
-    while (idx < arrUnassigned.size) {
+    while (idx < arrUnassigned.length) {
 
-      if (maxSumEndingHere + arrUnassigned(idx).totalPoints <= maxSum && lstGroup.size != arrUnassigned.size) {
+      if (maxSumEndingHere + arrUnassigned(idx).totalPoints <= maxSum && lstGroup.size != arrUnassigned.length) {
 
         maxSumEndingHere += arrUnassigned(idx).totalPoints
 
@@ -58,7 +58,7 @@ case class AssignToPartitions(arrAttrQT: Array[PartitionInfo], maxSum: Long) {
 
         partCounter += 1
 
-        idx = arrUnassigned.size
+        idx = arrUnassigned.length
       }
 
       idx += 1

@@ -20,7 +20,7 @@ object TestAllKnnJoin {
   def main(args: Array[String]): Unit = {
 
     val startTime = System.currentTimeMillis()
-    var startTime2 = startTime
+    //    var startTime2 = startTime
 
     //        val clArgs = SparkKNN_Local_CLArgs.taxi_taxi_1M(SparkKNN_Arguments())
     val clArgs = SparkKNN_Local_CLArgs.taxi_taxi_1M_No_Trip(SparkKNN_Arguments())
@@ -46,8 +46,8 @@ object TestAllKnnJoin {
     val sparkConf = new SparkConf()
       .setAppName(this.getClass.getName)
       .set("spark.serializer", classOf[KryoSerializer].getName)
-      .registerKryoClasses(GeoMatch.getGeoMatchClasses)
-      .registerKryoClasses(SparkKNN.getSparkKNNClasses)
+      .registerKryoClasses(GeoMatch.getGeoMatchClasses())
+      .registerKryoClasses(SparkKNN.getSparkKNNClasses())
 
     if (localMode)
       sparkConf.setMaster("local[*]")

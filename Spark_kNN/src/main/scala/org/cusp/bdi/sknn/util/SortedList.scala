@@ -51,41 +51,41 @@ import scala.collection.immutable.Iterable
 
 //type T <: Comparable[T]
 
-case class Node[T <% Comparable[_ >: T]](distance: Double, data: T) {
+case class Node[T](distance: Double, data: T)(implicit ev$1: T => Comparable[_ >: T]) {
 
-  var next: Node[T] = null
+  var next: Node[T] = _
 
-  override def toString() =
+  override def toString: String =
     "%f, %s".format(distance, data)
 }
 
-case class SortedList[T <% Comparable[_ >: T]](maxSize: Int, allowDuplicates: Boolean) extends Serializable with Iterable[Node[T]] {
+case class SortedList[T](maxSize: Int, allowDuplicates: Boolean)(implicit ev$1: T => Comparable[_ >: T]) extends Serializable with Iterable[Node[T]] {
 
-  private var headNode: Node[T] = null
-  private var lastNode: Node[T] = null
+  private var headNode: Node[T] = _
+  private var lastNode: Node[T] = _
   private var nodeCount = 0
 
-  override def head() = headNode
+  override def head(): Node[T] = headNode
 
-  override def last() = lastNode
+  override def last(): Node[T] = lastNode
 
-  override def size() = nodeCount
+  override def size(): Int = nodeCount
 
-  override def isEmpty() = headNode == null
+  override def isEmpty(): Boolean = headNode == null
 
-  def clear() = {
+  def clear(): Unit = {
 
     headNode = null
     lastNode = null
     nodeCount = 0
   }
 
-  def isFull() = nodeCount == maxSize
+  def isFull: Boolean = nodeCount == maxSize
 
   // line: String, xy: (Double, Double)
   def add(distance: Double, data: T) {
 
-    if (!isFull || distance <= last.distance) {
+    if (!isFull || distance <= last().distance) {
 
       var prevNode: Node[T] = null
       var currNode = headNode
@@ -134,7 +134,7 @@ case class SortedList[T <% Comparable[_ >: T]](maxSize: Int, allowDuplicates: Bo
     }
   }
 
-  def discardAfter(discardFromIndx: Int) = {
+  def discardAfter(discardFromIndx: Int): Unit = {
 
     if (!isEmpty && discardFromIndx < size)
       if (discardFromIndx == 0) {
@@ -145,7 +145,7 @@ case class SortedList[T <% Comparable[_ >: T]](maxSize: Int, allowDuplicates: Bo
       }
       else {
 
-        lastNode = head
+        lastNode = head()
 
         var idx = 0
 
@@ -166,7 +166,7 @@ case class SortedList[T <% Comparable[_ >: T]](maxSize: Int, allowDuplicates: Bo
 
   override def iterator(): Iterator[Node[T]] = new AbstractIterator[Node[T]] {
 
-    var cursor: Node[T] = if (SortedList.this.isEmpty) null else headNode
+    var cursor: Node[T] = if (SortedList.this.isEmpty()) null else headNode
 
     override def hasNext: Boolean = cursor != null
 
@@ -180,9 +180,9 @@ case class SortedList[T <% Comparable[_ >: T]](maxSize: Int, allowDuplicates: Bo
       }
   }
 
-  override def mkString(sep: String) =
+  override def mkString(sep: String): String =
     this.map(node => "%s%s".format(node, sep)).mkString("")
 
-  override def toString() =
+  override def toString(): String =
     mkString("\n")
 }

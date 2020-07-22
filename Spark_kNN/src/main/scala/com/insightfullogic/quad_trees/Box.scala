@@ -5,7 +5,7 @@ case class Box(center: Point, halfDimension: Point) extends Serializable {
     def this(other: Box) =
         this(new Point(other.center), new Point(other.halfDimension))
 
-    def contains(other: Box) =
+    def contains(other: Box): Boolean =
         !(this.left > other.left || this.right < other.right ||
             this.bottom > other.bottom || this.top < other.top)
 
@@ -42,18 +42,18 @@ case class Box(center: Point, halfDimension: Point) extends Serializable {
     }
 
     def quarterDim =
-        new Point((halfDimension.x / 2), (halfDimension.y / 2))
+        new Point(halfDimension.x / 2, halfDimension.y / 2)
 
-    def topLeftQuadrant =
+    def topLeftQuadrant: Box =
         Box(new Point(center.x - halfDimension.x / 2, center.y + halfDimension.y / 2), quarterDim)
 
-    def topRightQuadrant =
+    def topRightQuadrant: Box =
         Box(new Point(center.x + halfDimension.x / 2, center.y + halfDimension.y / 2), quarterDim)
 
-    def bottomLeftQuadrant =
+    def bottomLeftQuadrant: Box =
         Box(new Point(center.x - halfDimension.x / 2, center.y - halfDimension.y / 2), quarterDim)
 
-    def bottomRightQuadrant =
+    def bottomRightQuadrant: Box =
         Box(new Point(center.x + halfDimension.x / 2, center.y - halfDimension.y / 2), quarterDim)
 
     def top: Double = {
@@ -72,9 +72,9 @@ case class Box(center: Point, halfDimension: Point) extends Serializable {
         center.x - halfDimension.x
     }
 
-    def mbr =
+    def mbr: String =
         "%f,%f,%f,%f".format(left, bottom, right, top)
 
-    override def toString() =
+    override def toString: String =
         "%s\t%s".format(center, halfDimension)
 }

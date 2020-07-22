@@ -4,10 +4,10 @@ case class Circle(center: Point) extends Serializable {
 
     private var radius = 0.0
 
-    def setRadius(radius: Double) =
+    def setRadius(radius: Double): Unit =
         this.radius = radius
 
-    def getRadius() = radius
+    def getRadius: Double = radius
 
     def this(center: Point, radius: Double) = {
 
@@ -15,10 +15,10 @@ case class Circle(center: Point) extends Serializable {
         this.radius = radius
     }
 
-    def left = this.center.x - this.radius
-    def right = this.center.x + this.radius
-    def top = this.center.y + this.radius
-    def bottom = this.center.y - this.radius
+    def left: Double = this.center.x - this.radius
+    def right: Double = this.center.x + this.radius
+    def top: Double = this.center.y + this.radius
+    def bottom: Double = this.center.y - this.radius
 
     def contains(box: Box): Boolean = {
 
@@ -36,7 +36,7 @@ case class Circle(center: Point) extends Serializable {
     def contains(mbr: (Double, Double, Double, Double)): Boolean =
         contains(mbr._1, mbr._2, mbr._3, mbr._4)
 
-    def contains(left: => Double, bottom: => Double, right: => Double, top: => Double) = {
+    def contains(left: => Double, bottom: => Double, right: => Double, top: => Double): Boolean = {
 
         lazy val circleLeft = this.left
         lazy val circleRight = this.right
@@ -62,16 +62,6 @@ case class Circle(center: Point) extends Serializable {
             otherTop < circleBottom)
     }
 
-    def intersects(other: Circle): Boolean = {
-
-        lazy val otherLeft = this.center.x - this.radius
-        lazy val otherRight = this.center.x + this.radius
-        lazy val otherTop = this.center.y + this.radius
-        lazy val otherBottom = this.center.y - this.radius
-
-        intersects(otherLeft, otherBottom, otherRight, otherTop)
-    }
-
     def intersects(box: Box): Boolean = {
 
         lazy val boxLeft = box.left
@@ -82,9 +72,9 @@ case class Circle(center: Point) extends Serializable {
         intersects(boxLeft, boxBottom, boxRight, boxTop)
     }
 
-    def expandRadius(expandBy: Double) =
+    def expandRadius(expandBy: Double): Unit =
         radius += expandBy
 
-    override def toString() =
+    override def toString: String =
         "%f,%f,%f".format(center.x, center.y, radius)
 }

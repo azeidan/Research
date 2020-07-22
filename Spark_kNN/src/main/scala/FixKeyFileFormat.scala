@@ -30,7 +30,7 @@ object FixKeyFileFormat {
 
                 val arr = line.substring(0, line.length() - 2).split(",\\[")
 
-                val arr2 = arr(1).substring(1, arr(1).length - 1).split("\\),\\(")
+//                val arr2 = arr(1).substring(1, arr(1).length - 1).split("\\),\\(")
 
 //                writer.write(StringBuilder.newBuilder.append(arr(0))
 //                    .append(';')

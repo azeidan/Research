@@ -2,12 +2,12 @@ package org.cusp.bdi.sknn.util
 
 import scala.collection.mutable.ListBuffer
 import scala.collection.mutable.Queue
-
 import org.cusp.bdi.util.Helper
-
 import com.insightfullogic.quad_trees.Box
 import com.insightfullogic.quad_trees.Point
 import com.insightfullogic.quad_trees.QuadTree
+
+import scala.collection.mutable
 
 object QuadTreeOperations extends Serializable {
 
@@ -26,13 +26,13 @@ object QuadTreeOperations extends Serializable {
 
       val dim = math.ceil(math.sqrt(getFurthestCorner(searchPoint, sPtBestQT)._1))
 
-      searchRegion = new Box(searchPoint, new Point(dim, dim))
+      searchRegion = Box(searchPoint, new Point(dim, dim))
     }
     else {
 
-      val maxDist = math.sqrt(sortSetSqDist.last.distance)
+      val maxDist = math.sqrt(sortSetSqDist.last().distance)
 
-      searchRegion = new Box(searchPoint, new Point(maxDist, maxDist))
+      searchRegion = Box(searchPoint, new Point(maxDist, maxDist))
     }
 
     lstQTInf.foreach(qtInf => pointsWithinRegion(qtInf, searchRegion, sortSetSqDist))
@@ -81,11 +81,11 @@ object QuadTreeOperations extends Serializable {
 
     if (searchRegion.intersects(qtInf.quadTree.boundary)) {
 
-      val queueQT = Queue(qtInf.quadTree)
+      val queueQT = mutable.Queue(qtInf.quadTree)
 
-      var prevMaxSqrDist = if (sortSetSqDist.isEmpty()) -1 else sortSetSqDist.last.distance
+      var prevMaxSqrDist = if (sortSetSqDist.isEmpty()) -1 else sortSetSqDist.last().distance
 
-      while (!queueQT.isEmpty) {
+      while (queueQT.nonEmpty) {
 
         val qTree = queueQT.dequeue()
 
@@ -101,9 +101,9 @@ object QuadTreeOperations extends Serializable {
 
               sortSetSqDist.add(sqDist, qtPoint)
 
-              if (sortSetSqDist.isFull && prevMaxSqrDist != sortSetSqDist.last.distance) {
+              if (sortSetSqDist.isFull && prevMaxSqrDist != sortSetSqDist.last().distance) {
 
-                prevMaxSqrDist = sortSetSqDist.last.distance
+                prevMaxSqrDist = sortSetSqDist.last().distance
 
                 val newDim = math.sqrt(prevMaxSqrDist)
 
@@ -125,21 +125,21 @@ object QuadTreeOperations extends Serializable {
     }
   }
 
-  private def buildSearchRegion(qtInf: QuadTreeInfo, searchPoint: Point, sortSetSqDist: SortedList[Point], k: Int) = {
-
-    val searchDim = if (sortSetSqDist.isEmpty()) {
-
-      val sPtBestQT = getBestQuadrant(qtInf, (searchPoint.x, searchPoint.y), k)
-
-      (sPtBestQT.boundary.halfDimension.x + math.abs(searchPoint.x - sPtBestQT.boundary.center.x), sPtBestQT.boundary.halfDimension.y + math.abs(searchPoint.y - sPtBestQT.boundary.center.y))
-    }
-    else {
-
-      val maxDist = math.sqrt(sortSetSqDist.last.distance)
-
-      (maxDist, maxDist)
-    }
-
-    new Box(searchPoint, new Point(searchDim._1, searchDim._2))
-  }
+//  private def buildSearchRegion(qtInf: QuadTreeInfo, searchPoint: Point, sortSetSqDist: SortedList[Point], k: Int) = {
+//
+//    val searchDim = if (sortSetSqDist.isEmpty()) {
+//
+//      val sPtBestQT = getBestQuadrant(qtInf, (searchPoint.x, searchPoint.y), k)
+//
+//      (sPtBestQT.boundary.halfDimension.x + math.abs(searchPoint.x - sPtBestQT.boundary.center.x), sPtBestQT.boundary.halfDimension.y + math.abs(searchPoint.y - sPtBestQT.boundary.center.y))
+//    }
+//    else {
+//
+//      val maxDist = math.sqrt(sortSetSqDist.last.distance)
+//
+//      (maxDist, maxDist)
+//    }
+//
+//    new Box(searchPoint, new Point(searchDim._1, searchDim._2))
+//  }
 }

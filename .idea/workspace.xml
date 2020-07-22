@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AnalysisUIOptions">
+    <option name="SCOPE_TYPE" value="4" />
+    <option name="CUSTOM_SCOPE_NAME" value="Module 'SpatialBenchmark'" />
+  </component>
   <component name="BranchesTreeState">
     <expand>
       <path>
@@ -19,96 +23,73 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ee761a9d-eff2-4086-b83a-8096819a4548" name="Default Changelist" comment="Added DataSetTools module">
-      <change afterPath="$PROJECT_DIR$/DataSetTools/src/main/scala/org/cusp/bdi/tools/ExtractRecords.scala" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/DataSetTools/src/main/scala/org/cusp/bdi/tools/spark/ExtractTaxiCoords.scala" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/DataSetTools/src/main/scala/org/cusp/bdi/tools/spark/LineCount.scala" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/DataSetTools/src/main/scala/org/cusp/bdi/tools/spark/RecordFind.scala" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/DataSetTools/src/main/scala/org/cusp/bdi/tools/spark/WGS_Distance_Test_Analysis.scala" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+    <list default="true" id="ee761a9d-eff2-4086-b83a-8096819a4548" name="Default Changelist" comment="Code analysis fixes">
+      <change afterPath="$PROJECT_DIR$/.idea/dictionaries/ayman.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/scala_settings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/scala_settings.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DataSetTools/DataSetTools.iml" beforeDir="false" afterPath="$PROJECT_DIR$/DataSetTools/DataSetTools.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DataSetTools/src/main/scala/org/cusp/bdi/tools/ExtractTaxiCoords.scala" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/DataSetTools/src/main/scala/org/cusp/bdi/tools/LineCount.scala" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/DataSetTools/src/main/scala/org/cusp/bdi/tools/OutputComapre_Stats.scala.TBD" beforeDir="false" afterPath="$PROJECT_DIR$/DataSetTools/src/main/scala/org/cusp/bdi/tools/spark/OutputComapre_Stats.scala.TBD" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DataSetTools/src/main/scala/org/cusp/bdi/tools/RandomSampler.scala" beforeDir="false" afterPath="$PROJECT_DIR$/DataSetTools/src/main/scala/org/cusp/bdi/tools/spark/RandomSampler.scala" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DataSetTools/src/main/scala/org/cusp/bdi/tools/RecordFind.scala" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/DataSetTools/src/main/scala/org/cusp/bdi/tools/SB_Result_Extract.scala" beforeDir="false" afterPath="$PROJECT_DIR$/DataSetTools/src/main/scala/org/cusp/bdi/tools/SB_Result_Extract.scala" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DataSetTools/src/main/scala/org/cusp/bdi/tools/Test_InputFileParser.scala" beforeDir="false" afterPath="$PROJECT_DIR$/DataSetTools/src/main/scala/org/cusp/bdi/tools/spark/Test_InputFileParser.scala" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DataSetTools/src/main/scala/org/cusp/bdi/tools/WGS_Distance_Test_Analysis.scala" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/src/test/scala/org/cusp/bdi/fw/simba/SIM_Example.scala" beforeDir="false" afterPath="$PROJECT_DIR$/FW_Simba/src/test/scala/org/cusp/bdi/fw/simba/SIM_Example.scala" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/LocalRunFiles/src/main/scala/org/cusp/bdi/util/LocalRunConsts.scala" beforeDir="false" afterPath="$PROJECT_DIR$/LocalRunFiles/src/main/scala/org/cusp/bdi/util/LocalRunConsts.scala" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/LocalRunFiles/target/classes/org/cusp/bdi/util/LocalRunConsts$.class" beforeDir="false" afterPath="$PROJECT_DIR$/LocalRunFiles/target/classes/org/cusp/bdi/util/LocalRunConsts$.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Spark_kNN/src/main/scala/FixKeyFileFormat.scala" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/src/main/scala/FixKeyFileFormat.scala" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Spark_kNN/src/main/scala/com/insightfullogic/quad_trees/Box.scala" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/src/main/scala/com/insightfullogic/quad_trees/Box.scala" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Spark_kNN/src/main/scala/com/insightfullogic/quad_trees/Circle.scala" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/src/main/scala/com/insightfullogic/quad_trees/Circle.scala" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Spark_kNN/src/main/scala/com/insightfullogic/quad_trees/Point.scala" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/src/main/scala/com/insightfullogic/quad_trees/Point.scala" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Spark_kNN/src/main/scala/com/insightfullogic/quad_trees/QuadTree.scala" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/src/main/scala/com/insightfullogic/quad_trees/QuadTree.scala" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Spark_kNN/src/main/scala/com/insightfullogic/quad_trees/QuadTreeDigest.scala" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/src/main/scala/com/insightfullogic/quad_trees/QuadTreeDigest.scala" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Spark_kNN/src/main/scala/org/cusp/bdi/sknn/PartitionScheme.scala" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/src/main/scala/org/cusp/bdi/sknn/PartitionScheme.scala" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Spark_kNN/src/main/scala/org/cusp/bdi/sknn/SparkKNN.scala" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/src/main/scala/org/cusp/bdi/sknn/SparkKNN.scala" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Spark_kNN/src/main/scala/org/cusp/bdi/sknn/util/AssignToPartitions.scala" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/src/main/scala/org/cusp/bdi/sknn/util/AssignToPartitions.scala" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Spark_kNN/src/main/scala/org/cusp/bdi/sknn/util/QuadTreeDigestOperations.scala" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/src/main/scala/org/cusp/bdi/sknn/util/QuadTreeDigestOperations.scala" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Spark_kNN/src/main/scala/org/cusp/bdi/sknn/util/QuadTreeInfo.scala" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/src/main/scala/org/cusp/bdi/sknn/util/QuadTreeInfo.scala" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Spark_kNN/src/main/scala/org/cusp/bdi/sknn/util/QuadTreeOperations.scala" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/src/main/scala/org/cusp/bdi/sknn/util/QuadTreeOperations.scala" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/src/main/scala/org/cusp/bdi/sknn/util/SortSetObj.scala" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/src/main/scala/org/cusp/bdi/sknn/util/SortedList.scala" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Spark_kNN/src/main/scala/org/cusp/bdi/sknn/util/RDD_Store.scala" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/src/main/scala/org/cusp/bdi/sknn/util/RDD_Store.scala" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Spark_kNN/src/main/scala/org/cusp/bdi/sknn/util/SortedList.scala" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/src/main/scala/org/cusp/bdi/sknn/util/SortedList.scala" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Spark_kNN/src/main/scala/org/cusp/bdi/sknn/util/SparkKNN_Arguments.scala" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/src/main/scala/org/cusp/bdi/sknn/util/SparkKNN_Arguments.scala" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Spark_kNN/src/test/scala/org/cusp/bdi/sknn/test/TestAllKNN.scala" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/src/test/scala/org/cusp/bdi/sknn/test/TestAllKnnJoin.scala" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/com/insightfullogic/quad_trees/QuadTree$$anonfun$getAllPoints$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/target/classes/com/insightfullogic/quad_trees/QuadTree$$anonfun$getAllPoints$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/com/insightfullogic/quad_trees/QuadTree$$anonfun$getAllPoints$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/target/classes/com/insightfullogic/quad_trees/QuadTree$$anonfun$getAllPoints$2.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/com/insightfullogic/quad_trees/QuadTree$$anonfun$getAllPoints$3.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/com/insightfullogic/quad_trees/QuadTree$$anonfun$insert$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/target/classes/com/insightfullogic/quad_trees/QuadTree$$anonfun$insert$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/com/insightfullogic/quad_trees/QuadTree.class" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/target/classes/com/insightfullogic/quad_trees/QuadTree.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/PartitionInfo$.class" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/PartitionInfo$.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/PartitionInfo.class" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/PartitionInfo.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/SparkKNN$$anon$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/SparkKNN$$anon$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/SparkKNN$$anon$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/SparkKNN$$anon$2.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/SparkKNN$$anonfun$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/SparkKNN$$anonfun$1.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/SparkKNN$$anonfun$10.class" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/SparkKNN$$anonfun$10.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/SparkKNN$$anonfun$11$$anonfun$apply$10.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/SparkKNN$$anonfun$11$$anonfun$apply$8$$anonfun$apply$9.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/SparkKNN$$anonfun$11$$anonfun$apply$8.class" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/SparkKNN$$anonfun$11.class" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/SparkKNN$$anonfun$11.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/SparkKNN$$anonfun$12.class" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/SparkKNN$$anonfun$12.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/SparkKNN$$anonfun$13.class" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/SparkKNN$$anonfun$13.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/SparkKNN$$anonfun$14$$anonfun$apply$11.class" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/SparkKNN$$anonfun$14.class" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/SparkKNN$$anonfun$14.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/SparkKNN$$anonfun$15$$anonfun$apply$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/SparkKNN$$anonfun$15$$anonfun$apply$2.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/SparkKNN$$anonfun$15$$anonfun$apply$3.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/SparkKNN$$anonfun$15$$anonfun$apply$4.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/SparkKNN$$anonfun$15.class" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/SparkKNN$$anonfun$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/SparkKNN$$anonfun$2.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/SparkKNN$$anonfun$21$$anonfun$apply$15$$anonfun$apply$16.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/SparkKNN$$anonfun$21$$anonfun$apply$15.class" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/SparkKNN$$anonfun$21.class" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/SparkKNN$$anonfun$21.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/SparkKNN$$anonfun$22.class" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/SparkKNN$$anonfun$22.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/SparkKNN$$anonfun$23$$anonfun$apply$17.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/SparkKNN$$anonfun$23$$anonfun$apply$18.class" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/SparkKNN$$anonfun$23.class" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/SparkKNN$$anonfun$23.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/SparkKNN$$anonfun$24.class" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/SparkKNN$$anonfun$24.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/SparkKNN$$anonfun$25$$anonfun$apply$19.class" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/SparkKNN$$anonfun$25.class" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/SparkKNN$$anonfun$25.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/SparkKNN$$anonfun$26.class" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/SparkKNN$$anonfun$26.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/SparkKNN$$anonfun$27.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/SparkKNN$$anonfun$7$$anonfun$apply$7$$anonfun$8.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/SparkKNN$$anonfun$7$$anonfun$apply$7.class" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/SparkKNN$$anonfun$7$$anonfun$apply$7.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/SparkKNN$$anonfun$3$$anonfun$apply$5.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/SparkKNN$$anonfun$3.class" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/SparkKNN$$anonfun$3.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/SparkKNN$$anonfun$4.class" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/SparkKNN$$anonfun$4.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/SparkKNN$$anonfun$5.class" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/SparkKNN$$anonfun$5.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/SparkKNN$$anonfun$6$$anonfun$apply$6.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/SparkKNN$$anonfun$6.class" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/SparkKNN$$anonfun$6.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/SparkKNN$$anonfun$7$$anonfun$apply$7.class" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/SparkKNN$$anonfun$7.class" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/SparkKNN$$anonfun$7.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/SparkKNN$$anonfun$9.class" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/SparkKNN$$anonfun$9.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/SparkKNN$$anonfun$computePartitionRanges$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/SparkKNN$$anonfun$computePartitionRanges$1.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/SparkKNN$$anonfun$knnJoin$1$$anon$3.class" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/SparkKNN$$anonfun$knnJoin$1$$anon$3.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/SparkKNN$$anonfun$knnJoin$1$$anonfun$16$$anonfun$apply$12.class" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/SparkKNN$$anonfun$knnJoin$1$$anonfun$16.class" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/SparkKNN$$anonfun$knnJoin$1$$anonfun$16.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/SparkKNN$$anonfun$knnJoin$1$$anonfun$17$$anonfun$apply$13$$anonfun$18.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/SparkKNN$$anonfun$knnJoin$1$$anonfun$17$$anonfun$apply$13$$anonfun$19.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/SparkKNN$$anonfun$knnJoin$1$$anonfun$17$$anonfun$apply$13$$anonfun$20.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/SparkKNN$$anonfun$knnJoin$1$$anonfun$17$$anonfun$apply$13.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/SparkKNN$$anonfun$knnJoin$1$$anonfun$17$$anonfun$apply$14.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/SparkKNN$$anonfun$knnJoin$1$$anonfun$17.class" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/SparkKNN$$anonfun$knnJoin$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/SparkKNN$$anonfun$knnJoin$1.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/SparkKNN$$anonfun$knnJoin$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/SparkKNN$$anonfun$knnJoin$2.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/SparkKNN$.class" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/SparkKNN$.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/SparkKNN.class" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/SparkKNN.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/util/Node$.class" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/util/Node$.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/util/Node.class" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/util/Node.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/util/QuadTreeDigestOperations$$anonfun$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/util/QuadTreeDigestOperations$$anonfun$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/util/QuadTreeDigestOperations$$anonfun$getPartitionsInRange$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/util/QuadTreeDigestOperations$$anonfun$getPartitionsInRange$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/util/QuadTreeDigestOperations$$anonfun$getFurthestCorner$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/util/QuadTreeDigestOperations$$anonfun$getFurthestCorner$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/util/QuadTreeDigestOperations$$anonfun$getFurthestCorner$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/util/QuadTreeDigestOperations$$anonfun$getFurthestCorner$2.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/util/QuadTreeDigestOperations$$anonfun$getPartitionsInRange$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/util/QuadTreeDigestOperations$$anonfun$getPartitionsInRange$2.class" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/util/QuadTreeDigestOperations$$anonfun$pointsWithinRegion$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/util/QuadTreeDigestOperations$$anonfun$pointsWithinRegion$1.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/util/QuadTreeDigestOperations$.class" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/util/QuadTreeDigestOperations$.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/util/QuadTreeDigestOperations.class" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/util/QuadTreeDigestOperations.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/util/QuadTreeOperations$$anonfun$nearestNeighbor$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/util/QuadTreeOperations$$anonfun$nearestNeighbor$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/util/QuadTreeOperations$$anonfun$org$cusp$bdi$sknn$util$QuadTreeOperations$$pointsWithinRegion$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/util/QuadTreeOperations$$anonfun$org$cusp$bdi$sknn$util$QuadTreeOperations$$pointsWithinRegion$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/util/QuadTreeOperations$.class" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/util/QuadTreeOperations$.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/util/QuadTreeOperations.class" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/util/QuadTreeOperations.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/util/SortSetObj$$anon$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/util/SortSetObj$$anonfun$add$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/util/SortSetObj$$anonfun$mkString$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/util/SortSetObj$.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/util/SortSetObj.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SpatialBenchmark/src/main/scala/org/cusp/bdi/sb/OutputsComapre.scala" beforeDir="false" afterPath="$PROJECT_DIR$/SpatialBenchmark/src/main/scala/org/cusp/bdi/sb/OutputsComapre.scala" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SpatialBenchmark/target/classes/org/cusp/bdi/sb/OutputsComapre$$anonfun$10.class" beforeDir="false" afterPath="$PROJECT_DIR$/SpatialBenchmark/target/classes/org/cusp/bdi/sb/OutputsComapre$$anonfun$10.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -159,8 +140,10 @@
     <property name="project.structure.last.edited" value="Modules" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.34280476" />
+    <property name="restartRequiresConfirmation" value="false" />
+    <property name="run.code.analysis.last.selected.profile" value="pProject Default" />
     <property name="scala_project_settings_configurable.last_selected_tab_index" value="0" />
-    <property name="settings.editor.selected.configurable" value="preferences.keymap" />
+    <property name="settings.editor.selected.configurable" value="editor.preferences.smartKeys" />
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
@@ -261,11 +244,16 @@
   </component>
   <component name="ScalaProjectSettings">
     <option name="disableLangInjection" value="true" />
+    <option name="enableJavaToScalaConversion" value="false" />
     <option name="intInjectionMapping">
       <map>
         <entry key="xml" value="XML" />
       </map>
     </option>
+    <option name="scalaPriority" value="false" />
+  </component>
+  <component name="StructureViewFactory">
+    <option name="AUTOSCROLL_MODE" value="false" />
   </component>
   <component name="SvnConfiguration">
     <configuration />
@@ -299,7 +287,42 @@
       <option name="project" value="LOCAL" />
       <updated>1595190289342</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="Runtime @ 138.35">
+      <created>1595230160119</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1595230160119</updated>
+    </task>
+    <task id="LOCAL-00005" summary="Runtime @ 140.35">
+      <created>1595315274240</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1595315274240</updated>
+    </task>
+    <task id="LOCAL-00006" summary="Added check by distance if whole record (distance + key) match fails">
+      <created>1595401585233</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1595401585233</updated>
+    </task>
+    <task id="LOCAL-00007" summary="Code analysis fixes">
+      <created>1595403975589</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1595403975589</updated>
+    </task>
+    <task id="LOCAL-00008" summary="Code analysis fixes">
+      <created>1595405953829</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1595405953829</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -328,7 +351,11 @@
     <MESSAGE value="SpeedupChanges" />
     <MESSAGE value="runtime 133.49" />
     <MESSAGE value="Added DataSetTools module" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added DataSetTools module" />
+    <MESSAGE value="Runtime @ 138.35" />
+    <MESSAGE value="Runtime @ 140.35" />
+    <MESSAGE value="Added check by distance if whole record (distance + key) match fails" />
+    <MESSAGE value="Code analysis fixes" />
+    <option name="LAST_COMMIT_MESSAGE" value="Code analysis fixes" />
   </component>
   <component name="WindowStateProjectService">
     <state x="1183" y="599" width="811" height="531" key="#Notifications" timestamp="1594705139893">
@@ -363,10 +390,14 @@
       <screen x="67" y="27" width="2493" height="1413" />
     </state>
     <state x="1027" y="598" width="676" height="276" key="#com.intellij.refactoring.move.moveClassesOrPackages.MoveClassesOrPackagesDialog.classes/67.27.2493.1413@67.27.2493.1413" timestamp="1595190593283" />
-    <state width="543" height="506" key="DebuggerActiveHint" timestamp="1595201134707">
+    <state x="860" y="529" width="902" height="406" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1" timestamp="1595405974076">
       <screen x="67" y="27" width="2493" height="1413" />
     </state>
-    <state width="543" height="506" key="DebuggerActiveHint/67.27.2493.1413@67.27.2493.1413" timestamp="1595201134707" />
+    <state x="860" y="529" width="902" height="406" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1/67.27.2493.1413@67.27.2493.1413" timestamp="1595405974076" />
+    <state width="548" height="506" key="DebuggerActiveHint" timestamp="1595399633297">
+      <screen x="67" y="27" width="2493" height="1413" />
+    </state>
+    <state width="548" height="506" key="DebuggerActiveHint/67.27.2493.1413@67.27.2493.1413" timestamp="1595399633297" />
     <state x="935" y="476" width="735" height="513" key="FileChooserDialogImpl" timestamp="1595189970299">
       <screen x="67" y="27" width="2493" height="1413" />
     </state>
@@ -383,50 +414,50 @@
       <screen x="67" y="27" width="2493" height="1413" />
     </state>
     <state x="937" y="413" width="743" height="639" key="Github.UntrackedFilesDialog/67.27.2493.1413@67.27.2493.1413" timestamp="1594704490168" />
-    <state width="2439" height="383" key="GridCell.Tab.0.bottom" timestamp="1595229773841">
+    <state width="2437" height="380" key="GridCell.Tab.0.bottom" timestamp="1595405983038">
       <screen x="67" y="27" width="2493" height="1413" />
     </state>
-    <state width="2439" height="383" key="GridCell.Tab.0.bottom/67.27.2493.1413@67.27.2493.1413" timestamp="1595229773841" />
-    <state width="2439" height="383" key="GridCell.Tab.0.center" timestamp="1595229773840">
+    <state width="2437" height="380" key="GridCell.Tab.0.bottom/67.27.2493.1413@67.27.2493.1413" timestamp="1595405983038" />
+    <state width="2437" height="380" key="GridCell.Tab.0.center" timestamp="1595405983037">
       <screen x="67" y="27" width="2493" height="1413" />
     </state>
-    <state width="2439" height="383" key="GridCell.Tab.0.center/67.27.2493.1413@67.27.2493.1413" timestamp="1595229773840" />
-    <state width="2439" height="383" key="GridCell.Tab.0.left" timestamp="1595229773839">
+    <state width="2437" height="380" key="GridCell.Tab.0.center/67.27.2493.1413@67.27.2493.1413" timestamp="1595405983037" />
+    <state width="2437" height="380" key="GridCell.Tab.0.left" timestamp="1595405983035">
       <screen x="67" y="27" width="2493" height="1413" />
     </state>
-    <state width="2439" height="383" key="GridCell.Tab.0.left/67.27.2493.1413@67.27.2493.1413" timestamp="1595229773839" />
-    <state width="2439" height="383" key="GridCell.Tab.0.right" timestamp="1595229773840">
+    <state width="2437" height="380" key="GridCell.Tab.0.left/67.27.2493.1413@67.27.2493.1413" timestamp="1595405983035" />
+    <state width="2437" height="380" key="GridCell.Tab.0.right" timestamp="1595405983038">
       <screen x="67" y="27" width="2493" height="1413" />
     </state>
-    <state width="2439" height="383" key="GridCell.Tab.0.right/67.27.2493.1413@67.27.2493.1413" timestamp="1595229773840" />
-    <state width="2439" height="474" key="GridCell.Tab.1.bottom" timestamp="1595223328583">
+    <state width="2437" height="380" key="GridCell.Tab.0.right/67.27.2493.1413@67.27.2493.1413" timestamp="1595405983038" />
+    <state width="2437" height="356" key="GridCell.Tab.1.bottom" timestamp="1595403085669">
       <screen x="67" y="27" width="2493" height="1413" />
     </state>
-    <state width="2439" height="474" key="GridCell.Tab.1.bottom/67.27.2493.1413@67.27.2493.1413" timestamp="1595223328583" />
-    <state width="2439" height="474" key="GridCell.Tab.1.center" timestamp="1595223328583">
+    <state width="2437" height="356" key="GridCell.Tab.1.bottom/67.27.2493.1413@67.27.2493.1413" timestamp="1595403085669" />
+    <state width="2437" height="356" key="GridCell.Tab.1.center" timestamp="1595403085667">
       <screen x="67" y="27" width="2493" height="1413" />
     </state>
-    <state width="2439" height="474" key="GridCell.Tab.1.center/67.27.2493.1413@67.27.2493.1413" timestamp="1595223328583" />
-    <state width="2439" height="474" key="GridCell.Tab.1.left" timestamp="1595223328582">
+    <state width="2437" height="356" key="GridCell.Tab.1.center/67.27.2493.1413@67.27.2493.1413" timestamp="1595403085667" />
+    <state width="2437" height="356" key="GridCell.Tab.1.left" timestamp="1595403085667">
       <screen x="67" y="27" width="2493" height="1413" />
     </state>
-    <state width="2439" height="474" key="GridCell.Tab.1.left/67.27.2493.1413@67.27.2493.1413" timestamp="1595223328582" />
-    <state width="2439" height="474" key="GridCell.Tab.1.right" timestamp="1595223328583">
+    <state width="2437" height="356" key="GridCell.Tab.1.left/67.27.2493.1413@67.27.2493.1413" timestamp="1595403085667" />
+    <state width="2437" height="356" key="GridCell.Tab.1.right" timestamp="1595403085668">
       <screen x="67" y="27" width="2493" height="1413" />
     </state>
-    <state width="2439" height="474" key="GridCell.Tab.1.right/67.27.2493.1413@67.27.2493.1413" timestamp="1595223328583" />
+    <state width="2437" height="356" key="GridCell.Tab.1.right/67.27.2493.1413@67.27.2493.1413" timestamp="1595403085668" />
     <state x="899" y="479" width="819" height="507" key="NewModule_or_Project.wizard" timestamp="1594705270398">
       <screen x="67" y="27" width="2493" height="1413" />
     </state>
     <state x="899" y="479" width="819" height="507" key="NewModule_or_Project.wizard/67.27.2493.1413@67.27.2493.1413" timestamp="1594705270398" />
-    <state x="440" y="244" width="1850" height="995" key="SettingsEditor" timestamp="1595222794120">
+    <state x="440" y="244" width="1850" height="995" key="SettingsEditor" timestamp="1595400319848">
       <screen x="67" y="27" width="2493" height="1413" />
     </state>
-    <state x="440" y="244" width="1850" height="995" key="SettingsEditor/67.27.2493.1413@67.27.2493.1413" timestamp="1595222794120" />
-    <state x="908" y="468" width="800" height="528" key="Vcs.Push.Dialog.v2" timestamp="1595190294435">
+    <state x="440" y="244" width="1850" height="995" key="SettingsEditor/67.27.2493.1413@67.27.2493.1413" timestamp="1595400319848" />
+    <state x="908" y="468" width="800" height="528" key="Vcs.Push.Dialog.v2" timestamp="1595405955946">
       <screen x="67" y="27" width="2493" height="1413" />
     </state>
-    <state x="908" y="468" width="800" height="528" key="Vcs.Push.Dialog.v2/67.27.2493.1413@67.27.2493.1413" timestamp="1595190294435" />
+    <state x="908" y="468" width="800" height="528" key="Vcs.Push.Dialog.v2/67.27.2493.1413@67.27.2493.1413" timestamp="1595405955946" />
     <state x="1098" y="516" width="476" height="441" key="chooseDestDirectoryDialog" timestamp="1595190436979">
       <screen x="67" y="27" width="2493" height="1413" />
     </state>
@@ -455,9 +486,9 @@
       <screen x="67" y="27" width="2493" height="1413" />
     </state>
     <state x="977" y="343" key="run.anything.popup/67.27.2493.1413@67.27.2493.1413" timestamp="1595228144152" />
-    <state x="976" y="347" width="672" height="678" key="search.everywhere.popup" timestamp="1595043495899">
+    <state x="976" y="347" width="840" height="678" key="search.everywhere.popup" timestamp="1595400349743">
       <screen x="67" y="27" width="2493" height="1413" />
     </state>
-    <state x="976" y="347" width="672" height="678" key="search.everywhere.popup/67.27.2493.1413@67.27.2493.1413" timestamp="1595043495899" />
+    <state x="976" y="347" width="840" height="678" key="search.everywhere.popup/67.27.2493.1413@67.27.2493.1413" timestamp="1595400349743" />
   </component>
 </project>

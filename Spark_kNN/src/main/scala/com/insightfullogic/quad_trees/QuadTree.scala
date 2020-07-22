@@ -6,111 +6,113 @@ import QuadTree.capacity
 
 object QuadTree extends Serializable {
 
-    val capacity = 4
+  val capacity = 4
 }
 
 case class QuadTree(boundary: Box) extends Serializable {
 
-    private val points = ListBuffer[Point]()
-    private var totalPoints = 0L
-    var topLeft: QuadTree = null
-    var topRight: QuadTree = null
-    var bottomLeft: QuadTree = null
-    var bottomRight: QuadTree = null
+  private val points = ListBuffer[Point]()
+  var topLeft: QuadTree = _
+  var topRight: QuadTree = _
+  var bottomLeft: QuadTree = _
+  var bottomRight: QuadTree = _
+  private var totalPoints = 0L
 
-    var parent: QuadTree = null
+  //    var parent: QuadTree = null
 
-    def getTotalPoints() = totalPoints
-    def getPoints() = points
-    def getMBR() = (boundary.left, boundary.bottom, boundary.right, boundary.top)
+  def getTotalPoints: Long = totalPoints
 
-    def this(boundary: Box, parent: QuadTree) = {
+  def getPoints: ListBuffer[Point] = points
 
-        this(boundary)
-        this.parent = parent
+  def getMBR: (Double, Double, Double, Double) = (boundary.left, boundary.bottom, boundary.right, boundary.top)
+
+  //    def this(boundary: Box, parent: QuadTree) = {
+  //
+  //        this(boundary)
+  //        this.parent = parent
+  //    }
+
+  def insert(lstPoint: List[Point]): Unit =
+    lstPoint.foreach(insert)
+
+  def insert(point: Point): Boolean = {
+    if (!this.boundary.contains(point) || !insertPoint(point)) {
+
+      //            insertPoint(point)
+
+      throw new Exception("Point insert failed: %s in QuadTree: %s".format(point, this))
     }
 
-    def insert(lstPoint: List[Point]): Unit =
-        lstPoint.foreach(insert)
+    true
+  }
 
-    def insert(point: Point): Boolean = {
-        if (!this.boundary.contains(point) || !insertPoint(point)) {
+  private def insertPoint(point: Point): Boolean = {
 
-            //            insertPoint(point)
+    var qTree = this
 
-            throw new Exception("Point insert failed: %s in QuadTree: %s".format(point, this))
+    //        while (qTree.boundary.contains(point))
+    while (true) {
+
+      qTree.totalPoints += 1
+
+      if (qTree.points.size < capacity) {
+
+        qTree.points += point
+        return true
+      }
+      else
+      // switch to proper quadrant?
+        qTree = if (point.x <= qTree.boundary.center.x)
+          if (point.y >= qTree.boundary.center.y) {
+
+            if (qTree.topLeft == null)
+              qTree.topLeft = new QuadTree(qTree.boundary.topLeftQuadrant /*, qTree*/)
+
+            qTree.topLeft
+          }
+          else {
+
+            if (qTree.bottomLeft == null)
+              qTree.bottomLeft = new QuadTree(qTree.boundary.bottomLeftQuadrant /*, qTree*/)
+
+            qTree.bottomLeft
+          }
+        else if (point.y >= qTree.boundary.center.y) {
+
+          if (qTree.topRight == null)
+            qTree.topRight = new QuadTree(qTree.boundary.topRightQuadrant /*, qTree*/)
+
+          qTree.topRight
         }
+        else {
 
-        true
-    }
+          if (qTree.bottomRight == null)
+            qTree.bottomRight = new QuadTree(qTree.boundary.bottomRightQuadrant /*, qTree*/)
 
-    private def insertPoint(point: Point): Boolean = {
-
-        var qTree = this
-
-        //        while (qTree.boundary.contains(point))
-        while (true) {
-
-            qTree.totalPoints += 1
-
-            if (qTree.points.size < capacity) {
-
-                qTree.points += point
-                return true
-            }
-            else
-                // switch to proper quadrant?
-                qTree = if (point.x <= qTree.boundary.center.x)
-                    if (point.y >= qTree.boundary.center.y) {
-
-                        if (qTree.topLeft == null)
-                            qTree.topLeft = new QuadTree(qTree.boundary.topLeftQuadrant, qTree)
-
-                        qTree.topLeft
-                    }
-                    else {
-
-                        if (qTree.bottomLeft == null)
-                            qTree.bottomLeft = new QuadTree(qTree.boundary.bottomLeftQuadrant, qTree)
-
-                        qTree.bottomLeft
-                    }
-                else if (point.y >= qTree.boundary.center.y) {
-
-                    if (qTree.topRight == null)
-                        qTree.topRight = new QuadTree(qTree.boundary.topRightQuadrant, qTree)
-
-                    qTree.topRight
-                }
-                else {
-
-                    if (qTree.bottomRight == null)
-                        qTree.bottomRight = new QuadTree(qTree.boundary.bottomRightQuadrant, qTree)
-
-                    qTree.bottomRight
-                }
+          qTree.bottomRight
         }
-
-        false
     }
 
-    def isLeaf = topLeft == null && topRight == null && bottomLeft == null && bottomRight == null
+    false
+  }
 
-    def getAllPoints() = {
+  def isLeaf: Boolean = topLeft == null && topRight == null && bottomLeft == null && bottomRight == null
 
-        val lstQT = ListBuffer(this)
+  def getAllPoints: ListBuffer[ListBuffer[Point]] = {
 
-        lstQT.map(qTree => {
+    val lstQT = ListBuffer(this)
 
-            if (qTree.topLeft != null) lstQT += qTree.topLeft
-            if (qTree.topRight != null) lstQT += qTree.topRight
-            if (qTree.bottomLeft != null) lstQT += qTree.bottomLeft
-            if (qTree.bottomRight != null) lstQT += qTree.bottomRight
-        })
+    lstQT.map(qTree => {
 
-        lstQT.map(_.points).flatMap(_.seq)
-    }
+      if (qTree.topLeft != null) lstQT += qTree.topLeft
+      if (qTree.topRight != null) lstQT += qTree.topRight
+      if (qTree.bottomLeft != null) lstQT += qTree.bottomLeft
+      if (qTree.bottomRight != null) lstQT += qTree.bottomRight
+    })
 
-    override def toString() =
-        "%s\t%d\t%d".format(boundary, points.size, totalPoints)
+    lstQT.map(_.points) //.flatMap(_.seq)
+  }
+
+  override def toString: String =
+    "%s\t%d\t%d".format(boundary, points.size, totalPoints)
 }

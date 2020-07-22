@@ -1,18 +1,18 @@
 package org.cusp.bdi.sknn.util
 
 import scala.collection.mutable.Queue
-
 import org.cusp.bdi.util.Helper
-
 import com.insightfullogic.quad_trees.Box
 import com.insightfullogic.quad_trees.Point
 import com.insightfullogic.quad_trees.QuadTreeDigest
 
+import scala.collection.mutable
+
 object QuadTreeDigestOperations {
 
-  private val dimExtend = 3 * math.sqrt(2) // accounts for the further points effected by precision loss when converting to gird
+//  private val dimExtend = 3 * math.sqrt(2) // accounts for the further points effected by precision loss when converting to gird
 
-  def getNeededSpIdxUId(quadTreeDigest: QuadTreeDigest, searchPointXY: (Long, Long), k: Int /*, gridBoxMaxDim: Double*/) = {
+  def getNeededSpIdxUId(quadTreeDigest: QuadTreeDigest, searchPointXY: (Long, Long), k: Int /*, gridBoxMaxDim: Double*/): Set[Int] = {
 
     //        if (searchPointXY._1.toString().startsWith("15221") && searchPointXY._2.toString().startsWith("3205"))
     //            //            //            //            //            //            //        if (searchPointXY._1.toString().startsWith("100648") && searchPointXY._2.toString().startsWith("114152"))
@@ -27,13 +27,13 @@ object QuadTreeDigestOperations {
 
     //        val searchRegion = new Box(searchPoint, new Point((sPtBestQTD.boundary.halfDimension.x + math.abs(searchPoint.x - sPtBestQTD.boundary.center.x), sPtBestQTD.boundary.halfDimension.y + math.abs(searchPoint.y - sPtBestQTD.boundary.center.y)) /* + gridBoxH */ ))
 
-    val dim = math.ceil(dimExtend + math.sqrt(getFurthestCorner(searchPoint, sPtBestQTD)._1))
+    val dim = math.ceil(/*dimExtend +*/ math.sqrt(getFurthestCorner(searchPoint, sPtBestQTD)._1))
 
-    val searchRegion = new Box(searchPoint, new Point(dim, dim))
+    val searchRegion =  Box(searchPoint, new Point(dim, dim))
 
     // val sortSetSqDist = SortSetObj(Int.MaxValue)
 
-    var sortList = SortedList[Point](Int.MaxValue, true)
+    var sortList = SortedList[Point](Int.MaxValue, allowDuplicates = true)
 
     //         sortList = pointsWithinRegion(quadTreeDigest, searchRegion, k, sortList, null, gridBoxW, gridBoxH)
 
@@ -80,17 +80,17 @@ object QuadTreeDigestOperations {
 
   private def pointsWithinRegion(quadTreeDigest: QuadTreeDigest, searchRegion: Box, k: Int, sortList: SortedList[Point], skipQTD: QuadTreeDigest /*, gridBoxMaxDim: Double*/) = {
 
-    var totalWeight = if (sortList.isEmpty) 0 else sortList.map(_.data match { case pt: Point => pt.userData.asInstanceOf[(Long, Set[Int])]._1 }).sum
+    var totalWeight = if (sortList.isEmpty()) 0 else sortList.map(_.data match { case pt: Point => pt.userData.asInstanceOf[(Long, Set[Int])]._1 }).sum
 
-    var sortSetObj = sortList
-    var prevLastElem = if (sortList.isEmpty) null else sortList.last
-    var currSqDim = if (sortList.isEmpty) 0 else prevLastElem.distance + dimExtend
+    val sortListTemp = sortList
+    var prevLastElem = if (sortList.isEmpty()) null else sortList.last()
+    var currSqDim = if (sortList.isEmpty()) 0 else prevLastElem.distance /*+ dimExtend*/
 
     def shrinkSearchRegion() {
 
-      if (totalWeight - (sortSetObj.last.data.userData.asInstanceOf[(Long, Set[Int])]._1) >= k) {
+      if (totalWeight - sortListTemp.last().data.userData.asInstanceOf[(Long, Set[Int])]._1 >= k) {
 
-        val iter = sortSetObj.iterator
+        val iter = sortListTemp.iterator()
         var elem = iter.next
         var weightSoFar = elem.data.userData.asInstanceOf[(Long, Set[Int])]._1
 
@@ -99,20 +99,20 @@ object QuadTreeDigestOperations {
 
           idx += 1
           elem = iter.next
-          weightSoFar += (elem.data.userData.asInstanceOf[(Long, Set[Int])]._1)
+          weightSoFar += elem.data.userData.asInstanceOf[(Long, Set[Int])]._1
         }
 
         if (elem != prevLastElem) {
 
           prevLastElem = elem
 
-          val newDim = math.sqrt(elem.distance) + dimExtend
+          val newDim = math.sqrt(elem.distance) /*+ dimExtend*/
           searchRegion.halfDimension.x = newDim
           searchRegion.halfDimension.y = newDim
 
           currSqDim = math.pow(newDim, 2)
 
-          if (idx < sortSetObj.size - 1 && sortSetObj.last.distance > currSqDim) {
+          if (idx < sortListTemp.size - 1 && sortListTemp.last().distance > currSqDim) {
 
             var done = false
             idx += 1
@@ -123,27 +123,27 @@ object QuadTreeDigestOperations {
 
               if (elem.distance <= currSqDim) {
 
-                weightSoFar += (elem.data.userData.asInstanceOf[(Long, Set[Int])]._1)
+                weightSoFar += elem.data.userData.asInstanceOf[(Long, Set[Int])]._1
                 idx += 1
               }
               else
                 done = true
-            } while (!done && idx < sortSetObj.size)
+            } while (!done && idx < sortListTemp.size)
 
-            if (idx < sortSetObj.size) {
+            if (idx < sortListTemp.size) {
 
               totalWeight = weightSoFar
 
-              sortSetObj.discardAfter(idx)
+              sortListTemp.discardAfter(idx)
             }
           }
         }
       }
     }
 
-    val queueQT = Queue(quadTreeDigest)
+    val queueQT = mutable.Queue(quadTreeDigest)
 
-    while (!queueQT.isEmpty) {
+    while (queueQT.nonEmpty) {
 
       val qtd = queueQT.dequeue()
 
@@ -160,11 +160,9 @@ object QuadTreeDigestOperations {
 
             val sqDist = Helper.squaredDist(searchRegion.center.x, searchRegion.center.y, qtPoint.x, qtPoint.y)
 
-            //                        val mDist = math.abs(searchRegion.center.x - qtPoint.x) + math.abs(searchRegion.center.y - qtPoint.y)
-
             if (prevLastElem == null || sqDist <= currSqDim) {
 
-              sortSetObj.add(sqDist, qtPoint) // PointWithUniquId(qtd.getSetPart, qtPoint))
+              sortListTemp.add(sqDist, qtPoint) // PointWithUniquId(qtd.getSetPart, qtPoint))
 
               totalWeight += qtPoint.userData.asInstanceOf[(Long, Set[Int])]._1
 
@@ -184,7 +182,7 @@ object QuadTreeDigestOperations {
         queueQT += qtd.bottomRight
     }
 
-    sortSetObj
+    sortListTemp
   }
 
   private def getFurthestCorner(searchPoint: Point, sPtBestQTD: QuadTreeDigest) = {

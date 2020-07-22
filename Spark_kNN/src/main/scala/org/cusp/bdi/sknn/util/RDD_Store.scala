@@ -8,7 +8,7 @@ import org.cusp.bdi.util.LocalRunConsts
 
 object RDD_Store {
 
-    def getLineParser(objType: String) =
+    def getLineParser(objType: String): String => (String, (String, String)) =
         objType match {
             case s if s matches "(?i)" + LocalRunConsts.DS_CODE_TPEP_POINT => InputFileParsers.tpepPoints
             case s if s matches "(?i)" + LocalRunConsts.DS_CODE_TAXI_POINT => InputFileParsers.taxiPoints
@@ -18,7 +18,7 @@ object RDD_Store {
             case s if s matches "(?i)" + LocalRunConsts.DS_CODE_RAND_POINT => InputFileParsers.randPoints
         }
 
-    def getRDDPlain(sc: SparkContext, fileName: String, minPartitions: Int) =
+    def getRDDPlain(sc: SparkContext, fileName: String, minPartitions: Int): RDD[String] =
         if (minPartitions > 0)
             sc.textFile(fileName, minPartitions)
         else

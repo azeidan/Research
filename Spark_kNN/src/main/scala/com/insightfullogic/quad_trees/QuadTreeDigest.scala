@@ -13,17 +13,17 @@ case class QuadTreeDigest(boundary: Box) extends Serializable {
 
     private var pointCount = 0L
     private var totalPointWeight = 0L
-    private var lstPoint = ListBuffer[Point]()
-    var topLeft: QuadTreeDigest = null
-    var topRight: QuadTreeDigest = null
-    var bottomLeft: QuadTreeDigest = null
-    var bottomRight: QuadTreeDigest = null
+    private val lstPoint = ListBuffer[Point]()
+    var topLeft: QuadTreeDigest = _
+    var topRight: QuadTreeDigest = _
+    var bottomLeft: QuadTreeDigest = _
+    var bottomRight: QuadTreeDigest = _
 
-    var parent: QuadTreeDigest = null
+    var parent: QuadTreeDigest = _
 
-    def getTotalPointWeight() = totalPointWeight
-    def getPointCount() = pointCount
-    def getLstPoint() = lstPoint
+    def getTotalPointWeight: Long = totalPointWeight
+    def getPointCount: Long = pointCount
+    def getLstPoint: ListBuffer[Point] = lstPoint
 
     def this(boundary: Box, parent: QuadTreeDigest) = {
 
@@ -102,6 +102,6 @@ case class QuadTreeDigest(boundary: Box) extends Serializable {
         false
     }
 
-    override def toString() =
+    override def toString: String =
         "%s\t%d\t%d".format(boundary, pointCount, totalPointWeight)
 }

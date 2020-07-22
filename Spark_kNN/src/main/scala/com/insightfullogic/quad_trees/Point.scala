@@ -5,7 +5,7 @@ case class Point() extends Serializable with Comparable[Point] {
     var x = 0.0
     var y = 0.0
 
-    var userData: Any = null
+    var userData: Any = _
 
     def this(x: Double, y: Double) = {
 
@@ -31,11 +31,11 @@ case class Point() extends Serializable with Comparable[Point] {
     override def clone() =
         new Point(x, y)
 
-    override def compareTo(other: Point) = {
+    override def compareTo(other: Point): Int = {
 
         if (userData == null || other.userData == null) {
 
-            var res = this.x.compareTo(other.x)
+            val res = this.x.compareTo(other.x)
 
             if (res == 0)
                 this.y.compareTo(other.y)
@@ -46,11 +46,11 @@ case class Point() extends Serializable with Comparable[Point] {
             userData.toString.compareTo(other.userData.toString)
     }
 
-    override def equals(other: Any) = other match {
+    override def equals(other: Any): Boolean = other match {
         case mpi: Point => this.compareTo(mpi) == 0
         case _ => false
     }
 
-    override def toString() =
-        "(%.22f,%.22f%s)".format(x, y, if (userData == null) "" else "," + userData.toString())
+    override def toString: String =
+        "(%.22f,%.22f%s)".format(x, y, if (userData == null) "" else "," + userData.toString)
 }
