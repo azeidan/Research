@@ -13,31 +13,6 @@ import org.apache.commons.lang3.builder.HashCodeBuilder
 
 object OutputsComapre extends Serializable {
 
-  object Classifications {
-
-    val percent = "(%)"
-    val recordsBothNoMatch = "Records both no match"
-    val recordsCount = "Total Number of Records"
-    val recordsFWCorrectMatched = "Records correctly matched"
-    val recordsFWFailedToMatch = "Records framework failed to match"
-    val recordsFWMismatch = "Records framework incorrectly matched"
-    val recordsFWOnlyMatched = "Records framework only matched"
-    val recordsFWOverMatched = "Records framework overmatched"
-    val recordsFWUnderMatched = "Records framework undermatched"
-    val recordsInFWOnly = "Records appeared in framework only"
-    val recordsInKMOnly = "Records appeared in key match only"
-  }
-
-  private def rddUnique(rdd: RDD[String], fileParser: (String => (String, Array[String]))) =
-    rdd.mapPartitions(_.map(fileParser).filter(_ != null))
-      .mapPartitions(_.map(x => {
-
-        val arr = if (x._2 == null) Array[String]() else x._2.filter(x => !Helper.isNullOrEmpty(x))
-
-        (x._1.toLowerCase(), arr)
-      }))
-      .reduceByKey((x, y) => extractOneArray(x, y))
-
   def apply(classificationCount: Int, rddKeyMatch: RDD[String], keyMatchFileParser: BenchmarkInputFileParser, rddTestFW: RDD[String], testFWFileParser: BenchmarkInputFileParser) = {
 
     var rddKeyMatchUnique = rddUnique(rddKeyMatch, keyMatchFileParser.parseLine)
@@ -117,7 +92,34 @@ object OutputsComapre extends Serializable {
 
             val arrKMSize = row._2._1.size
             val arrFWSize = row._2._2.size
-            val arrMatchIdxs = row._2._2.map(x => row._2._1.indexOf(x))
+
+            val arrMatchIdxs = row._2._2.map(_ => -1)
+
+            (0 until row._2._2.size).foreach(i => arrMatchIdxs(i) = row._2._1.indexOf(row._2._2(i)))
+
+            lazy val kmDistances = row._2._1.map(_.split(",")).map(_ (0))
+
+            (0 until row._2._2.size).filter(i => arrMatchIdxs(i) == -1)
+              .foreach(i => {
+
+                var counter = 0
+                var idxOf = -1
+                val dist = row._2._2(i).split(",")(0)
+
+                while (counter < kmDistances.size && idxOf == -1) {
+
+                  idxOf = kmDistances.indexOf(dist)
+
+                  if (idxOf != -1 && arrMatchIdxs(idxOf) == -1)
+                    arrMatchIdxs(idxOf) = idxOf
+                  else
+                    idxOf = -1
+                  counter += 1
+                }
+
+                arrMatchIdxs(i) =
+                  kmDistances.indexOf(row._2._2(i).split(",")(0))
+              })
 
             if (arrFWSize == 0 && arrKMSize == 0) {
               incrementInMap(Classifications.recordsBothNoMatch, row)
@@ -199,19 +201,15 @@ object OutputsComapre extends Serializable {
       getFormatted(mapResults, Classifications.percent, (recordsFWMismatch / recordsCount * 100)))
   }
 
-  private def getFormatted(mapResults: HashMap[String, Long], key: String, default: Any) = {
+  private def rddUnique(rdd: RDD[String], fileParser: (String => (String, Array[String]))) =
+    rdd.mapPartitions(_.map(fileParser).filter(_ != null))
+      .mapPartitions(_.map(x => {
 
-    val opt = mapResults.get(key)
-    val value = if (opt == None) default else opt.get
+        val arr = if (x._2 == null) Array[String]() else x._2.filter(x => !Helper.isNullOrEmpty(x))
 
-    // Long data type assumed a count
-    // Double data type assumed a percentage
-    value match {
-      case _: Long => "%41s".format(key) + ": " + "%,d".format(value)
-      case _: Double => "%41s".format(key) + ": " + "%.4f%%".format(value)
-      case _ => "%41s".format(key) + ": " + value
-    }
-  }
+        (x._1.toLowerCase(), arr)
+      }))
+      .reduceByKey((x, y) => extractOneArray(x, y))
 
   private def extractOneArray(arr0: Array[String], arr1: Array[String]) = {
 
@@ -242,6 +240,36 @@ object OutputsComapre extends Serializable {
       lst.distinct.toArray
     }
   }
+
+  private def getFormatted(mapResults: HashMap[String, Long], key: String, default: Any) = {
+
+    val opt = mapResults.get(key)
+    val value = if (opt == None) default else opt.get
+
+    // Long data type assumed a count
+    // Double data type assumed a percentage
+    value match {
+      case _: Long => "%41s".format(key) + ": " + "%,d".format(value)
+      case _: Double => "%41s".format(key) + ": " + "%.4f%%".format(value)
+      case _ => "%41s".format(key) + ": " + value
+    }
+  }
+
+  object Classifications {
+
+    val percent = "(%)"
+    val recordsBothNoMatch = "Records both no match"
+    val recordsCount = "Total Number of Records"
+    val recordsFWCorrectMatched = "Records correctly matched"
+    val recordsFWFailedToMatch = "Records framework failed to match"
+    val recordsFWMismatch = "Records framework incorrectly matched"
+    val recordsFWOnlyMatched = "Records framework only matched"
+    val recordsFWOverMatched = "Records framework overmatched"
+    val recordsFWUnderMatched = "Records framework undermatched"
+    val recordsInFWOnly = "Records appeared in framework only"
+    val recordsInKMOnly = "Records appeared in key match only"
+  }
+
 }
 
 //class KeyPartitioner(_numPartitions: Int) extends Partitioner {
