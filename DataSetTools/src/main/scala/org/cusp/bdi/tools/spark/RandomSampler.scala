@@ -7,8 +7,8 @@ import org.cusp.bdi.util.LocalRunConsts
 object RandomSampler {
 
   var localMode = true
-  val outDir = "/media/ayman/Data/GeoMatch_Files/OutputFiles/000/"
-  var numRows = 1e3.toInt
+  val outDir = "/gws/projects/project-taxi_capstone_2016/share/GeoMatch_Work_Folder/RandomSamples/"
+  var numRows = 5e6.toInt
 
   def main(args: Array[String]): Unit = {
 
@@ -21,20 +21,55 @@ object RandomSampler {
 
     val sc = new SparkContext(sparkConf)
 
-    def getSample(inputFile: String, outputFile: String, numRows: Int) {
+    def getSample(inputFile: String, parser: String => (String, String), outputFile: String, numRows: Int) {
 
       val rddLeft = sc.textFile(inputFile)
 
       sc.parallelize(rddLeft.takeSample(false, numRows))
+        .mapPartitions(_.map(parser))
+        .filter(_ != null)
+        .groupByKey()
+        .mapPartitions(_.map(_._2.head))
         .saveAsTextFile(outputFile, classOf[GzipCodec])
     }
 
-    Array(("/gws/projects/project-taxi_capstone_2016/share/Bus_TripRecod_NAD83/", "Bus"),
-      ("/gws/projects/project-taxi_capstone_2016/data/breadcrumb_nad83/", "Bread"))
-      .map(row => Iterator((row._1, row._2 + "_1"), (row._1, row._2 + "_2"), (row._1, row._2 + "_3")))
-      .flatMap(_.seq)
-      .foreach(row =>
-        getSample(row._1, outDir + row._2.substring(row._2.lastIndexOf("/")), numRows))
+        var inputFile = "/gws/projects/project-taxi_capstone_2016/share/Bus_TripRecod_NAD83/"
+        var label = "Bus"
+        var parser = (line: String) => {
 
+          val arr = line.split(",")
+
+          if (arr(1).toDouble.isNaN || arr(2).toDouble.isNaN)
+            null
+          else
+            ("%.8f%.8f".format(arr(1).toDouble, arr(2).toDouble), line)
+        }
+
+//        var inputFile = "/gws/projects/project-taxi_capstone_2016/data/breadcrumb_nad83/"
+//        var label = "Bread"
+//        var parser = (line: String) => {
+//
+//          val arr = line.split(",")
+//
+//          if (arr(1).toDouble.isNaN || arr(2).toDouble.isNaN)
+//            null
+//          else
+//            ("%.8f%.8f".format(arr(1).toDouble, arr(2).toDouble), line)
+//        }
+
+//    var inputFile = "/gws/projects/project-taxi_capstone_2016/share/Yellow_TLC_TripRecord_NAD83/NYCYellowTaxiProj_2014_0[1-9]/"
+//    var label = "Taxi"
+//    var parser = (line: String) => {
+//
+//      val arr = line.split(",")
+//
+//      if (arr(5).toDouble.isNaN || arr(6).toDouble.isNaN)
+//        null
+//      else
+//        ("%.8f%.8f".format(arr(5).toDouble, arr(6).toDouble), line)
+//    }
+
+    Range(1, 4).foreach(i =>
+      getSample(inputFile, parser, outDir + label + i, numRows))
   }
 }

@@ -2,79 +2,79 @@ package com.insightfullogic.quad_trees
 
 case class Box(center: Point, halfDimension: Point) extends Serializable {
 
-    def this(other: Box) =
-        this(new Point(other.center), new Point(other.halfDimension))
+  def this(other: Box) =
+    this(new Point(other.center), new Point(other.halfDimension))
 
-    def contains(other: Box): Boolean =
-        !(this.left > other.left || this.right < other.right ||
-            this.bottom > other.bottom || this.top < other.top)
+  def contains(other: Box): Boolean =
+    !(this.left > other.left || this.right < other.right ||
+      this.bottom > other.bottom || this.top < other.top)
 
-    def contains(point: Point): Boolean =
-        contains(point.x, point.y)
+  def contains(point: Point): Boolean =
+    contains(point.x, point.y)
 
-    def contains(x: Double, y: Double): Boolean =
-        !(x < left || x > right || y < bottom || y > top)
+  def contains(x: Double, y: Double): Boolean =
+    !(x < left || x > right || y < bottom || y > top)
 
-    def contains(mbr: (Double, Double, Double, Double)): Boolean =
-        left <= mbr._1 && bottom <= mbr._2 && right >= mbr._3 && top >= mbr._4
+  def top: Double = {
+    center.y + halfDimension.y
+  }
 
-    def intersects(otherLeft: => Double, otherBottom: => Double, otherRight: => Double, otherTop: => Double): Boolean = {
+  def bottom: Double = {
+    center.y - halfDimension.y
+  }
 
-        lazy val thisLeft = this.left
-        lazy val thisBottom = this.bottom
-        lazy val thisRight = this.right
-        lazy val thisTop = this.top
+  def right: Double = {
+    center.x + halfDimension.x
+  }
 
-        !(thisLeft > otherRight ||
-            thisRight < otherLeft ||
-            thisTop < otherBottom ||
-            thisBottom > otherTop)
-    }
+  def left: Double = {
+    center.x - halfDimension.x
+  }
 
-    def intersects(other: Box): Boolean = {
+  def contains(mbr: (Double, Double, Double, Double)): Boolean =
+    left <= mbr._1 && bottom <= mbr._2 && right >= mbr._3 && top >= mbr._4
 
-        lazy val otherLeft = other.left
-        lazy val otherBottom = other.bottom
-        lazy val otherRight = other.right
-        lazy val otherTop = other.top
+  def intersects(other: Box): Boolean = {
 
-        intersects(otherLeft, otherBottom, otherRight, otherTop)
-    }
+    lazy val otherLeft = other.left
+    lazy val otherBottom = other.bottom
+    lazy val otherRight = other.right
+    lazy val otherTop = other.top
 
-    def quarterDim =
-        new Point(halfDimension.x / 2, halfDimension.y / 2)
+    intersects(otherLeft, otherBottom, otherRight, otherTop)
+  }
 
-    def topLeftQuadrant: Box =
-        Box(new Point(center.x - halfDimension.x / 2, center.y + halfDimension.y / 2), quarterDim)
+  def intersects(otherLeft: => Double, otherBottom: => Double, otherRight: => Double, otherTop: => Double): Boolean = {
 
-    def topRightQuadrant: Box =
-        Box(new Point(center.x + halfDimension.x / 2, center.y + halfDimension.y / 2), quarterDim)
+    lazy val thisLeft = this.left
+    lazy val thisBottom = this.bottom
+    lazy val thisRight = this.right
+    lazy val thisTop = this.top
 
-    def bottomLeftQuadrant: Box =
-        Box(new Point(center.x - halfDimension.x / 2, center.y - halfDimension.y / 2), quarterDim)
+    !(thisLeft > otherRight ||
+      thisRight < otherLeft ||
+      thisTop < otherBottom ||
+      thisBottom > otherTop)
+  }
 
-    def bottomRightQuadrant: Box =
-        Box(new Point(center.x + halfDimension.x / 2, center.y - halfDimension.y / 2), quarterDim)
+  def topLeftQuadrant: Box =
+    Box(new Point(center.x - halfDimension.x / 2, center.y + halfDimension.y / 2), quarterDim)
 
-    def top: Double = {
-        center.y + halfDimension.y
-    }
+  def topRightQuadrant: Box =
+    Box(new Point(center.x + halfDimension.x / 2, center.y + halfDimension.y / 2), quarterDim)
 
-    def bottom: Double = {
-        center.y - halfDimension.y
-    }
+  def bottomLeftQuadrant: Box =
+    Box(new Point(center.x - halfDimension.x / 2, center.y - halfDimension.y / 2), quarterDim)
 
-    def right: Double = {
-        center.x + halfDimension.x
-    }
+  def quarterDim =
+    new Point(halfDimension.x / 2, halfDimension.y / 2)
 
-    def left: Double = {
-        center.x - halfDimension.x
-    }
+  def bottomRightQuadrant: Box =
+    Box(new Point(center.x + halfDimension.x / 2, center.y - halfDimension.y / 2), quarterDim)
 
-    def mbr: String =
-        "%f,%f,%f,%f".format(left, bottom, right, top)
+  def mbr: String =
+    "%f,%f,%f,%f".format(left, bottom, right, top)
 
-    override def toString: String =
-        "%s\t%s".format(center, halfDimension)
+  override def toString: String =
+    "%s\t%s".format(center, halfDimension)
 }

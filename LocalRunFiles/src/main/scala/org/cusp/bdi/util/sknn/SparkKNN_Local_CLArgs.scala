@@ -64,15 +64,6 @@ object SparkKNN_Local_CLArgs {
               LocalRunConsts.DS_CODE_THREE_PART_LINE,
             17)
 
-    def taxi_taxi_1M_No_Trip(lstArgs: List[(String, String, Any, String)]) =
-        apply(lstArgs,
-            10,
-              LocalRunConsts.pathTaxi1M_No_Trip_NAD83_A,
-              LocalRunConsts.DS_CODE_THREE_PART_LINE,
-              LocalRunConsts.pathTaxi1M_No_Trip_NAD83_B,
-              LocalRunConsts.DS_CODE_THREE_PART_LINE,
-            17)
-
     def tpepPoint_tpepPoint(lstArgs: List[(String, String, Any, String)]) =
         apply(lstArgs,
             10,

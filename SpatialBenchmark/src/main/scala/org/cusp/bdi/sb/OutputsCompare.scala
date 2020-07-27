@@ -67,7 +67,7 @@ object OutputsCompare extends Serializable {
         def incrementInMap(classificationKey: String, row: (String, (Array[String], Array[String]))): Unit = {
 
           if (!(classificationKey.equals(Classifications.recordsCount) || classificationKey.equals(Classifications.recordsBothNoMatch) || classificationKey.equals(Classifications.recordsFWCorrectMatched)))
-            println(">>\t%s: %s\n\t\t\t>>%s\n\t\t\t>>%s".format(classificationKey, row._1, row._2._1.mkString(","), row._2._2.mkString(",")))
+            println(">>\t%s: %s\n\t\t\t>>%s\n\t\t\t>>%s".format(classificationKey, row._1, if (row._2._1 == null) "" else row._2._1.mkString(","), if (row._2._2 == null) "" else row._2._2.mkString(",")))
 
           mapRowLevelClassify.update(classificationKey, mapRowLevelClassify(classificationKey) + 1)
         }
@@ -99,29 +99,29 @@ object OutputsCompare extends Serializable {
 
             row._2._2.indices.foreach(i => arrMatchIdxs(i) = row._2._1.indexOf(row._2._2(i)))
 
-            lazy val kmDistances = row._2._1.map(_.split(",")).map(_ (0))
-
-            row._2._2.indices.filter(i => arrMatchIdxs(i) == -1)
-              .foreach(i => {
-
-                var counter = 0
-                var idxOf = -1
-                val dist = row._2._2(i).split(",")(0)
-
-                while (counter < kmDistances.length && idxOf == -1) {
-
-                  idxOf = kmDistances.indexOf(dist)
-
-                  if (idxOf != -1 && arrMatchIdxs(idxOf) == -1)
-                    arrMatchIdxs(idxOf) = idxOf
-                  else
-                    idxOf = -1
-                  counter += 1
-                }
-
-                arrMatchIdxs(i) =
-                  kmDistances.indexOf(row._2._2(i).split(",")(0))
-              })
+            //            lazy val kmDistances = row._2._1.map(_.split(",")).map(_ (0))
+            //
+            //            row._2._2.indices.filter(i => arrMatchIdxs(i) == -1)
+            //              .foreach(i => {
+            //
+            //                var counter = 0
+            //                var idxOf = -1
+            //                val dist = row._2._2(i).split(",")(0)
+            //
+            //                while (counter < kmDistances.length && idxOf == -1) {
+            //
+            //                  idxOf = kmDistances.indexOf(dist)
+            //
+            //                  if (idxOf != -1 && arrMatchIdxs(idxOf) == -1)
+            //                    arrMatchIdxs(idxOf) = idxOf
+            //                  else
+            //                    idxOf = -1
+            //                  counter += 1
+            //                }
+            //
+            //                arrMatchIdxs(i) =
+            //                  kmDistances.indexOf(row._2._2(i).split(",")(0))
+            //              })
 
             if (arrFWSize == 0 && arrKMSize == 0) {
               incrementInMap(Classifications.recordsBothNoMatch, row)

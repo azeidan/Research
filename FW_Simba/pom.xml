@@ -16,7 +16,7 @@
       <groupId>FW_Simba_Source</groupId>
       <artifactId>FW_Simba_Source</artifactId>
       <version>0.0.1-SNAPSHOT</version>
-      <scope>provided</scope>
+      <scope>compile</scope>
     </dependency>
 
     <dependency>

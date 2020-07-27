@@ -22,13 +22,11 @@ object TestAllKnnJoin {
     val startTime = System.currentTimeMillis()
     //    var startTime2 = startTime
 
-    //        val clArgs = SparkKNN_Local_CLArgs.taxi_taxi_1M(SparkKNN_Arguments())
-    val clArgs = SparkKNN_Local_CLArgs.taxi_taxi_1M_No_Trip(SparkKNN_Arguments())
-    //        val clArgs = SparkKNN_Local_CLArgs.random_sample(SparkKNN_Arguments())
-    //        val clArgs = SparkKNN_Local_CLArgs.busPoint_busPointShift(SparkKNN_Arguments())
-    //        val clArgs = SparkKNN_Local_CLArgs.busPoint_taxiPoint(SparkKNN_Arguments())
-    //        val clArgs = SparkKNN_Local_CLArgs.tpepPoint_tpepPoint(SparkKNN_Arguments())
-    //        val clArgs = CLArgsParser(args, SparkKNN_Arguments())
+    val clArgs = SparkKNN_Local_CLArgs.random_sample(SparkKNN_Arguments())
+    //    val clArgs = SparkKNN_Local_CLArgs.busPoint_busPointShift(SparkKNN_Arguments())
+    //    val clArgs = SparkKNN_Local_CLArgs.busPoint_taxiPoint(SparkKNN_Arguments())
+    //    val clArgs = SparkKNN_Local_CLArgs.tpepPoint_tpepPoint(SparkKNN_Arguments())
+    //    val clArgs = CLArgsParser(args, SparkKNN_Arguments())
 
     val localMode = clArgs.getParamValueBoolean(SparkKNN_Arguments.local)
     val firstSet = clArgs.getParamValueString(SparkKNN_Arguments.firstSet)

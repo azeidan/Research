@@ -10,7 +10,7 @@ import scala.collection.mutable
 
 object QuadTreeDigestOperations {
 
-//  private val dimExtend = 3 * math.sqrt(2) // accounts for the further points effected by precision loss when converting to gird
+  //  private val dimExtend = 3 * math.sqrt(2) // accounts for the further points effected by precision loss when converting to gird
 
   def getNeededSpIdxUId(quadTreeDigest: QuadTreeDigest, searchPointXY: (Long, Long), k: Int /*, gridBoxMaxDim: Double*/): Set[Int] = {
 
@@ -29,7 +29,7 @@ object QuadTreeDigestOperations {
 
     val dim = math.ceil(/*dimExtend +*/ math.sqrt(getFurthestCorner(searchPoint, sPtBestQTD)._1))
 
-    val searchRegion =  Box(searchPoint, new Point(dim, dim))
+    val searchRegion = Box(searchPoint, new Point(dim, dim))
 
     // val sortSetSqDist = SortSetObj(Int.MaxValue)
 
@@ -50,12 +50,6 @@ object QuadTreeDigestOperations {
       .flatMap(_.seq)
       .toSet
   }
-
-  private def contains(qtd: QuadTreeDigest, searchPoint: Point, k: Int) =
-    qtd != null && qtd.getTotalPointWeight > k && qtd.boundary.contains(searchPoint.x, searchPoint.y)
-
-  private def intersects(qtd: QuadTreeDigest, searchRegion: Box, skipQTD: QuadTreeDigest) =
-    qtd != null && qtd != skipQTD && searchRegion.intersects(qtd.boundary)
 
   private def getBestQuadrant(qtDigest: QuadTreeDigest, searchPoint: Point, k: Int) = {
 
@@ -78,13 +72,16 @@ object QuadTreeDigestOperations {
     qtd
   }
 
+  private def contains(qtd: QuadTreeDigest, searchPoint: Point, k: Int) =
+    qtd != null && qtd.getTotalPointWeight > k && qtd.boundary.contains(searchPoint.x, searchPoint.y)
+
   private def pointsWithinRegion(quadTreeDigest: QuadTreeDigest, searchRegion: Box, k: Int, sortList: SortedList[Point], skipQTD: QuadTreeDigest /*, gridBoxMaxDim: Double*/) = {
 
     var totalWeight = if (sortList.isEmpty()) 0 else sortList.map(_.data match { case pt: Point => pt.userData.asInstanceOf[(Long, Set[Int])]._1 }).sum
 
     val sortListTemp = sortList
     var prevLastElem = if (sortList.isEmpty()) null else sortList.last()
-    var currSqDim = if (sortList.isEmpty()) 0 else prevLastElem.distance /*+ dimExtend*/
+    var currSqDim = if (sortList.isFull) prevLastElem.distance else math.pow(searchRegion.halfDimension.x, 2)
 
     def shrinkSearchRegion() {
 
@@ -153,8 +150,18 @@ object QuadTreeDigestOperations {
       qtd.getLstPoint
         .foreach(qtPoint => {
 
-          //                    if (qtPoint.x.toString().startsWith("15218") && qtPoint.y.toString().startsWith("3204"))
-          //                        println
+          //          if (qtd.boundary.contains(new Point(6160, 1389)) && !qtd.getLstPoint.filter(pt => pt.x.toInt == 6160 && pt.y.toInt == 1389).isEmpty) {
+          //
+          //            println(searchRegion.left)
+          //            println(searchRegion.right)
+          //            println(searchRegion.bottom)
+          //            println(searchRegion.top)
+          //
+          //            println(qtPoint.x < searchRegion.left)
+          //            println(qtPoint.x > searchRegion.right)
+          //            println(qtPoint.y < searchRegion.bottom)
+          //            println(qtPoint.y > searchRegion.top)
+          //          }
 
           if (searchRegion.contains(qtPoint)) {
 
@@ -172,6 +179,15 @@ object QuadTreeDigestOperations {
           }
         })
 
+      //      else if (qtd.topLeft != null && qtd.topLeft.boundary.contains())
+      //        print()
+      //      else if (qtd.topRight != null && qtd.topRight.boundary.contains(new Point(6160, 1389)))
+      //        print()
+      //      else if (qtd.bottomLeft != null && qtd.bottomLeft.boundary.contains(new Point(6160, 1389)))
+      //        print()
+      //      else if (qtd.bottomRight != null && qtd.bottomRight.boundary.contains(new Point(6160, 1389)))
+      //        print()
+
       if (intersects(qtd.topLeft, searchRegion, skipQTD))
         queueQT += qtd.topLeft
       if (intersects(qtd.topRight, searchRegion, skipQTD))
@@ -184,6 +200,9 @@ object QuadTreeDigestOperations {
 
     sortListTemp
   }
+
+  private def intersects(qtd: QuadTreeDigest, searchRegion: Box, skipQTD: QuadTreeDigest) =
+    qtd != null && qtd != skipQTD && searchRegion.intersects(qtd.boundary)
 
   private def getFurthestCorner(searchPoint: Point, sPtBestQTD: QuadTreeDigest) = {
 

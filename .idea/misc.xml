@@ -4,13 +4,13 @@
     <option name="originalFiles">
       <list>
         <option value="$PROJECT_DIR$/FW_Simba_Source/pom.xml" />
-        <option value="$PROJECT_DIR$/FW_Simba/pom.xml" />
         <option value="$PROJECT_DIR$/Common/pom.xml" />
         <option value="$PROJECT_DIR$/LocalRunFiles/pom.xml" />
         <option value="$PROJECT_DIR$/Spark_kNN/pom.xml" />
         <option value="$PROJECT_DIR$/GeoMatch/pom.xml" />
         <option value="$PROJECT_DIR$/SpatialBenchmark/pom.xml" />
         <option value="$PROJECT_DIR$/DataSetTools/pom.xml" />
+        <option value="$PROJECT_DIR$/FW_Simba/pom.xml" />
       </list>
     </option>
   </component>
