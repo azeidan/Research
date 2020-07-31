@@ -149,6 +149,9 @@ case class SparkKNN(rddLeft: RDD[Point], rddRight: RDD[Point], k: Int) {
 
         iter.foreach(row => {
 
+//          if (row._2.userData.toString().equalsIgnoreCase("Taxi_1_A_153384"))
+//            print("")
+
           val partInf = mapUIdPartId(row._1) // binarySearchPartInf(arrPartInf, row._2.x)
 
           mapSpIdx.getOrElse(partInf.uniqueIdentifier, {
@@ -175,9 +178,9 @@ case class SparkKNN(rddLeft: RDD[Point], rddRight: RDD[Point], k: Int) {
       }, preservesPartitioning = true)
       .persist(StorageLevel.MEMORY_ONLY)
 
-//    println("=====================================")
-//    rddSpIdx.foreach(qtInf => println(">2>\t%d%s%n".format(mapUIdPartId.get(qtInf.uniqueIdentifier).get.assignedPart, qtInf.toString())))
-//    println("=====================================")
+    println(">2>=====================================")
+    rddSpIdx.foreach(qtInf => println(">2>\t%d%s%n".format(mapUIdPartId.get(qtInf.uniqueIdentifier).get.assignedPart, qtInf.toString())))
+    println(">2>=====================================")
 
     // (box#, Count)
     val arrGridAndSpIdxInf = rddSpIdx
@@ -228,8 +231,8 @@ case class SparkKNN(rddLeft: RDD[Point], rddRight: RDD[Point], k: Int) {
 
         iter.map(point => {
 
-          //          if (point.userData.toString().equalsIgnoreCase("Taxi_3_B_538917"))
-          //            println
+//          if (point.userData.toString().equalsIgnoreCase("taxi_1_b_444791"))
+//            println
 
           val lstUId = QuadTreeDigestOperations.getNeededSpIdxUId(bvQTGlobalIndex.value, gridOp.computeBoxXY(point.x, point.y), k)
             .toList
@@ -304,16 +307,13 @@ case class SparkKNN(rddLeft: RDD[Point], rddRight: RDD[Point], k: Int) {
 
                 val (point, sortSetSqDist, lstUId) = row._2.asInstanceOf[(Point, SortedList[Point], List[Int])]
 
-                //                                if (point.userData.toString().equalsIgnoreCase("taxi_b_601998"))
-                //                                    println(pIdx)
-
                 if (lstUId.nonEmpty) {
 
                   // build a list of QT to check
                   val lstVisitQTInf = lstPartQT.filter(qtInf => lstUId.contains(qtInf.uniqueIdentifier))
 
-                  //                  if (point.userData.toString().equalsIgnoreCase("Taxi_3_B_538917"))
-                  //                    println
+//                  if (point.userData.toString().equalsIgnoreCase("taxi_1_b_444791"))
+//                    println
 
                   QuadTreeOperations.nearestNeighbor(lstVisitQTInf, point, sortSetSqDist, k)
 

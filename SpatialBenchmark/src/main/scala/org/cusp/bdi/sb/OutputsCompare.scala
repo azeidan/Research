@@ -73,7 +73,8 @@ object OutputsCompare extends Serializable {
         }
 
         iter.foreach(row => {
-
+//          if (row._1.startsWith("Taxi_1_B_990357".toLowerCase))
+//            println()
           if (row._2._1 != null)
             incrementInMap(Classifications.recordsCount, row)
 
@@ -153,10 +154,10 @@ object OutputsCompare extends Serializable {
               }).sum
 
             // add # "Records both no match" to # of "Records correctly matched" since they are correctly classified
-            if (correctStreetCount == 0)
-              incrementInMap(Classifications.recordsFWMismatch, row)
-            else if (correctStreetCount > 0 && correctStreetCount <= classificationCount)
+            if (correctStreetCount == classificationCount)
               incrementInMap(Classifications.recordsFWCorrectMatched, row)
+            else
+              incrementInMap(Classifications.recordsFWMismatch, row)
           }
         })
 

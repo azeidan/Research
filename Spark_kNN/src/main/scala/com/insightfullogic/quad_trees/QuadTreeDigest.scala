@@ -1,8 +1,8 @@
 package com.insightfullogic.quad_trees
 
-import scala.collection.mutable.ListBuffer
+import com.insightfullogic.quad_trees.QuadTree.capacity
 
-import QuadTree.capacity
+import scala.collection.mutable.ListBuffer
 
 object QuadTreeDigest extends Serializable {
 

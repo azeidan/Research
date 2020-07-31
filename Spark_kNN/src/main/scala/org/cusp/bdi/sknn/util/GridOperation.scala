@@ -11,4 +11,5 @@ class GridOperation(mbr: (Double, Double, Double, Double), totalRowCount: Long, 
 
   def computeBoxXY(x: Double, y: Double): (Long, Long) =
     (math.floor(x / boxWH).toLong, math.floor(y / boxWH).toLong)
+  //    (math.round(x / boxWH), math.round(y / boxWH))
 }

@@ -5,7 +5,7 @@ import org.cusp.bdi.util.Helper
 
 import scala.collection.mutable.ListBuffer
 
-object QuadTreeDigestOperations {
+object QuadTreeDigestOperations_WithWeight {
 
   //  private val dimExtend = 3 * math.sqrt(2) // accounts for the further points effected by precision loss when converting to gird
 
@@ -50,7 +50,7 @@ object QuadTreeDigestOperations {
     var qtd = qtDigest
 
     def testQuad(qtdChild: QuadTreeDigest) =
-      qtdChild != null && /*qtd.getTotalPointWeight*/ qtdChild.getLstPoint.size >= k && qtdChild.boundary.contains(searchPoint.x, searchPoint.y)
+      qtdChild != null && qtd.getTotalPointWeight /*qtdChild.getLstPoint.size*/ >= k && qtdChild.boundary.contains(searchPoint.x, searchPoint.y)
 
     while (!done)
       if (testQuad(qtd.topLeft))
@@ -69,7 +69,7 @@ object QuadTreeDigestOperations {
 
   private def pointsWithinRegion(qtdStart: QuadTreeDigest, quadTreeDigest: QuadTreeDigest, searchRegion: Box, k: Int, sortList: SortedList[Point], skipQTD: QuadTreeDigest /*, gridBoxMaxDim: Double*/) = {
 
-    var totalWeight = 0 //if (sortList.isEmpty()) 0 else sortList.map(_.data.userData.asInstanceOf[(Long, Set[Int])]._1).sum
+    var totalWeight = 0L //if (sortList.isEmpty()) 0 else sortList.map(_.data.userData.asInstanceOf[(Long, Set[Int])]._1).sum
 
     val sortListTemp = sortList
     var prevLastElem: Node[Point] = null //sortList.last()
@@ -82,11 +82,11 @@ object QuadTreeDigestOperations {
 
       //      if (totalWeight - sortListTemp.last().data.userData.asInstanceOf[(Long, Set[Int])]._1 >= k) {
 
-      if (totalWeight - 1 >= k /* && sortListTemp.last().distance <= currSqDim*/ ) {
+      if (totalWeight - sortListTemp.last().data.userData.asInstanceOf[(Long, Set[Int])]._1 >= k /* && sortListTemp.last().distance <= currSqDim*/ ) {
 
         val iter = sortListTemp.iterator()
         var elem = iter.next
-        var weightSoFar = 1 //elem.data.userData.asInstanceOf[(Long, Set[Int])]._1
+        var weightSoFar = elem.data.userData.asInstanceOf[(Long, Set[Int])]._1
         //        var furthestX = elem.data.x
         //        var furthestY = elem.data.y
 
@@ -95,7 +95,7 @@ object QuadTreeDigestOperations {
 
           idx += 1
           elem = iter.next
-          weightSoFar += 1 //elem.data.userData.asInstanceOf[(Long, Set[Int])]._1
+          weightSoFar += elem.data.userData.asInstanceOf[(Long, Set[Int])]._1
 
           //          if (elem.data.x > furthestX)
           //            furthestX = elem.data.x
@@ -157,9 +157,9 @@ object QuadTreeDigestOperations {
 
                 if (prevLastElem == null || sqDist <= currSqDim) {
 
-                  sortListTemp.add(sqDist, qtPoint) // PointWithUniquId(qtd.getSetPart, qtPoint))
+                  sortListTemp.add(sqDist, qtPoint)
 
-                  totalWeight += 1 //qtPoint.userData.asInstanceOf[(Long, Set[Int])]._1
+                  totalWeight += qtPoint.userData.asInstanceOf[(Long, Set[Int])]._1
 
                   if (totalWeight > k)
                     shrinkSearchRegion()

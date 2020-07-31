@@ -1,23 +1,24 @@
 package org.cusp.bdi.sknn.test
 
+import com.insightfullogic.quad_trees.Point
 import org.apache.hadoop.io.compress.GzipCodec
-import org.apache.spark.SparkConf
-import org.apache.spark.SparkContext
+import org.apache.spark.{SparkConf, SparkContext}
 import org.apache.spark.serializer.KryoSerializer
 import org.cusp.bdi.gm.GeoMatch
 import org.cusp.bdi.sknn.SparkKNN
-import org.cusp.bdi.sknn.util.QuadTreeInfo
-import org.cusp.bdi.sknn.util.RDD_Store
-import org.cusp.bdi.sknn.util.SparkKNN_Arguments
-import org.cusp.bdi.util.Helper
-import org.cusp.bdi.util.LocalRunConsts
+import org.cusp.bdi.sknn.util.{RDD_Store, SparkKNN_Arguments}
+import org.cusp.bdi.util.{Helper, LocalRunConsts}
 import org.cusp.bdi.util.sknn.SparkKNN_Local_CLArgs
-
-import com.insightfullogic.quad_trees.Point
-import com.insightfullogic.quad_trees.QuadTree
 
 object TestAllKnnJoin {
   def main(args: Array[String]): Unit = {
+
+    //    println(math.round(12.34))
+    //    println(math.round(12.45))
+    //    println(math.round(12.50))
+    //    println(math.round(12.51))
+    //    println(math.round(12.55))
+    //System.exit(0)
 
     val startTime = System.currentTimeMillis()
     //    var startTime2 = startTime

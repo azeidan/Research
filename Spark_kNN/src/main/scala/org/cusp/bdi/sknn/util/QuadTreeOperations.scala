@@ -1,13 +1,10 @@
 package org.cusp.bdi.sknn.util
 
-import scala.collection.mutable.ListBuffer
-import scala.collection.mutable.Queue
+import com.insightfullogic.quad_trees.{Box, Point, QuadTree}
 import org.cusp.bdi.util.Helper
-import com.insightfullogic.quad_trees.Box
-import com.insightfullogic.quad_trees.Point
-import com.insightfullogic.quad_trees.QuadTree
 
 import scala.collection.mutable
+import scala.collection.mutable.ListBuffer
 
 object QuadTreeOperations extends Serializable {
 
@@ -89,10 +86,10 @@ object QuadTreeOperations extends Serializable {
         qTree.getPoints
           .foreach(qtPoint => {
 
-            if (searchRegion.contains(qtPoint)) {
+//            if (qtPoint.userData.toString().equalsIgnoreCase("Taxi_1_A_709981"))
+//              print("")
 
-              //              if (qtPoint.userData.toString().equalsIgnoreCase("Taxi_A_27652"))
-              //                println()
+            if (searchRegion.contains(qtPoint)) {
 
               val sqDist = Helper.squaredDist(searchRegion.center.x, searchRegion.center.y, qtPoint.x, qtPoint.y)
 

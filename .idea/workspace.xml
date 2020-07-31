@@ -4,285 +4,75 @@
     <option name="SCOPE_TYPE" value="4" />
     <option name="CUSTOM_SCOPE_NAME" value="Module 'SpatialBenchmark'" />
   </component>
+  <component name="ArtifactsWorkspaceSettings">
+    <artifacts-to-build>
+      <artifact name="Spark_kNN:jar" />
+    </artifacts-to-build>
+  </component>
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
   <component name="BranchesTreeState">
-    <expand>
-      <path>
-        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
-        <item name="LOCAL_ROOT" type="e8cecc67:BranchNodeDescriptor" />
-      </path>
-      <path>
-        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
-        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
-      </path>
-      <path>
-        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
-        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
-        <item name="GROUP_NODE:origin" type="e8cecc67:BranchNodeDescriptor" />
-      </path>
-    </expand>
+    <expand />
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ee761a9d-eff2-4086-b83a-8096819a4548" name="Default Changelist" comment="runtime 98secs&#10;code analysis fixes">
-      <change afterPath="$PROJECT_DIR$/TBD____FW_Simba/FW_Simba.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TBD____FW_Simba/target/classes/FW_Simba.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase_[Default_Changelist]/AssignToPartitions$$anonfun$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase_[Default_Changelist]/AssignToPartitions$$anonfun$2.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase_[Default_Changelist]/AssignToPartitions$$anonfun$3.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase_[Default_Changelist]/AssignToPartitions$$anonfun$4.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase_[Default_Changelist]/AssignToPartitions$$anonfun$5.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase_[Default_Changelist]/AssignToPartitions$$anonfun$6.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase_[Default_Changelist]/AssignToPartitions$.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase_[Default_Changelist]/AssignToPartitions.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase_[Default_Changelist]/LocalRunConsts$.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase_[Default_Changelist]/SparkKNN$$anon$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase_[Default_Changelist]/SparkKNN$$anonfun$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase_[Default_Changelist]/SparkKNN$$anonfun$10.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase_[Default_Changelist]/SparkKNN$$anonfun$11.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase_[Default_Changelist]/SparkKNN$$anonfun$12.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase_[Default_Changelist]/SparkKNN$$anonfun$13.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase_[Default_Changelist]/SparkKNN$$anonfun$14.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase_[Default_Changelist]/SparkKNN$$anonfun$15.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase_[Default_Changelist]/SparkKNN$$anonfun$16.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase_[Default_Changelist]/SparkKNN$$anonfun$2.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase_[Default_Changelist]/SparkKNN$$anonfun$23.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase_[Default_Changelist]/SparkKNN$$anonfun$24.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase_[Default_Changelist]/SparkKNN$$anonfun$26.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase_[Default_Changelist]/SparkKNN$$anonfun$28.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase_[Default_Changelist]/SparkKNN$$anonfun$29.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase_[Default_Changelist]/SparkKNN$$anonfun$3$$anonfun$apply$5.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase_[Default_Changelist]/SparkKNN$$anonfun$3.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase_[Default_Changelist]/SparkKNN$$anonfun$30.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase_[Default_Changelist]/SparkKNN$$anonfun$4.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase_[Default_Changelist]/SparkKNN$$anonfun$6$$anonfun$apply$6.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase_[Default_Changelist]/SparkKNN$$anonfun$6.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase_[Default_Changelist]/SparkKNN$$anonfun$7.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase_[Default_Changelist]/SparkKNN$$anonfun$9.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase_[Default_Changelist]/SparkKNN$$anonfun$knnJoin$1$$anonfun$18.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase_[Default_Changelist]/SparkKNN$$anonfun$knnJoin$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase_[Default_Changelist]/SparkKNN$$anonfun$knnJoin$2.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase_[Default_Changelist]/SparkKNN$.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase_[Default_Changelist]/SparkKNN.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase_[Default_Changelist]/TestAllKnnJoin$$anonfun$main$1$$anonfun$apply$3$$anonfun$apply$4.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase_[Default_Changelist]/TestAllKnnJoin$$anonfun$main$1$$anonfun$apply$3.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase_[Default_Changelist]/TestAllKnnJoin$$anonfun$main$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase_[Default_Changelist]/TestAllKnnJoin$.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase_[Default_Changelist]/shelved.patch" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase__Default_Changelist_.xml" beforeDir="false" />
+    <list default="true" id="ee761a9d-eff2-4086-b83a-8096819a4548" name="Default Changelist" comment="100% accuracy">
+      <change afterPath="$PROJECT_DIR$/.idea/artifacts/Spark_kNN_jar.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/runConfigurations/TestAllKnnJoin.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/FW_Simba_Source/src/main/scala/META-INF/MANIFEST.MF" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Spark_kNN/src/OLD/QuadTreeDigestOperations_WithWeight.scala" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Spark_kNN/src/main/java/META-INF/MANIFEST.MF" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DataSetTools/src/main/scala/org/cusp/bdi/tools/EnumerateFile.scala" beforeDir="false" afterPath="$PROJECT_DIR$/DataSetTools/src/main/scala/org/cusp/bdi/tools/EnumerateFile.scala" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DataSetTools/src/main/scala/org/cusp/bdi/tools/spark/RandomSampler.scala" beforeDir="false" afterPath="$PROJECT_DIR$/DataSetTools/src/main/scala/org/cusp/bdi/tools/spark/RandomSampler.scala" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/FW_Simba.iml" beforeDir="false" afterPath="$PROJECT_DIR$/FW_Simba/FW_Simba.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/FW_Simba/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/src/main/scala/org/cusp/bdi/fw/simba/HelperObjects.scala" beforeDir="false" afterPath="$PROJECT_DIR$/FW_Simba/src/main/scala/org/cusp/bdi/fw/simba/HelperObjects.scala" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/src/main/scala/org/cusp/bdi/fw/simba/SIM_Example.scala" beforeDir="false" afterPath="$PROJECT_DIR$/FW_Simba/src/main/scala/org/cusp/bdi/fw/simba/SIM_Example.scala" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/classes/org/cusp/bdi/fw/simba/SIM_CLArgs$.class" beforeDir="false" afterPath="$PROJECT_DIR$/FW_Simba/target/classes/org/cusp/bdi/fw/simba/SIM_CLArgs$.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/classes/org/cusp/bdi/fw/simba/SIM_CLArgs.class" beforeDir="false" afterPath="$PROJECT_DIR$/FW_Simba/target/classes/org/cusp/bdi/fw/simba/SIM_CLArgs.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/classes/org/cusp/bdi/fw/simba/SIM_Example$$anonfun$1$$anonfun$apply$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/FW_Simba/target/classes/org/cusp/bdi/fw/simba/SIM_Example$$anonfun$1$$anonfun$apply$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/classes/org/cusp/bdi/fw/simba/SIM_Example$$anonfun$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/FW_Simba/target/classes/org/cusp/bdi/fw/simba/SIM_Example$$anonfun$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/classes/org/cusp/bdi/fw/simba/SIM_Example$$anonfun$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/FW_Simba/target/classes/org/cusp/bdi/fw/simba/SIM_Example$$anonfun$2.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/classes/org/cusp/bdi/fw/simba/SIM_Example$$anonfun$3$$anonfun$apply$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/FW_Simba/target/classes/org/cusp/bdi/fw/simba/SIM_Example$$anonfun$3$$anonfun$apply$2.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/classes/org/cusp/bdi/fw/simba/SIM_Example$$anonfun$3.class" beforeDir="false" afterPath="$PROJECT_DIR$/FW_Simba/target/classes/org/cusp/bdi/fw/simba/SIM_Example$$anonfun$3.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/classes/org/cusp/bdi/fw/simba/SIM_Example$$anonfun$4$$anonfun$apply$3.class" beforeDir="false" afterPath="$PROJECT_DIR$/FW_Simba/target/classes/org/cusp/bdi/fw/simba/SIM_Example$$anonfun$4$$anonfun$apply$3.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/classes/org/cusp/bdi/fw/simba/SIM_Example$$anonfun$4.class" beforeDir="false" afterPath="$PROJECT_DIR$/FW_Simba/target/classes/org/cusp/bdi/fw/simba/SIM_Example$$anonfun$4.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/classes/org/cusp/bdi/fw/simba/SIM_Example$$anonfun$5.class" beforeDir="false" afterPath="$PROJECT_DIR$/FW_Simba/target/classes/org/cusp/bdi/fw/simba/SIM_Example$$anonfun$5.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/classes/org/cusp/bdi/fw/simba/SIM_Example$$anonfun$6$$anonfun$apply$4.class" beforeDir="false" afterPath="$PROJECT_DIR$/FW_Simba/target/classes/org/cusp/bdi/fw/simba/SIM_Example$$anonfun$6$$anonfun$apply$4.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/classes/org/cusp/bdi/fw/simba/SIM_Example$$anonfun$6.class" beforeDir="false" afterPath="$PROJECT_DIR$/FW_Simba/target/classes/org/cusp/bdi/fw/simba/SIM_Example$$anonfun$6.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/classes/org/cusp/bdi/fw/simba/SIM_Example$$anonfun$getDS$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/FW_Simba/target/classes/org/cusp/bdi/fw/simba/SIM_Example$$anonfun$getDS$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/classes/org/cusp/bdi/fw/simba/SIM_Example$$anonfun$getDS$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/FW_Simba/target/classes/org/cusp/bdi/fw/simba/SIM_Example$$anonfun$getDS$2.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/classes/org/cusp/bdi/fw/simba/SIM_Example$$anonfun$rowToString$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/FW_Simba/target/classes/org/cusp/bdi/fw/simba/SIM_Example$$anonfun$rowToString$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/classes/org/cusp/bdi/fw/simba/SIM_Example$$typecreator1$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/FW_Simba/target/classes/org/cusp/bdi/fw/simba/SIM_Example$$typecreator1$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/classes/org/cusp/bdi/fw/simba/SIM_Example$$typecreator10$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/FW_Simba/target/classes/org/cusp/bdi/fw/simba/SIM_Example$$typecreator10$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/classes/org/cusp/bdi/fw/simba/SIM_Example$$typecreator14$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/FW_Simba/target/classes/org/cusp/bdi/fw/simba/SIM_Example$$typecreator14$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/classes/org/cusp/bdi/fw/simba/SIM_Example$$typecreator2$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/FW_Simba/target/classes/org/cusp/bdi/fw/simba/SIM_Example$$typecreator2$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/classes/org/cusp/bdi/fw/simba/SIM_Example$$typecreator4$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/FW_Simba/target/classes/org/cusp/bdi/fw/simba/SIM_Example$$typecreator4$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/classes/org/cusp/bdi/fw/simba/SIM_Example$$typecreator8$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/FW_Simba/target/classes/org/cusp/bdi/fw/simba/SIM_Example$$typecreator8$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/classes/org/cusp/bdi/fw/simba/SIM_Example$.class" beforeDir="false" afterPath="$PROJECT_DIR$/FW_Simba/target/classes/org/cusp/bdi/fw/simba/SIM_Example$.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/classes/org/cusp/bdi/fw/simba/SIM_Example$PointData$.class" beforeDir="false" afterPath="$PROJECT_DIR$/FW_Simba/target/classes/org/cusp/bdi/fw/simba/SIM_Example$PointData$.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/classes/org/cusp/bdi/fw/simba/SIM_Example$PointData.class" beforeDir="false" afterPath="$PROJECT_DIR$/FW_Simba/target/classes/org/cusp/bdi/fw/simba/SIM_Example$PointData.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/test-classes/org/apache/spark/sql/simba/index/IntervalSuite$$anonfun$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/test-classes/org/apache/spark/sql/simba/index/IntervalSuite$$anonfun$2.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/test-classes/org/apache/spark/sql/simba/index/IntervalSuite$$anonfun$3.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/test-classes/org/apache/spark/sql/simba/index/IntervalSuite$$anonfun$4.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/test-classes/org/apache/spark/sql/simba/index/IntervalSuite$$anonfun$5$$anonfun$equalArray$1$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/test-classes/org/apache/spark/sql/simba/index/IntervalSuite$$anonfun$5.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/test-classes/org/apache/spark/sql/simba/index/IntervalSuite.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/test-classes/org/apache/spark/sql/simba/index/RTreeSuite$$anonfun$1$$anonfun$apply$mcVI$sp$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/test-classes/org/apache/spark/sql/simba/index/RTreeSuite$$anonfun$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/test-classes/org/apache/spark/sql/simba/index/RTreeSuite$$anonfun$2$$anonfun$apply$mcV$sp$1$$anonfun$apply$mcVI$sp$2.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/test-classes/org/apache/spark/sql/simba/index/RTreeSuite$$anonfun$2$$anonfun$apply$mcV$sp$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/test-classes/org/apache/spark/sql/simba/index/RTreeSuite$$anonfun$2$$anonfun$apply$mcV$sp$5.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/test-classes/org/apache/spark/sql/simba/index/RTreeSuite$$anonfun$2.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/test-classes/org/apache/spark/sql/simba/index/RTreeSuite$$anonfun$3$$anonfun$apply$mcV$sp$2$$anonfun$apply$mcVI$sp$3.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/test-classes/org/apache/spark/sql/simba/index/RTreeSuite$$anonfun$3$$anonfun$apply$mcV$sp$2.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/test-classes/org/apache/spark/sql/simba/index/RTreeSuite$$anonfun$3$$anonfun$apply$mcV$sp$6.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/test-classes/org/apache/spark/sql/simba/index/RTreeSuite$$anonfun$3.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/test-classes/org/apache/spark/sql/simba/index/RTreeSuite$$anonfun$4$$anonfun$apply$mcV$sp$3$$anonfun$apply$mcVI$sp$4.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/test-classes/org/apache/spark/sql/simba/index/RTreeSuite$$anonfun$4$$anonfun$apply$mcV$sp$3.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/test-classes/org/apache/spark/sql/simba/index/RTreeSuite$$anonfun$4$$anonfun$apply$mcV$sp$7.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/test-classes/org/apache/spark/sql/simba/index/RTreeSuite$$anonfun$4.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/test-classes/org/apache/spark/sql/simba/index/RTreeSuite$$anonfun$5$$anonfun$apply$mcV$sp$4$$anonfun$apply$mcVI$sp$5.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/test-classes/org/apache/spark/sql/simba/index/RTreeSuite$$anonfun$5$$anonfun$apply$mcV$sp$4.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/test-classes/org/apache/spark/sql/simba/index/RTreeSuite$$anonfun$5$$anonfun$apply$mcV$sp$8.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/test-classes/org/apache/spark/sql/simba/index/RTreeSuite$$anonfun$5$$anonfun$org$apache$spark$sql$simba$index$RTreeSuite$$anonfun$$touch$1$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/test-classes/org/apache/spark/sql/simba/index/RTreeSuite$$anonfun$5$$anonfun$org$apache$spark$sql$simba$index$RTreeSuite$$anonfun$$touch$1$2.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/test-classes/org/apache/spark/sql/simba/index/RTreeSuite$$anonfun$5.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/test-classes/org/apache/spark/sql/simba/index/RTreeSuite$$anonfun$6$$anonfun$minDist$1$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/test-classes/org/apache/spark/sql/simba/index/RTreeSuite$$anonfun$6.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/test-classes/org/apache/spark/sql/simba/index/RTreeSuite.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/test-classes/org/apache/spark/sql/simba/index/TreapSuite$$anonfun$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/test-classes/org/apache/spark/sql/simba/index/TreapSuite$$anonfun$2$$anonfun$apply$mcV$sp$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/test-classes/org/apache/spark/sql/simba/index/TreapSuite$$anonfun$2.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/test-classes/org/apache/spark/sql/simba/index/TreapSuite$$anonfun$3$$anonfun$apply$mcV$sp$2.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/test-classes/org/apache/spark/sql/simba/index/TreapSuite$$anonfun$3.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/test-classes/org/apache/spark/sql/simba/index/TreapSuite$$anonfun$4$$anonfun$apply$mcV$sp$3$$anonfun$apply$mcVI$sp$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/test-classes/org/apache/spark/sql/simba/index/TreapSuite$$anonfun$4$$anonfun$apply$mcV$sp$3.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/test-classes/org/apache/spark/sql/simba/index/TreapSuite$$anonfun$4.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/test-classes/org/apache/spark/sql/simba/index/TreapSuite$$anonfun$5$$anonfun$apply$mcV$sp$4.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/test-classes/org/apache/spark/sql/simba/index/TreapSuite$$anonfun$5.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/test-classes/org/apache/spark/sql/simba/index/TreapSuite$$anonfun$6$$anonfun$apply$mcV$sp$5.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/test-classes/org/apache/spark/sql/simba/index/TreapSuite$$anonfun$6.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/test-classes/org/apache/spark/sql/simba/index/TreapSuite.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/test-classes/org/apache/spark/sql/simba/spatial/CircleSuite$$anonfun$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/test-classes/org/apache/spark/sql/simba/spatial/CircleSuite$$anonfun$2.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/test-classes/org/apache/spark/sql/simba/spatial/CircleSuite$$anonfun$3.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/test-classes/org/apache/spark/sql/simba/spatial/CircleSuite$$anonfun$4.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/test-classes/org/apache/spark/sql/simba/spatial/CircleSuite$$anonfun$5.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/test-classes/org/apache/spark/sql/simba/spatial/CircleSuite$$anonfun$6.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/test-classes/org/apache/spark/sql/simba/spatial/CircleSuite.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/test-classes/org/apache/spark/sql/simba/spatial/DistSuite$$anonfun$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/test-classes/org/apache/spark/sql/simba/spatial/DistSuite.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/test-classes/org/apache/spark/sql/simba/spatial/LineSegmentSuite$$anonfun$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/test-classes/org/apache/spark/sql/simba/spatial/LineSegmentSuite$$anonfun$2.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/test-classes/org/apache/spark/sql/simba/spatial/LineSegmentSuite$$anonfun$3.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/test-classes/org/apache/spark/sql/simba/spatial/LineSegmentSuite$$anonfun$4.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/test-classes/org/apache/spark/sql/simba/spatial/LineSegmentSuite$$anonfun$5.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/test-classes/org/apache/spark/sql/simba/spatial/LineSegmentSuite$$anonfun$6.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/test-classes/org/apache/spark/sql/simba/spatial/LineSegmentSuite$$anonfun$7.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/test-classes/org/apache/spark/sql/simba/spatial/LineSegmentSuite.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/test-classes/org/apache/spark/sql/simba/spatial/MBRSuite$$anonfun$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/test-classes/org/apache/spark/sql/simba/spatial/MBRSuite$$anonfun$2.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/test-classes/org/apache/spark/sql/simba/spatial/MBRSuite$$anonfun$3.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/test-classes/org/apache/spark/sql/simba/spatial/MBRSuite$$anonfun$4.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/test-classes/org/apache/spark/sql/simba/spatial/MBRSuite$$anonfun$5.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/test-classes/org/apache/spark/sql/simba/spatial/MBRSuite$$anonfun$6.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/test-classes/org/apache/spark/sql/simba/spatial/MBRSuite$$anonfun$7.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/test-classes/org/apache/spark/sql/simba/spatial/MBRSuite$$anonfun$8.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/test-classes/org/apache/spark/sql/simba/spatial/MBRSuite.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/test-classes/org/apache/spark/sql/simba/spatial/PointSuite$$anonfun$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/test-classes/org/apache/spark/sql/simba/spatial/PointSuite$$anonfun$10.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/test-classes/org/apache/spark/sql/simba/spatial/PointSuite$$anonfun$2.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/test-classes/org/apache/spark/sql/simba/spatial/PointSuite$$anonfun$3.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/test-classes/org/apache/spark/sql/simba/spatial/PointSuite$$anonfun$4.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/test-classes/org/apache/spark/sql/simba/spatial/PointSuite$$anonfun$5.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/test-classes/org/apache/spark/sql/simba/spatial/PointSuite$$anonfun$6.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/test-classes/org/apache/spark/sql/simba/spatial/PointSuite$$anonfun$7.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/test-classes/org/apache/spark/sql/simba/spatial/PointSuite$$anonfun$8.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/test-classes/org/apache/spark/sql/simba/spatial/PointSuite$$anonfun$9.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/test-classes/org/apache/spark/sql/simba/spatial/PointSuite.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/test-classes/org/apache/spark/sql/simba/spatial/PolygonSuite$$anonfun$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/test-classes/org/apache/spark/sql/simba/spatial/PolygonSuite$$anonfun$2.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/test-classes/org/apache/spark/sql/simba/spatial/PolygonSuite$$anonfun$3.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/test-classes/org/apache/spark/sql/simba/spatial/PolygonSuite$$anonfun$4.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/test-classes/org/apache/spark/sql/simba/spatial/PolygonSuite$$anonfun$5.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/test-classes/org/apache/spark/sql/simba/spatial/PolygonSuite$$anonfun$6.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/test-classes/org/apache/spark/sql/simba/spatial/PolygonSuite.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/test-classes/org/apache/spark/sql/simba/spatial/ShapeSuite$$anonfun$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/test-classes/org/apache/spark/sql/simba/spatial/ShapeSuite$$anonfun$2.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/test-classes/org/apache/spark/sql/simba/spatial/ShapeSuite.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/test-classes/org/apache/spark/sql/simba/spatial/ZValueSuite$$anonfun$1$$anonfun$apply$mcV$sp$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/test-classes/org/apache/spark/sql/simba/spatial/ZValueSuite$$anonfun$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/test-classes/org/apache/spark/sql/simba/spatial/ZValueSuite.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/test-classes/org/cusp/bdi/fw/simba/SIM_Arguments$.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/test-classes/org/cusp/bdi/fw/simba/SIM_Arguments.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/test-classes/org/cusp/bdi/fw/simba/SIM_CLArgs$.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/test-classes/org/cusp/bdi/fw/simba/SIM_CLArgs.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/test-classes/org/cusp/bdi/fw/simba/SIM_Example$$anonfun$1$$anonfun$apply$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/test-classes/org/cusp/bdi/fw/simba/SIM_Example$$anonfun$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/test-classes/org/cusp/bdi/fw/simba/SIM_Example$$anonfun$2.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/test-classes/org/cusp/bdi/fw/simba/SIM_Example$$anonfun$3$$anonfun$apply$2.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/test-classes/org/cusp/bdi/fw/simba/SIM_Example$$anonfun$3.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/test-classes/org/cusp/bdi/fw/simba/SIM_Example$$anonfun$4$$anonfun$apply$3.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/test-classes/org/cusp/bdi/fw/simba/SIM_Example$$anonfun$4.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/test-classes/org/cusp/bdi/fw/simba/SIM_Example$$anonfun$5.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/test-classes/org/cusp/bdi/fw/simba/SIM_Example$$anonfun$6$$anonfun$apply$4.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/test-classes/org/cusp/bdi/fw/simba/SIM_Example$$anonfun$6.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/test-classes/org/cusp/bdi/fw/simba/SIM_Example$$anonfun$getDS$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/test-classes/org/cusp/bdi/fw/simba/SIM_Example$$anonfun$getDS$2.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/test-classes/org/cusp/bdi/fw/simba/SIM_Example$$anonfun$rowToString$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/test-classes/org/cusp/bdi/fw/simba/SIM_Example$$typecreator1$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/test-classes/org/cusp/bdi/fw/simba/SIM_Example$$typecreator10$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/test-classes/org/cusp/bdi/fw/simba/SIM_Example$$typecreator14$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/test-classes/org/cusp/bdi/fw/simba/SIM_Example$$typecreator2$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/test-classes/org/cusp/bdi/fw/simba/SIM_Example$$typecreator4$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/test-classes/org/cusp/bdi/fw/simba/SIM_Example$$typecreator8$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/test-classes/org/cusp/bdi/fw/simba/SIM_Example$.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/test-classes/org/cusp/bdi/fw/simba/SIM_Example$PointData$.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/test-classes/org/cusp/bdi/fw/simba/SIM_Example$PointData.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/test-classes/org/cusp/bdi/fw/simba/SIM_Example.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/test-classes/org/cusp/bdi/fw/simba/SimbaLineParser$.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/test-classes/org/cusp/bdi/fw/simba/SimbaLineParser.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Common/src/main/scala/org/cusp/bdi/util/Helper.scala" beforeDir="false" afterPath="$PROJECT_DIR$/Common/src/main/scala/org/cusp/bdi/util/Helper.scala" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Common/target/classes/org/cusp/bdi/util/Helper$$anonfun$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/Common/target/classes/org/cusp/bdi/util/Helper$$anonfun$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Common/target/classes/org/cusp/bdi/util/Helper$$anonfun$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/Common/target/classes/org/cusp/bdi/util/Helper$$anonfun$2.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Common/target/classes/org/cusp/bdi/util/Helper$$anonfun$3.class" beforeDir="false" afterPath="$PROJECT_DIR$/Common/target/classes/org/cusp/bdi/util/Helper$$anonfun$3.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Common/target/classes/org/cusp/bdi/util/Helper$$anonfun$4.class" beforeDir="false" afterPath="$PROJECT_DIR$/Common/target/classes/org/cusp/bdi/util/Helper$$anonfun$4.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Common/target/classes/org/cusp/bdi/util/Helper$$anonfun$5.class" beforeDir="false" afterPath="$PROJECT_DIR$/Common/target/classes/org/cusp/bdi/util/Helper$$anonfun$5.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Common/target/classes/org/cusp/bdi/util/Helper$$anonfun$6.class" beforeDir="false" afterPath="$PROJECT_DIR$/Common/target/classes/org/cusp/bdi/util/Helper$$anonfun$6.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Common/target/classes/org/cusp/bdi/util/Helper$$anonfun$isNullOrEmpty$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/Common/target/classes/org/cusp/bdi/util/Helper$$anonfun$isNullOrEmpty$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Common/target/classes/org/cusp/bdi/util/Helper$.class" beforeDir="false" afterPath="$PROJECT_DIR$/Common/target/classes/org/cusp/bdi/util/Helper$.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Common/target/classes/org/cusp/bdi/util/Helper$StringLikeObj$.class" beforeDir="false" afterPath="$PROJECT_DIR$/Common/target/classes/org/cusp/bdi/util/Helper$StringLikeObj$.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Common/target/classes/org/cusp/bdi/util/Helper$StringLikeObj.class" beforeDir="false" afterPath="$PROJECT_DIR$/Common/target/classes/org/cusp/bdi/util/Helper$StringLikeObj.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Common/target/classes/org/cusp/bdi/util/Helper.class" beforeDir="false" afterPath="$PROJECT_DIR$/Common/target/classes/org/cusp/bdi/util/Helper.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/FW_Simba_Source/FW_Simba_Source.iml" beforeDir="false" afterPath="$PROJECT_DIR$/FW_Simba_Source/FW_Simba_Source.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/LocalRunFiles/src/main/scala/org/cusp/bdi/util/LocalRunConsts.scala" beforeDir="false" afterPath="$PROJECT_DIR$/LocalRunFiles/src/main/scala/org/cusp/bdi/util/LocalRunConsts.scala" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LocalRunFiles/src/main/scala/org/cusp/bdi/util/sknn/SparkKNN_Local_CLArgs.scala" beforeDir="false" afterPath="$PROJECT_DIR$/LocalRunFiles/src/main/scala/org/cusp/bdi/util/sknn/SparkKNN_Local_CLArgs.scala" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/LocalRunFiles/target/classes/org/cusp/bdi/util/LocalRunConsts$.class" beforeDir="false" afterPath="$PROJECT_DIR$/LocalRunFiles/target/classes/org/cusp/bdi/util/LocalRunConsts$.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LocalRunFiles/target/classes/org/cusp/bdi/util/sknn/SparkKNN_Local_CLArgs$.class" beforeDir="false" afterPath="$PROJECT_DIR$/LocalRunFiles/target/classes/org/cusp/bdi/util/sknn/SparkKNN_Local_CLArgs$.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LocalRunFiles/target/classes/org/cusp/bdi/util/sknn/SparkKNN_Local_CLArgs.class" beforeDir="false" afterPath="$PROJECT_DIR$/LocalRunFiles/target/classes/org/cusp/bdi/util/sknn/SparkKNN_Local_CLArgs.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/src/main/scala/com/insightfullogic/quad_trees/Box.scala" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/src/main/scala/com/insightfullogic/quad_trees/Box.scala" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Spark_kNN/src/main/scala/com/insightfullogic/quad_trees/Point.scala" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/src/main/scala/com/insightfullogic/quad_trees/Point.scala" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Spark_kNN/src/main/scala/com/insightfullogic/quad_trees/QuadTreeDigest.scala" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/src/main/scala/com/insightfullogic/quad_trees/QuadTreeDigest.scala" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Spark_kNN/src/main/scala/org/cusp/bdi/sknn/SparkKNN.scala" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/src/main/scala/org/cusp/bdi/sknn/SparkKNN.scala" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Spark_kNN/src/main/scala/org/cusp/bdi/sknn/util/GridOperation.scala" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/src/main/scala/org/cusp/bdi/sknn/util/GridOperation.scala" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Spark_kNN/src/main/scala/org/cusp/bdi/sknn/util/QuadTreeDigestOperations.scala" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/src/main/scala/org/cusp/bdi/sknn/util/QuadTreeDigestOperations.scala" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Spark_kNN/src/main/scala/org/cusp/bdi/sknn/util/QuadTreeOperations.scala" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/src/main/scala/org/cusp/bdi/sknn/util/QuadTreeOperations.scala" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Spark_kNN/src/test/scala/org/cusp/bdi/sknn/test/TestAllKnnJoin.scala" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/src/test/scala/org/cusp/bdi/sknn/test/TestAllKnnJoin.scala" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/FixKeyFileFormat$$anonfun$main$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/target/classes/FixKeyFileFormat$$anonfun$main$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/com/insightfullogic/quad_trees/Circle$$anonfun$intersects$10.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/com/insightfullogic/quad_trees/Circle$$anonfun$intersects$11.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/com/insightfullogic/quad_trees/Circle$$anonfun$intersects$12.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/com/insightfullogic/quad_trees/Circle$$anonfun$intersects$5.class" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/target/classes/com/insightfullogic/quad_trees/Circle$$anonfun$intersects$5.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/com/insightfullogic/quad_trees/Circle$$anonfun$intersects$6.class" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/target/classes/com/insightfullogic/quad_trees/Circle$$anonfun$intersects$6.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/com/insightfullogic/quad_trees/Circle$$anonfun$intersects$7.class" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/target/classes/com/insightfullogic/quad_trees/Circle$$anonfun$intersects$7.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/com/insightfullogic/quad_trees/Circle$$anonfun$intersects$8.class" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/target/classes/com/insightfullogic/quad_trees/Circle$$anonfun$intersects$8.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/com/insightfullogic/quad_trees/Circle$$anonfun$intersects$9.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/com/insightfullogic/quad_trees/Circle.class" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/target/classes/com/insightfullogic/quad_trees/Circle.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/com/insightfullogic/quad_trees/Box$$anonfun$intersects$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/target/classes/com/insightfullogic/quad_trees/Box$$anonfun$intersects$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/com/insightfullogic/quad_trees/Box$$anonfun$intersects$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/target/classes/com/insightfullogic/quad_trees/Box$$anonfun$intersects$2.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/com/insightfullogic/quad_trees/Box$$anonfun$intersects$3.class" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/target/classes/com/insightfullogic/quad_trees/Box$$anonfun$intersects$3.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/com/insightfullogic/quad_trees/Box$$anonfun$intersects$4.class" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/target/classes/com/insightfullogic/quad_trees/Box$$anonfun$intersects$4.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/com/insightfullogic/quad_trees/Box.class" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/target/classes/com/insightfullogic/quad_trees/Box.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/com/insightfullogic/quad_trees/Point.class" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/target/classes/com/insightfullogic/quad_trees/Point.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/com/insightfullogic/quad_trees/QuadTreeDigest.class" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/target/classes/com/insightfullogic/quad_trees/QuadTreeDigest.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/PartitionScheme$$anonfun$apply$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/PartitionScheme$$anonfun$apply$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/PartitionScheme$.class" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/PartitionScheme$.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/SparkKNN$$anon$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/SparkKNN$$anon$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/SparkKNN$$anon$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/SparkKNN$$anon$2.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/SparkKNN$$anonfun$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/SparkKNN$$anonfun$1.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/SparkKNN$$anonfun$10.class" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/SparkKNN$$anonfun$10.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/SparkKNN$$anonfun$11.class" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/SparkKNN$$anonfun$11.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/SparkKNN$$anonfun$12.class" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/SparkKNN$$anonfun$12.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/SparkKNN$$anonfun$13.class" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/SparkKNN$$anonfun$13.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/SparkKNN$$anonfun$14.class" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/SparkKNN$$anonfun$14.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/SparkKNN$$anonfun$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/SparkKNN$$anonfun$2.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/SparkKNN$$anonfun$21.class" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/SparkKNN$$anonfun$21.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/SparkKNN$$anonfun$22.class" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/SparkKNN$$anonfun$22.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/SparkKNN$$anonfun$23.class" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/SparkKNN$$anonfun$23.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/SparkKNN$$anonfun$24.class" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/SparkKNN$$anonfun$24.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/SparkKNN$$anonfun$25.class" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/SparkKNN$$anonfun$25.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/SparkKNN$$anonfun$26.class" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/SparkKNN$$anonfun$26.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/SparkKNN$$anonfun$3.class" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/SparkKNN$$anonfun$3.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/SparkKNN$$anonfun$4.class" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/SparkKNN$$anonfun$4.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/SparkKNN$$anonfun$5.class" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/SparkKNN$$anonfun$5.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/SparkKNN$$anonfun$6.class" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/SparkKNN$$anonfun$6.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/SparkKNN$$anonfun$7.class" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/SparkKNN$$anonfun$7.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/SparkKNN$$anonfun$9.class" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/SparkKNN$$anonfun$9.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/SparkKNN$$anonfun$computePartitionRanges$1.class" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/SparkKNN$$anonfun$knnJoin$1$$anon$3.class" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/SparkKNN$$anonfun$knnJoin$1$$anon$3.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/SparkKNN$$anonfun$knnJoin$1$$anonfun$16.class" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/SparkKNN$$anonfun$knnJoin$1$$anonfun$16.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/SparkKNN$$anonfun$knnJoin$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/SparkKNN$$anonfun$knnJoin$1.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/SparkKNN$$anonfun$knnJoin$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/SparkKNN$$anonfun$knnJoin$2.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/SparkKNN.class" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/SparkKNN.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/util/AssignToPartitions.class" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/util/AssignToPartitions.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/util/Node$.class" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/util/Node$.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/util/Node.class" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/util/Node.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/util/QuadTreeInfo.class" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/util/QuadTreeInfo.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/util/QuadTreeDigestOperations$$anonfun$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/util/QuadTreeDigestOperations$$anonfun$getFurthestCorner$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/util/QuadTreeDigestOperations$$anonfun$getFurthestCorner$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/util/QuadTreeDigestOperations$$anonfun$getFurthestCorner$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/util/QuadTreeDigestOperations$$anonfun$getFurthestCorner$2.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/util/QuadTreeDigestOperations$$anonfun$pointsWithinRegion$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/util/QuadTreeDigestOperations$.class" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/util/QuadTreeDigestOperations$.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/util/QuadTreeDigestOperations.class" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/util/QuadTreeDigestOperations.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/util/QuadTreeOperations$$anonfun$getFurthestCorner$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/util/QuadTreeOperations$$anonfun$getFurthestCorner$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/util/QuadTreeOperations$$anonfun$getFurthestCorner$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/util/QuadTreeOperations$$anonfun$getFurthestCorner$2.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/util/QuadTreeOperations$$anonfun$nearestNeighbor$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/util/QuadTreeOperations$$anonfun$nearestNeighbor$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/util/QuadTreeOperations$$anonfun$org$cusp$bdi$sknn$util$QuadTreeOperations$$pointsWithinRegion$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/util/QuadTreeOperations$$anonfun$org$cusp$bdi$sknn$util$QuadTreeOperations$$pointsWithinRegion$1.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/util/QuadTreeOperations$.class" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/util/QuadTreeOperations$.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/util/QuadTreeOperations.class" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/util/QuadTreeOperations.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/util/RDD_Store.class" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/util/RDD_Store.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/util/SparkKNN_Arguments.class" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/util/SparkKNN_Arguments.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Spark_kNN/target/test-classes/org/cusp/bdi/sknn/test/TestAllKnnJoin$$anonfun$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/target/test-classes/org/cusp/bdi/sknn/test/TestAllKnnJoin$$anonfun$1.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Spark_kNN/target/test-classes/org/cusp/bdi/sknn/test/TestAllKnnJoin$$anonfun$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/target/test-classes/org/cusp/bdi/sknn/test/TestAllKnnJoin$$anonfun$2.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Spark_kNN/target/test-classes/org/cusp/bdi/sknn/test/TestAllKnnJoin$$anonfun$3$$anonfun$apply$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/target/test-classes/org/cusp/bdi/sknn/test/TestAllKnnJoin$$anonfun$3$$anonfun$apply$1.class" afterDir="false" />
@@ -295,7 +85,6 @@
       <change beforePath="$PROJECT_DIR$/Spark_kNN/target/test-classes/org/cusp/bdi/sknn/test/TestAllKnnJoin$$anonfun$main$1$$anonfun$apply$3.class" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/target/test-classes/org/cusp/bdi/sknn/test/TestAllKnnJoin$$anonfun$main$1$$anonfun$apply$3.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Spark_kNN/target/test-classes/org/cusp/bdi/sknn/test/TestAllKnnJoin$$anonfun$main$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/target/test-classes/org/cusp/bdi/sknn/test/TestAllKnnJoin$$anonfun$main$1.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Spark_kNN/target/test-classes/org/cusp/bdi/sknn/test/TestAllKnnJoin$.class" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/target/test-classes/org/cusp/bdi/sknn/test/TestAllKnnJoin$.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/test-classes/org/cusp/bdi/sknn/test/TestAllKnnJoin.class" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/target/test-classes/org/cusp/bdi/sknn/test/TestAllKnnJoin.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/SpatialBenchmark/src/main/scala/org/cusp/bdi/sb/OutputsCompare.scala" beforeDir="false" afterPath="$PROJECT_DIR$/SpatialBenchmark/src/main/scala/org/cusp/bdi/sb/OutputsCompare.scala" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -322,6 +111,13 @@
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="MavenImportPreferences">
+    <option name="generalSettings">
+      <MavenGeneralSettings>
+        <option name="mavenHome" value="$APPLICATION_HOME_DIR$/plugins/maven/lib/maven3" />
+      </MavenGeneralSettings>
+    </option>
+  </component>
   <component name="ProjectCodeStyleSettingsMigration">
     <option name="version" value="1" />
   </component>
@@ -344,7 +140,7 @@
     <property name="TODO_SCOPE" value="All Places" />
     <property name="last_directory_selection" value="$PROJECT_DIR$/DataSetTools/src/main/scala/org/cusp/bdi/tools" />
     <property name="last_opened_file_path" value="$MAVEN_REPOSITORY$/org/apache/spark/spark-sql_2.11/2.1.0/spark-sql_2.11-2.1.0.jar!/" />
-    <property name="project.structure.last.edited" value="Modules" />
+    <property name="project.structure.last.edited" value="Artifacts" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.34280476" />
     <property name="restartRequiresConfirmation" value="false" />
@@ -353,8 +149,15 @@
     <property name="settings.editor.selected.configurable" value="preferences.keymap" />
   </component>
   <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/Spark_kNN/src/OLD" />
+      <recent name="$PROJECT_DIR$/DataSetTools/src/main/scala/org/cusp/bdi/tools/spark" />
+    </key>
     <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
       <recent name="org.cusp.bdi.tools.spark" />
+    </key>
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="org.cusp.bdi.sknn.util" />
     </key>
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/FW_Simba/src" />
@@ -363,12 +166,9 @@
       <recent name="$PROJECT_DIR$/FW_Simba/src/test/scala" />
       <recent name="$PROJECT_DIR$/FW_GeoMatch/src" />
     </key>
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/DataSetTools/src/main/scala/org/cusp/bdi/tools/spark" />
-    </key>
   </component>
   <component name="RunManager" selected="Application.SpatialBenchmark">
-    <configuration name="EnumerateFile" type="Application" factoryName="Application" temporary="true">
+    <configuration name="EnumerateFile" type="Application" factoryName="Application">
       <option name="MAIN_CLASS_NAME" value="org.cusp.bdi.tools.EnumerateFile" />
       <module name="DataSetTools" />
       <extension name="coverage">
@@ -381,7 +181,7 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="RandomSampler" type="Application" factoryName="Application" temporary="true">
+    <configuration name="RandomSampler" type="Application" factoryName="Application">
       <option name="MAIN_CLASS_NAME" value="org.cusp.bdi.tools.spark.RandomSampler" />
       <module name="DataSetTools" />
       <extension name="coverage">
@@ -394,7 +194,7 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="SIM_Example" type="Application" factoryName="Application" temporary="true">
+    <configuration name="SIM_Example" type="Application" factoryName="Application">
       <option name="MAIN_CLASS_NAME" value="org.cusp.bdi.fw.simba.SIM_Example" />
       <module name="FW_Simba" />
       <extension name="coverage">
@@ -407,27 +207,13 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="SpatialBenchmark" type="Application" factoryName="Application" temporary="true">
+    <configuration name="SpatialBenchmark" type="Application" factoryName="Application">
       <output_file path="/media/ayman/Data/GeoMatch_Files/OutputFiles/intelliJ_output_SpatialBenchmark" is_save="true" />
       <option name="MAIN_CLASS_NAME" value="org.cusp.bdi.sb.SpatialBenchmark" />
       <module name="SpatialBenchmark" />
       <extension name="coverage">
         <pattern>
           <option name="PATTERN" value="org.cusp.bdi.sb.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="TestAllKnnJoin" type="Application" factoryName="Application" temporary="true">
-      <output_file path="/media/ayman/Data/GeoMatch_Files/OutputFiles/intelliJ_output_TestAllKnnJoin" is_save="true" />
-      <option name="MAIN_CLASS_NAME" value="org.cusp.bdi.sknn.test.TestAllKnnJoin" />
-      <module name="Spark_kNN" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="org.cusp.bdi.sknn.test.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -442,15 +228,6 @@
       <item itemvalue="Application.RandomSampler" />
       <item itemvalue="Application.EnumerateFile" />
     </list>
-    <recent_temporary>
-      <list>
-        <item itemvalue="Application.SpatialBenchmark" />
-        <item itemvalue="Application.SIM_Example" />
-        <item itemvalue="Application.TestAllKnnJoin" />
-        <item itemvalue="Application.EnumerateFile" />
-        <item itemvalue="Application.RandomSampler" />
-      </list>
-    </recent_temporary>
   </component>
   <component name="ScalaProjectSettings">
     <option name="disableLangInjection" value="true" />
@@ -462,9 +239,7 @@
     </option>
     <option name="scalaPriority" value="false" />
   </component>
-  <component name="StructureViewFactory">
-    <option name="AUTOSCROLL_MODE" value="false" />
-  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="project-level" UseSingleDictionary="true" transferred="true" />
   <component name="SvnConfiguration">
     <configuration />
   </component>
@@ -539,7 +314,14 @@
       <option name="project" value="LOCAL" />
       <updated>1595406321004</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="100% accuracy">
+      <created>1595833268560</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1595833268561</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -573,33 +355,46 @@
     <MESSAGE value="Added check by distance if whole record (distance + key) match fails" />
     <MESSAGE value="Code analysis fixes" />
     <MESSAGE value="runtime 98secs&#10;code analysis fixes" />
-    <option name="LAST_COMMIT_MESSAGE" value="runtime 98secs&#10;code analysis fixes" />
+    <MESSAGE value="100% accuracy" />
+    <option name="LAST_COMMIT_MESSAGE" value="100% accuracy" />
   </component>
   <component name="WindowStateProjectService">
     <state x="1183" y="599" width="811" height="531" key="#Notifications" timestamp="1594705139893">
       <screen x="67" y="27" width="2493" height="1413" />
     </state>
     <state x="1183" y="599" width="811" height="531" key="#Notifications/67.27.2493.1413@67.27.2493.1413" timestamp="1594705139893" />
-    <state x="382" y="164" width="1557" height="1060" key="#Project_Structure" timestamp="1595481338906">
+    <state x="808" y="291" width="1000" height="883" key="#Plugins" timestamp="1596075586448">
       <screen x="67" y="27" width="2493" height="1413" />
     </state>
-    <state x="382" y="164" width="1557" height="1060" key="#Project_Structure/67.27.2493.1413@67.27.2493.1413" timestamp="1595481338906" />
+    <state x="808" y="291" width="1000" height="883" key="#Plugins/67.27.2493.1413@67.27.2493.1413" timestamp="1596075586448" />
+    <state x="382" y="164" width="1557" height="1060" key="#Project_Structure" timestamp="1596166675225">
+      <screen x="67" y="27" width="2493" height="1413" />
+    </state>
+    <state x="382" y="164" width="1557" height="1060" key="#Project_Structure/67.27.2493.1413@67.27.2493.1413" timestamp="1596166675225" />
     <state x="1046" y="490" width="524" height="484" key="#com.intellij.codeInsight.editorActions.RestoreReferencesDialog" timestamp="1595191826608">
       <screen x="67" y="27" width="2493" height="1413" />
     </state>
     <state x="1046" y="490" width="524" height="484" key="#com.intellij.codeInsight.editorActions.RestoreReferencesDialog/67.27.2493.1413@67.27.2493.1413" timestamp="1595191826608" />
-    <state x="782" y="207" width="1201" height="698" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1595822680077">
+    <state x="782" y="207" width="1409" height="1022" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1596173546682">
       <screen x="67" y="27" width="2493" height="1413" />
     </state>
-    <state x="782" y="207" width="1201" height="698" key="#com.intellij.execution.impl.EditConfigurationsDialog/67.27.2493.1413@67.27.2493.1413" timestamp="1595822680077" />
+    <state x="782" y="207" width="1409" height="1022" key="#com.intellij.execution.impl.EditConfigurationsDialog/67.27.2493.1413@67.27.2493.1413" timestamp="1596173546682" />
     <state x="1029" y="649" width="559" height="167" key="#com.intellij.framework.addSupport.AddSupportForSingleFrameworkDialog" timestamp="1594705151507">
       <screen x="67" y="27" width="2493" height="1413" />
     </state>
     <state x="1029" y="649" width="559" height="167" key="#com.intellij.framework.addSupport.AddSupportForSingleFrameworkDialog/67.27.2493.1413@67.27.2493.1413" timestamp="1594705151507" />
+    <state x="990" y="536" width="637" height="393" key="#com.intellij.ide.actions.ChooseComponentsToExportDialog" timestamp="1596175188861">
+      <screen x="67" y="27" width="2493" height="1413" />
+    </state>
+    <state x="990" y="536" width="637" height="393" key="#com.intellij.ide.actions.ChooseComponentsToExportDialog/67.27.2493.1413@67.27.2493.1413" timestamp="1596175188861" />
     <state x="1121" y="426" width="374" height="613" key="#com.intellij.ide.util.MemberChooser" timestamp="1594875751099">
       <screen x="67" y="27" width="2493" height="1413" />
     </state>
     <state x="1121" y="426" width="374" height="613" key="#com.intellij.ide.util.MemberChooser/67.27.2493.1413@67.27.2493.1413" timestamp="1594875751099" />
+    <state x="1027" y="487" width="656" height="510" key="#com.intellij.ide.util.TreeClassChooserDialog" timestamp="1596173004665">
+      <screen x="67" y="27" width="2493" height="1413" />
+    </state>
+    <state x="1027" y="487" width="656" height="510" key="#com.intellij.ide.util.TreeClassChooserDialog/67.27.2493.1413@67.27.2493.1413" timestamp="1596173004665" />
     <state x="1018" y="402" width="687" height="661" key="#com.intellij.ide.util.frameworkSupport.AddFrameworkSupportDialog" timestamp="1595477995982">
       <screen x="67" y="27" width="2493" height="1413" />
     </state>
@@ -608,30 +403,46 @@
       <screen x="67" y="27" width="2493" height="1413" />
     </state>
     <state x="990" y="392" width="330" height="604" key="#com.intellij.openapi.roots.ui.configuration.libraryEditor.LibraryEditorDialog/67.27.2493.1413@67.27.2493.1413" timestamp="1595481229296" />
+    <state x="993" y="459" width="630" height="546" key="#com.intellij.openapi.updateSettings.impl.PluginUpdateInfoDialog" timestamp="1596004131129">
+      <screen x="67" y="27" width="2493" height="1413" />
+    </state>
+    <state x="993" y="459" width="630" height="546" key="#com.intellij.openapi.updateSettings.impl.PluginUpdateInfoDialog/67.27.2493.1413@67.27.2493.1413" timestamp="1596004131129" />
     <state x="1027" y="598" width="676" height="276" key="#com.intellij.refactoring.move.moveClassesOrPackages.MoveClassesOrPackagesDialog.classes" timestamp="1595190593283">
       <screen x="67" y="27" width="2493" height="1413" />
     </state>
     <state x="1027" y="598" width="676" height="276" key="#com.intellij.refactoring.move.moveClassesOrPackages.MoveClassesOrPackagesDialog.classes/67.27.2493.1413@67.27.2493.1413" timestamp="1595190593283" />
+    <state x="1094" y="537" width="532" height="408" key="#com.intellij.tools.ToolEditorDialog" timestamp="1596166849413">
+      <screen x="67" y="27" width="2493" height="1413" />
+    </state>
+    <state x="1094" y="537" width="532" height="408" key="#com.intellij.tools.ToolEditorDialog/67.27.2493.1413@67.27.2493.1413" timestamp="1596166849413" />
     <state x="828" y="395" width="655" height="598" key="#com.intellij.util.ui.classpath.ChooseLibrariesDialog" timestamp="1595481338341">
       <screen x="67" y="27" width="2493" height="1413" />
     </state>
     <state x="828" y="395" width="655" height="598" key="#com.intellij.util.ui.classpath.ChooseLibrariesDialog/67.27.2493.1413@67.27.2493.1413" timestamp="1595481338341" />
+    <state x="1012" y="419" key="#xdebugger.evaluate" timestamp="1595868635154">
+      <screen x="67" y="27" width="2493" height="1413" />
+    </state>
+    <state x="1012" y="419" key="#xdebugger.evaluate/67.27.2493.1413@67.27.2493.1413" timestamp="1595868635154" />
     <state x="860" y="529" width="902" height="406" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1" timestamp="1595477137001">
       <screen x="67" y="27" width="2493" height="1413" />
     </state>
     <state x="860" y="529" width="902" height="406" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1/67.27.2493.1413@67.27.2493.1413" timestamp="1595477137001" />
-    <state width="565" height="506" key="DebuggerActiveHint" timestamp="1595816109960">
+    <state width="588" height="506" key="DebuggerActiveHint" timestamp="1596165982590">
       <screen x="67" y="27" width="2493" height="1413" />
     </state>
-    <state width="565" height="506" key="DebuggerActiveHint/67.27.2493.1413@67.27.2493.1413" timestamp="1595816109960" />
+    <state width="588" height="506" key="DebuggerActiveHint/67.27.2493.1413@67.27.2493.1413" timestamp="1596165982590" />
+    <state x="167" y="125" width="2293" height="1215" key="DiffContextDialog" timestamp="1596173547121">
+      <screen x="67" y="27" width="2493" height="1413" />
+    </state>
+    <state x="167" y="125" width="2293" height="1215" key="DiffContextDialog/67.27.2493.1413@67.27.2493.1413" timestamp="1596173547121" />
     <state x="1145" y="453" width="370" height="572" key="EnvironmentVariablesDialog" timestamp="1595477521248">
       <screen x="67" y="27" width="2493" height="1413" />
     </state>
     <state x="1145" y="453" width="370" height="572" key="EnvironmentVariablesDialog/67.27.2493.1413@67.27.2493.1413" timestamp="1595477521248" />
-    <state x="935" y="476" width="878" height="513" key="FileChooserDialogImpl" timestamp="1595572166781">
+    <state x="935" y="476" width="878" height="513" key="FileChooserDialogImpl" timestamp="1596175186877">
       <screen x="67" y="27" width="2493" height="1413" />
     </state>
-    <state x="935" y="476" width="878" height="513" key="FileChooserDialogImpl/67.27.2493.1413@67.27.2493.1413" timestamp="1595572166781" />
+    <state x="935" y="476" width="878" height="513" key="FileChooserDialogImpl/67.27.2493.1413@67.27.2493.1413" timestamp="1596175186877" />
     <state x="1105" y="653" key="Github.CreateGistDialog" timestamp="1594704073076">
       <screen x="67" y="27" width="2493" height="1413" />
     </state>
@@ -644,62 +455,62 @@
       <screen x="67" y="27" width="2493" height="1413" />
     </state>
     <state x="937" y="413" width="743" height="639" key="Github.UntrackedFilesDialog/67.27.2493.1413@67.27.2493.1413" timestamp="1594704490168" />
-    <state width="2437" height="380" key="GridCell.Tab.0.bottom" timestamp="1595832753930">
+    <state width="2437" height="383" key="GridCell.Tab.0.bottom" timestamp="1596175956550">
       <screen x="67" y="27" width="2493" height="1413" />
     </state>
-    <state width="2437" height="380" key="GridCell.Tab.0.bottom/67.27.2493.1413@67.27.2493.1413" timestamp="1595832753930" />
-    <state width="2437" height="380" key="GridCell.Tab.0.center" timestamp="1595832753929">
+    <state width="2437" height="383" key="GridCell.Tab.0.bottom/67.27.2493.1413@67.27.2493.1413" timestamp="1596175956550" />
+    <state width="2437" height="383" key="GridCell.Tab.0.center" timestamp="1596175956549">
       <screen x="67" y="27" width="2493" height="1413" />
     </state>
-    <state width="2437" height="380" key="GridCell.Tab.0.center/67.27.2493.1413@67.27.2493.1413" timestamp="1595832753929" />
-    <state width="2437" height="380" key="GridCell.Tab.0.left" timestamp="1595832753928">
+    <state width="2437" height="383" key="GridCell.Tab.0.center/67.27.2493.1413@67.27.2493.1413" timestamp="1596175956549" />
+    <state width="2437" height="383" key="GridCell.Tab.0.left" timestamp="1596175956548">
       <screen x="67" y="27" width="2493" height="1413" />
     </state>
-    <state width="2437" height="380" key="GridCell.Tab.0.left/67.27.2493.1413@67.27.2493.1413" timestamp="1595832753928" />
-    <state width="2437" height="380" key="GridCell.Tab.0.right" timestamp="1595832753929">
+    <state width="2437" height="383" key="GridCell.Tab.0.left/67.27.2493.1413@67.27.2493.1413" timestamp="1596175956548" />
+    <state width="2437" height="383" key="GridCell.Tab.0.right" timestamp="1596175956549">
       <screen x="67" y="27" width="2493" height="1413" />
     </state>
-    <state width="2437" height="380" key="GridCell.Tab.0.right/67.27.2493.1413@67.27.2493.1413" timestamp="1595832753929" />
-    <state width="2437" height="435" key="GridCell.Tab.1.bottom" timestamp="1595822473075">
+    <state width="2437" height="383" key="GridCell.Tab.0.right/67.27.2493.1413@67.27.2493.1413" timestamp="1596175956549" />
+    <state width="2437" height="472" key="GridCell.Tab.1.bottom" timestamp="1596174074111">
       <screen x="67" y="27" width="2493" height="1413" />
     </state>
-    <state width="2437" height="435" key="GridCell.Tab.1.bottom/67.27.2493.1413@67.27.2493.1413" timestamp="1595822473075" />
-    <state width="2437" height="435" key="GridCell.Tab.1.center" timestamp="1595822473074">
+    <state width="2437" height="472" key="GridCell.Tab.1.bottom/67.27.2493.1413@67.27.2493.1413" timestamp="1596174074111" />
+    <state width="2437" height="472" key="GridCell.Tab.1.center" timestamp="1596174074111">
       <screen x="67" y="27" width="2493" height="1413" />
     </state>
-    <state width="2437" height="435" key="GridCell.Tab.1.center/67.27.2493.1413@67.27.2493.1413" timestamp="1595822473074" />
-    <state width="2437" height="435" key="GridCell.Tab.1.left" timestamp="1595822473074">
+    <state width="2437" height="472" key="GridCell.Tab.1.center/67.27.2493.1413@67.27.2493.1413" timestamp="1596174074111" />
+    <state width="2437" height="472" key="GridCell.Tab.1.left" timestamp="1596174074110">
       <screen x="67" y="27" width="2493" height="1413" />
     </state>
-    <state width="2437" height="435" key="GridCell.Tab.1.left/67.27.2493.1413@67.27.2493.1413" timestamp="1595822473074" />
-    <state width="2437" height="435" key="GridCell.Tab.1.right" timestamp="1595822473074">
+    <state width="2437" height="472" key="GridCell.Tab.1.left/67.27.2493.1413@67.27.2493.1413" timestamp="1596174074110" />
+    <state width="2437" height="472" key="GridCell.Tab.1.right" timestamp="1596174074111">
       <screen x="67" y="27" width="2493" height="1413" />
     </state>
-    <state width="2437" height="435" key="GridCell.Tab.1.right/67.27.2493.1413@67.27.2493.1413" timestamp="1595822473074" />
+    <state width="2437" height="472" key="GridCell.Tab.1.right/67.27.2493.1413@67.27.2493.1413" timestamp="1596174074111" />
     <state x="899" y="479" width="819" height="507" key="NewModule_or_Project.wizard" timestamp="1594705270398">
       <screen x="67" y="27" width="2493" height="1413" />
     </state>
     <state x="899" y="479" width="819" height="507" key="NewModule_or_Project.wizard/67.27.2493.1413@67.27.2493.1413" timestamp="1594705270398" />
-    <state x="440" y="244" width="1850" height="995" key="SettingsEditor" timestamp="1595821727790">
+    <state x="440" y="244" width="1850" height="995" key="SettingsEditor" timestamp="1596174979609">
       <screen x="67" y="27" width="2493" height="1413" />
     </state>
-    <state x="440" y="244" width="1850" height="995" key="SettingsEditor/67.27.2493.1413@67.27.2493.1413" timestamp="1595821727790" />
-    <state x="908" y="468" width="800" height="528" key="Vcs.Push.Dialog.v2" timestamp="1595740639412">
+    <state x="440" y="244" width="1850" height="995" key="SettingsEditor/67.27.2493.1413@67.27.2493.1413" timestamp="1596174979609" />
+    <state x="908" y="468" width="800" height="528" key="Vcs.Push.Dialog.v2" timestamp="1595833280426">
       <screen x="67" y="27" width="2493" height="1413" />
     </state>
-    <state x="908" y="468" width="800" height="528" key="Vcs.Push.Dialog.v2/67.27.2493.1413@67.27.2493.1413" timestamp="1595740639412" />
+    <state x="908" y="468" width="800" height="528" key="Vcs.Push.Dialog.v2/67.27.2493.1413@67.27.2493.1413" timestamp="1595833280426" />
     <state x="1098" y="516" width="476" height="441" key="chooseDestDirectoryDialog" timestamp="1595190436979">
       <screen x="67" y="27" width="2493" height="1413" />
     </state>
     <state x="1098" y="516" width="476" height="441" key="chooseDestDirectoryDialog/67.27.2493.1413@67.27.2493.1413" timestamp="1595190436979" />
-    <state x="690" y="229" width="1237" height="1006" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser" timestamp="1595740625190">
+    <state x="690" y="229" width="1237" height="1006" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser" timestamp="1596168185476">
       <screen x="67" y="27" width="2493" height="1413" />
     </state>
-    <state x="690" y="229" width="1237" height="1006" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser/67.27.2493.1413@67.27.2493.1413" timestamp="1595740625190" />
-    <state x="937" y="427" width="1490" height="829" key="com.intellij.xdebugger.impl.breakpoints.ui.BreakpointsDialogFactory$2" timestamp="1595822306830">
+    <state x="690" y="229" width="1237" height="1006" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser/67.27.2493.1413@67.27.2493.1413" timestamp="1596168185476" />
+    <state x="1040" y="216" width="1490" height="829" key="com.intellij.xdebugger.impl.breakpoints.ui.BreakpointsDialogFactory$2" timestamp="1596173560956">
       <screen x="67" y="27" width="2493" height="1413" />
     </state>
-    <state x="937" y="427" width="1490" height="829" key="com.intellij.xdebugger.impl.breakpoints.ui.BreakpointsDialogFactory$2/67.27.2493.1413@67.27.2493.1413" timestamp="1595822306830" />
+    <state x="1040" y="216" width="1490" height="829" key="com.intellij.xdebugger.impl.breakpoints.ui.BreakpointsDialogFactory$2/67.27.2493.1413@67.27.2493.1413" timestamp="1596173560956" />
     <state x="167" y="125" width="2293" height="1215" key="dock-window-1" timestamp="1594783317173">
       <screen x="67" y="27" width="2493" height="1413" />
     </state>
@@ -708,10 +519,10 @@
       <screen x="67" y="27" width="2493" height="1413" />
     </state>
     <state x="292" y="314" width="2293" height="1215" key="dock-window-2/67.27.2493.1413@67.27.2493.1413" timestamp="1594783317173" />
-    <state x="974" y="339" width="1109" height="836" key="find.popup" timestamp="1595710299369">
+    <state x="974" y="339" width="1109" height="836" key="find.popup" timestamp="1596078077239">
       <screen x="67" y="27" width="2493" height="1413" />
     </state>
-    <state x="974" y="339" width="1109" height="836" key="find.popup/67.27.2493.1413@67.27.2493.1413" timestamp="1595710299369" />
+    <state x="974" y="339" width="1109" height="836" key="find.popup/67.27.2493.1413@67.27.2493.1413" timestamp="1596078077239" />
     <state x="622" y="459" width="1372" height="547" key="new project wizard" timestamp="1595477988799">
       <screen x="67" y="27" width="2493" height="1413" />
     </state>
@@ -720,18 +531,33 @@
       <screen x="67" y="27" width="2493" height="1413" />
     </state>
     <state x="977" y="343" key="run.anything.popup/67.27.2493.1413@67.27.2493.1413" timestamp="1595661934996" />
-    <state x="976" y="347" width="840" height="678" key="search.everywhere.popup" timestamp="1595400349743">
+    <state x="976" y="347" width="840" height="678" key="search.everywhere.popup" timestamp="1596165673410">
       <screen x="67" y="27" width="2493" height="1413" />
     </state>
-    <state x="976" y="347" width="840" height="678" key="search.everywhere.popup/67.27.2493.1413@67.27.2493.1413" timestamp="1595400349743" />
+    <state x="976" y="347" width="840" height="678" key="search.everywhere.popup/67.27.2493.1413@67.27.2493.1413" timestamp="1596165673410" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
-        <line-breakpoint enabled="true" type="scala-line">
+        <line-breakpoint type="scala-line">
           <url>file://$PROJECT_DIR$/Spark_kNN/src/main/scala/org/cusp/bdi/sknn/SparkKNN.scala</url>
           <line>315</line>
-          <option name="timeStamp" value="40" />
+          <option name="timeStamp" value="60" />
+        </line-breakpoint>
+        <line-breakpoint type="scala-line">
+          <url>file://$PROJECT_DIR$/Spark_kNN/src/main/scala/org/cusp/bdi/sknn/SparkKNN.scala</url>
+          <line>234</line>
+          <option name="timeStamp" value="67" />
+        </line-breakpoint>
+        <line-breakpoint type="scala-line">
+          <url>file://$PROJECT_DIR$/Spark_kNN/src/main/scala/org/cusp/bdi/sknn/util/QuadTreeDigestOperations.scala</url>
+          <line>150</line>
+          <option name="timeStamp" value="82" />
+        </line-breakpoint>
+        <line-breakpoint type="scala-line">
+          <url>file://$PROJECT_DIR$/Spark_kNN/src/main/scala/org/cusp/bdi/sknn/SparkKNN.scala</url>
+          <line>274</line>
+          <option name="timeStamp" value="88" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
