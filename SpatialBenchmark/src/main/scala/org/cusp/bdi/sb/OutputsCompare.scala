@@ -73,8 +73,10 @@ object OutputsCompare extends Serializable {
         }
 
         iter.foreach(row => {
-//          if (row._1.startsWith("Taxi_1_B_990357".toLowerCase))
+
+//          if (row._1.startsWith("bread_1_b_817301".toLowerCase))
 //            println()
+
           if (row._2._1 != null)
             incrementInMap(Classifications.recordsCount, row)
 
@@ -100,29 +102,26 @@ object OutputsCompare extends Serializable {
 
             row._2._2.indices.foreach(i => arrMatchIdxs(i) = row._2._1.indexOf(row._2._2(i)))
 
-            //            lazy val kmDistances = row._2._1.map(_.split(",")).map(_ (0))
-            //
-            //            row._2._2.indices.filter(i => arrMatchIdxs(i) == -1)
-            //              .foreach(i => {
-            //
-            //                var counter = 0
-            //                var idxOf = -1
-            //                val dist = row._2._2(i).split(",")(0)
-            //
-            //                while (counter < kmDistances.length && idxOf == -1) {
-            //
-            //                  idxOf = kmDistances.indexOf(dist)
-            //
-            //                  if (idxOf != -1 && arrMatchIdxs(idxOf) == -1)
-            //                    arrMatchIdxs(idxOf) = idxOf
-            //                  else
-            //                    idxOf = -1
-            //                  counter += 1
-            //                }
-            //
-            //                arrMatchIdxs(i) =
-            //                  kmDistances.indexOf(row._2._2(i).split(",")(0))
-            //              })
+            lazy val kmDistances = row._2._1.map(_.split(",")).map(_ (0))
+
+            row._2._2.indices
+              .filter(arrIdx => arrMatchIdxs(arrIdx) == -1)
+              .foreach(arrIdx => {
+
+                val dist = row._2._2(arrIdx).split(",")(0)
+
+                val l = kmDistances
+                  .indices
+                  .filter(i => kmDistances(i).equals(dist))
+
+                val arrValidIdxs = l.filterNot(idx => arrMatchIdxs.contains(idx)).take(1)
+
+                //                val arrValidIdxs = ll.find(i => arrMatchIdxs(i) == -1)
+                //                  .getOrElse(-1)
+
+                if (!arrValidIdxs.isEmpty)
+                  arrMatchIdxs(arrIdx) = arrValidIdxs.head
+              })
 
             if (arrFWSize == 0 && arrKMSize == 0) {
               incrementInMap(Classifications.recordsBothNoMatch, row)

@@ -1,6 +1,6 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="TestAllKnnJoin" type="Application" factoryName="Application">
-    <output_file path="/media/ayman/Data/GeoMatch_Files/OutputFiles/intelliJ_output_TestAllKnnJoin" is_save="true" />
+    <output_file path="/media/ayman/Data/GeoMatch_Files/OutputFiles/IntelliJ_Logs/TestAllKnnJoin" is_save="true" />
     <option name="MAIN_CLASS_NAME" value="org.cusp.bdi.sknn.test.TestAllKnnJoin" />
     <module name="Spark_kNN" />
     <extension name="coverage">

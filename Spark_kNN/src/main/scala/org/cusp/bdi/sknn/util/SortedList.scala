@@ -65,22 +65,12 @@ case class SortedList[T](maxSize: Int, allowDuplicates: Boolean)(implicit ev$1: 
   private var lastNode: Node[T] = _
   private var nodeCount = 0
 
-  override def head(): Node[T] = headNode
-
-  override def last(): Node[T] = lastNode
-
-  override def size(): Int = nodeCount
-
-  override def isEmpty(): Boolean = headNode == null
-
   def clear(): Unit = {
 
     headNode = null
     lastNode = null
     nodeCount = 0
   }
-
-  def isFull: Boolean = nodeCount == maxSize
 
   // line: String, xy: (Double, Double)
   def add(distance: Double, data: T) {
@@ -134,35 +124,64 @@ case class SortedList[T](maxSize: Int, allowDuplicates: Boolean)(implicit ev$1: 
     }
   }
 
-  def discardAfter(discardFromIndx: Int): Unit = {
+  override def last(): Node[T] = lastNode
 
-    if (!isEmpty && discardFromIndx < size)
-      if (discardFromIndx == 0) {
+  def isFull: Boolean = nodeCount == maxSize
 
-        headNode = null
-        lastNode = headNode
-        nodeCount = 0
-      }
-      else {
+  def discardAfter(node: Node[T], newCount: Int): Unit = {
 
-        lastNode = head()
+    if (node.next != null) {
 
-        var idx = 0
+      lastNode = node
+      lastNode.next = null
 
-        while (lastNode.next != null && idx < discardFromIndx - 1) {
+      nodeCount = newCount
+    }
 
-          lastNode = lastNode.next
-
-          idx += 1
-        }
-
-        //                if (currNode != null) {
-
-        lastNode.next = null
-        nodeCount = idx + 1
-        //                }
-      }
+    //    if (!isEmpty && discardFromIndx < size)
+    //      if (discardFromIndx == 0) {
+    //
+    //        headNode = null
+    //        lastNode = headNode
+    //        nodeCount = 0
+    //      }
+    //      else {
+    //
+    //        lastNode = head()
+    //
+    //        var idx = 0
+    //
+    //        while (lastNode.next != null && idx < discardFromIndx - 1) {
+    //
+    //          lastNode = lastNode.next
+    //
+    //          idx += 1
+    //        }
+    //
+    //        //                if (currNode != null) {
+    //
+    //        lastNode.next = null
+    //        nodeCount = idx + 1
+    //        //                }
+    //      }
   }
+
+  override def size(): Int = nodeCount
+
+  def get(idx: Int) = {
+
+    var current = head
+    var i = 0
+    while (i < idx) {
+
+      current = current.next
+      i += 1
+    }
+
+    current
+  }
+
+  override def head(): Node[T] = headNode
 
   override def iterator(): Iterator[Node[T]] = new AbstractIterator[Node[T]] {
 
@@ -180,9 +199,11 @@ case class SortedList[T](maxSize: Int, allowDuplicates: Boolean)(implicit ev$1: 
       }
   }
 
-  override def mkString(sep: String): String =
-    this.map(node => "%s%s".format(node, sep)).mkString("")
+  override def isEmpty(): Boolean = headNode == null
 
   override def toString(): String =
     mkString("\n")
+
+  override def mkString(sep: String): String =
+    this.map(node => "%s%s".format(node, sep)).mkString("")
 }

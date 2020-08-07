@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ScalaProjectSettings">
+    <option name="autoRunDelay" value="1390" />
     <option name="disableLangInjection" value="true" />
     <option name="enableJavaToScalaConversion" value="false" />
     <option name="intInjectionMapping">
@@ -9,5 +10,6 @@
       </map>
     </option>
     <option name="scalaPriority" value="false" />
+    <option name="treatDocCommentAsBlockComment" value="true" />
   </component>
 </project>

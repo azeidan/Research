@@ -6,20 +6,25 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="FW_Simba" />
         <module name="FW_Simba_Source" />
-        <module name="Common" />
-        <module name="DataSetTools" />
-        <module name="GeoMatch" />
         <module name="Spark_kNN" />
+        <module name="FW_GeoMatch" />
+        <module name="FW_LocationSpark" />
+        <module name="FW_Simba" />
+        <module name="GeoMatch" />
+        <module name="DataSetTools" />
         <module name="LocalRunFiles" />
         <module name="SpatialBenchmark" />
+        <module name="FW_LocationSpark_Source" />
+        <module name="Common" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="Common" target="1.8" />
       <module name="DataSetTools" target="1.8" />
       <module name="FW_GeoMatch" target="1.8" />
+      <module name="FW_LocationSpark" target="1.8" />
+      <module name="FW_LocationSpark_Source" target="1.8" />
       <module name="FW_Simba" target="1.8" />
       <module name="FW_Simba_Source" target="1.8" />
       <module name="GeoMatch" target="1.8" />

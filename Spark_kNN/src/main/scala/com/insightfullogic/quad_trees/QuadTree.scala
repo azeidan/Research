@@ -22,7 +22,7 @@ case class QuadTree(boundary: Box) extends Serializable {
 
   def getTotalPoints: Long = totalPoints
 
-  def getPoints: ListBuffer[Point] = points
+  def getLstPoint: ListBuffer[Point] = points
 
   def getMBR: (Double, Double, Double, Double) = (boundary.left, boundary.bottom, boundary.right, boundary.top)
 
