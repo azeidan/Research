@@ -17,698 +17,8 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ee761a9d-eff2-4086-b83a-8096819a4548" name="Default Changelist" comment="Before removing Weight">
-      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__asm_asm_3_1.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__com_esotericsoftware_kryo_kryo_2_21.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__com_esotericsoftware_minlog_minlog_1_2.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__com_esotericsoftware_reflectasm_reflectasm_shaded_1_07.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__com_fasterxml_jackson_core_jackson_annotations_2_4_4.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__com_fasterxml_jackson_core_jackson_core_2_4_4.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__com_fasterxml_jackson_core_jackson_databind_2_4_4.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__com_fasterxml_jackson_module_jackson_module_scala_2_10_2_4_4.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__com_google_uzaygezen_uzaygezen_core_0_2.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__com_sun_jersey_contribs_jersey_guice_1_9.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__com_sun_jersey_jersey_client_1_9.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__com_sun_jersey_jersey_core_1_9.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__com_sun_jersey_jersey_grizzly2_1_9.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__com_sun_jersey_jersey_json_1_9.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__com_sun_jersey_jersey_server_1_9.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__com_sun_jersey_jersey_test_framework_jersey_test_framework_core_1_9.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__com_sun_jersey_jersey_test_framework_jersey_test_framework_grizzly2_1_9.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__com_sun_xml_bind_jaxb_impl_2_2_3_1.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__com_twitter_chill_2_10_0_5_0.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__com_twitter_chill_java_0_5_0.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__com_typesafe_akka_akka_actor_2_10_2_3_11.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__com_typesafe_akka_akka_remote_2_10_2_3_11.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__com_typesafe_akka_akka_slf4j_2_10_2_3_11.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__com_typesafe_config_1_2_1.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__com_vividsolutions_jts_1_13.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__commons_lang_commons_lang_2_4.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__io_netty_netty_all_4_0_29_Final.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__javax_activation_activation_1_1.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__javax_servlet_javax_servlet_api_3_0_1.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__jline_jline_0_9_94.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__net_razorvine_pyrolite_4_9.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__net_sf_py4j_py4j_0_9.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_commons_commons_lang3_3_3_2.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_mesos_mesos_shaded_protobuf_0_21_1.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_spark_spark_core_2_10_1_6_2.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_spark_spark_launcher_2_10_1_6_2.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_spark_spark_network_common_2_10_1_6_2.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_spark_spark_network_shuffle_2_10_1_6_2.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_spark_spark_unsafe_2_10_1_6_2.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_codehaus_jackson_jackson_jaxrs_1_8_3.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_codehaus_jackson_jackson_xc_1_8_3.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_codehaus_jettison_jettison_1_1.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_eclipse_jetty_orbit_javax_servlet_3_0_0_v201112011016.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_glassfish_external_management_api_3_0_0_b012.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_glassfish_gmbal_gmbal_api_only_3_0_0_b023.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_glassfish_grizzly_grizzly_framework_2_1_2.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_glassfish_grizzly_grizzly_http_2_1_2.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_glassfish_grizzly_grizzly_http_server_2_1_2.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_glassfish_grizzly_grizzly_http_servlet_2_1_2.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_glassfish_grizzly_grizzly_rcm_2_1_2.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_glassfish_javax_servlet_3_1.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_json4s_json4s_ast_2_10_3_2_10.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_json4s_json4s_core_2_10_3_2_10.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_json4s_json4s_jackson_2_10_3_2_10.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_objenesis_objenesis_1_2.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_scala_lang_scala_compiler_2_10_0.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_scala_lang_scala_library_2_10_5.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_scala_lang_scala_reflect_2_10_4.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_scala_lang_scalap_2_10_0.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_slf4j_jcl_over_slf4j_1_7_10.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_slf4j_jul_to_slf4j_1_7_10.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_slf4j_slf4j_api_1_7_10.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_slf4j_slf4j_log4j12_1_7_10.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_tachyonproject_tachyon_client_0_8_2.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_tachyonproject_tachyon_underfs_hdfs_0_8_2.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_tachyonproject_tachyon_underfs_local_0_8_2.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_tachyonproject_tachyon_underfs_s3_0_8_2.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_uncommons_maths_uncommons_maths_1_2_2a.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_xerial_snappy_snappy_java_1_1_2_1.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__stax_stax_api_1_0_1.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FW_LocationSpark/FW_LocationSpark.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FW_LocationSpark/pom.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FW_LocationSpark/src/test/scala/org/cusp/bdi/sb/fw/ls/HelperObjects.scala" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FW_LocationSpark/src/test/scala/org/cusp/bdi/sb/fw/ls/LS_Example.scala" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FW_LocationSpark_Source/FW_LocationSpark_Source.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FW_LocationSpark_Source/pom.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FW_LocationSpark_Source/src/main/scala/cs/purdue/edu/examples/KnnJoinApp.scala" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FW_LocationSpark_Source/src/main/scala/cs/purdue/edu/examples/SpatialJoinApp.scala" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FW_LocationSpark_Source/src/main/scala/cs/purdue/edu/examples/SpatialJoinWithSchedulerApp.scala" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FW_LocationSpark_Source/src/main/scala/cs/purdue/edu/examples/SpatialOpts.scala" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FW_LocationSpark_Source/src/main/scala/cs/purdue/edu/examples/SpatialSampleRDD.scala" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FW_LocationSpark_Source/src/main/scala/cs/purdue/edu/scheduler/joinScheduler.scala" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FW_LocationSpark_Source/src/main/scala/cs/purdue/edu/scheduler/skewAnalysis.scala" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FW_LocationSpark_Source/src/main/scala/cs/purdue/edu/spatialanalysis/clustering.scala" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FW_LocationSpark_Source/src/main/scala/cs/purdue/edu/spatialanalysis/stextual.scala" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FW_LocationSpark_Source/src/main/scala/cs/purdue/edu/spatialindex/quatree/Node.scala" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FW_LocationSpark_Source/src/main/scala/cs/purdue/edu/spatialindex/quatree/Qtree.scala" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FW_LocationSpark_Source/src/main/scala/cs/purdue/edu/spatialindex/quatree/QtreePartionner.scala" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FW_LocationSpark_Source/src/main/scala/cs/purdue/edu/spatialindex/quatree/SBQTree.scala" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FW_LocationSpark_Source/src/main/scala/cs/purdue/edu/spatialindex/rtree/Geom.scala" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FW_LocationSpark_Source/src/main/scala/cs/purdue/edu/spatialindex/rtree/Joined.scala" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FW_LocationSpark_Source/src/main/scala/cs/purdue/edu/spatialindex/rtree/Node.scala" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FW_LocationSpark_Source/src/main/scala/cs/purdue/edu/spatialindex/rtree/RTree.scala" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FW_LocationSpark_Source/src/main/scala/cs/purdue/edu/spatialindex/rtree/sfcurve.scala" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FW_LocationSpark_Source/src/main/scala/cs/purdue/edu/spatialindex/spatialbloomfilter/binnaryopt.scala" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FW_LocationSpark_Source/src/main/scala/cs/purdue/edu/spatialindex/spatialbloomfilter/sbfilter.scala" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FW_LocationSpark_Source/src/main/scala/cs/purdue/edu/spatialmemory/spatialmemory.scala" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FW_LocationSpark_Source/src/main/scala/cs/purdue/edu/spatialrdd/SpatialRDDPartition.scala" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FW_LocationSpark_Source/src/main/scala/cs/purdue/edu/spatialrdd/SpatialRdd.scala" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FW_LocationSpark_Source/src/main/scala/cs/purdue/edu/spatialrdd/impl/IRtreePartition.scala" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FW_LocationSpark_Source/src/main/scala/cs/purdue/edu/spatialrdd/impl/QtreePartition.scala" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FW_LocationSpark_Source/src/main/scala/cs/purdue/edu/spatialrdd/impl/RtreePartition.scala" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FW_LocationSpark_Source/src/main/scala/cs/purdue/edu/spatialrdd/impl/SMapPartition.scala" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FW_LocationSpark_Source/src/main/scala/cs/purdue/edu/spatialrdd/impl/SpatialPartitioner.scala" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FW_LocationSpark_Source/src/main/scala/cs/purdue/edu/spatialrdd/impl/Util.scala" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FW_LocationSpark_Source/src/main/scala/cs/purdue/edu/spatialrdd/impl/knnJoinRDD.scala" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FW_LocationSpark_Source/src/main/scala/cs/purdue/edu/spatialrdd/main/ToWKT.scala" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Spark_kNN/src/OLD/QuadTreeDigestOperations.scala" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/runConfigurations/TestAllKnnJoin.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/runConfigurations/TestAllKnnJoin.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/scala_settings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/scala_settings.xml" afterDir="false" />
+    <list default="true" id="ee761a9d-eff2-4086-b83a-8096819a4548" name="Default Changelist" comment="100% accuracy in all 18 tests">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Common/target/classes/org/cusp/bdi/util/CLArgsParser$$anonfun$buildArgMap$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Common/target/classes/org/cusp/bdi/util/CLArgsParser$$anonfun$buildArgMap$2.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Common/target/classes/org/cusp/bdi/util/CLArgsParser$$anonfun$buildArgMap$3.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Common/target/classes/org/cusp/bdi/util/CLArgsParser$$anonfun$toString$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Common/target/classes/org/cusp/bdi/util/CLArgsParser$.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Common/target/classes/org/cusp/bdi/util/CLArgsParser.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Common/target/classes/org/cusp/bdi/util/Helper$$anonfun$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Common/target/classes/org/cusp/bdi/util/Helper$$anonfun$2.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Common/target/classes/org/cusp/bdi/util/Helper$$anonfun$3.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Common/target/classes/org/cusp/bdi/util/Helper$$anonfun$4.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Common/target/classes/org/cusp/bdi/util/Helper$$anonfun$5.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Common/target/classes/org/cusp/bdi/util/Helper$$anonfun$6.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Common/target/classes/org/cusp/bdi/util/Helper$$anonfun$isNullOrEmpty$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Common/target/classes/org/cusp/bdi/util/Helper$.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Common/target/classes/org/cusp/bdi/util/Helper$StringLikeObj$.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Common/target/classes/org/cusp/bdi/util/Helper$StringLikeObj.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Common/target/classes/org/cusp/bdi/util/Helper.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Common/target/classes/org/cusp/bdi/util/HilbertIndex$$anonfun$getNearbyIndexes$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Common/target/classes/org/cusp/bdi/util/HilbertIndex$$anonfun$getNearbyIndexes$2.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Common/target/classes/org/cusp/bdi/util/HilbertIndex$.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Common/target/classes/org/cusp/bdi/util/HilbertIndex.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Common/target/classes/org/cusp/bdi/util/RefInt$.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Common/target/classes/org/cusp/bdi/util/RefInt.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Common/target/classes/org/cusp/bdi/util/Test_CLArgsParser$.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Common/target/classes/org/cusp/bdi/util/Test_CLArgsParser.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_GeoMatch/FW_GeoMatch.iml" beforeDir="false" afterPath="$PROJECT_DIR$/FW_GeoMatch/FW_GeoMatch.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/src/main/scala/org/cusp/bdi/fw/simba/HelperObjects.scala" beforeDir="false" afterPath="$PROJECT_DIR$/FW_Simba/src/main/scala/org/cusp/bdi/fw/simba/HelperObjects.scala" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/src/main/scala/org/cusp/bdi/fw/simba/SIM_Example.scala" beforeDir="false" afterPath="$PROJECT_DIR$/FW_Simba/src/main/scala/org/cusp/bdi/fw/simba/SIM_Example.scala" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/classes/org/cusp/bdi/fw/simba/SIM_Arguments$.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/classes/org/cusp/bdi/fw/simba/SIM_Arguments.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/classes/org/cusp/bdi/fw/simba/SIM_CLArgs$.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/classes/org/cusp/bdi/fw/simba/SIM_CLArgs.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/classes/org/cusp/bdi/fw/simba/SIM_Example$$anonfun$1$$anonfun$apply$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/classes/org/cusp/bdi/fw/simba/SIM_Example$$anonfun$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/classes/org/cusp/bdi/fw/simba/SIM_Example$$anonfun$2.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/classes/org/cusp/bdi/fw/simba/SIM_Example$$anonfun$3$$anonfun$apply$2.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/classes/org/cusp/bdi/fw/simba/SIM_Example$$anonfun$3.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/classes/org/cusp/bdi/fw/simba/SIM_Example$$anonfun$4$$anonfun$apply$3.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/classes/org/cusp/bdi/fw/simba/SIM_Example$$anonfun$4.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/classes/org/cusp/bdi/fw/simba/SIM_Example$$anonfun$5.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/classes/org/cusp/bdi/fw/simba/SIM_Example$$anonfun$6$$anonfun$apply$4.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/classes/org/cusp/bdi/fw/simba/SIM_Example$$anonfun$6.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/classes/org/cusp/bdi/fw/simba/SIM_Example$$anonfun$getDS$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/classes/org/cusp/bdi/fw/simba/SIM_Example$$anonfun$getDS$2.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/classes/org/cusp/bdi/fw/simba/SIM_Example$$anonfun$rowToString$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/classes/org/cusp/bdi/fw/simba/SIM_Example$$typecreator1$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/classes/org/cusp/bdi/fw/simba/SIM_Example$$typecreator10$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/classes/org/cusp/bdi/fw/simba/SIM_Example$$typecreator14$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/classes/org/cusp/bdi/fw/simba/SIM_Example$$typecreator2$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/classes/org/cusp/bdi/fw/simba/SIM_Example$$typecreator4$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/classes/org/cusp/bdi/fw/simba/SIM_Example$$typecreator8$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/classes/org/cusp/bdi/fw/simba/SIM_Example$.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/classes/org/cusp/bdi/fw/simba/SIM_Example$PointData$.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/classes/org/cusp/bdi/fw/simba/SIM_Example$PointData.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/classes/org/cusp/bdi/fw/simba/SIM_Example.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/classes/org/cusp/bdi/fw/simba/SimbaLineParser$.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/target/classes/org/cusp/bdi/fw/simba/SimbaLineParser.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoMatch/target/classes/org/cusp/bdi/gm/GeoMatch$$anonfun$10$$anonfun$11.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoMatch/target/classes/org/cusp/bdi/gm/GeoMatch$$anonfun$10.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoMatch/target/classes/org/cusp/bdi/gm/GeoMatch$$anonfun$2$$anonfun$apply$2.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoMatch/target/classes/org/cusp/bdi/gm/GeoMatch$$anonfun$2.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoMatch/target/classes/org/cusp/bdi/gm/GeoMatch$$anonfun$3$$anonfun$apply$3.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoMatch/target/classes/org/cusp/bdi/gm/GeoMatch$$anonfun$3.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoMatch/target/classes/org/cusp/bdi/gm/GeoMatch$$anonfun$4$$anonfun$apply$4.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoMatch/target/classes/org/cusp/bdi/gm/GeoMatch$$anonfun$4.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoMatch/target/classes/org/cusp/bdi/gm/GeoMatch$$anonfun$5$$anonfun$apply$5$$anonfun$apply$6$$anonfun$apply$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoMatch/target/classes/org/cusp/bdi/gm/GeoMatch$$anonfun$5$$anonfun$apply$5$$anonfun$apply$6.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoMatch/target/classes/org/cusp/bdi/gm/GeoMatch$$anonfun$5$$anonfun$apply$5$$anonfun$apply$7.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoMatch/target/classes/org/cusp/bdi/gm/GeoMatch$$anonfun$5$$anonfun$apply$5$$anonfun$apply$8.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoMatch/target/classes/org/cusp/bdi/gm/GeoMatch$$anonfun$5$$anonfun$apply$5.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoMatch/target/classes/org/cusp/bdi/gm/GeoMatch$$anonfun$5.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoMatch/target/classes/org/cusp/bdi/gm/GeoMatch$$anonfun$6.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoMatch/target/classes/org/cusp/bdi/gm/GeoMatch$$anonfun$7$$anonfun$apply$9$$anonfun$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoMatch/target/classes/org/cusp/bdi/gm/GeoMatch$$anonfun$7$$anonfun$apply$9.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoMatch/target/classes/org/cusp/bdi/gm/GeoMatch$$anonfun$7.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoMatch/target/classes/org/cusp/bdi/gm/GeoMatch$$anonfun$8$$anonfun$apply$10.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoMatch/target/classes/org/cusp/bdi/gm/GeoMatch$$anonfun$8.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoMatch/target/classes/org/cusp/bdi/gm/GeoMatch$$anonfun$9.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoMatch/target/classes/org/cusp/bdi/gm/GeoMatch$$anonfun$calculateSearchGridMBR$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoMatch/target/classes/org/cusp/bdi/gm/GeoMatch$$anonfun$cluster$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoMatch/target/classes/org/cusp/bdi/gm/GeoMatch$$anonfun$cluster$2.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoMatch/target/classes/org/cusp/bdi/gm/GeoMatch$$anonfun$cluster$3.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoMatch/target/classes/org/cusp/bdi/gm/GeoMatch$$anonfun$cluster$4.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoMatch/target/classes/org/cusp/bdi/gm/GeoMatch$$anonfun$spatialJoinDistance$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoMatch/target/classes/org/cusp/bdi/gm/GeoMatch$$anonfun$spatialJoinDistance$2.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoMatch/target/classes/org/cusp/bdi/gm/GeoMatch$$anonfun$spatialJoinKNN$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoMatch/target/classes/org/cusp/bdi/gm/GeoMatch$$anonfun$spatialJoinKNN$2.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoMatch/target/classes/org/cusp/bdi/gm/GeoMatch$$anonfun$spatialJoinRange$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoMatch/target/classes/org/cusp/bdi/gm/GeoMatch$$anonfun$spatialJoinRange$2.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoMatch/target/classes/org/cusp/bdi/gm/GeoMatch$.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoMatch/target/classes/org/cusp/bdi/gm/GeoMatch.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoMatch/target/classes/org/cusp/bdi/gm/geom/GMGeomBase.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoMatch/target/classes/org/cusp/bdi/gm/geom/GMLineString$$anonfun$getHilbertIndexList$1$$anonfun$apply$mcVI$sp$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoMatch/target/classes/org/cusp/bdi/gm/geom/GMLineString$$anonfun$getHilbertIndexList$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoMatch/target/classes/org/cusp/bdi/gm/geom/GMLineString$$anonfun$toJTS$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoMatch/target/classes/org/cusp/bdi/gm/geom/GMLineString$.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoMatch/target/classes/org/cusp/bdi/gm/geom/GMLineString.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoMatch/target/classes/org/cusp/bdi/gm/geom/GMPoint$.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoMatch/target/classes/org/cusp/bdi/gm/geom/GMPoint.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoMatch/target/classes/org/cusp/bdi/gm/geom/GMPolygon$$anonfun$getHilbertIndexList$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoMatch/target/classes/org/cusp/bdi/gm/geom/GMPolygon$$anonfun$getHilbertIndexList$2.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoMatch/target/classes/org/cusp/bdi/gm/geom/GMPolygon$$anonfun$getHilbertIndexList$3.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoMatch/target/classes/org/cusp/bdi/gm/geom/GMPolygon$$anonfun$getHilbertIndexList$4.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoMatch/target/classes/org/cusp/bdi/gm/geom/GMPolygon$$anonfun$getHilbertIndexList$5.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoMatch/target/classes/org/cusp/bdi/gm/geom/GMPolygon$$anonfun$toJTS$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoMatch/target/classes/org/cusp/bdi/gm/geom/GMPolygon$.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoMatch/target/classes/org/cusp/bdi/gm/geom/GMPolygon.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoMatch/target/classes/org/cusp/bdi/gm/geom/GMPolygonBase$$anonfun$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoMatch/target/classes/org/cusp/bdi/gm/geom/GMPolygonBase$$anonfun$getHilbertIndexList$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoMatch/target/classes/org/cusp/bdi/gm/geom/GMPolygonBase$$anonfun$getHilbertIndexList$2.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoMatch/target/classes/org/cusp/bdi/gm/geom/GMPolygonBase$$anonfun$getHilbertIndexList$3.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoMatch/target/classes/org/cusp/bdi/gm/geom/GMPolygonBase$$anonfun$getHilbertIndexList$4.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoMatch/target/classes/org/cusp/bdi/gm/geom/GMPolygonBase$$anonfun$getHilbertIndexList$5.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoMatch/target/classes/org/cusp/bdi/gm/geom/GMPolygonBase.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoMatch/target/classes/org/cusp/bdi/gm/geom/GMRectangle$$anonfun$getHilbertIndexList$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoMatch/target/classes/org/cusp/bdi/gm/geom/GMRectangle$$anonfun$getHilbertIndexList$2.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoMatch/target/classes/org/cusp/bdi/gm/geom/GMRectangle$$anonfun$getHilbertIndexList$3.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoMatch/target/classes/org/cusp/bdi/gm/geom/GMRectangle$$anonfun$getHilbertIndexList$4.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoMatch/target/classes/org/cusp/bdi/gm/geom/GMRectangle$$anonfun$getHilbertIndexList$5.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoMatch/target/classes/org/cusp/bdi/gm/geom/GMRectangle$$anonfun$toJTS$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoMatch/target/classes/org/cusp/bdi/gm/geom/GMRectangle$.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoMatch/target/classes/org/cusp/bdi/gm/geom/GMRectangle.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoMatch/target/classes/org/cusp/bdi/gm/geom/util/LineRasterization$$anonfun$appendToSet$1$$anonfun$apply$mcVI$sp$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoMatch/target/classes/org/cusp/bdi/gm/geom/util/LineRasterization$$anonfun$appendToSet$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoMatch/target/classes/org/cusp/bdi/gm/geom/util/LineRasterization$.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoMatch/target/classes/org/cusp/bdi/gm/geom/util/LineRasterization.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoMatch/target/classes/org/cusp/bdi/gm/geom/util/PolygonRasterization$$anonfun$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoMatch/target/classes/org/cusp/bdi/gm/geom/util/PolygonRasterization$$anonfun$2.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoMatch/target/classes/org/cusp/bdi/gm/geom/util/PolygonRasterization$$anonfun$getCoordSet$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoMatch/target/classes/org/cusp/bdi/gm/geom/util/PolygonRasterization$$anonfun$getCoordSet$2.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoMatch/target/classes/org/cusp/bdi/gm/geom/util/PolygonRasterization$$anonfun$getCoordSet$3.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoMatch/target/classes/org/cusp/bdi/gm/geom/util/PolygonRasterization$$anonfun$getCoordSet$4.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoMatch/target/classes/org/cusp/bdi/gm/geom/util/PolygonRasterization$$anonfun$getCoordSet$5.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoMatch/target/classes/org/cusp/bdi/gm/geom/util/PolygonRasterization$$anonfun$getCoordSet$6.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoMatch/target/classes/org/cusp/bdi/gm/geom/util/PolygonRasterization$$anonfun$getInnerCoordinates$1$$anonfun$apply$mcVI$sp$4$$anonfun$apply$mcVI$sp$5.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoMatch/target/classes/org/cusp/bdi/gm/geom/util/PolygonRasterization$$anonfun$getInnerCoordinates$1$$anonfun$apply$mcVI$sp$4.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoMatch/target/classes/org/cusp/bdi/gm/geom/util/PolygonRasterization$$anonfun$getInnerCoordinates$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoMatch/target/classes/org/cusp/bdi/gm/geom/util/PolygonRasterization$$anonfun$getInnerCoordinates$2.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoMatch/target/classes/org/cusp/bdi/gm/geom/util/PolygonRasterization$$anonfun$org$cusp$bdi$gm$geom$util$PolygonRasterization$$activateEdges$1$$anonfun$apply$mcVI$sp$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoMatch/target/classes/org/cusp/bdi/gm/geom/util/PolygonRasterization$$anonfun$org$cusp$bdi$gm$geom$util$PolygonRasterization$$activateEdges$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoMatch/target/classes/org/cusp/bdi/gm/geom/util/PolygonRasterization$$anonfun$org$cusp$bdi$gm$geom$util$PolygonRasterization$$appendToSet$1$$anonfun$apply$mcVI$sp$3.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoMatch/target/classes/org/cusp/bdi/gm/geom/util/PolygonRasterization$$anonfun$org$cusp$bdi$gm$geom$util$PolygonRasterization$$appendToSet$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoMatch/target/classes/org/cusp/bdi/gm/geom/util/PolygonRasterization$$anonfun$org$cusp$bdi$gm$geom$util$PolygonRasterization$$removeInactiveEdges$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoMatch/target/classes/org/cusp/bdi/gm/geom/util/PolygonRasterization$$anonfun$org$cusp$bdi$gm$geom$util$PolygonRasterization$$updateXCoordinates$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoMatch/target/classes/org/cusp/bdi/gm/geom/util/PolygonRasterization$$anonfun$sortActiveEdges$1$$anonfun$apply$mcVI$sp$2.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoMatch/target/classes/org/cusp/bdi/gm/geom/util/PolygonRasterization$$anonfun$sortActiveEdges$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoMatch/target/classes/org/cusp/bdi/gm/geom/util/PolygonRasterization$.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoMatch/target/classes/org/cusp/bdi/gm/geom/util/PolygonRasterization.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoMatch/target/classes/org/cusp/bdi/gm/keyPart/GMPartitioner$.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoMatch/target/classes/org/cusp/bdi/gm/keyPart/GMPartitioner.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoMatch/target/classes/org/cusp/bdi/gm/keyPart/GeomKey$.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoMatch/target/classes/org/cusp/bdi/gm/keyPart/GeomKey.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoMatch/target/classes/org/cusp/bdi/gm/keyPart/GeomKeySetOne.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoMatch/target/classes/org/cusp/bdi/gm/keyPart/GeomKeySetTwo.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoMatch/target/classes/org/cusp/bdi/gm/keyPart/GeomKeySetTwoSkip.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoMatch/target/classes/org/cusp/bdi/gm/keyPart/PartitionMapper$$anonfun$10$$anonfun$apply$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoMatch/target/classes/org/cusp/bdi/gm/keyPart/PartitionMapper$$anonfun$10$$anonfun$apply$2.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoMatch/target/classes/org/cusp/bdi/gm/keyPart/PartitionMapper$$anonfun$10.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoMatch/target/classes/org/cusp/bdi/gm/keyPart/PartitionMapper$$anonfun$11.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoMatch/target/classes/org/cusp/bdi/gm/keyPart/PartitionMapper$$anonfun$12$$anonfun$apply$10$$anonfun$apply$11.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoMatch/target/classes/org/cusp/bdi/gm/keyPart/PartitionMapper$$anonfun$12$$anonfun$apply$10.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoMatch/target/classes/org/cusp/bdi/gm/keyPart/PartitionMapper$$anonfun$12$$anonfun$apply$12.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoMatch/target/classes/org/cusp/bdi/gm/keyPart/PartitionMapper$$anonfun$12$$anonfun$apply$8.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoMatch/target/classes/org/cusp/bdi/gm/keyPart/PartitionMapper$$anonfun$12$$anonfun$apply$9$$anonfun$apply$3.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoMatch/target/classes/org/cusp/bdi/gm/keyPart/PartitionMapper$$anonfun$12$$anonfun$apply$9.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoMatch/target/classes/org/cusp/bdi/gm/keyPart/PartitionMapper$$anonfun$12.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoMatch/target/classes/org/cusp/bdi/gm/keyPart/PartitionMapper$$anonfun$13.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoMatch/target/classes/org/cusp/bdi/gm/keyPart/PartitionMapper$$anonfun$14.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoMatch/target/classes/org/cusp/bdi/gm/keyPart/PartitionMapper$$anonfun$15$$anonfun$apply$13.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoMatch/target/classes/org/cusp/bdi/gm/keyPart/PartitionMapper$$anonfun$15.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoMatch/target/classes/org/cusp/bdi/gm/keyPart/PartitionMapper$$anonfun$3.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoMatch/target/classes/org/cusp/bdi/gm/keyPart/PartitionMapper$$anonfun$7$$anonfun$apply$5$$anonfun$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoMatch/target/classes/org/cusp/bdi/gm/keyPart/PartitionMapper$$anonfun$7$$anonfun$apply$5$$anonfun$apply$6.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoMatch/target/classes/org/cusp/bdi/gm/keyPart/PartitionMapper$$anonfun$7$$anonfun$apply$5.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoMatch/target/classes/org/cusp/bdi/gm/keyPart/PartitionMapper$$anonfun$7$$anonfun$apply$7.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoMatch/target/classes/org/cusp/bdi/gm/keyPart/PartitionMapper$$anonfun$7.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoMatch/target/classes/org/cusp/bdi/gm/keyPart/PartitionMapper$$anonfun$8.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoMatch/target/classes/org/cusp/bdi/gm/keyPart/PartitionMapper$$anonfun$9.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoMatch/target/classes/org/cusp/bdi/gm/keyPart/PartitionMapper$$anonfun$adjustForBoundryCrossing$1$$anonfun$4.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoMatch/target/classes/org/cusp/bdi/gm/keyPart/PartitionMapper$$anonfun$adjustForBoundryCrossing$1$$anonfun$5$$anonfun$apply$mcJI$sp$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoMatch/target/classes/org/cusp/bdi/gm/keyPart/PartitionMapper$$anonfun$adjustForBoundryCrossing$1$$anonfun$5.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoMatch/target/classes/org/cusp/bdi/gm/keyPart/PartitionMapper$$anonfun$adjustForBoundryCrossing$1$$anonfun$6.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoMatch/target/classes/org/cusp/bdi/gm/keyPart/PartitionMapper$$anonfun$adjustForBoundryCrossing$1$$anonfun$apply$mcVI$sp$1$$anonfun$apply$mcVI$sp$2.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoMatch/target/classes/org/cusp/bdi/gm/keyPart/PartitionMapper$$anonfun$adjustForBoundryCrossing$1$$anonfun$apply$mcVI$sp$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoMatch/target/classes/org/cusp/bdi/gm/keyPart/PartitionMapper$$anonfun$adjustForBoundryCrossing$1$$anonfun$apply$mcVI$sp$3.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoMatch/target/classes/org/cusp/bdi/gm/keyPart/PartitionMapper$$anonfun$adjustForBoundryCrossing$1$$anonfun$apply$mcVI$sp$4$$anonfun$apply$4.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoMatch/target/classes/org/cusp/bdi/gm/keyPart/PartitionMapper$$anonfun$adjustForBoundryCrossing$1$$anonfun$apply$mcVI$sp$4.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoMatch/target/classes/org/cusp/bdi/gm/keyPart/PartitionMapper$$anonfun$adjustForBoundryCrossing$1$$anonfun$apply$mcVI$sp$5.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoMatch/target/classes/org/cusp/bdi/gm/keyPart/PartitionMapper$$anonfun$adjustForBoundryCrossing$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoMatch/target/classes/org/cusp/bdi/gm/keyPart/PartitionMapper$$anonfun$computeArrPartMapping$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoMatch/target/classes/org/cusp/bdi/gm/keyPart/PartitionMapper$$anonfun$getArrIndexPartMapping$1$$anonfun$2.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoMatch/target/classes/org/cusp/bdi/gm/keyPart/PartitionMapper$$anonfun$getArrIndexPartMapping$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoMatch/target/classes/org/cusp/bdi/gm/keyPart/PartitionMapper$.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoMatch/target/classes/org/cusp/bdi/gm/keyPart/PartitionMapper.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoMatch/target/classes/org/cusp/bdi/gm/ops/MatchGeometry$$anonfun$runMatch$1$$anonfun$apply$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoMatch/target/classes/org/cusp/bdi/gm/ops/MatchGeometry$$anonfun$runMatch$1$$anonfun$apply$2.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoMatch/target/classes/org/cusp/bdi/gm/ops/MatchGeometry$$anonfun$runMatch$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoMatch/target/classes/org/cusp/bdi/gm/ops/MatchGeometry$$anonfun$runMatch$2.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoMatch/target/classes/org/cusp/bdi/gm/ops/MatchGeometry$class.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoMatch/target/classes/org/cusp/bdi/gm/ops/MatchGeometry.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoMatch/target/classes/org/cusp/bdi/gm/ops/MatchGeometryKNNDistance$.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoMatch/target/classes/org/cusp/bdi/gm/ops/MatchGeometryKNNDistance.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoMatch/target/classes/org/cusp/bdi/gm/ops/MatchGeometryRange$.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoMatch/target/classes/org/cusp/bdi/gm/ops/MatchGeometryRange.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/LocalRunFiles/src/main/scala/org/cusp/bdi/util/LocalRunConsts.scala" beforeDir="false" afterPath="$PROJECT_DIR$/LocalRunFiles/src/main/scala/org/cusp/bdi/util/LocalRunConsts.scala" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LocalRunFiles/target/classes/MatchOutputSummary$$anonfun$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/LocalRunFiles/target/classes/MatchOutputSummary$$anonfun$2.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/LocalRunFiles/target/classes/MatchOutputSummary$$anonfun$3.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/LocalRunFiles/target/classes/MatchOutputSummary$.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/LocalRunFiles/target/classes/MatchOutputSummary.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/LocalRunFiles/target/classes/org/cusp/bdi/util/Arguments.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/LocalRunFiles/target/classes/org/cusp/bdi/util/Arguments_QueryType.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/LocalRunFiles/target/classes/org/cusp/bdi/util/InputFileParsers$$anonfun$busPoints$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/LocalRunFiles/target/classes/org/cusp/bdi/util/InputFileParsers$$anonfun$busPoints_WGS84$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/LocalRunFiles/target/classes/org/cusp/bdi/util/InputFileParsers$$anonfun$nycLION$1$$anonfun$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/LocalRunFiles/target/classes/org/cusp/bdi/util/InputFileParsers$$anonfun$nycLION$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/LocalRunFiles/target/classes/org/cusp/bdi/util/InputFileParsers$$anonfun$nycLION_Segments$1$$anonfun$apply$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/LocalRunFiles/target/classes/org/cusp/bdi/util/InputFileParsers$$anonfun$nycLION_Segments$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/LocalRunFiles/target/classes/org/cusp/bdi/util/InputFileParsers$$anonfun$nycLION_WGS84$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/LocalRunFiles/target/classes/org/cusp/bdi/util/InputFileParsers$$anonfun$osmPoints_WGS84$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/LocalRunFiles/target/classes/org/cusp/bdi/util/InputFileParsers$$anonfun$randPoints$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/LocalRunFiles/target/classes/org/cusp/bdi/util/InputFileParsers$$anonfun$taxiPoints$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/LocalRunFiles/target/classes/org/cusp/bdi/util/InputFileParsers$$anonfun$taxiPoints_WGS84$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/LocalRunFiles/target/classes/org/cusp/bdi/util/InputFileParsers$$anonfun$threePartLine$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/LocalRunFiles/target/classes/org/cusp/bdi/util/InputFileParsers$$anonfun$tpepPoints$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/LocalRunFiles/target/classes/org/cusp/bdi/util/InputFileParsers$$anonfun$tpepPoints_WGS84$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/LocalRunFiles/target/classes/org/cusp/bdi/util/InputFileParsers$.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/LocalRunFiles/target/classes/org/cusp/bdi/util/InputFileParsers.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/LocalRunFiles/target/classes/org/cusp/bdi/util/LocalRunArgs$.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/LocalRunFiles/target/classes/org/cusp/bdi/util/LocalRunArgs.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/LocalRunFiles/target/classes/org/cusp/bdi/util/LocalRunConsts$.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/LocalRunFiles/target/classes/org/cusp/bdi/util/LocalRunConsts.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/LocalRunFiles/target/classes/org/cusp/bdi/util/sknn/SparkKNN_Local_CLArgs$.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/LocalRunFiles/target/classes/org/cusp/bdi/util/sknn/SparkKNN_Local_CLArgs.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/src/main/scala/com/insightfullogic/quad_trees/QuadTree.scala" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/src/main/scala/com/insightfullogic/quad_trees/QuadTree.scala" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/src/main/scala/com/insightfullogic/quad_trees/QuadTreeDigest.scala" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/src/main/scala/com/insightfullogic/quad_trees/QuadTreeDigest.scala" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/src/main/scala/com/insightfullogic/quad_trees/QuadTreeMBR.scala" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/src/OLD/QuadTreeMBR.scala" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/src/main/scala/org/cusp/bdi/sknn/SparkKNN.scala" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/src/main/scala/org/cusp/bdi/sknn/SparkKNN.scala" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/src/main/scala/org/cusp/bdi/sknn/util/GridOperation.scala" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/src/main/scala/org/cusp/bdi/sknn/util/GridOperation.scala" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/src/main/scala/org/cusp/bdi/sknn/util/QuadTreeDigestOperations.scala" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/src/main/scala/org/cusp/bdi/sknn/util/QuadTreeOperations.scala" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/src/main/scala/org/cusp/bdi/sknn/util/QuadTreeOperations.scala" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/src/main/scala/org/cusp/bdi/sknn/util/SortedList.scala" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/src/main/scala/org/cusp/bdi/sknn/util/SortedList.scala" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/FixKeyFileFormat$$anonfun$main$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/FixKeyFileFormat$.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/FixKeyFileFormat.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/HilbertCurve$Point.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/HilbertCurve.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/com/insightfullogic/quad_trees/Box$$anonfun$intersects$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/com/insightfullogic/quad_trees/Box$$anonfun$intersects$2.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/com/insightfullogic/quad_trees/Box$$anonfun$intersects$3.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/com/insightfullogic/quad_trees/Box$$anonfun$intersects$4.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/com/insightfullogic/quad_trees/Box$.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/com/insightfullogic/quad_trees/Box.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/com/insightfullogic/quad_trees/Circle$$anonfun$contains$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/com/insightfullogic/quad_trees/Circle$$anonfun$contains$2.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/com/insightfullogic/quad_trees/Circle$$anonfun$contains$3.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/com/insightfullogic/quad_trees/Circle$$anonfun$contains$4.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/com/insightfullogic/quad_trees/Circle$$anonfun$contains$5.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/com/insightfullogic/quad_trees/Circle$$anonfun$contains$6.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/com/insightfullogic/quad_trees/Circle$$anonfun$contains$7.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/com/insightfullogic/quad_trees/Circle$$anonfun$contains$8.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/com/insightfullogic/quad_trees/Circle$$anonfun$intersects$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/com/insightfullogic/quad_trees/Circle$$anonfun$intersects$2.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/com/insightfullogic/quad_trees/Circle$$anonfun$intersects$3.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/com/insightfullogic/quad_trees/Circle$$anonfun$intersects$4.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/com/insightfullogic/quad_trees/Circle$$anonfun$intersects$5.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/com/insightfullogic/quad_trees/Circle$$anonfun$intersects$6.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/com/insightfullogic/quad_trees/Circle$$anonfun$intersects$7.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/com/insightfullogic/quad_trees/Circle$$anonfun$intersects$8.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/com/insightfullogic/quad_trees/Circle$.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/com/insightfullogic/quad_trees/Circle.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/com/insightfullogic/quad_trees/Point$.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/com/insightfullogic/quad_trees/Point.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/com/insightfullogic/quad_trees/QuadTree$$anonfun$getAllPoints$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/com/insightfullogic/quad_trees/QuadTree$$anonfun$getAllPoints$2.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/com/insightfullogic/quad_trees/QuadTree$$anonfun$insert$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/com/insightfullogic/quad_trees/QuadTree$.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/com/insightfullogic/quad_trees/QuadTree.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/com/insightfullogic/quad_trees/QuadTreeDigest$.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/com/insightfullogic/quad_trees/QuadTreeDigest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/PartitionInfo$.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/PartitionInfo.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/PartitionScheme$$anonfun$apply$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/PartitionScheme$.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/PartitionScheme.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/SparkKNN$$anon$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/SparkKNN$$anon$2.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/SparkKNN$$anonfun$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/SparkKNN$$anonfun$10.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/SparkKNN$$anonfun$11.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/SparkKNN$$anonfun$12.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/SparkKNN$$anonfun$13.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/SparkKNN$$anonfun$14.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/SparkKNN$$anonfun$2.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/SparkKNN$$anonfun$21.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/SparkKNN$$anonfun$22.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/SparkKNN$$anonfun$23.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/SparkKNN$$anonfun$24.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/SparkKNN$$anonfun$25.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/SparkKNN$$anonfun$26.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/SparkKNN$$anonfun$3.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/SparkKNN$$anonfun$4.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/SparkKNN$$anonfun$5.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/SparkKNN$$anonfun$6.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/SparkKNN$$anonfun$7.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/SparkKNN$$anonfun$9.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/SparkKNN$$anonfun$knnJoin$1$$anon$3.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/SparkKNN$$anonfun$knnJoin$1$$anonfun$16.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/SparkKNN$$anonfun$knnJoin$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/SparkKNN$$anonfun$knnJoin$2.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/SparkKNN$.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/SparkKNN.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/util/AssignToPartitions$$anonfun$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/util/AssignToPartitions$$anonfun$2.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/util/AssignToPartitions$$anonfun$3.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/util/AssignToPartitions$$anonfun$4.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/util/AssignToPartitions$$anonfun$5.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/util/AssignToPartitions$$anonfun$6.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/util/AssignToPartitions$.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/util/AssignToPartitions.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/util/GridOperation.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/util/Node$.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/util/Node.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/util/QuadTreeDigestOperations$$anonfun$getFurthestCorner$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/util/QuadTreeDigestOperations$$anonfun$getFurthestCorner$2.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/util/QuadTreeDigestOperations$.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/util/QuadTreeDigestOperations.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/util/QuadTreeInfo.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/util/QuadTreeOperations$$anonfun$getFurthestCorner$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/util/QuadTreeOperations$$anonfun$getFurthestCorner$2.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/util/QuadTreeOperations$$anonfun$nearestNeighbor$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/util/QuadTreeOperations$$anonfun$org$cusp$bdi$sknn$util$QuadTreeOperations$$pointsWithinRegion$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/util/QuadTreeOperations$.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/util/QuadTreeOperations.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/util/RDD_Store$$anonfun$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/util/RDD_Store$$anonfun$getRDD$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/util/RDD_Store$.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/util/RDD_Store.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/util/SparkKNN_Arguments$.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/classes/org/cusp/bdi/sknn/util/SparkKNN_Arguments.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/test-classes/org/cusp/bdi/sknn/test/TestAllKnnJoin$$anonfun$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/test-classes/org/cusp/bdi/sknn/test/TestAllKnnJoin$$anonfun$2.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/test-classes/org/cusp/bdi/sknn/test/TestAllKnnJoin$$anonfun$3$$anonfun$apply$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/test-classes/org/cusp/bdi/sknn/test/TestAllKnnJoin$$anonfun$3.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/test-classes/org/cusp/bdi/sknn/test/TestAllKnnJoin$$anonfun$4.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/test-classes/org/cusp/bdi/sknn/test/TestAllKnnJoin$$anonfun$5.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/test-classes/org/cusp/bdi/sknn/test/TestAllKnnJoin$$anonfun$6$$anonfun$apply$2.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/test-classes/org/cusp/bdi/sknn/test/TestAllKnnJoin$$anonfun$6.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/test-classes/org/cusp/bdi/sknn/test/TestAllKnnJoin$$anonfun$main$1$$anonfun$apply$3$$anonfun$apply$4.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/test-classes/org/cusp/bdi/sknn/test/TestAllKnnJoin$$anonfun$main$1$$anonfun$apply$3.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/test-classes/org/cusp/bdi/sknn/test/TestAllKnnJoin$$anonfun$main$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/test-classes/org/cusp/bdi/sknn/test/TestAllKnnJoin$.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/target/test-classes/org/cusp/bdi/sknn/test/TestAllKnnJoin.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SpatialBenchmark/src/main/scala/org/cusp/bdi/sb/OutputsCompare.scala" beforeDir="false" afterPath="$PROJECT_DIR$/SpatialBenchmark/src/main/scala/org/cusp/bdi/sb/OutputsCompare.scala" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SpatialBenchmark/target/classes/org/cusp/bdi/sb/MatchDistAnalysis$$anonfun$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SpatialBenchmark/target/classes/org/cusp/bdi/sb/MatchDistAnalysis$$anonfun$10$$anonfun$apply$3.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SpatialBenchmark/target/classes/org/cusp/bdi/sb/MatchDistAnalysis$$anonfun$10.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SpatialBenchmark/target/classes/org/cusp/bdi/sb/MatchDistAnalysis$$anonfun$11$$anonfun$apply$4$$anonfun$12.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SpatialBenchmark/target/classes/org/cusp/bdi/sb/MatchDistAnalysis$$anonfun$11$$anonfun$apply$4.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SpatialBenchmark/target/classes/org/cusp/bdi/sb/MatchDistAnalysis$$anonfun$11.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SpatialBenchmark/target/classes/org/cusp/bdi/sb/MatchDistAnalysis$$anonfun$13.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SpatialBenchmark/target/classes/org/cusp/bdi/sb/MatchDistAnalysis$$anonfun$14$$anonfun$apply$5.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SpatialBenchmark/target/classes/org/cusp/bdi/sb/MatchDistAnalysis$$anonfun$14.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SpatialBenchmark/target/classes/org/cusp/bdi/sb/MatchDistAnalysis$$anonfun$2.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SpatialBenchmark/target/classes/org/cusp/bdi/sb/MatchDistAnalysis$$anonfun$3$$anonfun$apply$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SpatialBenchmark/target/classes/org/cusp/bdi/sb/MatchDistAnalysis$$anonfun$3.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SpatialBenchmark/target/classes/org/cusp/bdi/sb/MatchDistAnalysis$$anonfun$4.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SpatialBenchmark/target/classes/org/cusp/bdi/sb/MatchDistAnalysis$$anonfun$5$$anonfun$apply$2.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SpatialBenchmark/target/classes/org/cusp/bdi/sb/MatchDistAnalysis$$anonfun$5.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SpatialBenchmark/target/classes/org/cusp/bdi/sb/MatchDistAnalysis$$anonfun$6.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SpatialBenchmark/target/classes/org/cusp/bdi/sb/MatchDistAnalysis$$anonfun$7$$anonfun$8.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SpatialBenchmark/target/classes/org/cusp/bdi/sb/MatchDistAnalysis$$anonfun$7$$anonfun$9.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SpatialBenchmark/target/classes/org/cusp/bdi/sb/MatchDistAnalysis$$anonfun$7.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SpatialBenchmark/target/classes/org/cusp/bdi/sb/MatchDistAnalysis$$anonfun$main$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SpatialBenchmark/target/classes/org/cusp/bdi/sb/MatchDistAnalysis$.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SpatialBenchmark/target/classes/org/cusp/bdi/sb/MatchDistAnalysis$Classifications$.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SpatialBenchmark/target/classes/org/cusp/bdi/sb/MatchDistAnalysis.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SpatialBenchmark/target/classes/org/cusp/bdi/sb/SpatialBenchmark$$anonfun$main$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SpatialBenchmark/target/classes/org/cusp/bdi/sb/SpatialBenchmark$.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SpatialBenchmark/target/classes/org/cusp/bdi/sb/SpatialBenchmark.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SpatialBenchmark/target/classes/org/cusp/bdi/sb/examples/BenchmarkInputFileParser$$anonfun$commonParseLine$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SpatialBenchmark/target/classes/org/cusp/bdi/sb/examples/BenchmarkInputFileParser$class.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SpatialBenchmark/target/classes/org/cusp/bdi/sb/examples/BenchmarkInputFileParser.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SpatialBenchmark/target/classes/org/cusp/bdi/sb/examples/KM_InputFileParser_OSM_Buildings$.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SpatialBenchmark/target/classes/org/cusp/bdi/sb/examples/KM_InputFileParser_OSM_Buildings.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SpatialBenchmark/target/classes/org/cusp/bdi/sb/examples/SB_Arguments$.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SpatialBenchmark/target/classes/org/cusp/bdi/sb/examples/SB_Arguments.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SpatialBenchmark/target/classes/org/cusp/bdi/sb/examples/SB_CLArgs$.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SpatialBenchmark/target/classes/org/cusp/bdi/sb/examples/SB_CLArgs.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SpatialBenchmark/target/classes/org/cusp/bdi/sb/examples/SB_KeyMatchInputFileParser_Bus$.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SpatialBenchmark/target/classes/org/cusp/bdi/sb/examples/SB_KeyMatchInputFileParser_Bus.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SpatialBenchmark/target/classes/org/cusp/bdi/sb/examples/SB_KeyMatchInputFileParser_Bus_Small$$anonfun$parseLine$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SpatialBenchmark/target/classes/org/cusp/bdi/sb/examples/SB_KeyMatchInputFileParser_Bus_Small$.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SpatialBenchmark/target/classes/org/cusp/bdi/sb/examples/SB_KeyMatchInputFileParser_Bus_Small.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SpatialBenchmark/target/classes/org/cusp/bdi/sb/examples/SB_KeyMatchInputFileParser_Bus_wgs84$.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SpatialBenchmark/target/classes/org/cusp/bdi/sb/examples/SB_KeyMatchInputFileParser_Bus_wgs84.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SpatialBenchmark/target/classes/org/cusp/bdi/sb/examples/SB_KeyMatchInputFileParser_RandomPoints$.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SpatialBenchmark/target/classes/org/cusp/bdi/sb/examples/SB_KeyMatchInputFileParser_RandomPoints.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SpatialBenchmark/target/classes/org/cusp/bdi/sb/examples/SB_KeyMatchInputFileParser_TPEP$.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SpatialBenchmark/target/classes/org/cusp/bdi/sb/examples/SB_KeyMatchInputFileParser_TPEP.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SpatialBenchmark/target/classes/org/cusp/bdi/sb/examples/SB_KeyMatchInputFileParser_TPEP_wgs84$.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SpatialBenchmark/target/classes/org/cusp/bdi/sb/examples/SB_KeyMatchInputFileParser_TPEP_wgs84.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SpatialBenchmark/target/classes/org/cusp/bdi/sb/examples/SB_KeyMatchInputFileParser_Taxi$.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SpatialBenchmark/target/classes/org/cusp/bdi/sb/examples/SB_KeyMatchInputFileParser_Taxi.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SpatialBenchmark/target/classes/org/cusp/bdi/sb/examples/SB_KeyMatchInputFileParser_Taxi_wgs84$.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SpatialBenchmark/target/classes/org/cusp/bdi/sb/examples/SB_KeyMatchInputFileParser_Taxi_wgs84.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TBD____FW_Simba/FW_Simba.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TBD____FW_Simba/pom.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TBD____FW_Simba/src/main/scala/org/cusp/bdi/fw/simba/HelperObjects.scala" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TBD____FW_Simba/src/main/scala/org/cusp/bdi/fw/simba/SIM_Example.scala" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TBD____FW_Simba/src/test/scala/org/apache/spark/sql/simba/index/IntervalSuite.scala" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TBD____FW_Simba/src/test/scala/org/apache/spark/sql/simba/index/RTreeSuite.scala" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TBD____FW_Simba/src/test/scala/org/apache/spark/sql/simba/index/TreapSuite.scala" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TBD____FW_Simba/src/test/scala/org/apache/spark/sql/simba/spatial/CircleSuite.scala" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TBD____FW_Simba/src/test/scala/org/apache/spark/sql/simba/spatial/DistSuite.scala" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TBD____FW_Simba/src/test/scala/org/apache/spark/sql/simba/spatial/LineSegmentSuite.scala" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TBD____FW_Simba/src/test/scala/org/apache/spark/sql/simba/spatial/MBRSuite.scala" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TBD____FW_Simba/src/test/scala/org/apache/spark/sql/simba/spatial/PointSuite.scala" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TBD____FW_Simba/src/test/scala/org/apache/spark/sql/simba/spatial/PolygonSuite.scala" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TBD____FW_Simba/src/test/scala/org/apache/spark/sql/simba/spatial/ShapeSuite.scala" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TBD____FW_Simba/src/test/scala/org/apache/spark/sql/simba/spatial/ZValueSuite.scala" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TBD____FW_Simba/src/test/scala/org/cusp/bdi/fw/simba/HelperObjects.scala" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TBD____FW_Simba/src/test/scala/org/cusp/bdi/fw/simba/SIM_Example.scala" beforeDir="false" afterPath="$PROJECT_DIR$/FW_Simba/src/main/scala/org/cusp/bdi/fw/simba/SIM_Example_Batch.scala" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TBD____FW_Simba/target/classes/FW_Simba.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TBD____FW_Simba/target/classes/org/cusp/bdi/fw/simba/SIM_Arguments$.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TBD____FW_Simba/target/classes/org/cusp/bdi/fw/simba/SIM_Arguments.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TBD____FW_Simba/target/classes/org/cusp/bdi/fw/simba/SIM_CLArgs$.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TBD____FW_Simba/target/classes/org/cusp/bdi/fw/simba/SIM_CLArgs.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TBD____FW_Simba/target/classes/org/cusp/bdi/fw/simba/SIM_Example$$anonfun$1$$anonfun$apply$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TBD____FW_Simba/target/classes/org/cusp/bdi/fw/simba/SIM_Example$$anonfun$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TBD____FW_Simba/target/classes/org/cusp/bdi/fw/simba/SIM_Example$$anonfun$2.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TBD____FW_Simba/target/classes/org/cusp/bdi/fw/simba/SIM_Example$$anonfun$3$$anonfun$apply$2.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TBD____FW_Simba/target/classes/org/cusp/bdi/fw/simba/SIM_Example$$anonfun$3.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TBD____FW_Simba/target/classes/org/cusp/bdi/fw/simba/SIM_Example$$anonfun$4$$anonfun$apply$3.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TBD____FW_Simba/target/classes/org/cusp/bdi/fw/simba/SIM_Example$$anonfun$4.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TBD____FW_Simba/target/classes/org/cusp/bdi/fw/simba/SIM_Example$$anonfun$5.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TBD____FW_Simba/target/classes/org/cusp/bdi/fw/simba/SIM_Example$$anonfun$6$$anonfun$apply$4.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TBD____FW_Simba/target/classes/org/cusp/bdi/fw/simba/SIM_Example$$anonfun$6.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TBD____FW_Simba/target/classes/org/cusp/bdi/fw/simba/SIM_Example$$anonfun$getDS$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TBD____FW_Simba/target/classes/org/cusp/bdi/fw/simba/SIM_Example$$anonfun$getDS$2.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TBD____FW_Simba/target/classes/org/cusp/bdi/fw/simba/SIM_Example$$anonfun$rowToString$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TBD____FW_Simba/target/classes/org/cusp/bdi/fw/simba/SIM_Example$$typecreator1$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TBD____FW_Simba/target/classes/org/cusp/bdi/fw/simba/SIM_Example$$typecreator10$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TBD____FW_Simba/target/classes/org/cusp/bdi/fw/simba/SIM_Example$$typecreator14$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TBD____FW_Simba/target/classes/org/cusp/bdi/fw/simba/SIM_Example$$typecreator2$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TBD____FW_Simba/target/classes/org/cusp/bdi/fw/simba/SIM_Example$$typecreator4$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TBD____FW_Simba/target/classes/org/cusp/bdi/fw/simba/SIM_Example$$typecreator8$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TBD____FW_Simba/target/classes/org/cusp/bdi/fw/simba/SIM_Example$.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TBD____FW_Simba/target/classes/org/cusp/bdi/fw/simba/SIM_Example$PointData$.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TBD____FW_Simba/target/classes/org/cusp/bdi/fw/simba/SIM_Example$PointData.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TBD____FW_Simba/target/classes/org/cusp/bdi/fw/simba/SIM_Example.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TBD____FW_Simba/target/classes/org/cusp/bdi/fw/simba/SimbaLineParser$.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TBD____FW_Simba/target/classes/org/cusp/bdi/fw/simba/SimbaLineParser.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TBD____FW_Simba/target/classes/pom.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TBD____FW_Simba/target/test-classes/org/apache/spark/sql/simba/index/IntervalSuite$$anonfun$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TBD____FW_Simba/target/test-classes/org/apache/spark/sql/simba/index/IntervalSuite$$anonfun$2.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TBD____FW_Simba/target/test-classes/org/apache/spark/sql/simba/index/IntervalSuite$$anonfun$3.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TBD____FW_Simba/target/test-classes/org/apache/spark/sql/simba/index/IntervalSuite$$anonfun$4.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TBD____FW_Simba/target/test-classes/org/apache/spark/sql/simba/index/IntervalSuite$$anonfun$5$$anonfun$equalArray$1$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TBD____FW_Simba/target/test-classes/org/apache/spark/sql/simba/index/IntervalSuite$$anonfun$5.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TBD____FW_Simba/target/test-classes/org/apache/spark/sql/simba/index/IntervalSuite.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TBD____FW_Simba/target/test-classes/org/apache/spark/sql/simba/index/RTreeSuite$$anonfun$1$$anonfun$apply$mcVI$sp$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TBD____FW_Simba/target/test-classes/org/apache/spark/sql/simba/index/RTreeSuite$$anonfun$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TBD____FW_Simba/target/test-classes/org/apache/spark/sql/simba/index/RTreeSuite$$anonfun$2$$anonfun$apply$mcV$sp$1$$anonfun$apply$mcVI$sp$2.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TBD____FW_Simba/target/test-classes/org/apache/spark/sql/simba/index/RTreeSuite$$anonfun$2$$anonfun$apply$mcV$sp$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TBD____FW_Simba/target/test-classes/org/apache/spark/sql/simba/index/RTreeSuite$$anonfun$2$$anonfun$apply$mcV$sp$5.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TBD____FW_Simba/target/test-classes/org/apache/spark/sql/simba/index/RTreeSuite$$anonfun$2.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TBD____FW_Simba/target/test-classes/org/apache/spark/sql/simba/index/RTreeSuite$$anonfun$3$$anonfun$apply$mcV$sp$2$$anonfun$apply$mcVI$sp$3.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TBD____FW_Simba/target/test-classes/org/apache/spark/sql/simba/index/RTreeSuite$$anonfun$3$$anonfun$apply$mcV$sp$2.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TBD____FW_Simba/target/test-classes/org/apache/spark/sql/simba/index/RTreeSuite$$anonfun$3$$anonfun$apply$mcV$sp$6.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TBD____FW_Simba/target/test-classes/org/apache/spark/sql/simba/index/RTreeSuite$$anonfun$3.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TBD____FW_Simba/target/test-classes/org/apache/spark/sql/simba/index/RTreeSuite$$anonfun$4$$anonfun$apply$mcV$sp$3$$anonfun$apply$mcVI$sp$4.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TBD____FW_Simba/target/test-classes/org/apache/spark/sql/simba/index/RTreeSuite$$anonfun$4$$anonfun$apply$mcV$sp$3.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TBD____FW_Simba/target/test-classes/org/apache/spark/sql/simba/index/RTreeSuite$$anonfun$4$$anonfun$apply$mcV$sp$7.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TBD____FW_Simba/target/test-classes/org/apache/spark/sql/simba/index/RTreeSuite$$anonfun$4.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TBD____FW_Simba/target/test-classes/org/apache/spark/sql/simba/index/RTreeSuite$$anonfun$5$$anonfun$apply$mcV$sp$4$$anonfun$apply$mcVI$sp$5.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TBD____FW_Simba/target/test-classes/org/apache/spark/sql/simba/index/RTreeSuite$$anonfun$5$$anonfun$apply$mcV$sp$4.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TBD____FW_Simba/target/test-classes/org/apache/spark/sql/simba/index/RTreeSuite$$anonfun$5$$anonfun$apply$mcV$sp$8.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TBD____FW_Simba/target/test-classes/org/apache/spark/sql/simba/index/RTreeSuite$$anonfun$5$$anonfun$org$apache$spark$sql$simba$index$RTreeSuite$$anonfun$$touch$1$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TBD____FW_Simba/target/test-classes/org/apache/spark/sql/simba/index/RTreeSuite$$anonfun$5$$anonfun$org$apache$spark$sql$simba$index$RTreeSuite$$anonfun$$touch$1$2.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TBD____FW_Simba/target/test-classes/org/apache/spark/sql/simba/index/RTreeSuite$$anonfun$5.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TBD____FW_Simba/target/test-classes/org/apache/spark/sql/simba/index/RTreeSuite$$anonfun$6$$anonfun$minDist$1$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TBD____FW_Simba/target/test-classes/org/apache/spark/sql/simba/index/RTreeSuite$$anonfun$6.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TBD____FW_Simba/target/test-classes/org/apache/spark/sql/simba/index/RTreeSuite.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TBD____FW_Simba/target/test-classes/org/apache/spark/sql/simba/index/TreapSuite$$anonfun$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TBD____FW_Simba/target/test-classes/org/apache/spark/sql/simba/index/TreapSuite$$anonfun$2$$anonfun$apply$mcV$sp$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TBD____FW_Simba/target/test-classes/org/apache/spark/sql/simba/index/TreapSuite$$anonfun$2.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TBD____FW_Simba/target/test-classes/org/apache/spark/sql/simba/index/TreapSuite$$anonfun$3$$anonfun$apply$mcV$sp$2.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TBD____FW_Simba/target/test-classes/org/apache/spark/sql/simba/index/TreapSuite$$anonfun$3.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TBD____FW_Simba/target/test-classes/org/apache/spark/sql/simba/index/TreapSuite$$anonfun$4$$anonfun$apply$mcV$sp$3$$anonfun$apply$mcVI$sp$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TBD____FW_Simba/target/test-classes/org/apache/spark/sql/simba/index/TreapSuite$$anonfun$4$$anonfun$apply$mcV$sp$3.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TBD____FW_Simba/target/test-classes/org/apache/spark/sql/simba/index/TreapSuite$$anonfun$4.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TBD____FW_Simba/target/test-classes/org/apache/spark/sql/simba/index/TreapSuite$$anonfun$5$$anonfun$apply$mcV$sp$4.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TBD____FW_Simba/target/test-classes/org/apache/spark/sql/simba/index/TreapSuite$$anonfun$5.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TBD____FW_Simba/target/test-classes/org/apache/spark/sql/simba/index/TreapSuite$$anonfun$6$$anonfun$apply$mcV$sp$5.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TBD____FW_Simba/target/test-classes/org/apache/spark/sql/simba/index/TreapSuite$$anonfun$6.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TBD____FW_Simba/target/test-classes/org/apache/spark/sql/simba/index/TreapSuite.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TBD____FW_Simba/target/test-classes/org/apache/spark/sql/simba/spatial/CircleSuite$$anonfun$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TBD____FW_Simba/target/test-classes/org/apache/spark/sql/simba/spatial/CircleSuite$$anonfun$2.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TBD____FW_Simba/target/test-classes/org/apache/spark/sql/simba/spatial/CircleSuite$$anonfun$3.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TBD____FW_Simba/target/test-classes/org/apache/spark/sql/simba/spatial/CircleSuite$$anonfun$4.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TBD____FW_Simba/target/test-classes/org/apache/spark/sql/simba/spatial/CircleSuite$$anonfun$5.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TBD____FW_Simba/target/test-classes/org/apache/spark/sql/simba/spatial/CircleSuite$$anonfun$6.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TBD____FW_Simba/target/test-classes/org/apache/spark/sql/simba/spatial/CircleSuite.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TBD____FW_Simba/target/test-classes/org/apache/spark/sql/simba/spatial/DistSuite$$anonfun$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TBD____FW_Simba/target/test-classes/org/apache/spark/sql/simba/spatial/DistSuite.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TBD____FW_Simba/target/test-classes/org/apache/spark/sql/simba/spatial/LineSegmentSuite$$anonfun$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TBD____FW_Simba/target/test-classes/org/apache/spark/sql/simba/spatial/LineSegmentSuite$$anonfun$2.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TBD____FW_Simba/target/test-classes/org/apache/spark/sql/simba/spatial/LineSegmentSuite$$anonfun$3.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TBD____FW_Simba/target/test-classes/org/apache/spark/sql/simba/spatial/LineSegmentSuite$$anonfun$4.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TBD____FW_Simba/target/test-classes/org/apache/spark/sql/simba/spatial/LineSegmentSuite$$anonfun$5.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TBD____FW_Simba/target/test-classes/org/apache/spark/sql/simba/spatial/LineSegmentSuite$$anonfun$6.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TBD____FW_Simba/target/test-classes/org/apache/spark/sql/simba/spatial/LineSegmentSuite$$anonfun$7.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TBD____FW_Simba/target/test-classes/org/apache/spark/sql/simba/spatial/LineSegmentSuite.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TBD____FW_Simba/target/test-classes/org/apache/spark/sql/simba/spatial/MBRSuite$$anonfun$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TBD____FW_Simba/target/test-classes/org/apache/spark/sql/simba/spatial/MBRSuite$$anonfun$2.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TBD____FW_Simba/target/test-classes/org/apache/spark/sql/simba/spatial/MBRSuite$$anonfun$3.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TBD____FW_Simba/target/test-classes/org/apache/spark/sql/simba/spatial/MBRSuite$$anonfun$4.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TBD____FW_Simba/target/test-classes/org/apache/spark/sql/simba/spatial/MBRSuite$$anonfun$5.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TBD____FW_Simba/target/test-classes/org/apache/spark/sql/simba/spatial/MBRSuite$$anonfun$6.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TBD____FW_Simba/target/test-classes/org/apache/spark/sql/simba/spatial/MBRSuite$$anonfun$7.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TBD____FW_Simba/target/test-classes/org/apache/spark/sql/simba/spatial/MBRSuite$$anonfun$8.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TBD____FW_Simba/target/test-classes/org/apache/spark/sql/simba/spatial/MBRSuite.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TBD____FW_Simba/target/test-classes/org/apache/spark/sql/simba/spatial/PointSuite$$anonfun$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TBD____FW_Simba/target/test-classes/org/apache/spark/sql/simba/spatial/PointSuite$$anonfun$10.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TBD____FW_Simba/target/test-classes/org/apache/spark/sql/simba/spatial/PointSuite$$anonfun$2.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TBD____FW_Simba/target/test-classes/org/apache/spark/sql/simba/spatial/PointSuite$$anonfun$3.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TBD____FW_Simba/target/test-classes/org/apache/spark/sql/simba/spatial/PointSuite$$anonfun$4.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TBD____FW_Simba/target/test-classes/org/apache/spark/sql/simba/spatial/PointSuite$$anonfun$5.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TBD____FW_Simba/target/test-classes/org/apache/spark/sql/simba/spatial/PointSuite$$anonfun$6.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TBD____FW_Simba/target/test-classes/org/apache/spark/sql/simba/spatial/PointSuite$$anonfun$7.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TBD____FW_Simba/target/test-classes/org/apache/spark/sql/simba/spatial/PointSuite$$anonfun$8.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TBD____FW_Simba/target/test-classes/org/apache/spark/sql/simba/spatial/PointSuite$$anonfun$9.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TBD____FW_Simba/target/test-classes/org/apache/spark/sql/simba/spatial/PointSuite.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TBD____FW_Simba/target/test-classes/org/apache/spark/sql/simba/spatial/PolygonSuite$$anonfun$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TBD____FW_Simba/target/test-classes/org/apache/spark/sql/simba/spatial/PolygonSuite$$anonfun$2.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TBD____FW_Simba/target/test-classes/org/apache/spark/sql/simba/spatial/PolygonSuite$$anonfun$3.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TBD____FW_Simba/target/test-classes/org/apache/spark/sql/simba/spatial/PolygonSuite$$anonfun$4.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TBD____FW_Simba/target/test-classes/org/apache/spark/sql/simba/spatial/PolygonSuite$$anonfun$5.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TBD____FW_Simba/target/test-classes/org/apache/spark/sql/simba/spatial/PolygonSuite$$anonfun$6.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TBD____FW_Simba/target/test-classes/org/apache/spark/sql/simba/spatial/PolygonSuite.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TBD____FW_Simba/target/test-classes/org/apache/spark/sql/simba/spatial/ShapeSuite$$anonfun$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TBD____FW_Simba/target/test-classes/org/apache/spark/sql/simba/spatial/ShapeSuite$$anonfun$2.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TBD____FW_Simba/target/test-classes/org/apache/spark/sql/simba/spatial/ShapeSuite.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TBD____FW_Simba/target/test-classes/org/apache/spark/sql/simba/spatial/ZValueSuite$$anonfun$1$$anonfun$apply$mcV$sp$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TBD____FW_Simba/target/test-classes/org/apache/spark/sql/simba/spatial/ZValueSuite$$anonfun$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TBD____FW_Simba/target/test-classes/org/apache/spark/sql/simba/spatial/ZValueSuite.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TBD____FW_Simba/target/test-classes/org/cusp/bdi/fw/simba/SIM_Arguments$.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TBD____FW_Simba/target/test-classes/org/cusp/bdi/fw/simba/SIM_Arguments.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TBD____FW_Simba/target/test-classes/org/cusp/bdi/fw/simba/SIM_CLArgs$.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TBD____FW_Simba/target/test-classes/org/cusp/bdi/fw/simba/SIM_CLArgs.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TBD____FW_Simba/target/test-classes/org/cusp/bdi/fw/simba/SIM_Example$$anonfun$1$$anonfun$apply$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TBD____FW_Simba/target/test-classes/org/cusp/bdi/fw/simba/SIM_Example$$anonfun$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TBD____FW_Simba/target/test-classes/org/cusp/bdi/fw/simba/SIM_Example$$anonfun$2.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TBD____FW_Simba/target/test-classes/org/cusp/bdi/fw/simba/SIM_Example$$anonfun$3$$anonfun$apply$2.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TBD____FW_Simba/target/test-classes/org/cusp/bdi/fw/simba/SIM_Example$$anonfun$3.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TBD____FW_Simba/target/test-classes/org/cusp/bdi/fw/simba/SIM_Example$$anonfun$4$$anonfun$apply$3.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TBD____FW_Simba/target/test-classes/org/cusp/bdi/fw/simba/SIM_Example$$anonfun$4.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TBD____FW_Simba/target/test-classes/org/cusp/bdi/fw/simba/SIM_Example$$anonfun$5.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TBD____FW_Simba/target/test-classes/org/cusp/bdi/fw/simba/SIM_Example$$anonfun$6$$anonfun$apply$4.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TBD____FW_Simba/target/test-classes/org/cusp/bdi/fw/simba/SIM_Example$$anonfun$6.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TBD____FW_Simba/target/test-classes/org/cusp/bdi/fw/simba/SIM_Example$$anonfun$getDS$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TBD____FW_Simba/target/test-classes/org/cusp/bdi/fw/simba/SIM_Example$$anonfun$getDS$2.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TBD____FW_Simba/target/test-classes/org/cusp/bdi/fw/simba/SIM_Example$$anonfun$rowToString$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TBD____FW_Simba/target/test-classes/org/cusp/bdi/fw/simba/SIM_Example$$typecreator1$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TBD____FW_Simba/target/test-classes/org/cusp/bdi/fw/simba/SIM_Example$$typecreator10$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TBD____FW_Simba/target/test-classes/org/cusp/bdi/fw/simba/SIM_Example$$typecreator14$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TBD____FW_Simba/target/test-classes/org/cusp/bdi/fw/simba/SIM_Example$$typecreator2$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TBD____FW_Simba/target/test-classes/org/cusp/bdi/fw/simba/SIM_Example$$typecreator4$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TBD____FW_Simba/target/test-classes/org/cusp/bdi/fw/simba/SIM_Example$$typecreator8$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TBD____FW_Simba/target/test-classes/org/cusp/bdi/fw/simba/SIM_Example$.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TBD____FW_Simba/target/test-classes/org/cusp/bdi/fw/simba/SIM_Example$PointData$.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TBD____FW_Simba/target/test-classes/org/cusp/bdi/fw/simba/SIM_Example$PointData.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TBD____FW_Simba/target/test-classes/org/cusp/bdi/fw/simba/SIM_Example.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TBD____FW_Simba/target/test-classes/org/cusp/bdi/fw/simba/SimbaLineParser$.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TBD____FW_Simba/target/test-classes/org/cusp/bdi/fw/simba/SimbaLineParser.class" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -964,7 +274,14 @@
       <option name="project" value="LOCAL" />
       <updated>1596176337828</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
+    <task id="LOCAL-00012" summary="100% accuracy in all 18 tests">
+      <created>1596767343544</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1596767343544</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -1000,7 +317,8 @@
     <MESSAGE value="runtime 98secs&#10;code analysis fixes" />
     <MESSAGE value="100% accuracy" />
     <MESSAGE value="Before removing Weight" />
-    <option name="LAST_COMMIT_MESSAGE" value="Before removing Weight" />
+    <MESSAGE value="100% accuracy in all 18 tests" />
+    <option name="LAST_COMMIT_MESSAGE" value="100% accuracy in all 18 tests" />
   </component>
   <component name="WindowStateProjectService">
     <state x="1183" y="599" width="811" height="531" key="#Notifications" timestamp="1594705139893">
@@ -1071,18 +389,18 @@
       <screen x="67" y="27" width="2493" height="1413" />
     </state>
     <state x="1012" y="419" key="#xdebugger.evaluate/67.27.2493.1413@67.27.2493.1413" timestamp="1595868635154" />
-    <state x="860" y="529" width="902" height="406" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1" timestamp="1595477137001">
+    <state x="860" y="529" width="902" height="406" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1" timestamp="1596767376689">
       <screen x="67" y="27" width="2493" height="1413" />
     </state>
-    <state x="860" y="529" width="902" height="406" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1/67.27.2493.1413@67.27.2493.1413" timestamp="1595477137001" />
+    <state x="860" y="529" width="902" height="406" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1/67.27.2493.1413@67.27.2493.1413" timestamp="1596767376689" />
     <state width="588" height="506" key="DebuggerActiveHint" timestamp="1596602385023">
       <screen x="67" y="27" width="2493" height="1413" />
     </state>
     <state width="588" height="506" key="DebuggerActiveHint/67.27.2493.1413@67.27.2493.1413" timestamp="1596602385023" />
-    <state x="167" y="125" width="2293" height="1215" key="DiffContextDialog" timestamp="1596251928573">
+    <state x="167" y="125" width="2293" height="1215" key="DiffContextDialog" timestamp="1596770950930">
       <screen x="67" y="27" width="2493" height="1413" />
     </state>
-    <state x="167" y="125" width="2293" height="1215" key="DiffContextDialog/67.27.2493.1413@67.27.2493.1413" timestamp="1596251928573" />
+    <state x="167" y="125" width="2293" height="1215" key="DiffContextDialog/67.27.2493.1413@67.27.2493.1413" timestamp="1596770950930" />
     <state x="1145" y="453" width="370" height="572" key="EnvironmentVariablesDialog" timestamp="1595477521248">
       <screen x="67" y="27" width="2493" height="1413" />
     </state>
@@ -1103,22 +421,22 @@
       <screen x="67" y="27" width="2493" height="1413" />
     </state>
     <state x="937" y="413" width="743" height="639" key="Github.UntrackedFilesDialog/67.27.2493.1413@67.27.2493.1413" timestamp="1594704490168" />
-    <state width="2437" height="383" key="GridCell.Tab.0.bottom" timestamp="1596766626212">
+    <state width="2437" height="383" key="GridCell.Tab.0.bottom" timestamp="1596766721189">
       <screen x="67" y="27" width="2493" height="1413" />
     </state>
-    <state width="2437" height="383" key="GridCell.Tab.0.bottom/67.27.2493.1413@67.27.2493.1413" timestamp="1596766626212" />
-    <state width="2437" height="383" key="GridCell.Tab.0.center" timestamp="1596766626211">
+    <state width="2437" height="383" key="GridCell.Tab.0.bottom/67.27.2493.1413@67.27.2493.1413" timestamp="1596766721189" />
+    <state width="2437" height="383" key="GridCell.Tab.0.center" timestamp="1596766721188">
       <screen x="67" y="27" width="2493" height="1413" />
     </state>
-    <state width="2437" height="383" key="GridCell.Tab.0.center/67.27.2493.1413@67.27.2493.1413" timestamp="1596766626211" />
-    <state width="2437" height="383" key="GridCell.Tab.0.left" timestamp="1596766626211">
+    <state width="2437" height="383" key="GridCell.Tab.0.center/67.27.2493.1413@67.27.2493.1413" timestamp="1596766721188" />
+    <state width="2437" height="383" key="GridCell.Tab.0.left" timestamp="1596766721188">
       <screen x="67" y="27" width="2493" height="1413" />
     </state>
-    <state width="2437" height="383" key="GridCell.Tab.0.left/67.27.2493.1413@67.27.2493.1413" timestamp="1596766626211" />
-    <state width="2437" height="383" key="GridCell.Tab.0.right" timestamp="1596766626212">
+    <state width="2437" height="383" key="GridCell.Tab.0.left/67.27.2493.1413@67.27.2493.1413" timestamp="1596766721188" />
+    <state width="2437" height="383" key="GridCell.Tab.0.right" timestamp="1596766721189">
       <screen x="67" y="27" width="2493" height="1413" />
     </state>
-    <state width="2437" height="383" key="GridCell.Tab.0.right/67.27.2493.1413@67.27.2493.1413" timestamp="1596766626212" />
+    <state width="2437" height="383" key="GridCell.Tab.0.right/67.27.2493.1413@67.27.2493.1413" timestamp="1596766721189" />
     <state width="2437" height="358" key="GridCell.Tab.1.bottom" timestamp="1596691374828">
       <screen x="67" y="27" width="2493" height="1413" />
     </state>
@@ -1143,10 +461,14 @@
       <screen x="67" y="27" width="2493" height="1413" />
     </state>
     <state x="778" y="394" width="1598" height="905" key="SettingsEditor/67.27.2493.1413@67.27.2493.1413" timestamp="1596596777714" />
-    <state x="908" y="468" width="800" height="528" key="Vcs.Push.Dialog.v2" timestamp="1596176352879">
+    <state x="167" y="125" width="2293" height="1215" key="ShowDiffWithBranchDialog" timestamp="1596770950931">
       <screen x="67" y="27" width="2493" height="1413" />
     </state>
-    <state x="908" y="468" width="800" height="528" key="Vcs.Push.Dialog.v2/67.27.2493.1413@67.27.2493.1413" timestamp="1596176352879" />
+    <state x="167" y="125" width="2293" height="1215" key="ShowDiffWithBranchDialog/67.27.2493.1413@67.27.2493.1413" timestamp="1596770950931" />
+    <state x="908" y="468" width="800" height="528" key="Vcs.Push.Dialog.v2" timestamp="1596771385210">
+      <screen x="67" y="27" width="2493" height="1413" />
+    </state>
+    <state x="908" y="468" width="800" height="528" key="Vcs.Push.Dialog.v2/67.27.2493.1413@67.27.2493.1413" timestamp="1596771385210" />
     <state x="1098" y="516" width="476" height="441" key="chooseDestDirectoryDialog" timestamp="1596256687366">
       <screen x="67" y="27" width="2493" height="1413" />
     </state>
@@ -1167,10 +489,10 @@
       <screen x="67" y="27" width="2493" height="1413" />
     </state>
     <state x="292" y="314" width="2293" height="1215" key="dock-window-2/67.27.2493.1413@67.27.2493.1413" timestamp="1594783317173" />
-    <state x="714" y="270" width="1109" height="836" key="find.popup" timestamp="1596688462951">
+    <state x="714" y="270" width="1109" height="836" key="find.popup" timestamp="1596766806277">
       <screen x="67" y="27" width="2493" height="1413" />
     </state>
-    <state x="714" y="270" width="1109" height="836" key="find.popup/67.27.2493.1413@67.27.2493.1413" timestamp="1596688462951" />
+    <state x="714" y="270" width="1109" height="836" key="find.popup/67.27.2493.1413@67.27.2493.1413" timestamp="1596766806277" />
     <state x="622" y="459" width="1372" height="547" key="new project wizard" timestamp="1596654344251">
       <screen x="67" y="27" width="2493" height="1413" />
     </state>
