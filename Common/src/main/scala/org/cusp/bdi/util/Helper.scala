@@ -7,12 +7,7 @@ package org.cusp.bdi.util
 
 import java.io.File
 
-import org.apache.hadoop.fs.{FileSystem, Path}
-import org.apache.log4j.Logger
-import org.apache.spark.SparkContext
-
 import scala.collection.mutable.ListBuffer
-import scala.reflect.io.Directory
 import scala.util.Random
 
 object Helper {
@@ -120,6 +115,20 @@ object Helper {
     Array((minX, minY), (maxX, maxY))
   }
 
+  def getMBREnds(arrCoords: Array[(Double, Double)], expandBy: Double) = {
+
+    val xCoords = arrCoords.map(_._1)
+    val yCoords = arrCoords.map(_._2)
+
+    var minX = xCoords.min - expandBy
+    var minY = yCoords.min - expandBy
+    var maxX = xCoords.max + expandBy
+    var maxY = yCoords.max + expandBy
+
+    // Closed ring MBR (1st and last points repeated)
+    Array((minX, minY), (maxX, maxY))
+  }
+
   def getMBR_ClosedRing(arrCoords: Array[(Double, Double)], expandBy: Double) = {
 
     val xCoords = arrCoords.map(_._1)
@@ -147,10 +156,10 @@ object Helper {
   /**
    * Sends message(s) to the log belonging to the class when debug is turned on
    */
-  def logMessage(debugOn: Boolean, clazz: => Any, message: => Object) {
-    if (debugOn)
-      Logger.getLogger(clazz.getClass().getName).info("# " + message)
-  }
+//  def logMessage(debugOn: Boolean, clazz: => Any, message: => Object) {
+//    if (debugOn)
+//      Logger.getLogger(clazz.getClass().getName).info("# " + message)
+//  }
 
   /**
    * Randomizes the output directory. This is used when running Spark in local mode for testing
@@ -168,24 +177,24 @@ object Helper {
     randOutDir.toString()
   }
 
-  def delDirHDFS(sparkContext: SparkContext, dirPath: String) {
-
-    try {
-      val hdfs = FileSystem.get(sparkContext.hadoopConfiguration)
-      val path = new Path(dirPath)
-      if (hdfs.exists(path))
-        hdfs.delete(path, true)
-    }
-    catch {
-      case ex: Exception => ex.printStackTrace()
-    }
-  }
-
-  def delDirHDFS(dirPath: String) {
-
-    val directory = new Directory(new File(dirPath))
-    directory.deleteRecursively()
-  }
+//  def delDirHDFS(sparkContext: SparkContext, dirPath: String) {
+//
+//    try {
+//      val hdfs = FileSystem.get(sparkContext.hadoopConfiguration)
+//      val path = new Path(dirPath)
+//      if (hdfs.exists(path))
+//        hdfs.delete(path, true)
+//    }
+//    catch {
+//      case ex: Exception => ex.printStackTrace()
+//    }
+//  }
+//
+//  def delDirHDFS(dirPath: String) {
+//
+//    val directory = new Directory(new File(dirPath))
+//    directory.deleteRecursively()
+//  }
 
   def ensureClosedRingCoordinates[T <: AnyVal](arrCoord: Array[(T, T)]) = {
 

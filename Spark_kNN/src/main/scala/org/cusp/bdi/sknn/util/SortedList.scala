@@ -170,7 +170,7 @@ case class SortedList[T](maxSize: Int, allowDuplicates: Boolean)(implicit ev$1: 
 
   def get(idx: Int) = {
 
-    var current = head
+    var current = head()
     var i = 0
     while (i < idx) {
 

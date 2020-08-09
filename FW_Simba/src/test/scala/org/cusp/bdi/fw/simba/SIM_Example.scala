@@ -1,40 +1,30 @@
 package org.cusp.bdi.fw.simba
 
 import org.apache.hadoop.io.compress.GzipCodec
+import org.apache.hadoop.fs.{FileSystem, Path}
 import org.apache.spark.sql.Row
 import org.apache.spark.sql.simba.SimbaSession
-import org.cusp.bdi.util.{Helper, LocalRunConsts}
+import org.cusp.bdi.util.{CLArgsParser, Helper, LocalRunConsts}
 
 import scala.collection.mutable.SortedSet
 
 object SIM_Example extends Serializable {
 
-  case class PointData(x: Double, y: Double, other: String)
+  private val inputPath = "/media/ayman/Data/GeoMatch_Files/InputFiles/RandomSamples/"
+  private val inputPathOld = "/media/ayman/Data/GeoMatch_Files/InputFiles/RandomSamples_OLD/"
 
   //    case class PointData(x: Double, y: Double)
   //    case class LineSegmentData(start: Point, end: Point, other: String)
-
-  private final def getDS(simbaSession: SimbaSession, fileName: String, objType: String) = {
-
-    //        import simbaSession.implicits._
-    //        import simbaSession.simbaImplicits._
-
-    import simbaSession.implicits._
-
-    simbaSession.read.textFile(fileName)
-      .map(SimbaLineParser.lineParser(objType))
-      .filter(_ != null)
-      .map(row => PointData(row._2._1.toDouble, row._2._2.toDouble, row._1))
-  }
 
   def main(args: Array[String]): Unit = {
 
     val startTime = System.currentTimeMillis()
 
-    val clArgs = SIM_CLArgs.taxi_taxi_1M_No_Trip
-    //        val clArgs = SIM_CLArgs.taxi_taxi_rand_samp
-    //        val clArgs = SIM_CLArgs.randomPoints_randomPoints
+    //    val clArgs = SIM_CLArgs.random_sample
 
+    val clArgs = CLArgsParser(args, SIM_Arguments())
+    //        val clArgs = SIM_CLArgs.taxi_taxi_1M_No_Trip
+    //        val clArgs = SIM_CLArgs.randomPoints_randomPoints
     //        val clArgs = SIM_CLArgs.busPoint_busPointShift
     //        val clArgs = SIM_CLArgs.TPEP_Point_TPEP_Point
     //        val clArgs = SIM_CLArgs.lion_PolyRect_TPEP_Point
@@ -42,7 +32,6 @@ object SIM_Example extends Serializable {
     //        val clArgs = SIM_CLArgs.lion_LStr_Taxi_Point
     //        val clArgs = SIM_CLArgs.lion_PolyRect_Taxi_Point
     //        val clArgs = SIM_CLArgs.OSM_Point_OSM_Point
-    //        val clArgs = CLArgsParser(args, SIM_Arguments())
 
     var simbaBuilder = SimbaSession.builder()
       .appName(StringBuilder.newBuilder
@@ -65,7 +54,10 @@ object SIM_Example extends Serializable {
     val simbaSession = simbaBuilder.getOrCreate()
 
     // delete output dir if exists
-    Helper.delDirHDFS(simbaSession.sparkContext, clArgs.getParamValueString(SIM_Arguments.outDir))
+    val hdfs = FileSystem.get(simbaSession.sparkContext.hadoopConfiguration)
+    val path = new Path(clArgs.getParamValueString(SIM_Arguments.outDir))
+    if (hdfs.exists(path))
+      hdfs.delete(path, true)
 
     val DS1 = getDS(simbaSession, clArgs.getParamValueString(SIM_Arguments.firstSet), clArgs.getParamValueString(SIM_Arguments.firstSetObj))
       .repartition(1024)
@@ -97,9 +89,29 @@ object SIM_Example extends Serializable {
 
     if (clArgs.getParamValueBoolean(SIM_Arguments.local)) {
 
-      printf("Total Time: %,.2f Sec%n", (System.currentTimeMillis() - startTime) / 1000.0)
-      println("Output idr: " + clArgs.getParamValueString(SIM_Arguments.outDir))
+      LocalRunConsts.logLocalRunEntry(LocalRunConsts.localRunLogFile, "sKNN",
+        clArgs.getParamValueString(SIM_Arguments.firstSet).substring(clArgs.getParamValueString(SIM_Arguments.firstSet).lastIndexOf("/") + 1),
+        clArgs.getParamValueString(SIM_Arguments.secondSet).substring(clArgs.getParamValueString(SIM_Arguments.secondSet).lastIndexOf("/") + 1),
+        clArgs.getParamValueString(SIM_Arguments.outDir).substring(clArgs.getParamValueString(SIM_Arguments.outDir).lastIndexOf("/") + 1),
+        (System.currentTimeMillis() - startTime) / 1000.0)
+
+      printf("Total Time: %,.4f Sec%n", (System.currentTimeMillis() - startTime) / 1000.0)
+      println("Output: %s".format(clArgs.getParamValueString(SIM_Arguments.outDir)))
+      println("Run Log: %s".format(LocalRunConsts.localRunLogFile))
     }
+  }
+
+  private final def getDS(simbaSession: SimbaSession, fileName: String, objType: String) = {
+
+    //        import simbaSession.implicits._
+    //        import simbaSession.simbaImplicits._
+
+    import simbaSession.implicits._
+
+    simbaSession.read.textFile(fileName)
+      .map(SimbaLineParser.lineParser(objType))
+      .filter(_ != null)
+      .map(row => PointData(row._2._1.toDouble, row._2._2.toDouble, row._1))
   }
 
   def rowToString(row: (String, SortedSet[(Double, String)])) = {
@@ -129,4 +141,7 @@ object SIM_Example extends Serializable {
 
     (pointInfo, sSet)
   }
+
+  case class PointData(x: Double, y: Double, other: String)
+
 }

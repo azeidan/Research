@@ -1,9 +1,13 @@
 package org.cusp.bdi.util
 
+import java.io.FileWriter
+
 object LocalRunConsts {
 
   val pathOutput = "/media/cusp/Data/GeoMatch_Files/OutputFiles/"
   val sparkWorkDir = "/media/cusp/Data/GeoMatch_Files/spark_work_dir/"
+  val localRunLogFile = "/media/ayman/Data/GeoMatch_Files/OutputFiles/batchTestResults.txt"
+  val benchmarkLogFile = "/media/ayman/Data/GeoMatch_Files/OutputFiles/benchmarkResults.txt"
 
   val DS_CODE_TPEP_POINT = "TPEP_Point"
   val DS_CODE_TPEP_POINT_WGS84 = "TPEP_Point_WGS84"
@@ -41,9 +45,9 @@ object LocalRunConsts {
   val pathKM_Bus_WGS84 = "/media/cusp/Data/GeoMatch_Files/InputFiles/KM_WGS84_LION_LineString_Bus_Point_ErrCorr_MBRExp_150_MaxDist_150.1K.csv"
   val pathKM_RandomPointsNonUniform = ""
 
-  val pathGM_TPEP = "/media/ayman/Data/GeoMatch_Files/OutputFiles/Simba/967_Simb_Taxi_3_Grp2/"
+  val pathGM_TPEP = "/media/ayman/Data/GeoMatch_Files/OutputFiles/Simba/527_Simb_Taxi_2_Grp1/"
   val pathSparkKNN_FW_Output_1 = pathGM_TPEP
-  val pathSparkKNN_FW_Output_2 = "/media/cusp/Data/GeoMatch_Files/OutputFiles/109/"
+  val pathSparkKNN_FW_Output_2 = "/media/cusp/Data/GeoMatch_Files/OutputFiles/260/"
 
   val pathGS_TPEP = "/media/cusp/Data/GeoMatch_Files/InputFiles/GeoSpark_LION_TPEP.csv"
   val pathLS_wgs_TPEP = "/media/cusp/Data/GeoMatch_Files/InputFiles/LocationSpark_LION_TPEP.csv"
@@ -54,8 +58,8 @@ object LocalRunConsts {
 
   val pathTaxi1M_NAD83 = "/media/cusp/Data/GeoMatch_Files/InputFiles/Yellow_TLC_TripRecord_NAD83_1M.csv"
 
-  val pathRandSample_A_NAD83 = "/media/cusp/Data/GeoMatch_Files/InputFiles/RandomSamples/Taxi_3_A.csv"
-  val pathRandSample_B_NAD83 = "/media/cusp/Data/GeoMatch_Files/InputFiles/RandomSamples/Taxi_3_B.csv"
+  val pathRandSample_A_NAD83 = "/media/cusp/Data/GeoMatch_Files/InputFiles/RandomSamples_OLD/Taxi_1_A.csv"
+  val pathRandSample_B_NAD83 = "/media/cusp/Data/GeoMatch_Files/InputFiles/RandomSamples_OLD/Taxi_1_B.csv"
 
   //  val pathTaxi1M_No_Trip_NAD83_A = "/media/cusp/Data/GeoMatch_Files/InputFiles/Yellow_TLC_TripRecord_NAD83_1M_No_Trip_Info_A.csv"
   //  val pathTaxi1M_No_Trip_NAD83_B = "/media/cusp/Data/GeoMatch_Files/InputFiles/Yellow_TLC_TripRecord_NAD83_1M_No_Trip_Info_B.csv"
@@ -65,4 +69,15 @@ object LocalRunConsts {
 
   //    val pathTaxi1M_No_Trip_NAD83_A = "/media/cusp/Data/GeoMatch_Files/InputFiles/RandomSamples_OLD/Bread_1_A.csv"
   //    val pathTaxi1M_No_Trip_NAD83_B = "/media/cusp/Data/GeoMatch_Files/InputFiles/RandomSamples_OLD/Bread_1_B.csv"
+
+
+  def logLocalRunEntry(fileName: String, label: String, file1: String, file2: String, outDir: String, time: Double): Unit = {
+
+    val fw = new FileWriter(fileName, true)
+
+    fw.write("%s\t%s\t%s\t%s\t%.4f\t%n".format(label, file1, file2, outDir, time))
+
+    fw.flush()
+    fw.close()
+  }
 }

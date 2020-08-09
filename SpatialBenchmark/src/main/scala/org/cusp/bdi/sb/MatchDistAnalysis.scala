@@ -1,21 +1,14 @@
 package org.cusp.bdi.sb
 
-import scala.collection.mutable.HashMap
-import scala.collection.mutable.ListBuffer
-import scala.collection.mutable.Map
-import scala.collection.mutable.SortedSet
-import org.apache.commons.logging.LogFactory
-import org.apache.spark.SparkConf
-import org.apache.spark.SparkContext
-import org.apache.spark.rdd.RDD
-import org.apache.spark.serializer.KryoSerializer
-import org.cusp.bdi.sb.examples.BenchmarkInputFileParser
-import org.cusp.bdi.sb.examples.SB_Arguments
-import org.cusp.bdi.sb.examples.SB_CLArgs
-import org.cusp.bdi.util.Helper
+import org.apache.hadoop.fs.{FileSystem, Path}
 import org.apache.hadoop.io.compress.GzipCodec
+import org.apache.spark.rdd.RDD
+import org.apache.spark.{SparkConf, SparkContext}
+import org.apache.spark.serializer.KryoSerializer
+import org.cusp.bdi.sb.examples.{BenchmarkInputFileParser, SB_Arguments, SB_CLArgs}
 
 import scala.collection.mutable
+import scala.collection.mutable.ListBuffer
 
 object MatchDistAnalysis extends Serializable {
 
@@ -51,7 +44,10 @@ object MatchDistAnalysis extends Serializable {
     val sparkContext = new SparkContext(sparkConf)
 
     // delete output dir if exists
-    Helper.delDirHDFS(sparkContext, clArgs.getParamValueString(SB_Arguments.outDir))
+    val hdfs = FileSystem.get(sparkContext.hadoopConfiguration)
+    val path = new Path(clArgs.getParamValueString(SB_Arguments.outDir))
+    if (hdfs.exists(path))
+      hdfs.delete(path, true)
 
     val rdd1 = sparkContext.textFile(clArgs.getParamValueString(SB_Arguments.keyMatchInFile))
     val rdd2 = sparkContext.textFile(clArgs.getParamValueString(SB_Arguments.testFWInFile))
