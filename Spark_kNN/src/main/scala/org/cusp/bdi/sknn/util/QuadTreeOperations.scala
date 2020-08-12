@@ -7,7 +7,7 @@ import scala.collection.mutable.ListBuffer
 
 object QuadTreeOperations extends Serializable {
 
-  private val expandBy = 2 * math.sqrt(2)
+  private val expandBy = math.sqrt(2)
 
   def nearestNeighbor(lstQTInf: ListBuffer[QuadTreeInfo], searchPoint: Point, sortSetSqDist: SortedList[Point], k: Int) {
 
@@ -91,29 +91,8 @@ object QuadTreeOperations extends Serializable {
     //    }
   }
 
-  def spatialIdxRangeLookup(quadree: QuadTree, searchPointXY: (Long, Long), k: Int): Set[Int] = {
-
-    //    if (searchPointXY._1.toString().startsWith("26262") && searchPointXY._2.toString().startsWith("5488"))
-    //      println
-
-    val searchPoint = new Point(searchPointXY._1, searchPointXY._2)
-
-    val sPtBestQT = getBestQuadrant(quadree, searchPoint, k)
-
-    //    val expandBy = math.sqrt(gridBoxWH)
-
-    val dim = expandBy + math.max(math.max(math.abs(searchPoint.x - sPtBestQT.boundary.left), math.abs(searchPoint.x - sPtBestQT.boundary.right)),
-      math.max(math.abs(searchPoint.y - sPtBestQT.boundary.bottom), math.abs(searchPoint.y - sPtBestQT.boundary.top)))
-
-    val searchRegion = Box(searchPoint, new Point(dim, dim))
-
-    val sortList = spatialIdxRangeLookupHelper(sPtBestQT, quadree, searchRegion, k, expandBy)
-
-    sortList
-      .map(f = _.data.userData.asInstanceOf[Set[Int]])
-      .flatMap(_.seq)
-      .toSet
-  }
+  private def intersects(quadTree: QuadTree, searchRegion: Box) =
+    quadTree != null && searchRegion.intersects(quadTree.boundary)
 
   private def getBestQuadrant(quadTree: QuadTree, searchPoint: Point, k: Int) = {
 
@@ -139,6 +118,28 @@ object QuadTreeOperations extends Serializable {
     qTree
   }
 
+  def spatialIdxRangeLookup(quadree: QuadTree, searchPointXY: (Long, Long), k: Int): Set[Int] = {
+
+    //    if (searchPointXY._1.toString().startsWith("26167") && searchPointXY._2.toString().startsWith("4966"))
+    //      println
+
+    val searchPoint = new Point(searchPointXY._1, searchPointXY._2)
+
+    val sPtBestQT = getBestQuadrant(quadree, searchPoint, k)
+
+    val dim = /*expandBy +*/ math.max(math.max(math.abs(searchPoint.x - sPtBestQT.boundary.left), math.abs(searchPoint.x - sPtBestQT.boundary.right)),
+      math.max(math.abs(searchPoint.y - sPtBestQT.boundary.bottom), math.abs(searchPoint.y - sPtBestQT.boundary.top)))
+
+    val searchRegion = Box(searchPoint, new Point(dim, dim))
+
+    val sortList = spatialIdxRangeLookupHelper(sPtBestQT, quadree, searchRegion, k, expandBy)
+
+    sortList
+      .map(f = _.data.userData.asInstanceOf[Set[Int]])
+      .flatMap(_.seq)
+      .toSet
+  }
+
   private def spatialIdxRangeLookupHelper(quadTreeStart: QuadTree, quadTree: QuadTree, searchRegion: Box, k: Int, expandBy: Double) = {
 
     //    var totalCount = 0
@@ -158,7 +159,7 @@ object QuadTreeOperations extends Serializable {
             .filter(searchRegion.contains)
             .foreach(qtPoint => {
 
-              //              if (qtPoint.x.toString().startsWith("26262") && qtPoint.y.toString().startsWith("5428"))
+              //              if (qtPoint.x.toString().startsWith("26157") && qtPoint.y.toString().startsWith("4965"))
               //                print("")
 
               val sqDist = Helper.squaredDist(searchRegion.center.x, searchRegion.center.y, qtPoint.x, qtPoint.y)
@@ -175,12 +176,12 @@ object QuadTreeOperations extends Serializable {
 
                     prevLastElem = elem
 
-                    searchRegion.halfDimension.x = expandBy + math.sqrt(prevLastElem.distance)
+                    searchRegion.halfDimension.x = math.sqrt(prevLastElem.distance) + expandBy
                     searchRegion.halfDimension.y = searchRegion.halfDimension.x
 
                     currSqDim = math.pow(searchRegion.halfDimension.x, 2)
 
-                    // keep points within new dimension
+                    // keep points with xCoord < than the center's
                     var count = k
 
                     while (elem.next != null && elem.next.distance <= currSqDim) {
@@ -216,9 +217,6 @@ object QuadTreeOperations extends Serializable {
 
     sortList
   }
-
-  private def intersects(quadTree: QuadTree, searchRegion: Box) =
-    quadTree != null && searchRegion.intersects(quadTree.boundary)
 
   //  private def getFurthestCorner(searchPoint: Point, sPtBestQT: QuadTree) = {
   //

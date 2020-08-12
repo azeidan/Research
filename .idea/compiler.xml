@@ -7,8 +7,11 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="FW_Simba_Source" />
+        <module name="Spark_kNN" />
         <module name="FW_GeoMatch" />
+        <module name="FW_LocationSpark" />
         <module name="FW_Simba" />
+        <module name="FW_LocationSpark_Src" />
         <module name="GeoMatch" />
         <module name="LocalRunFiles" />
         <module name="Common" />
@@ -22,6 +25,7 @@
       <module name="FW_GeoMatch" target="1.8" />
       <module name="FW_LocationSpark" target="1.8" />
       <module name="FW_LocationSpark_Source" target="1.8" />
+      <module name="FW_LocationSpark_Src" target="1.7" />
       <module name="FW_Simba" target="1.8" />
       <module name="FW_Simba_Source" target="1.8" />
       <module name="GeoMatch" target="1.8" />

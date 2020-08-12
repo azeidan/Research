@@ -4,15 +4,15 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>groupId</groupId>
+  <groupId>FW_LocationSpark</groupId>
   <artifactId>FW_LocationSpark</artifactId>
-  <version>1.0-SNAPSHOT</version>
+  <version>0.0.1-SNAPSHOT</version>
 
   <dependencies>
 
     <dependency>
-      <groupId>FW_LocationSpark</groupId>
-      <artifactId>FW_LocationSpark</artifactId>
+      <groupId>Src_LocationSpark</groupId>
+      <artifactId>Src_LocationSpark</artifactId>
       <version>0.0.1-SNAPSHOT</version>
     </dependency>
 
@@ -26,7 +26,6 @@
       <groupId>Common</groupId>
       <artifactId>Common</artifactId>
       <version>0.2</version>
-      <scope>compile</scope>
       <exclusions>
         <exclusion>
           <groupId>org.apache.spark</groupId>
