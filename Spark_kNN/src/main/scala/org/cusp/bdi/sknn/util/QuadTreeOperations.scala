@@ -7,8 +7,6 @@ import scala.collection.mutable.ListBuffer
 
 object QuadTreeOperations extends Serializable {
 
-  private val expandBy = math.sqrt(2)
-
   def nearestNeighbor(lstQTInf: ListBuffer[QuadTreeInfo], searchPoint: Point, sortSetSqDist: SortedList[Point], k: Int) {
 
     //    if (searchPoint.userData != null && searchPoint.userData.toString().equalsIgnoreCase("taxi_b_651809"))
@@ -118,21 +116,23 @@ object QuadTreeOperations extends Serializable {
     qTree
   }
 
-  def spatialIdxRangeLookup(quadree: QuadTree, searchPointXY: (Long, Long), k: Int): Set[Int] = {
+  def spatialIdxRangeLookup(quadree: QuadTree, searchPoint: Point, k: Int, gridOperation: GridOperation): Set[Int] = {
 
     //    if (searchPointXY._1.toString().startsWith("26167") && searchPointXY._2.toString().startsWith("4966"))
     //      println
 
-    val searchPoint = new Point(searchPointXY._1, searchPointXY._2)
+    val xy = gridOperation.computeBoxXY(searchPoint.x, searchPoint.y)
 
-    val sPtBestQT = getBestQuadrant(quadree, searchPoint, k)
+    val centerPoint = new Point(xy._1.toDouble, xy._2.toDouble)
 
-    val dim = /*expandBy +*/ math.max(math.max(math.abs(searchPoint.x - sPtBestQT.boundary.left), math.abs(searchPoint.x - sPtBestQT.boundary.right)),
-      math.max(math.abs(searchPoint.y - sPtBestQT.boundary.bottom), math.abs(searchPoint.y - sPtBestQT.boundary.top)))
+    val sPtBestQT = getBestQuadrant(quadree, centerPoint, k)
 
-    val searchRegion = Box(searchPoint, new Point(dim, dim))
+    val dim = math.max(math.max(math.abs(centerPoint.x - sPtBestQT.boundary.left), math.abs(centerPoint.x - sPtBestQT.boundary.right)),
+      math.max(math.abs(centerPoint.y - sPtBestQT.boundary.bottom), math.abs(centerPoint.y - sPtBestQT.boundary.top)))
 
-    val sortList = spatialIdxRangeLookupHelper(sPtBestQT, quadree, searchRegion, k, expandBy)
+    val searchRegion = Box(centerPoint, new Point(dim, dim))
+
+    val sortList = spatialIdxRangeLookupHelper(sPtBestQT, quadree, searchRegion, k, gridOperation.getShiftErrorRange)
 
     sortList
       .map(f = _.data.userData.asInstanceOf[Set[Int]])
@@ -140,7 +140,7 @@ object QuadTreeOperations extends Serializable {
       .toSet
   }
 
-  private def spatialIdxRangeLookupHelper(quadTreeStart: QuadTree, quadTree: QuadTree, searchRegion: Box, k: Int, expandBy: Double) = {
+  private def spatialIdxRangeLookupHelper(quadTreeStart: QuadTree, quadTree: QuadTree, searchRegion: Box, k: Int, shiftErrorRange: Double) = {
 
     //    var totalCount = 0
 
@@ -159,16 +159,16 @@ object QuadTreeOperations extends Serializable {
             .filter(searchRegion.contains)
             .foreach(qtPoint => {
 
-              //              if (qtPoint.x.toString().startsWith("26157") && qtPoint.y.toString().startsWith("4965"))
-              //                print("")
+              //              if (qtPoint.x.toString().startsWith("167404") && qtPoint.y.toString().startsWith("32479"))
+              //                println("")
 
               val sqDist = Helper.squaredDist(searchRegion.center.x, searchRegion.center.y, qtPoint.x, qtPoint.y)
 
-              if (prevLastElem == null || sqDist <= currSqDim) {
+              if (prevLastElem == null || sqDist < currSqDim) {
 
                 sortList.add(sqDist, qtPoint)
 
-                if (sortList.size > k) {
+                if (sortList.size >= k) {
 
                   var elem = sortList.get(k - 1)
 
@@ -176,7 +176,7 @@ object QuadTreeOperations extends Serializable {
 
                     prevLastElem = elem
 
-                    searchRegion.halfDimension.x = math.sqrt(prevLastElem.distance) + expandBy
+                    searchRegion.halfDimension.x = math.sqrt(prevLastElem.distance) + shiftErrorRange
                     searchRegion.halfDimension.y = searchRegion.halfDimension.x
 
                     currSqDim = math.pow(searchRegion.halfDimension.x, 2)
