@@ -9,9 +9,7 @@
         <module name="FW_Simba_Source" />
         <module name="Spark_kNN" />
         <module name="FW_GeoMatch" />
-        <module name="FW_LocationSpark" />
         <module name="FW_Simba" />
-        <module name="FW_LocationSpark_Src" />
         <module name="GeoMatch" />
         <module name="LocalRunFiles" />
         <module name="Common" />
