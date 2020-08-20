@@ -206,15 +206,6 @@ object Helper {
     retArr
   }
 
-  def euclideanDist(xy1: (Double, Double), xy2: (Double, Double)) =
-    math.sqrt(math.pow(xy1._1 - xy2._1, 2) + math.pow(xy1._2 - xy2._2, 2))
-
-  def squaredDist(x1: Double, y1: Double, x2: Double, y2: Double) =
-    math.pow(x1 - x2, 2) + math.pow(y1 - y2, 2)
-
-  def manhattanDist(x1: Double, y1: Double, x2: Double, y2: Double) =
-    math.abs(x1 - x2) + math.abs(y1 - y2)
-
   def toByte(str: String) = {
     var idx = 0
     while (idx < str.length() && Character.isDigit(str.charAt(idx))) idx += 1

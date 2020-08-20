@@ -10,10 +10,11 @@
         <option value="$PROJECT_DIR$/FW_Simba_Source/pom.xml" />
         <option value="$PROJECT_DIR$/FW_Simba/pom.xml" />
         <option value="$PROJECT_DIR$/Spark_kNN/pom.xml" />
+        <option value="$PROJECT_DIR$/Datastructures/pom.xml" />
       </list>
     </option>
   </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_1_8" default="false" project-jdk-name="1.8" project-jdk-type="JavaSDK">
-    <output url="file://$PROJECT_DIR$/out" />
+    <output url="file:///var/tmp/Intellij/Research" />
   </component>
 </project>

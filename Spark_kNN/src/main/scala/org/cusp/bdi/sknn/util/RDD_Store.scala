@@ -1,10 +1,8 @@
 package org.cusp.bdi.sknn.util
 
 import org.apache.spark.SparkContext
-import org.cusp.bdi.util.InputFileParsers
 import org.apache.spark.rdd.RDD
-import org.cusp.bdi.util.LocalRunConsts
-import org.cusp.bdi.util.LocalRunConsts
+import org.cusp.bdi.util.{InputFileParsers, LocalRunConsts}
 
 object RDD_Store {
 

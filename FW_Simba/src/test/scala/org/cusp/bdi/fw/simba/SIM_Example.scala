@@ -1,10 +1,10 @@
 package org.cusp.bdi.fw.simba
 
-import org.apache.hadoop.io.compress.GzipCodec
 import org.apache.hadoop.fs.{FileSystem, Path}
+import org.apache.hadoop.io.compress.GzipCodec
 import org.apache.spark.sql.Row
 import org.apache.spark.sql.simba.SimbaSession
-import org.cusp.bdi.util.{CLArgsParser, Helper, LocalRunConsts}
+import org.cusp.bdi.util.{CLArgsParser, LocalRunConsts}
 
 import scala.collection.mutable.SortedSet
 
@@ -124,12 +124,16 @@ object SIM_Example extends Serializable {
     sb.toString()
   }
 
+  private def euclideanDist(xy1: (Double, Double), xy2: (Double, Double)) =
+    math.sqrt(math.pow(xy1._1 - xy2._1, 2) + math.pow(xy1._2 - xy2._2, 2))
+
   def processRow(row: Row) = {
+
 
     val x = row(0).toString.toDouble
     val y = row(1).toString.toDouble
 
-    val dist = Helper.euclideanDist((x, y), (row(3) match {
+    val dist = euclideanDist((x, y), (row(3) match {
       case d: Double => d
     }, row(4) match {
       case d: Double => d

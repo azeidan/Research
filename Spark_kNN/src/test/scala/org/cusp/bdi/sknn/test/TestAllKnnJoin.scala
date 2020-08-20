@@ -1,17 +1,18 @@
 package org.cusp.bdi.sknn.test
 
-import com.insightfullogic.quad_trees.Point
 import org.apache.hadoop.fs.{FileSystem, Path}
 import org.apache.hadoop.io.compress.GzipCodec
 import org.apache.spark.serializer.KryoSerializer
 import org.apache.spark.{SparkConf, SparkContext}
 import org.cusp.bdi.util.sknn.SparkKNN_Local_CLArgs
 //import org.cusp.bdi.gm.GeoMatch
+import org.cusp.bdi.ds.Point
 import org.cusp.bdi.sknn.SparkKNN
 import org.cusp.bdi.sknn.util.{RDD_Store, SparkKNN_Arguments}
 import org.cusp.bdi.util.{CLArgsParser, LocalRunConsts}
 
 object TestAllKnnJoin {
+
   def main(args: Array[String]): Unit = {
 
     //    println(math.round(12.34))
@@ -24,7 +25,7 @@ object TestAllKnnJoin {
     val startTime = System.currentTimeMillis()
     //    var startTime2 = startTime
 
-//        val clArgs = SparkKNN_Local_CLArgs.random_sample(SparkKNN_Arguments())
+//            val clArgs = SparkKNN_Local_CLArgs.random_sample(SparkKNN_Arguments())
     val clArgs = CLArgsParser(args, SparkKNN_Arguments())
 
     //    val clArgs = SparkKNN_Local_CLArgs.busPoint_busPointShift(SparkKNN_Arguments())

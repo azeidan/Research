@@ -1,19 +1,22 @@
-package com.insightfullogic.quad_trees
+package org.cusp.bdi.ds
 
-case class Box(center: Point, halfDimension: Point) extends Serializable {
+case class Box(center: PointBase, halfDimension: PointBase) extends Serializable {
 
   def this(other: Box) =
-    this(new Point(other.center), new Point(other.halfDimension))
+    this(new PointBase(other.center), new PointBase(other.halfDimension))
 
   def contains(other: Box): Boolean =
     !(this.left > other.left || this.right < other.right ||
       this.bottom > other.bottom || this.top < other.top)
 
-  def contains(point: Point): Boolean =
+  def contains(point: PointBase): Boolean =
     contains(point.x, point.y)
 
   def contains(x: Double, y: Double): Boolean =
     !(x < left || x > right || y < bottom || y > top)
+
+  def contains(mbr: (Double, Double, Double, Double)): Boolean =
+    left <= mbr._1 && bottom <= mbr._2 && right >= mbr._3 && top >= mbr._4
 
   def top: Double = {
     center.y + halfDimension.y
@@ -30,9 +33,6 @@ case class Box(center: Point, halfDimension: Point) extends Serializable {
   def left: Double = {
     center.x - halfDimension.x
   }
-
-  def contains(mbr: (Double, Double, Double, Double)): Boolean =
-    left <= mbr._1 && bottom <= mbr._2 && right >= mbr._3 && top >= mbr._4
 
   def intersects(other: Box): Boolean = {
 
@@ -58,19 +58,19 @@ case class Box(center: Point, halfDimension: Point) extends Serializable {
   }
 
   def topLeftQuadrant: Box =
-    Box(new Point(center.x - halfDimension.x / 2, center.y + halfDimension.y / 2), quarterDim)
-
-  def topRightQuadrant: Box =
-    Box(new Point(center.x + halfDimension.x / 2, center.y + halfDimension.y / 2), quarterDim)
-
-  def bottomLeftQuadrant: Box =
-    Box(new Point(center.x - halfDimension.x / 2, center.y - halfDimension.y / 2), quarterDim)
+    Box(new PointBase(center.x - halfDimension.x / 2, center.y + halfDimension.y / 2), quarterDim)
 
   def quarterDim =
-    new Point(halfDimension.x / 2, halfDimension.y / 2)
+    new PointBase(halfDimension.x / 2, halfDimension.y / 2)
+
+  def topRightQuadrant: Box =
+    Box(new PointBase(center.x + halfDimension.x / 2, center.y + halfDimension.y / 2), quarterDim)
+
+  def bottomLeftQuadrant: Box =
+    Box(new PointBase(center.x - halfDimension.x / 2, center.y - halfDimension.y / 2), quarterDim)
 
   def bottomRightQuadrant: Box =
-    Box(new Point(center.x + halfDimension.x / 2, center.y - halfDimension.y / 2), quarterDim)
+    Box(new PointBase(center.x + halfDimension.x / 2, center.y - halfDimension.y / 2), quarterDim)
 
   def mbr: String =
     "%f,%f,%f,%f".format(left, bottom, right, top)

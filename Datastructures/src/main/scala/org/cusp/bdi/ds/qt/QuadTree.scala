@@ -1,15 +1,17 @@
-package com.insightfullogic.quad_trees
+package org.cusp.bdi.ds.qt
+
+import org.cusp.bdi.ds.inter.SpatialIndex
+import org.cusp.bdi.ds.qt.QuadTree.capacity
+import org.cusp.bdi.ds.{Box, Point}
 
 import scala.collection.mutable.ListBuffer
-
-import QuadTree.capacity
 
 object QuadTree extends Serializable {
 
   val capacity = 4
 }
 
-case class QuadTree(boundary: Box) extends Serializable {
+case class QuadTree(boundary: Box) extends SpatialIndex {
 
   private val points = ListBuffer[Point]()
   var topLeft: QuadTree = _
@@ -17,14 +19,31 @@ case class QuadTree(boundary: Box) extends Serializable {
   var bottomLeft: QuadTree = _
   var bottomRight: QuadTree = _
   private var totalPoints = 0L
-
   //    var parent: QuadTree = null
+
+  def getBoundary = boundary
 
   def getTotalPoints: Long = totalPoints
 
   def getLstPoint: ListBuffer[Point] = points
 
-  def getMBR: (Double, Double, Double, Double) = (boundary.left, boundary.bottom, boundary.right, boundary.top)
+  def getAllPoints: ListBuffer[ListBuffer[Point]] = {
+
+    val lstQT = ListBuffer(this)
+
+    lstQT.map(qTree => {
+
+      if (qTree.topLeft != null) lstQT += qTree.topLeft
+      if (qTree.topRight != null) lstQT += qTree.topRight
+      if (qTree.bottomLeft != null) lstQT += qTree.bottomLeft
+      if (qTree.bottomRight != null) lstQT += qTree.bottomRight
+    })
+
+    lstQT.map(_.points) //.flatMap(_.seq)
+  }
+
+
+  //  def getMBR: (Double, Double, Double, Double) = (boundary.left, boundary.bottom, boundary.right, boundary.top)
 
   //    def this(boundary: Box, parent: QuadTree) = {
   //
@@ -36,12 +55,8 @@ case class QuadTree(boundary: Box) extends Serializable {
     lstPoint.foreach(insert)
 
   def insert(point: Point): Boolean = {
-    if (!this.boundary.contains(point) || !insertPoint(point)) {
-
-      //            insertPoint(point)
-
+    if (!this.boundary.contains(point) || !insertPoint(point))
       throw new Exception("Point insert failed: %s in QuadTree: %s".format(point, this))
-    }
 
     true
   }
@@ -50,7 +65,6 @@ case class QuadTree(boundary: Box) extends Serializable {
 
     var qTree = this
 
-    //        while (qTree.boundary.contains(point))
     while (true) {
 
       qTree.totalPoints += 1
@@ -94,23 +108,6 @@ case class QuadTree(boundary: Box) extends Serializable {
     }
 
     false
-  }
-
-  def isLeaf: Boolean = topLeft == null && topRight == null && bottomLeft == null && bottomRight == null
-
-  def getAllPoints: ListBuffer[ListBuffer[Point]] = {
-
-    val lstQT = ListBuffer(this)
-
-    lstQT.map(qTree => {
-
-      if (qTree.topLeft != null) lstQT += qTree.topLeft
-      if (qTree.topRight != null) lstQT += qTree.topRight
-      if (qTree.bottomLeft != null) lstQT += qTree.bottomLeft
-      if (qTree.bottomRight != null) lstQT += qTree.bottomRight
-    })
-
-    lstQT.map(_.points) //.flatMap(_.seq)
   }
 
   override def toString: String =

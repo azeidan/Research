@@ -36,6 +36,12 @@
       <version>0.2</version>
     </dependency>
 
+    <dependency>
+      <groupId>Datastructures</groupId>
+      <artifactId>Datastructures</artifactId>
+      <version>0.5</version>
+    </dependency>
+
   </dependencies>
 
   <build>

@@ -6,11 +6,15 @@ object Test {
 
   def main(args: Array[String]): Unit = {
 
-    val s = Set(1,2,3,4,5,6)
+    val d = 123.98765456789
 
-    s.foreach(println)
+    println(d.toLong)
 
-    Random.shuffle(s).foreach(println)
+//    val s = Set(1,2,3,4,5,6)
+//
+//    s.foreach(println)
+//
+//    Random.shuffle(s).foreach(println)
 
 //    val arr = Array((176463.0, 944795.0),
 //      (944796.0, 948464.0),

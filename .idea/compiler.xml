@@ -9,6 +9,7 @@
         <module name="FW_Simba_Source" />
         <module name="Spark_kNN" />
         <module name="FW_GeoMatch" />
+        <module name="Datastructures" />
         <module name="FW_Simba" />
         <module name="GeoMatch" />
         <module name="LocalRunFiles" />
@@ -20,6 +21,7 @@
       <module name="_FW_Simba" target="1.8" />
       <module name="Common" target="1.8" />
       <module name="DataSetTools" target="1.8" />
+      <module name="Datastructures" target="1.5" />
       <module name="FW_GeoMatch" target="1.8" />
       <module name="FW_LocationSpark" target="1.8" />
       <module name="FW_LocationSpark_Source" target="1.8" />
