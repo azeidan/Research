@@ -1,10 +1,10 @@
 package org.cusp.bdi.sknn.test
 
-import com.insightfullogic.quad_trees.Point
 import org.apache.hadoop.fs.{FileSystem, Path}
 import org.apache.hadoop.io.compress.GzipCodec
 import org.apache.spark.serializer.KryoSerializer
 import org.apache.spark.{SparkConf, SparkContext}
+import org.cusp.bdi.ds.Point
 import org.cusp.bdi.util.sknn.SparkKNN_Local_CLArgs
 //import org.cusp.bdi.gm.GeoMatch
 import org.cusp.bdi.sknn.SparkKNN

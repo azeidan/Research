@@ -1,8 +1,9 @@
-package com.insightfullogic.quad_trees
+package org.cusp.bdi.ds.qt
+
+import org.cusp.bdi.ds.qt.QuadTree.capacity
+import org.cusp.bdi.ds.{Box, Point}
 
 import scala.collection.mutable.ListBuffer
-
-import QuadTree.capacity
 
 object QuadTree extends Serializable {
 

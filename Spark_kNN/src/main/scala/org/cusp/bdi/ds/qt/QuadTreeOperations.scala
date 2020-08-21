@@ -1,13 +1,12 @@
-package org.cusp.bdi.sknn.util
+package org.cusp.bdi.ds.qt
 
-import com.insightfullogic.quad_trees.{Box, Point, QuadTree}
+import org.cusp.bdi.ds.{Box, Point}
+import org.cusp.bdi.sknn.util.{QuadTreeInfo, SortedList}
 import org.cusp.bdi.util.Helper
 
 import scala.collection.mutable.ListBuffer
 
 object QuadTreeOperations extends Serializable {
-
-  private val expandBy = math.sqrt(2)
 
   def nearestNeighbor(lstQTInf: ListBuffer[QuadTreeInfo], searchPoint: Point, sortSetSqDist: SortedList[Point], k: Int) {
 
@@ -118,7 +117,7 @@ object QuadTreeOperations extends Serializable {
     qTree
   }
 
-  def spatialIdxRangeLookup(quadree: QuadTree, searchPointXY: (Long, Long), k: Int): Set[Int] = {
+  def spatialIdxRangeLookup(quadree: QuadTree, searchPointXY: (Long, Long), k: Int, expandBy: Double): Set[Int] = {
 
     //    if (searchPointXY._1.toString().startsWith("26167") && searchPointXY._2.toString().startsWith("4966"))
     //      println
@@ -127,7 +126,7 @@ object QuadTreeOperations extends Serializable {
 
     val sPtBestQT = getBestQuadrant(quadree, searchPoint, k)
 
-    val dim = /*expandBy +*/ math.max(math.max(math.abs(searchPoint.x - sPtBestQT.boundary.left), math.abs(searchPoint.x - sPtBestQT.boundary.right)),
+    val dim = expandBy + math.max(math.max(math.abs(searchPoint.x - sPtBestQT.boundary.left), math.abs(searchPoint.x - sPtBestQT.boundary.right)),
       math.max(math.abs(searchPoint.y - sPtBestQT.boundary.bottom), math.abs(searchPoint.y - sPtBestQT.boundary.top)))
 
     val searchRegion = Box(searchPoint, new Point(dim, dim))
@@ -145,7 +144,7 @@ object QuadTreeOperations extends Serializable {
     //    var totalCount = 0
 
     val sortList = SortedList[Point](Int.MaxValue, allowDuplicates = true)
-    var prevLastElem: Node[Point] = null
+    var prevLastElem = sortList.head
     var currSqDim = math.pow(searchRegion.halfDimension.x, 2)
 
     var lstQT = ListBuffer(quadTreeStart)
@@ -176,7 +175,7 @@ object QuadTreeOperations extends Serializable {
 
                     prevLastElem = elem
 
-                    searchRegion.halfDimension.x = math.sqrt(prevLastElem.distance) + expandBy
+                    searchRegion.halfDimension.x = expandBy + math.sqrt(prevLastElem.distance)
                     searchRegion.halfDimension.y = searchRegion.halfDimension.x
 
                     currSqDim = math.pow(searchRegion.halfDimension.x, 2)

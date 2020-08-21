@@ -1,9 +1,6 @@
-package com.insightfullogic.quad_trees
+package org.cusp.bdi.ds
 
-case class Point() extends Serializable with Comparable[Point] {
-
-  var x = 0.0
-  var y = 0.0
+case class Point() extends PointBase {
 
   var userData: Any = _
 
@@ -39,19 +36,15 @@ case class Point() extends Serializable with Comparable[Point] {
     case _ => false
   }
 
-  override def compareTo(other: Point): Int = {
+  override def compareTo(other: PointBase): Int = {
 
-    if (userData == null || other.userData == null) {
-
-      val res = this.x.compareTo(other.x)
-
-      if (res == 0)
-        this.y.compareTo(other.y)
-      else
-        res
+    other match {
+      case point: Point =>
+        if (userData == null || point.userData == null)
+          super.compareTo(other)
+        else
+          userData.toString.compareTo(point.userData.toString)
     }
-    else
-      userData.toString.compareTo(other.userData.toString)
   }
 
   override def toString: String =

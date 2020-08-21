@@ -1,15 +1,15 @@
-package com.insightfullogic.quad_trees
+package org.cusp.bdi.ds
 
-case class Box(center: Point, halfDimension: Point) extends Serializable {
+case class Box(center: PointBase, halfDimension: PointBase) extends Serializable {
 
   def this(other: Box) =
-    this(new Point(other.center), new Point(other.halfDimension))
+    this(new PointBase(other.center), new PointBase(other.halfDimension))
 
   def contains(other: Box): Boolean =
     !(this.left > other.left || this.right < other.right ||
       this.bottom > other.bottom || this.top < other.top)
 
-  def contains(point: Point): Boolean =
+  def contains(point: PointBase): Boolean =
     contains(point.x, point.y)
 
   def contains(x: Double, y: Double): Boolean =
@@ -58,19 +58,19 @@ case class Box(center: Point, halfDimension: Point) extends Serializable {
   }
 
   def topLeftQuadrant: Box =
-    Box(new Point(center.x - halfDimension.x / 2, center.y + halfDimension.y / 2), quarterDim)
+    Box(new PointBase(center.x - halfDimension.x / 2, center.y + halfDimension.y / 2), quarterDim)
 
   def topRightQuadrant: Box =
-    Box(new Point(center.x + halfDimension.x / 2, center.y + halfDimension.y / 2), quarterDim)
+    Box(new PointBase(center.x + halfDimension.x / 2, center.y + halfDimension.y / 2), quarterDim)
 
   def bottomLeftQuadrant: Box =
-    Box(new Point(center.x - halfDimension.x / 2, center.y - halfDimension.y / 2), quarterDim)
+    Box(new PointBase(center.x - halfDimension.x / 2, center.y - halfDimension.y / 2), quarterDim)
 
   def quarterDim =
-    new Point(halfDimension.x / 2, halfDimension.y / 2)
+    new PointBase(halfDimension.x / 2, halfDimension.y / 2)
 
   def bottomRightQuadrant: Box =
-    Box(new Point(center.x + halfDimension.x / 2, center.y - halfDimension.y / 2), quarterDim)
+    Box(new PointBase(center.x + halfDimension.x / 2, center.y - halfDimension.y / 2), quarterDim)
 
   def mbr: String =
     "%f,%f,%f,%f".format(left, bottom, right, top)

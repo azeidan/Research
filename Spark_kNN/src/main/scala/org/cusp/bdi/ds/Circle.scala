@@ -1,6 +1,6 @@
-package com.insightfullogic.quad_trees
+package org.cusp.bdi.ds
 
-case class Circle(center: Point) extends Serializable {
+case class Circle(center: PointBase) extends Serializable {
 
     private var radius = 0.0
 
@@ -9,7 +9,7 @@ case class Circle(center: Point) extends Serializable {
 
     def getRadius: Double = radius
 
-    def this(center: Point, radius: Double) = {
+    def this(center: PointBase, radius: Double) = {
 
         this(center)
         this.radius = radius

@@ -6,7 +6,11 @@ class GridOperation(mbr: (Double, Double, Double, Double), totalRowCount: Long, 
 
   private val boxWH = math.max(math.ceil((mbr._4 - mbr._2) / pointPerBox), math.ceil((mbr._3 - mbr._1) / pointPerBox))
 
+  private val errorRange = 2 * math.sqrt(2 * math.pow((boxWH - 1) / boxWH, 2))
+
   def getBoxWH = boxWH
+
+  def getErrorRange = errorRange
 
   def computeBoxXY(xy: (Double, Double)): (Long, Long) =
     computeBoxXY(xy._1, xy._2)
