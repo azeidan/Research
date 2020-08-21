@@ -13,9 +13,14 @@ import scala.collection.mutable
 import scala.collection.mutable.ListBuffer
 import scala.util.Random
 
-case class PartitionInfo(left: (Double, Double), bottom: (Double, Double), right: (Double, Double), top: (Double, Double), uniqueIdentifier: Int, totalPoints: Long) {
+case class PartitionInfo(uniqueIdentifier: Int) {
 
+  var totalPoints = 0L
   var assignedPart: Int = -1
+  var left: (Double, Double) = null
+  var bottom: (Double, Double) = null
+  var right: (Double, Double) = null
+  var top: (Double, Double) = null
 
   override def toString: String =
     "%d\t%d\t%d".format(assignedPart, uniqueIdentifier, totalPoints)
@@ -73,43 +78,31 @@ case class SparkKNN(rddLeft: RDD[Point], rddRight: RDD[Point], k: Int) {
 
         val lstPartitionRangeCount = ListBuffer[PartitionInfo]()
 
-        var left = iter.next
-        var bottom = left
-        var right = left
-        var top = left
+        while (iter.hasNext) {
 
-        //        if ("%.8f".format(left._1).startsWith("%.8f".format(218892.35631916218)) && "%.8f".format(left._2).startsWith("%.8f".format(1949299.3119498254)))
-        //          println(pIdx)
+          val iterXY = iter.take(execRowCapacity)
 
-        var count = 1
+          val partInf = PartitionInfo(Random.nextInt())
+          partInf.left = iterXY.next
+          partInf.bottom = partInf.left
+          partInf.right = partInf.left
+          partInf.top = partInf.left
 
-        do {
-          if (count == execRowCapacity || !iter.hasNext) {
+          partInf.totalPoints = 1L
 
-            lstPartitionRangeCount.append(PartitionInfo(left, bottom, right, top, Random.nextInt(), count))
+          iterXY.foreach(xy => {
 
-            if (iter.hasNext) {
+            partInf.totalPoints += 1
 
-              left = iter.next
-              bottom = left
-              right = left
-              top = left
-              count = 1
-            }
-            else
-              count = 0
-          }
-          else if (iter.hasNext) {
+            if (!iterXY.hasNext)
+              partInf.right = xy
 
-            right = iter.next
-            count += 1
+            if (xy._2 < partInf.bottom._2) partInf.bottom = xy
+            else if (xy._2 > partInf.top._2) partInf.top = xy
+          })
 
-            if (right._2 < bottom._2) bottom = right
-            else if (right._2 > top._2) top = right
-          }
-          else
-            count = 0
-        } while (count != 0)
+          lstPartitionRangeCount.append(partInf)
+        }
 
         lstPartitionRangeCount.iterator
       })
@@ -235,21 +228,23 @@ case class SparkKNN(rddLeft: RDD[Point], rddRight: RDD[Point], k: Int) {
 
     //    println(rddPoint.map(_._2.asInstanceOf[(Point, SortedList[Point], List[Int])]._3.size).max)
 
-    val numRounds = mapUIdPartId.values
-      .map(partInf => {
+    val numRounds = rddLeft
+      .mapPartitions(iter => {
 
-        //        if (QuadTreeOperations.spatialIdxRangeLookup(bvQTGlobalIndex.value, gridOp.computeBoxXY(partInf.left), k).map(mapUIdPartId(_).assignedPart).size >= 9)
-        //          println(QuadTreeOperations.spatialIdxRangeLookup(bvQTGlobalIndex.value, gridOp.computeBoxXY(partInf.left), k).map(mapUIdPartId(_).assignedPart))
+        val gridOp = new GridOperation(mbrDS1, totalRowCount, k)
 
-        List(QuadTreeOperations.spatialIdxRangeLookup(bvQTGlobalIndex.value, gridOp.computeBoxXY(partInf.left), k, gridOp.getErrorRange).map(mapUIdPartId(_).assignedPart).size,
-          QuadTreeOperations.spatialIdxRangeLookup(bvQTGlobalIndex.value, gridOp.computeBoxXY(partInf.bottom), k, gridOp.getErrorRange).map(mapUIdPartId(_).assignedPart).size,
-          QuadTreeOperations.spatialIdxRangeLookup(bvQTGlobalIndex.value, gridOp.computeBoxXY(partInf.right), k, gridOp.getErrorRange).map(mapUIdPartId(_).assignedPart).size,
-          QuadTreeOperations.spatialIdxRangeLookup(bvQTGlobalIndex.value, gridOp.computeBoxXY(partInf.top), k, gridOp.getErrorRange).map(mapUIdPartId(_).assignedPart).size,
-          QuadTreeOperations.spatialIdxRangeLookup(bvQTGlobalIndex.value, gridOp.computeBoxXY(partInf.left._1, partInf.bottom._2), k, gridOp.getErrorRange).map(mapUIdPartId(_).assignedPart).size,
-          QuadTreeOperations.spatialIdxRangeLookup(bvQTGlobalIndex.value, gridOp.computeBoxXY(partInf.right._1, partInf.bottom._2), k, gridOp.getErrorRange).map(mapUIdPartId(_).assignedPart).size,
-          QuadTreeOperations.spatialIdxRangeLookup(bvQTGlobalIndex.value, gridOp.computeBoxXY(partInf.right._1, partInf.top._2), k, gridOp.getErrorRange).map(mapUIdPartId(_).assignedPart).size,
-          QuadTreeOperations.spatialIdxRangeLookup(bvQTGlobalIndex.value, gridOp.computeBoxXY(partInf.left._1, partInf.top._2), k, gridOp.getErrorRange).map(mapUIdPartId(_).assignedPart).size).max
-      }).max
+        val b = 0.toByte
+
+        iter.map(point => (gridOp.computeBoxXY(point.x, point.y), b))
+      })
+      .reduceByKey((x, _) => x)
+      .mapPartitions(iter => {
+
+        val gridOp = new GridOperation(mbrDS1, totalRowCount, k)
+
+        Iterator(iter.map(row => QuadTreeOperations.spatialIdxRangeLookup(bvQTGlobalIndex.value, row._1, k, gridOp.getErrorRange).map(mapUIdPartId(_).assignedPart).size).max)
+      })
+      .max
 
     (0 until numRounds).foreach(_ => {
 

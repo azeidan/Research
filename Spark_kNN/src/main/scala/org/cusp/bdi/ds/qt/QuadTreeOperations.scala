@@ -175,7 +175,7 @@ object QuadTreeOperations extends Serializable {
 
                     prevLastElem = elem
 
-                    searchRegion.halfDimension.x = expandBy + math.sqrt(prevLastElem.distance)
+                    searchRegion.halfDimension.x = math.sqrt(prevLastElem.distance) + expandBy
                     searchRegion.halfDimension.y = searchRegion.halfDimension.x
 
                     currSqDim = math.pow(searchRegion.halfDimension.x, 2)

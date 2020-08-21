@@ -77,7 +77,7 @@ object TestAllKnnJoin {
         point
       }))
 
-    val sparkKNN = SparkKNN(rddLeft, rddRight /*, sampleRate*/ , kParam)
+    val sparkKNN = SparkKNN(rddLeft, rddRight  , kParam)
 
     // during local test runs
     sparkKNN.minPartitions = minPartitions
