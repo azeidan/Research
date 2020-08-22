@@ -55,7 +55,7 @@ case class SparkKNN(rddLeft: RDD[Point], rddRight: RDD[Point], k: Int) {
 
   private def knnJoinExecute(rddLeft: RDD[Point], rddRight: RDD[Point]): RDD[(Point, Iterable[(Double, Point)])] = {
 
-    val (execRowCapacity, totalRowCount) = computeCapacity(rddRight, k)
+    val (execRowCapacity, totalRowCount) = computeLimits(rddRight)
 
     //        execRowCapacity = 57702
     //        println(">>" + execRowCapacity)
@@ -83,11 +83,9 @@ case class SparkKNN(rddLeft: RDD[Point], rddRight: RDD[Point], k: Int) {
           val iterXY = iter.take(execRowCapacity)
 
           val partInf = PartitionInfo(Random.nextInt())
-
-          var xyFirst = iterXY.next
-
-          partInf.left = xyFirst._1
-          partInf.bottom = xyFirst._2
+          val row = iterXY.next
+          partInf.left = row._1
+          partInf.bottom = row._2
           partInf.right = partInf.left
           partInf.top = partInf.bottom
 
@@ -121,7 +119,7 @@ case class SparkKNN(rddLeft: RDD[Point], rddRight: RDD[Point], k: Int) {
     val mbrDS1 = arrPartInf.map(partInf => (partInf.left, partInf.bottom, partInf.right, partInf.top))
       .fold((Double.MaxValue, Double.MaxValue, Double.MinValue, Double.MinValue))((mbr1, mbr2) => (math.min(mbr1._1, mbr2._1), math.min(mbr1._2, mbr2._2), math.max(mbr1._3, mbr2._3), math.max(mbr1._4, mbr2._4)))
 
-    //    arrPartInf.foreach(pInf => println(">1>\t%s\t%s\t%s\t%s\t%d\t%d\t%d".format(pInf.left._1, pInf.bottom._2, pInf.right._1, pInf.top._2, pInf.totalPoints, pInf.assignedPart, pInf.uniqueIdentifier)))
+//        arrPartInf.foreach(pInf => println(">1>\t%s\t%s\t%s\t%s\t%d\t%d\t%d".format(pInf.left, pInf.bottom, pInf.right, pInf.top, pInf.totalPoints, pInf.assignedPart, pInf.uniqueIdentifier)))
 
     val rddSpIdx = rddRight
       .mapPartitions(_.map(point => (binarySearchPartInf(arrPartInf, point.x).uniqueIdentifier, point)))
@@ -141,9 +139,9 @@ case class SparkKNN(rddLeft: RDD[Point], rddRight: RDD[Point], k: Int) {
           //          if (row._2.userData.toString().equalsIgnoreCase("Taxi_2_A_295759"))
           //            print("")
 
-          val partInf = mapUIdPartId(row._1) // binarySearchPartInf(arrPartInf, row._2.x)
+          val partInf = mapUIdPartId(row._1)
 
-          mapSpIdx.getOrElse(partInf.uniqueIdentifier, {
+           mapSpIdx.getOrElse(partInf.uniqueIdentifier, {
 
             val minX = partInf.left.toLong
             val minY = partInf.bottom.toLong
@@ -160,7 +158,7 @@ case class SparkKNN(rddLeft: RDD[Point], rddRight: RDD[Point], k: Int) {
 
             newIdx
           })
-            .quadTree.insert(row._2)
+             .quadTree.insert(row._2)
         })
 
         mapSpIdx.valuesIterator
@@ -358,7 +356,7 @@ case class SparkKNN(rddLeft: RDD[Point], rddRight: RDD[Point], k: Int) {
     throw new Exception("binarySearchPartInf() for %.8f failed in horizontal distribution %s".format(pointX, arrPartInf.mkString("Array(", ", ", ")")))
   }
 
-  private def computeCapacity(rddRight: RDD[Point], k: Int): (Int, Long) = {
+  private def computeLimits(rddRight: RDD[Point]) = {
 
     // 7% reduction in memory to account for overhead operations
     val execAvailableMemory = Helper.toByte(rddRight.context.getConf.get("spark.executor.memory", rddRight.context.getExecutorMemoryStatus.map(_._2._1).max + "B")) // skips memory of core assigned for Hadoop daemon

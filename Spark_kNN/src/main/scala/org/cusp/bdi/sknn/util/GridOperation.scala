@@ -15,18 +15,14 @@ class GridOperation(mbr: (Double, Double, Double, Double), totalRowCount: Long, 
   def computeBoxXY(xy: (Double, Double)): (Long, Long) =
     computeBoxXY(xy._1, xy._2)
 
-  def computeBoxXY(x: Double, y: Double): (Long, Long) = {
+  def computeBoxXY(x: Double, y: Double): (Long, Long) =
+    (math.floor(x / boxWH).toLong, math.floor(y / boxWH).toLong)
 
-    val scaled = scaleXY(x, y)
-
-    (math.floor(scaled._1).toLong, math.floor(scaled._2).toLong)
-  }
-
-  def scaleXY(xy: (Double, Double)): (Double, Double) =
-    scaleXY(xy._1, xy._2)
-
-  def scaleXY(x: Double, y: Double) =
-    (x / boxWH, y / boxWH)
+  //  def scaleXY(xy: (Double, Double)): (Double, Double) =
+  //    scaleXY(xy._1, xy._2)
+  //
+  //  def scaleXY(x: Double, y: Double) =
+  //    (x / boxWH, y / boxWH)
 
   //    (math.round(x / boxWH), math.round(y / boxWH))
 }
