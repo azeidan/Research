@@ -55,7 +55,7 @@ case class SparkKNN(rddLeft: RDD[Point], rddRight: RDD[Point], k: Int) {
 
   private def knnJoinExecute(rddLeft: RDD[Point], rddRight: RDD[Point]): RDD[(Point, Iterable[(Double, Point)])] = {
 
-    val (execRowCapacity, totalRowCount) = computeCapacity(rddRight, k)
+    val (execRowCapacity, totalRowCount) = computeCapacity(rddRight)
 
     //        execRowCapacity = 57702
     //        println(">>" + execRowCapacity)
@@ -77,34 +77,36 @@ case class SparkKNN(rddLeft: RDD[Point], rddRight: RDD[Point], k: Int) {
       .mapPartitions(iter => {
 
         val lstPartitionRangeCount = ListBuffer[PartitionInfo]()
+        var partInf = PartitionInfo(Random.nextInt())
+
+        lstPartitionRangeCount.append(partInf)
 
         while (iter.hasNext) {
 
-          val iterXY = iter.take(execRowCapacity)
+          val row = iter.next
 
-          val partInf = PartitionInfo(Random.nextInt())
+          if (partInf.totalPoints == execRowCapacity) {
 
-          var xyFirst = iterXY.next
+            partInf = PartitionInfo(Random.nextInt())
+            lstPartitionRangeCount.append(partInf)
+          }
 
-          partInf.left = xyFirst._1
-          partInf.bottom = xyFirst._2
-          partInf.right = partInf.left
-          partInf.top = partInf.bottom
+          partInf.totalPoints += 1
 
-          partInf.totalPoints = 1L
+          if (partInf.totalPoints == 1) {
 
-          iterXY.foreach(xy => {
+            partInf.left = row._1
+            partInf.bottom = row._2
+            partInf.right = partInf.left
+            partInf.top = partInf.bottom
+          }
+          else {
 
-            partInf.totalPoints += 1
+            partInf.right = row._1
 
-            if (!iterXY.hasNext)
-              partInf.right = xy._1
-
-            if (xy._2 < partInf.bottom) partInf.bottom = xy._2
-            else if (xy._2 > partInf.top) partInf.top = xy._2
-          })
-
-          lstPartitionRangeCount.append(partInf)
+            if (row._2 < partInf.bottom) partInf.bottom = row._2
+            else if (row._2 > partInf.top) partInf.top = row._2
+          }
         }
 
         lstPartitionRangeCount.iterator
@@ -118,10 +120,7 @@ case class SparkKNN(rddLeft: RDD[Point], rddRight: RDD[Point], k: Int) {
 
     val mapUIdPartId = arrPartInf.map(partInf => (partInf.uniqueIdentifier, partInf)).toMap
 
-    val mbrDS1 = arrPartInf.map(partInf => (partInf.left, partInf.bottom, partInf.right, partInf.top))
-      .fold((Double.MaxValue, Double.MaxValue, Double.MinValue, Double.MinValue))((mbr1, mbr2) => (math.min(mbr1._1, mbr2._1), math.min(mbr1._2, mbr2._2), math.max(mbr1._3, mbr2._3), math.max(mbr1._4, mbr2._4)))
-
-    //    arrPartInf.foreach(pInf => println(">1>\t%s\t%s\t%s\t%s\t%d\t%d\t%d".format(pInf.left._1, pInf.bottom._2, pInf.right._1, pInf.top._2, pInf.totalPoints, pInf.assignedPart, pInf.uniqueIdentifier)))
+    //    arrPartInf.foreach(pInf => println(">1>\t%s\t%s\t%s\t%s\t%d\t%d\t%d".format(pInf.left, pInf.bottom, pInf.right, pInf.top, pInf.totalPoints, pInf.assignedPart, pInf.uniqueIdentifier)))
 
     val rddSpIdx = rddRight
       .mapPartitions(_.map(point => (binarySearchPartInf(arrPartInf, point.x).uniqueIdentifier, point)))
@@ -171,10 +170,15 @@ case class SparkKNN(rddLeft: RDD[Point], rddRight: RDD[Point], k: Int) {
     //    rddSpIdx.foreach(qtInf => println(">2>\t%d%s%n".format(mapUIdPartId(qtInf.uniqueIdentifier).assignedPart, qtInf.toString())))
     //    println(">2>=====================================")
 
+    var mbrDS1 = arrPartInf.map(partInf => (partInf.left, partInf.bottom, partInf.right, partInf.top))
+      .fold((Double.MaxValue, Double.MaxValue, Double.MinValue, Double.MinValue))((mbr1, mbr2) => (math.min(mbr1._1, mbr2._1), math.min(mbr1._2, mbr2._2), math.max(mbr1._3, mbr2._3), math.max(mbr1._4, mbr2._4)))
+
     val gridOp = new GridOperation(mbrDS1, totalRowCount, k)
 
     val leftBot = gridOp.computeBoxXY(mbrDS1._1, mbrDS1._2)
     val rightTop = gridOp.computeBoxXY(mbrDS1._3, mbrDS1._4)
+
+    mbrDS1 = null
 
     val halfWidth = ((rightTop._1 - leftBot._1) + 1) / 2.0
     val halfHeight = ((rightTop._2 - leftBot._2) + 1) / 2.0
@@ -185,18 +189,14 @@ case class SparkKNN(rddLeft: RDD[Point], rddRight: RDD[Point], k: Int) {
 
     // (box#, Count)
     rddSpIdx
-      .mapPartitions(iter => {
-
-        val gridOp = new GridOperation(mbrDS1, totalRowCount, k)
-
-        iter.map(qtInf => qtInf.quadTree
-          .getAllPoints
-          .iterator
-          .map(_.map(point => (gridOp.computeBoxXY(point.x, point.y), qtInf.uniqueIdentifier))))
-          .flatMap(_.seq)
-          .flatMap(_.seq)
-          .map(row => (row._1, Set(row._2)))
-      })
+      .mapPartitions(_.map(qtInf => qtInf.quadTree
+        .getAllPoints
+        .iterator
+        .map(_.map(point => (gridOp.computeBoxXY(point.x, point.y), qtInf.uniqueIdentifier))))
+        .flatMap(_.seq)
+        .flatMap(_.seq)
+        .map(row => (row._1, Set(row._2)))
+      )
       .reduceByKey(_ ++ _)
       .collect
       .foreach(row => globalIndex.insert(new Point(row._1._1, row._1._2, row._2)))
@@ -207,8 +207,6 @@ case class SparkKNN(rddLeft: RDD[Point], rddRight: RDD[Point], k: Int) {
 
     var rddPoint = rddLeft
       .mapPartitions(iter => {
-
-        val gridOp = new GridOperation(mbrDS1, totalRowCount, k)
 
         iter.map(point => {
 
@@ -234,16 +232,12 @@ case class SparkKNN(rddLeft: RDD[Point], rddRight: RDD[Point], k: Int) {
     val numRounds = rddLeft
       .mapPartitions(iter => {
 
-        val gridOp = new GridOperation(mbrDS1, totalRowCount, k)
-
         val b = 0.toByte
 
         iter.map(point => (gridOp.computeBoxXY(point.x, point.y), b))
       })
       .reduceByKey((x, _) => x)
       .mapPartitions(iter => {
-
-        val gridOp = new GridOperation(mbrDS1, totalRowCount, k)
 
         Iterator(iter.map(row => QuadTreeOperations.spatialIdxRangeLookup(bvQTGlobalIndex.value, row._1, k, gridOp.getErrorRange).map(mapUIdPartId(_).assignedPart).size).max)
       })
@@ -286,7 +280,7 @@ case class SparkKNN(rddLeft: RDD[Point], rddRight: RDD[Point], k: Int) {
                 val (point, sortSetSqDist, lstUId) = row._2.asInstanceOf[(Point, SortedList[Point], List[Int])]
 
                 if (lstUId == null)
-                  (Random.nextInt(actualPartitionCount), row._2)
+                  row
                 else {
 
                   // build a list of QT to check
@@ -298,7 +292,7 @@ case class SparkKNN(rddLeft: RDD[Point], rddRight: RDD[Point], k: Int) {
                   val lstLeftQTInf = Random.shuffle(lstUId.filterNot(lstVisitQTInf.map(_.uniqueIdentifier).contains _))
 
                   if (lstLeftQTInf.isEmpty)
-                    (Random.nextInt(actualPartitionCount), (point, sortSetSqDist, null))
+                    (row._1, (point, sortSetSqDist, null))
                   else
                     (mapUIdPartId(lstLeftQTInf.head).assignedPart, (point, sortSetSqDist, lstLeftQTInf))
                 }
@@ -316,7 +310,7 @@ case class SparkKNN(rddLeft: RDD[Point], rddRight: RDD[Point], k: Int) {
     }))
   }
 
-  private def binarySearchArr(arrHorizDist: Array[(Double, Double)], pointX: Long): Int = {
+  private def binarySearchArr(arrHorizDist: => Array[(Double, Double)], pointX: => Long): Int = {
 
     var topIdx = 0
     var botIdx = arrHorizDist.length - 1
@@ -358,7 +352,7 @@ case class SparkKNN(rddLeft: RDD[Point], rddRight: RDD[Point], k: Int) {
     throw new Exception("binarySearchPartInf() for %.8f failed in horizontal distribution %s".format(pointX, arrPartInf.mkString("Array(", ", ", ")")))
   }
 
-  private def computeCapacity(rddRight: RDD[Point], k: Int): (Int, Long) = {
+  private def computeCapacity(rddRight: RDD[Point]): (Int, Long) = {
 
     // 7% reduction in memory to account for overhead operations
     val execAvailableMemory = Helper.toByte(rddRight.context.getConf.get("spark.executor.memory", rddRight.context.getExecutorMemoryStatus.map(_._2._1).max + "B")) // skips memory of core assigned for Hadoop daemon
@@ -455,8 +449,6 @@ case class SparkKNN(rddLeft: RDD[Point], rddRight: RDD[Point], k: Int) {
         }
       }
     }
-
-    //    lstPartRangeCount.foreach(row => println(">4>\t%.8f\t%.8f\t%d".format(row._1, row._2, row._3)))
 
     lstPartRangeCount.toArray
   }
