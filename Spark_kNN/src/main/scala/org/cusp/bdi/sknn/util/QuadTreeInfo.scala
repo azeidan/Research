@@ -1,7 +1,7 @@
 package org.cusp.bdi.sknn.util
 
+import org.cusp.bdi.ds.Box
 import org.cusp.bdi.ds.qt.QuadTree
-import org.cusp.bdi.ds.{Box, qt}
 
 class QuadTreeInfo {
 
@@ -13,7 +13,7 @@ class QuadTreeInfo {
 
     this
 
-    quadTree = qt.QuadTree(boundary)
+    quadTree = QuadTree(boundary)
   }
   override def toString: String =
     "\t%d\t%s".format(uniqueIdentifier, quadTree.toString())
