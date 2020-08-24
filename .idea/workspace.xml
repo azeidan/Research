@@ -30,17 +30,11 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ee761a9d-eff2-4086-b83a-8096819a4548" name="Default Changelist" comment="PartitionInfo collects MBR instead of boundary points - 100% all tests">
+    <list default="true" id="ee761a9d-eff2-4086-b83a-8096819a4548" name="Default Changelist" comment="Added process function to nearestNeighbor()">
+      <change afterPath="$PROJECT_DIR$/Spark_kNN/src/OLD/SparkKNN_20.scala_Before_eliminating_computePartitionRanges" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoMatch/src/main/scala/org/cusp/bdi/gm/keyPart/PartitionMapper.scala" beforeDir="false" afterPath="$PROJECT_DIR$/GeoMatch/src/main/scala/org/cusp/bdi/gm/keyPart/PartitionMapper.scala" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LocalRunFiles/src/main/scala/org/cusp/bdi/util/LocalRunConsts.scala" beforeDir="false" afterPath="$PROJECT_DIR$/LocalRunFiles/src/main/scala/org/cusp/bdi/util/LocalRunConsts.scala" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/src/main/scala/org/cusp/bdi/ds/Point.scala" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/src/main/scala/org/cusp/bdi/ds/Point.scala" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/src/main/scala/org/cusp/bdi/ds/PointBase.scala" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/src/main/scala/org/cusp/bdi/ds/PointBase.scala" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Spark_kNN/src/main/scala/org/cusp/bdi/ds/qt/QuadTreeOperations.scala" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/src/main/scala/org/cusp/bdi/ds/qt/QuadTreeOperations.scala" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Spark_kNN/src/main/scala/org/cusp/bdi/sknn/SparkKNN.scala" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/src/main/scala/org/cusp/bdi/sknn/SparkKNN.scala" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/src/main/scala/org/cusp/bdi/sknn/TBDT.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/src/main/scala/org/cusp/bdi/sknn/TBDT.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/src/main/scala/org/cusp/bdi/sknn/util/GridOperation.scala" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/src/main/scala/org/cusp/bdi/sknn/util/GridOperation.scala" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/src/main/scala/org/cusp/bdi/sknn/util/SortedList.scala" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/src/main/scala/org/cusp/bdi/sknn/util/SortedList.scala" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -106,23 +100,11 @@
     <property name="settings.editor.selected.configurable" value="preferences.keymap" />
   </component>
   <component name="RecentsManager">
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/FW_GeoMatch/src/main" />
-      <recent name="$PROJECT_DIR$/Spark_kNN/src/OLD" />
-      <recent name="$PROJECT_DIR$/FW_LocationSpark/src/test" />
-      <recent name="$PROJECT_DIR$/FW_LocationSpark/src/main" />
-      <recent name="$PROJECT_DIR$/DataSetTools/src/main/scala/org/cusp/bdi/tools/spark" />
-    </key>
     <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
       <recent name="org.cusp.bdi.ds.qt" />
       <recent name="org.cusp.bdi.ds" />
       <recent name="org.cusp.bdi.sknn.test" />
       <recent name="org.cusp.bdi.tools.spark" />
-    </key>
-    <key name="CopyClassDialog.RECENTS_KEY">
-      <recent name="org.cusp.bdi.ds" />
-      <recent name="org.cusp.bdi.fw.simba" />
-      <recent name="org.cusp.bdi.sknn.util" />
     </key>
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/Spark_kNN/src/OLD" />
@@ -130,6 +112,18 @@
       <recent name="$PROJECT_DIR$/FW_Simba_Source/src/main" />
       <recent name="$PROJECT_DIR$/FW_Simba/src/test" />
       <recent name="$PROJECT_DIR$/FW_Simba_Source/src" />
+    </key>
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="org.cusp.bdi.ds" />
+      <recent name="org.cusp.bdi.fw.simba" />
+      <recent name="org.cusp.bdi.sknn.util" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/FW_GeoMatch/src/main" />
+      <recent name="$PROJECT_DIR$/Spark_kNN/src/OLD" />
+      <recent name="$PROJECT_DIR$/FW_LocationSpark/src/test" />
+      <recent name="$PROJECT_DIR$/FW_LocationSpark/src/main" />
+      <recent name="$PROJECT_DIR$/DataSetTools/src/main/scala/org/cusp/bdi/tools/spark" />
     </key>
   </component>
   <component name="RunManager" selected="Application.SpatialBenchmark">
@@ -409,13 +403,14 @@
     <MESSAGE value="100% accuracy in all 18 tests" />
     <MESSAGE value="added region expansion by sqrt(2)" />
     <MESSAGE value="Moved QT to it's own package" />
-    <option name="LAST_COMMIT_MESSAGE" value="Moved QT to it's own package" />
+    <MESSAGE value="Added process function to nearestNeighbor()" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added process function to nearestNeighbor()" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="938" y="400" width="740" height="665" key="#Inspections" timestamp="1596775797604">
+    <state x="938" y="400" width="740" height="665" key="#Inspections" timestamp="1598293324740">
       <screen x="67" y="27" width="2493" height="1413" />
     </state>
-    <state x="938" y="400" width="740" height="665" key="#Inspections/67.27.2493.1413@67.27.2493.1413" timestamp="1596775797604" />
+    <state x="938" y="400" width="740" height="665" key="#Inspections/67.27.2493.1413@67.27.2493.1413" timestamp="1598293324740" />
     <state x="1183" y="599" width="811" height="531" key="#Notifications" timestamp="1594705139893">
       <screen x="67" y="27" width="2493" height="1413" />
     </state>
@@ -492,10 +487,10 @@
       <screen x="67" y="27" width="2493" height="1413" />
     </state>
     <state x="1012" y="419" key="#xdebugger.evaluate/67.27.2493.1413@67.27.2493.1413" timestamp="1595868635154" />
-    <state x="860" y="529" width="902" height="406" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1" timestamp="1596781493134">
+    <state x="860" y="529" width="902" height="406" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1" timestamp="1598293295179">
       <screen x="67" y="27" width="2493" height="1413" />
     </state>
-    <state x="860" y="529" width="902" height="406" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1/67.27.2493.1413@67.27.2493.1413" timestamp="1596781493134" />
+    <state x="860" y="529" width="902" height="406" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1/67.27.2493.1413@67.27.2493.1413" timestamp="1598293295179" />
     <state width="588" height="506" key="DebuggerActiveHint" timestamp="1598166777993">
       <screen x="67" y="27" width="2493" height="1413" />
     </state>
@@ -628,11 +623,6 @@
           <url>file://$PROJECT_DIR$/Spark_kNN/src/main/scala/org/cusp/bdi/sknn/SparkKNN.scala</url>
           <line>249</line>
           <option name="timeStamp" value="113" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="scala-line">
-          <url>file://$PROJECT_DIR$/Spark_kNN/src/main/scala/org/cusp/bdi/sknn/util/SortedList.scala</url>
-          <line>10</line>
-          <option name="timeStamp" value="117" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="scala-line">
           <url>file://$PROJECT_DIR$/Spark_kNN/src/main/scala/org/cusp/bdi/sknn/SparkKNN.scala</url>
