@@ -26,6 +26,17 @@ case class PartitionInfo(uniqueIdentifier: Int) {
     "%d\t%d\t%d".format(assignedPart, uniqueIdentifier, totalPoints)
 }
 
+class RowPointData(_point: Point, _sortedList: SortedList[Point], _lstQuadTreeUId: List[Int]) {
+
+  var point = _point
+  var sortedList = _sortedList
+  var lstQuadTreeUId = _lstQuadTreeUId
+}
+
+case class GlobalIndexPointData(numPoints: Long, setUId: Set[Int]) extends Serializable with Comparable[GlobalIndexPointData] {
+  override def compareTo(other: GlobalIndexPointData) = 1
+}
+
 object SparkKNN {
 
   def getSparkKNNClasses: Array[Class[_]] =
@@ -65,7 +76,7 @@ case class SparkKNN(rddLeft: RDD[Point], rddRight: RDD[Point], k: Int) {
     var arrPartInf = rddRight.mapPartitions(_.map(point => (point.x, point.y)))
       .repartitionAndSortWithinPartitions(new Partitioner() {
 
-        // places in containers along the x-axis and sort by x-coor
+        // places in containers along the x-axis and sort by x-coord
         override def numPartitions: Int = arrPartRangeCount.length
 
         override def getPartition(key: Any): Int =
@@ -192,14 +203,13 @@ case class SparkKNN(rddLeft: RDD[Point], rddRight: RDD[Point], k: Int) {
       .mapPartitions(_.map(qtInf => qtInf.quadTree
         .getAllPoints
         .iterator
-        .map(_.map(point => (gridOp.computeBoxXY(point.x, point.y), qtInf.uniqueIdentifier))))
+        .map(_.map(point => (gridOp.computeBoxXY(point.x, point.y), (1L, Set(qtInf.uniqueIdentifier))))))
         .flatMap(_.seq)
         .flatMap(_.seq)
-        .map(row => (row._1, Set(row._2)))
       )
-      .reduceByKey(_ ++ _)
+      .reduceByKey((x, y) => (x._1 + y._1, x._2 ++ y._2))
       .collect
-      .foreach(row => globalIndex.insert(new Point(row._1._1, row._1._2, row._2)))
+      .foreach(row => globalIndex.insert(new Point(row._1._1, row._1._2, GlobalIndexPointData(row._2._1, row._2._2))))
 
     //    arrGridAndSpIdxInf.foreach(row => println(">3>\t%d\t%d\t%d\t%s".format(row._1._1, row._1._2, row._2._1, row._2._2.mkString(","))))
 
@@ -210,20 +220,15 @@ case class SparkKNN(rddLeft: RDD[Point], rddRight: RDD[Point], k: Int) {
 
         iter.map(point => {
 
-          //          if (point.userData.toString().equalsIgnoreCase("bread_2_a_598733"))
-          //            println
+//          if (point.userData.toString().equalsIgnoreCase("bus_1_b_409423"))
+//            println
 
           val lstUId = QuadTreeOperations.spatialIdxRangeLookup(bvQTGlobalIndex.value, gridOp.computeBoxXY(point.x, point.y), k, gridOp.getErrorRange)
             .toList
 
-          //println(">>\t"+lstUId.size)
+          val rowPointData: Any = new RowPointData(point, SortedList[Point](k, false), lstUId)
 
-          //          if (lstUId.size >= 11)
-          //            println(QuadTreeOperations.spatialIdxRangeLookup(bvQTGlobalIndex.value, gridOp.computeBoxXY(point.x, point.y), k))
-
-          val tuple: Any = (point, SortedList[Point](k, allowDuplicates = false), lstUId)
-
-          (mapUIdPartId(lstUId.head).assignedPart, tuple)
+          (mapUIdPartId(lstUId.head).assignedPart, rowPointData)
         })
       })
 
@@ -239,7 +244,13 @@ case class SparkKNN(rddLeft: RDD[Point], rddRight: RDD[Point], k: Int) {
       .reduceByKey((x, _) => x)
       .mapPartitions(iter => {
 
-        Iterator(iter.map(row => QuadTreeOperations.spatialIdxRangeLookup(bvQTGlobalIndex.value, row._1, k, gridOp.getErrorRange).map(mapUIdPartId(_).assignedPart).size).max)
+        Iterator(iter.map(row => {
+
+          //          if (QuadTreeOperations.spatialIdxRangeLookup(bvQTGlobalIndex.value, row._1, k, gridOp.getErrorRange).map(mapUIdPartId(_).assignedPart).size >= 8)
+          //            println(QuadTreeOperations.spatialIdxRangeLookup(bvQTGlobalIndex.value, row._1, k, gridOp.getErrorRange).map(mapUIdPartId(_).assignedPart).size)
+
+          QuadTreeOperations.spatialIdxRangeLookup(bvQTGlobalIndex.value, row._1, k, gridOp.getErrorRange).map(mapUIdPartId(_).assignedPart).size
+        }).max)
       })
       .max
 
@@ -259,7 +270,7 @@ case class SparkKNN(rddLeft: RDD[Point], rddRight: RDD[Point], k: Int) {
 
           override def getPartition(key: Any): Int =
             key match {
-              case partId: Int => if (partId < 0) -partId else partId
+              case partId: Int => partId
             }
         })
         .mapPartitions(iter => {
@@ -275,26 +286,28 @@ case class SparkKNN(rddLeft: RDD[Point], rddRight: RDD[Point], k: Int) {
                 lstPartQT += qtInf
 
                 null
-              case _ =>
+              case rowPointData: RowPointData =>
 
-                val (point, sortSetSqDist, lstUId) = row._2.asInstanceOf[(Point, SortedList[Point], List[Int])]
-
-                if (lstUId == null)
+                if (rowPointData.lstQuadTreeUId == null)
                   row
                 else {
 
                   // build a list of QT to check
-                  val lstVisitQTInf = lstPartQT.filter(partQT => lstUId.contains(partQT.uniqueIdentifier))
+                  val lstVisitQTInf = lstPartQT.filter(partQT => rowPointData.lstQuadTreeUId.contains(partQT.uniqueIdentifier))
 
-                  QuadTreeOperations.nearestNeighbor(lstVisitQTInf, point, sortSetSqDist, k)
+                  QuadTreeOperations.nearestNeighbor(lstVisitQTInf, rowPointData.point, rowPointData.sortedList, k)
 
                   // randomize order to lessen query skews
-                  val lstLeftQTInf = Random.shuffle(lstUId.filterNot(lstVisitQTInf.map(_.uniqueIdentifier).contains _))
+                  val lstLeftQTInf = Random.shuffle(rowPointData.lstQuadTreeUId.filterNot(lstVisitQTInf.map(_.uniqueIdentifier).contains _))
 
-                  if (lstLeftQTInf.isEmpty)
-                    (row._1, (point, sortSetSqDist, null))
-                  else
-                    (mapUIdPartId(lstLeftQTInf.head).assignedPart, (point, sortSetSqDist, lstLeftQTInf))
+                  rowPointData.lstQuadTreeUId = if (lstLeftQTInf.isEmpty) null else lstLeftQTInf
+
+                  (if (lstLeftQTInf.isEmpty) row._1 else mapUIdPartId(lstLeftQTInf.head).assignedPart, rowPointData)
+
+                  //                  if (lstLeftQTInf.isEmpty)
+                  //                    (row._1, (point, sortSetSqDist, null))
+                  //                  else
+                  //                    (mapUIdPartId(lstLeftQTInf.head).assignedPart, (point, sortSetSqDist, lstLeftQTInf))
                 }
             }
           })
@@ -302,12 +315,8 @@ case class SparkKNN(rddLeft: RDD[Point], rddRight: RDD[Point], k: Int) {
         })
     })
 
-    rddPoint.mapPartitions(_.map(row => {
-
-      val (point, sortSetSqDist, _) = row._2.asInstanceOf[(Point, SortedList[Point], _)]
-
-      (point, sortSetSqDist.map(nd => (nd.distance, nd.data)))
-    }))
+    rddPoint.mapPartitions(_.map(_._2 match { case rowPointData: RowPointData => rowPointData })
+      .map(rowPointData => (rowPointData.point, rowPointData.sortedList.map(nd => (nd.distance, nd.data)))))
   }
 
   private def binarySearchArr(arrHorizDist: => Array[(Double, Double)], pointX: => Long): Int = {
@@ -357,7 +366,7 @@ case class SparkKNN(rddLeft: RDD[Point], rddRight: RDD[Point], k: Int) {
     // 7% reduction in memory to account for overhead operations
     val execAvailableMemory = Helper.toByte(rddRight.context.getConf.get("spark.executor.memory", rddRight.context.getExecutorMemoryStatus.map(_._2._1).max + "B")) // skips memory of core assigned for Hadoop daemon
     // deduct yarn overhead
-    val exeOverheadMemory = math.ceil(math.max(384, 0.1 * execAvailableMemory)).toLong
+    val exeOverheadMemory = (math.max(384, 0.1 * execAvailableMemory)).toLong + 1
 
     val (maxRowSize, totalRowCount) = rddRight.mapPartitions(iter =>
       Iterator(iter.map(point => (point.userData.toString.length, 1L))
@@ -378,7 +387,7 @@ case class SparkKNN(rddLeft: RDD[Point], rddRight: RDD[Point], k: Int) {
     // exec mem cost = 1QT + 1Pt and matches
     var execRowCapacity = ((execAvailableMemory - exeOverheadMemory - quadTreeCost) / pointCost).toInt
 
-    var numParts = math.ceil(totalRowCount.toDouble / execRowCapacity).toInt
+    var numParts = (totalRowCount.toDouble / execRowCapacity).toInt + 1
 
     if (numParts == 1) {
 
@@ -425,7 +434,7 @@ case class SparkKNN(rddLeft: RDD[Point], rddRight: RDD[Point], k: Int) {
 
         val percent = if (borrowCount > row._3.toDouble) 1 else borrowCount / row._3.toDouble
 
-        val end = row._1 + math.ceil((row._2 - row._1) * percent).toLong
+        val end = row._1 + ((row._2 - row._1) * percent).toLong + 1
 
         lstPartRangeCount.append((start, end))
 

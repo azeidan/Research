@@ -3,7 +3,7 @@ package org.cusp.bdi.sknn.util
 import scala.collection.AbstractIterator
 import scala.collection.immutable.Iterable
 
-case class Node[T](distance: Double, data: T)(implicit ev$1: T => Comparable[_ >: T]) {
+case class Node[T](distance: Double, data: T) /*(implicit ev$1: T => Comparable[_ >: T])*/ {
 
   var next: Node[T] = _
 
@@ -11,7 +11,7 @@ case class Node[T](distance: Double, data: T)(implicit ev$1: T => Comparable[_ >
     "%f, %s".format(distance, data)
 }
 
-case class SortedList[T](maxSize: Int, allowDuplicates: Boolean)(implicit ev$1: T => Comparable[_ >: T]) extends Serializable with Iterable[Node[T]] {
+case class SortedList[T](maxSize: Int, allowDuplicates: Boolean) /*(implicit ev$1: T => Comparable[_ >: T])*/ extends Serializable with Iterable[Node[T]] {
 
   private var headNode: Node[T] = _
   private var lastNode: Node[T] = _
@@ -80,14 +80,12 @@ case class SortedList[T](maxSize: Int, allowDuplicates: Boolean)(implicit ev$1: 
 
   def isFull: Boolean = nodeCount == maxSize
 
-  def discardAfter(node: Node[T], newCount: Int): Unit = {
+  def discardAfter(node: Node[T]): Unit = {
 
-    if (node.next != null) {
+    if (node != null && node.next != null) {
 
       lastNode = node
       lastNode.next = null
-
-      nodeCount = newCount
     }
   }
 

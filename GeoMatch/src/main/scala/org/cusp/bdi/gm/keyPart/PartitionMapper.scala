@@ -89,7 +89,7 @@ object PartitionMapper {
         var tuple: (Int, Long, Set[Int]) = null
 
         var pointCount = arrIdxSummary.map(_._2._1).sum.toDouble
-        val partitionLoad = math.ceil(pointCount / numPartitions).toLong
+        val partitionLoad = (pointCount / numPartitions).toLong+1
         var arrPartMapping = arrIdxSummary.map(row => {
 
             var ret: (Int, Int, Int, Set[Int]) = null

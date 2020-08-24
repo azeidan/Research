@@ -32,21 +32,26 @@ case class Point() extends PointBase {
     new Point(x, y)
 
   override def equals(other: Any): Boolean = other match {
-    case mpi: Point => this.compareTo(mpi) == 0
-    case _ => false
+    case pt: Point =>
+      if (userData == null || pt.userData == null)
+        super.equals(other)
+      else
+        userData.equals(pt.userData)
+    case _ =>
+      false
   }
 
-  override def compareTo(other: PointBase): Int = {
-
-    other match {
-      case point: Point =>
-        if (userData == null || point.userData == null)
-          super.compareTo(other)
-        else
-          userData.toString.compareTo(point.userData.toString)
-    }
-  }
+  //  override def compareTo(other: PointBase): Int = {
+  //
+  //    other match {
+  //      case point: Point =>
+  //        if (userData == null || point.userData == null)
+  //          super.compareTo(other)
+  //        else
+  //          userData.compareTo(point.userData)
+  //    }
+  //  }
 
   override def toString: String =
-    "(%.22f,%.22f%s)".format(x, y, if (userData == null) "" else "," + userData.toString)
+    "(%.22f,%.22f,%s)".format(x, y, if (userData == null) "" else  userData.toString)
 }

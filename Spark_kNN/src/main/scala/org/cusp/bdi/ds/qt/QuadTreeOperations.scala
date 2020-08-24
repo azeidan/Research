@@ -1,7 +1,8 @@
 package org.cusp.bdi.ds.qt
 
 import org.cusp.bdi.ds.{Box, Point}
-import org.cusp.bdi.sknn.util.{QuadTreeInfo, SortedList}
+import org.cusp.bdi.sknn.GlobalIndexPointData
+import org.cusp.bdi.sknn.util.{Node, QuadTreeInfo, SortedList}
 import org.cusp.bdi.util.Helper
 
 import scala.collection.mutable.ListBuffer
@@ -134,7 +135,9 @@ object QuadTreeOperations extends Serializable {
     val sortList = spatialIdxRangeLookupHelper(sPtBestQT, quadree, searchRegion, k, expandBy)
 
     sortList
-      .map(f = _.data.userData.asInstanceOf[Set[Int]])
+      .map(f = _.data.userData match {
+        case globalIndexPointData: GlobalIndexPointData => globalIndexPointData.setUId
+      })
       .flatMap(_.seq)
       .toSet
   }
@@ -143,11 +146,16 @@ object QuadTreeOperations extends Serializable {
 
     //    var totalCount = 0
 
-    val sortList = SortedList[Point](Int.MaxValue, allowDuplicates = true)
+    val sortList = SortedList[Point](Int.MaxValue, true)
     var prevLastElem = sortList.head
     var currSqDim = math.pow(searchRegion.halfDimension.x, 2)
+    var weight = 0L
 
     var lstQT = ListBuffer(quadTreeStart)
+
+    def getNumPoints(point: Point): Long = point.userData match {
+      case globalIndexPointData: GlobalIndexPointData => globalIndexPointData.numPoints
+    }
 
     def process(startRound: Boolean) {
 
@@ -167,29 +175,42 @@ object QuadTreeOperations extends Serializable {
 
                 sortList.add(sqDist, qtPoint)
 
-                if (sortList.size > k) {
+                weight += getNumPoints(qtPoint)
 
-                  var elem = sortList.get(k - 1)
+                if ((qtPoint != sortList.last.data || prevLastElem == null) && (weight - getNumPoints(sortList.last.data)) >= k) {
+
+                  var elem = sortList.head
+                  weight = getNumPoints(elem.data)
+
+                  while (weight < k) {
+
+                    elem = elem.next
+
+                    weight += getNumPoints(elem.data)
+                  }
 
                   if (elem != prevLastElem) {
 
                     prevLastElem = elem
 
-                    searchRegion.halfDimension.x = math.sqrt(prevLastElem.distance) + expandBy
+                    searchRegion.halfDimension.x = math.sqrt(prevLastElem.distance).toLong + 1 + expandBy
                     searchRegion.halfDimension.y = searchRegion.halfDimension.x
 
                     currSqDim = math.pow(searchRegion.halfDimension.x, 2)
 
                     // keep points with xCoord < than the center's
-                    var count = k
+                  }
+
+                  if (sortList.last.distance > currSqDim) {
 
                     while (elem.next != null && elem.next.distance <= currSqDim) {
 
                       elem = elem.next
-                      count += 1
+
+                      weight += getNumPoints(elem.data)
                     }
 
-                    sortList.discardAfter(elem, count)
+                    sortList.discardAfter(elem)
                   }
                 }
               }
