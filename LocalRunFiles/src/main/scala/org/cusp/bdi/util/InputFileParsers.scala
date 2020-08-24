@@ -25,11 +25,10 @@ object InputFileParsers extends Serializable {
             (streetID, coordArr)
         }
         catch {
-            case ex: Exception => {
+            case ex: Exception =>
 
                 ex.printStackTrace()
                 null
-            }
         }
     }
 
@@ -52,7 +51,7 @@ object InputFileParsers extends Serializable {
 
                 val endPoint = coordArr(i)
 
-                lst.append((streetID, ((startPoint, endPoint))))
+                lst.append((streetID, (startPoint, endPoint)))
 
                 startPoint = endPoint
             })
@@ -190,11 +189,10 @@ object InputFileParsers extends Serializable {
                 (line, (xy.head, xy.last))
         }
         catch {
-            case ex: Exception => {
+            case ex: Exception =>
 
                 ex.printStackTrace()
                 null
-            }
         }
 
     private def getXY(line: String, startCommaNum: Int /*, removeDecimal: Boolean*/ ) = {
@@ -221,8 +219,8 @@ object InputFileParsers extends Serializable {
             val idx1 = getCommaPos(1, idx0 + 1)
             val idx2 = getCommaPos(1, idx1 + 1)
 
-            var x = line.substring(idx0, idx1 - 1)
-            var y = line.substring(idx1, idx2 - 1)
+            val x = line.substring(idx0, idx1 - 1)
+            val y = line.substring(idx1, idx2 - 1)
 
             //            if (removeDecimal) {
             //
@@ -236,11 +234,10 @@ object InputFileParsers extends Serializable {
                 (x, y)
         }
         catch {
-            case ex: Exception => {
+            case ex: Exception =>
 
                 ex.printStackTrace()
                 null
-            }
         }
     }
 }

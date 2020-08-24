@@ -119,7 +119,7 @@ object OutputsCompare extends Serializable {
                 //                val arrValidIdxs = ll.find(i => arrMatchIdxs(i) == -1)
                 //                  .getOrElse(-1)
 
-                if (!arrValidIdxs.isEmpty)
+                if (arrValidIdxs.nonEmpty)
                   arrMatchIdxs(arrIdx) = arrValidIdxs.head
               })
 
