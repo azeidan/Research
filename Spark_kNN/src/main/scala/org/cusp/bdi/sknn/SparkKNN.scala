@@ -7,7 +7,7 @@ import org.apache.spark.util.SizeEstimator
 import org.cusp.bdi.ds.qt.{QuadTree, QuadTreeOperations}
 import org.cusp.bdi.ds.{Box, Point}
 import org.cusp.bdi.sknn.util._
-import org.cusp.bdi.util.Helper
+import org.cusp.bdi.util.{Helper, SortedList}
 
 import scala.collection.mutable
 import scala.collection.mutable.ListBuffer
@@ -71,18 +71,18 @@ case class SparkKNN(rddLeft: RDD[Point], rddRight: RDD[Point], k: Int) {
     //        execRowCapacity = 57702
     //        println(">>" + execRowCapacity)
 
-    var arrPartRangeCount = computePartitionRanges(rddRight, execRowCapacity)
+    var arrPartRange = computePartitionRanges(rddRight, execRowCapacity)
 
     var arrPartInf = rddRight.mapPartitions(_.map(point => (point.x, point.y)))
       .repartitionAndSortWithinPartitions(new Partitioner() {
 
         // places in containers along the x-axis and sort by x-coord
-        override def numPartitions: Int = arrPartRangeCount.length
+        override def numPartitions: Int = arrPartRange.length
 
         override def getPartition(key: Any): Int =
           key match {
             case xCoord: Double =>
-              binarySearchArr(arrPartRangeCount, xCoord.toLong)
+              binarySearchArrPartRange(arrPartRange, xCoord.toLong)
           }
       })
       .mapPartitions(iter => {
@@ -125,7 +125,7 @@ case class SparkKNN(rddLeft: RDD[Point], rddRight: RDD[Point], k: Int) {
       .sortBy(_.left)
       .collect
 
-    arrPartRangeCount = null
+    arrPartRange = null
 
     val actualPartitionCount = AssignToPartitions(arrPartInf, execRowCapacity).getPartitionCount
 
@@ -220,8 +220,8 @@ case class SparkKNN(rddLeft: RDD[Point], rddRight: RDD[Point], k: Int) {
 
         iter.map(point => {
 
-//          if (point.userData.toString().equalsIgnoreCase("bus_1_b_409423"))
-//            println
+          //          if (point.userData.toString().equalsIgnoreCase("bus_1_b_409423"))
+          //            println
 
           val lstUId = QuadTreeOperations.spatialIdxRangeLookup(bvQTGlobalIndex.value, gridOp.computeBoxXY(point.x, point.y), k, gridOp.getErrorRange)
             .toList
@@ -319,15 +319,15 @@ case class SparkKNN(rddLeft: RDD[Point], rddRight: RDD[Point], k: Int) {
       .map(rowPointData => (rowPointData.point, rowPointData.sortedList.map(nd => (nd.distance, nd.data)))))
   }
 
-  private def binarySearchArr(arrHorizDist: => Array[(Double, Double)], pointX: => Long): Int = {
+  private def binarySearchArrPartRange(arrPartRange: => Array[(Double, Double)], pointX: => Long): Int = {
 
     var topIdx = 0
-    var botIdx = arrHorizDist.length - 1
+    var botIdx = arrPartRange.length - 1
 
     while (botIdx >= topIdx) {
 
       val midIdx = (topIdx + botIdx) / 2
-      val midRegion = arrHorizDist(midIdx)
+      val midRegion = arrPartRange(midIdx)
 
       if (pointX >= midRegion._1 && pointX <= midRegion._2)
         return midIdx
@@ -337,7 +337,7 @@ case class SparkKNN(rddLeft: RDD[Point], rddRight: RDD[Point], k: Int) {
         topIdx = midIdx + 1
     }
 
-    throw new Exception("binarySearchArr() for %,d failed in horizontal distribution %s".format(pointX, arrHorizDist.mkString("Array(", ", ", ")")))
+    throw new Exception("binarySearchArrPartRange() for %,d failed in horizontal distribution %s".format(pointX, arrPartRange.mkString("Array(", ", ", ")")))
   }
 
   private def binarySearchPartInf(arrPartInf: Array[PartitionInfo], pointX: Double): PartitionInfo = {
