@@ -2,8 +2,8 @@ package org.cusp.bdi.ds.qt
 
 import org.cusp.bdi.ds.{Box, Point}
 import org.cusp.bdi.sknn.GlobalIndexPointData
-import org.cusp.bdi.sknn.util.{Node, QuadTreeInfo, SortedList}
-import org.cusp.bdi.util.Helper
+import org.cusp.bdi.sknn.util.QuadTreeInfo
+import org.cusp.bdi.util.{Helper, SortedList}
 
 import scala.collection.mutable.ListBuffer
 
@@ -154,7 +154,7 @@ object QuadTreeOperations extends Serializable {
       .toSet
   }
 
-  private def spatialIdxRangeLookupHelper(quadTreeFirst: QuadTree, quadTreeSecon: QuadTree, searchRegion: Box, k: Int, expandBy: Double) = {
+  private def spatialIdxRangeLookupHelper(quadTreeFirst: QuadTree, quadTreeSecond: QuadTree, searchRegion: Box, k: Int, expandBy: Double) = {
 
     //    var totalCount = 0
 
@@ -174,56 +174,56 @@ object QuadTreeOperations extends Serializable {
         if (startRound || qTree != quadTreeFirst) {
 
           qTree.getLstPoint
-            .filter(searchRegion.contains)
-            .foreach(qtPoint => {
+            .foreach(qtPoint =>
+              if (searchRegion.contains(qtPoint)) {
 
-              //              if (qtPoint.x.toString().startsWith("26157") && qtPoint.y.toString().startsWith("4965"))
-              //                print("")
+                //              if (qtPoint.x.toString().startsWith("26157") && qtPoint.y.toString().startsWith("4965"))
+                //                print("")
 
-              val sqDist = Helper.squaredDist(searchRegion.center.x, searchRegion.center.y, qtPoint.x, qtPoint.y)
+                val sqDist = Helper.squaredDist(searchRegion.center.x, searchRegion.center.y, qtPoint.x, qtPoint.y)
 
-              if (prevLastElem == null || sqDist <= currSqDim) {
+                if (prevLastElem == null || sqDist <= currSqDim) {
 
-                sortList.add(sqDist, qtPoint)
+                  sortList.add(sqDist, qtPoint)
 
-                weight += getNumPoints(qtPoint)
+                  weight += getNumPoints(qtPoint)
 
-                if ((qtPoint != sortList.last().data || prevLastElem == null) && (weight - getNumPoints(sortList.last().data)) >= k) {
+                  if ((qtPoint != sortList.last().data || prevLastElem == null) && (weight - getNumPoints(sortList.last().data)) >= k) {
 
-                  var elem = sortList.head()
-                  weight = getNumPoints(elem.data)
+                    var elem = sortList.head()
+                    weight = getNumPoints(elem.data)
 
-                  while (weight < k) {
-
-                    elem = elem.next
-
-                    weight += getNumPoints(elem.data)
-                  }
-
-                  if (elem != prevLastElem) {
-
-                    prevLastElem = elem
-
-                    searchRegion.halfDimension.x = math.sqrt(prevLastElem.distance).toLong + 1 + expandBy
-                    searchRegion.halfDimension.y = searchRegion.halfDimension.x
-
-                    currSqDim = math.pow(searchRegion.halfDimension.x, 2)
-                  }
-
-                  if (sortList.last().distance > currSqDim) {
-
-                    while (elem.next != null && elem.next.distance <= currSqDim) {
+                    while (weight < k) {
 
                       elem = elem.next
 
                       weight += getNumPoints(elem.data)
                     }
 
-                    sortList.discardAfter(elem)
+                    if (elem != prevLastElem) {
+
+                      prevLastElem = elem
+
+                      searchRegion.halfDimension.x = math.sqrt(prevLastElem.distance).toLong + 1 + expandBy
+                      searchRegion.halfDimension.y = searchRegion.halfDimension.x
+
+                      currSqDim = math.pow(searchRegion.halfDimension.x, 2)
+                    }
+
+                    if (sortList.last().distance > currSqDim) {
+
+                      while (elem.next != null && elem.next.distance <= currSqDim) {
+
+                        elem = elem.next
+
+                        weight += getNumPoints(elem.data)
+                      }
+
+                      sortList.discardAfter(elem)
+                    }
                   }
                 }
-              }
-            })
+              })
 
           if (intersects(qTree.topLeft, searchRegion))
             lstQT += qTree.topLeft
@@ -238,9 +238,9 @@ object QuadTreeOperations extends Serializable {
 
     process(true)
 
-    if (quadTreeFirst != quadTreeSecon) {
+    if (quadTreeFirst != quadTreeSecond) {
 
-      lstQT = ListBuffer(quadTreeSecon)
+      lstQT = ListBuffer(quadTreeSecond)
       process(false)
     }
 
