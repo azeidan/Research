@@ -30,12 +30,19 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ee761a9d-eff2-4086-b83a-8096819a4548" name="Default Changelist" comment="Added process function to nearestNeighbor()">
-      <change afterPath="$PROJECT_DIR$/Spark_kNN/src/OLD/SparkKNN_20.scala_Before_eliminating_computePartitionRanges" afterDir="false" />
+    <list default="true" id="ee761a9d-eff2-4086-b83a-8096819a4548" name="Default Changelist" comment="Merged with branch">
+      <change afterPath="$PROJECT_DIR$/Spark_kNN/src/main/scala/Test.scala" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LocalRunFiles/src/main/scala/org/cusp/bdi/util/InputFileParsers.scala" beforeDir="false" afterPath="$PROJECT_DIR$/LocalRunFiles/src/main/scala/org/cusp/bdi/util/InputFileParsers.scala" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/src/main/scala/org/cusp/bdi/ds/qt/QuadTreeOperations.scala" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/src/main/scala/org/cusp/bdi/ds/qt/QuadTreeOperations.scala" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/src/main/scala/org/cusp/bdi/sknn/SparkKNN.scala" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/src/main/scala/org/cusp/bdi/sknn/SparkKNN.scala" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Common/Common.iml" beforeDir="false" afterPath="$PROJECT_DIR$/Common/Common.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FW_Simba/FW_Simba.iml" beforeDir="false" afterPath="$PROJECT_DIR$/FW_Simba/FW_Simba.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FW_Simba/src/test/scala/org/cusp/bdi/fw/simba/SIM_Example_Batch.scala" beforeDir="false" afterPath="$PROJECT_DIR$/FW_Simba/src/test/scala/org/cusp/bdi/fw/simba/SIM_Example_Batch.scala" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FW_Simba_Source/FW_Simba_Source.iml" beforeDir="false" afterPath="$PROJECT_DIR$/FW_Simba_Source/FW_Simba_Source.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GeoMatch/GeoMatch.iml" beforeDir="false" afterPath="$PROJECT_DIR$/GeoMatch/GeoMatch.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LocalRunFiles/LocalRunFiles.iml" beforeDir="false" afterPath="$PROJECT_DIR$/LocalRunFiles/LocalRunFiles.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Spark_kNN/Spark_kNN.iml" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/Spark_kNN.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Spark_kNN/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Spark_kNN/src/main/scala/org/cusp/bdi/sknn/util/SortedList.scala" beforeDir="false" afterPath="$PROJECT_DIR$/Common/src/main/scala/org/cusp/bdi/util/SortedList.scala" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/SpatialBenchmark/src/main/scala/org/cusp/bdi/sb/OutputsCompare.scala" beforeDir="false" afterPath="$PROJECT_DIR$/SpatialBenchmark/src/main/scala/org/cusp/bdi/sb/OutputsCompare.scala" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -116,6 +123,7 @@
       <recent name="org.cusp.bdi.tools.spark" />
     </key>
     <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="com.insightfullogic.quad_trees" />
       <recent name="org.cusp.bdi.ds" />
       <recent name="org.cusp.bdi.fw.simba" />
       <recent name="org.cusp.bdi.sknn.util" />
@@ -330,7 +338,42 @@
       <option name="project" value="LOCAL" />
       <updated>1598296599280</updated>
     </task>
-    <option name="localTasksCounter" value="16" />
+    <task id="LOCAL-00016" summary="Merged with branch">
+      <created>1598301400982</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1598301400982</updated>
+    </task>
+    <task id="LOCAL-00017" summary="Merged with branch">
+      <created>1598310149132</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1598310149132</updated>
+    </task>
+    <task id="LOCAL-00018" summary="Merged with branch">
+      <created>1598310171915</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1598310171915</updated>
+    </task>
+    <task id="LOCAL-00019" summary="Merged with branch">
+      <created>1598310206057</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1598310206057</updated>
+    </task>
+    <task id="LOCAL-00020" summary="Merged with branch">
+      <created>1598310323261</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1598310323261</updated>
+    </task>
+    <option name="localTasksCounter" value="21" />
     <servers />
   </component>
   <component name="UnloadedModulesList">
@@ -415,7 +458,8 @@
     <MESSAGE value="added region expansion by sqrt(2)" />
     <MESSAGE value="Moved QT to it's own package" />
     <MESSAGE value="Added process function to nearestNeighbor()" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added process function to nearestNeighbor()" />
+    <MESSAGE value="Merged with branch" />
+    <option name="LAST_COMMIT_MESSAGE" value="Merged with branch" />
   </component>
   <component name="WindowStateProjectService">
     <state x="938" y="400" width="740" height="665" key="#Inspections" timestamp="1598293324740">
@@ -502,14 +546,18 @@
       <screen x="67" y="27" width="2493" height="1413" />
     </state>
     <state x="860" y="529" width="902" height="406" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1/67.27.2493.1413@67.27.2493.1413" timestamp="1598296859564" />
+    <state x="683" y="246" width="1251" height="973" key="CommitChangelistDialog2" timestamp="1598309685765">
+      <screen x="67" y="27" width="2493" height="1413" />
+    </state>
+    <state x="683" y="246" width="1251" height="973" key="CommitChangelistDialog2/67.27.2493.1413@67.27.2493.1413" timestamp="1598309685765" />
     <state width="588" height="506" key="DebuggerActiveHint" timestamp="1598166777993">
       <screen x="67" y="27" width="2493" height="1413" />
     </state>
     <state width="588" height="506" key="DebuggerActiveHint/67.27.2493.1413@67.27.2493.1413" timestamp="1598166777993" />
-    <state x="67" y="130" width="2283" height="1215" maximized="true" key="DiffContextDialog" timestamp="1597987329906">
+    <state x="67" y="130" width="2273" height="1215" maximized="true" key="DiffContextDialog" timestamp="1598310349220">
       <screen x="67" y="27" width="2493" height="1413" />
     </state>
-    <state x="67" y="130" width="2283" height="1215" maximized="true" key="DiffContextDialog/67.27.2493.1413@67.27.2493.1413" timestamp="1597987329906" />
+    <state x="67" y="130" width="2273" height="1215" maximized="true" key="DiffContextDialog/67.27.2493.1413@67.27.2493.1413" timestamp="1598310349220" />
     <state x="1145" y="453" width="370" height="572" key="EnvironmentVariablesDialog" timestamp="1595477521248">
       <screen x="67" y="27" width="2493" height="1413" />
     </state>
@@ -562,26 +610,42 @@
       <screen x="67" y="27" width="2493" height="1413" />
     </state>
     <state width="2437" height="441" key="GridCell.Tab.1.right/67.27.2493.1413@67.27.2493.1413" timestamp="1598237214717" />
+    <state x="306" y="152" width="1994" height="1160" key="MergeDialog" timestamp="1598301802825">
+      <screen x="67" y="27" width="2493" height="1413" />
+    </state>
+    <state x="306" y="152" width="1994" height="1160" key="MergeDialog/67.27.2493.1413@67.27.2493.1413" timestamp="1598301802825" />
+    <state x="855" y="439" width="906" height="586" key="MultipleFileMergeDialog" timestamp="1598309953729">
+      <screen x="67" y="27" width="2493" height="1413" />
+    </state>
+    <state x="855" y="439" width="906" height="586" key="MultipleFileMergeDialog/67.27.2493.1413@67.27.2493.1413" timestamp="1598309953729" />
     <state x="899" y="479" width="936" height="507" key="NewModule_or_Project.wizard" timestamp="1596766520478">
       <screen x="67" y="27" width="2493" height="1413" />
     </state>
     <state x="899" y="479" width="936" height="507" key="NewModule_or_Project.wizard/67.27.2493.1413@67.27.2493.1413" timestamp="1596766520478" />
-    <state x="882" y="369" width="853" height="727" key="RollbackChangesDialog" timestamp="1596943400096">
+    <state x="882" y="369" width="853" height="727" key="RollbackChangesDialog" timestamp="1598309870654">
       <screen x="67" y="27" width="2493" height="1413" />
     </state>
-    <state x="882" y="369" width="853" height="727" key="RollbackChangesDialog/67.27.2493.1413@67.27.2493.1413" timestamp="1596943400096" />
+    <state x="882" y="369" width="853" height="727" key="RollbackChangesDialog/67.27.2493.1413@67.27.2493.1413" timestamp="1598309870654" />
     <state x="557" y="158" width="1598" height="905" key="SettingsEditor" timestamp="1597967693495">
       <screen x="67" y="27" width="2493" height="1413" />
     </state>
     <state x="557" y="158" width="1598" height="905" key="SettingsEditor/67.27.2493.1413@67.27.2493.1413" timestamp="1597967693495" />
-    <state x="167" y="125" width="2293" height="1215" key="ShowDiffWithBranchDialog" timestamp="1596770950931">
+    <state x="167" y="125" width="2293" height="1215" key="ShowDiffWithBranchDialog" timestamp="1598303246727">
       <screen x="67" y="27" width="2493" height="1413" />
     </state>
-    <state x="167" y="125" width="2293" height="1215" key="ShowDiffWithBranchDialog/67.27.2493.1413@67.27.2493.1413" timestamp="1596770950931" />
-    <state x="908" y="468" width="800" height="528" key="Vcs.Push.Dialog.v2" timestamp="1598164491188">
+    <state x="167" y="125" width="2293" height="1215" key="ShowDiffWithBranchDialog/67.27.2493.1413@67.27.2493.1413" timestamp="1598303246727" />
+    <state width="675" height="655" key="StructurePopup" timestamp="1598303388623">
       <screen x="67" y="27" width="2493" height="1413" />
     </state>
-    <state x="908" y="468" width="800" height="528" key="Vcs.Push.Dialog.v2/67.27.2493.1413@67.27.2493.1413" timestamp="1598164491188" />
+    <state width="675" height="655" key="StructurePopup/67.27.2493.1413@67.27.2493.1413" timestamp="1598303388623" />
+    <state x="1144" y="631" width="329" height="203" key="VCS.EditChangelistDialog" timestamp="1598309673598">
+      <screen x="67" y="27" width="2493" height="1413" />
+    </state>
+    <state x="1144" y="631" width="329" height="203" key="VCS.EditChangelistDialog/67.27.2493.1413@67.27.2493.1413" timestamp="1598309673598" />
+    <state x="828" y="335" width="1291" height="801" key="Vcs.Push.Dialog.v2" timestamp="1598310327374">
+      <screen x="67" y="27" width="2493" height="1413" />
+    </state>
+    <state x="828" y="335" width="1291" height="801" key="Vcs.Push.Dialog.v2/67.27.2493.1413@67.27.2493.1413" timestamp="1598310327374" />
     <state x="1098" y="516" width="476" height="441" key="chooseDestDirectoryDialog" timestamp="1597983109645">
       <screen x="67" y="27" width="2493" height="1413" />
     </state>
@@ -590,10 +654,10 @@
       <screen x="67" y="27" width="2493" height="1413" />
     </state>
     <state x="1028" y="581" width="582" height="320" key="classpath-attribute-editor/67.27.2493.1413@67.27.2493.1413" timestamp="1596865239837" />
-    <state x="167" y="125" width="2293" height="1215" maximized="true" key="com.intellij.history.integration.ui.views.FileHistoryDialog" timestamp="1597989661318">
+    <state x="167" y="125" width="2283" height="1215" maximized="true" key="com.intellij.history.integration.ui.views.FileHistoryDialog" timestamp="1598303246728">
       <screen x="67" y="27" width="2493" height="1413" />
     </state>
-    <state x="167" y="125" width="2293" height="1215" maximized="true" key="com.intellij.history.integration.ui.views.FileHistoryDialog/67.27.2493.1413@67.27.2493.1413" timestamp="1597989661318" />
+    <state x="167" y="125" width="2283" height="1215" maximized="true" key="com.intellij.history.integration.ui.views.FileHistoryDialog/67.27.2493.1413@67.27.2493.1413" timestamp="1598303246728" />
     <state x="690" y="229" width="1237" height="1006" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser" timestamp="1596168185476">
       <screen x="67" y="27" width="2493" height="1413" />
     </state>
@@ -622,26 +686,12 @@
       <screen x="67" y="27" width="2493" height="1413" />
     </state>
     <state x="977" y="343" key="run.anything.popup/67.27.2493.1413@67.27.2493.1413" timestamp="1596437028802" />
-    <state x="976" y="347" width="840" height="678" key="search.everywhere.popup" timestamp="1598154014856">
+    <state x="976" y="347" width="840" height="678" key="search.everywhere.popup" timestamp="1598301335196">
       <screen x="67" y="27" width="2493" height="1413" />
     </state>
-    <state x="976" y="347" width="840" height="678" key="search.everywhere.popup/67.27.2493.1413@67.27.2493.1413" timestamp="1598154014856" />
+    <state x="976" y="347" width="840" height="678" key="search.everywhere.popup/67.27.2493.1413@67.27.2493.1413" timestamp="1598301335196" />
   </component>
   <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="scala-line">
-          <url>file://$PROJECT_DIR$/Spark_kNN/src/main/scala/org/cusp/bdi/sknn/SparkKNN.scala</url>
-          <line>249</line>
-          <option name="timeStamp" value="113" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="scala-line">
-          <url>file://$PROJECT_DIR$/Spark_kNN/src/main/scala/org/cusp/bdi/sknn/SparkKNN.scala</url>
-          <line>223</line>
-          <option name="timeStamp" value="118" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
     <pin-to-top-manager>
       <pinned-members>
         <PinnedItemInfo parentTag="scala.Tuple2" memberName="_2" />

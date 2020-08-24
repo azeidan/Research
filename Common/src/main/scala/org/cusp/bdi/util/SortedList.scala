@@ -1,4 +1,4 @@
-package org.cusp.bdi.sknn.util
+package org.cusp.bdi.util
 
 import scala.collection.AbstractIterator
 import scala.collection.immutable.Iterable
@@ -24,7 +24,6 @@ case class SortedList[T](maxSize: Int, allowDuplicates: Boolean) /*(implicit ev$
     nodeCount = 0
   }
 
-  // line: String, xy: (Double, Double)
   def add(distance: Double, data: T) {
 
     if (!isFull || distance <= last().distance) {

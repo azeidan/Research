@@ -1,17 +1,13 @@
 
 package org.cusp.bdi.sb
 
-import scala.collection.mutable.HashMap
-import scala.collection.mutable.ListBuffer
-import org.apache.spark.Partitioner
 import org.apache.spark.rdd.RDD
 import org.apache.spark.rdd.RDD.rddToPairRDDFunctions
-import org.cusp.bdi.util.Helper
 import org.cusp.bdi.sb.examples.BenchmarkInputFileParser
-import org.apache.commons.lang3.builder.HashCodeBuilder
+import org.cusp.bdi.util.Helper
 
-import scala.collection.JavaConverters._
 import scala.collection.mutable
+import scala.collection.mutable.ListBuffer
 
 object OutputsCompare extends Serializable {
 
@@ -74,8 +70,8 @@ object OutputsCompare extends Serializable {
 
         iter.foreach(row => {
 
-//          if (row._1.startsWith("bread_1_b_817301".toLowerCase))
-//            println()
+          //          if (row._1.startsWith("bread_1_b_817301".toLowerCase))
+          //            println()
 
           if (row._2._1 != null)
             incrementInMap(Classifications.recordsCount, row)
