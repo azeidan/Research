@@ -5,7 +5,7 @@
     <module name="Spark_kNN" />
     <extension name="coverage">
       <pattern>
-        <option name="PATTERN" value="org.cusp.bdi.sknn.test.*" />
+        <option name="PATTERN" value="org.cusp.bdi.sknn.test.test.*" />
         <option name="ENABLED" value="true" />
       </pattern>
     </extension>

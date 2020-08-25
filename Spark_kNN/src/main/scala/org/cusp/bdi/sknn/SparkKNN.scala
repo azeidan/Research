@@ -7,7 +7,7 @@ import org.apache.spark.util.SizeEstimator
 import org.cusp.bdi.ds.qt.{QuadTree, QuadTreeOperations}
 import org.cusp.bdi.ds.{Box, Point}
 import org.cusp.bdi.sknn.util._
-import org.cusp.bdi.util.{Helper, SortedList}
+import org.cusp.bdi.util.{Helper, Node, SortedList}
 
 import scala.collection.mutable
 import scala.collection.mutable.ListBuffer
@@ -26,7 +26,7 @@ case class PartitionInfo(uniqueIdentifier: Int) {
     "%d\t%d\t%d".format(assignedPart, uniqueIdentifier, totalPoints)
 }
 
-class RowPointData(_point: Point, _sortedList: SortedList[Point], _lstQuadTreeUId: List[Int]) {
+class RowData(_point: Point, _sortedList: SortedList[Point], _lstQuadTreeUId: List[Int]) {
 
   val point = _point
   val sortedList = _sortedList
@@ -40,16 +40,21 @@ case class GlobalIndexPointData(numPoints: Long, setUId: Set[Int]) extends Seria
 object SparkKNN {
 
   def getSparkKNNClasses: Array[Class[_]] =
-    Array(classOf[QuadTree],
-      classOf[QuadTreeInfo],
-      classOf[GridOperation],
+    Array(classOf[PartitionInfo],
+      classOf[RowData],
+      classOf[GlobalIndexPointData],
+      classOf[QuadTree],
       QuadTreeOperations.getClass,
-      Helper.getClass,
+      classOf[GridOperation],
       classOf[QuadTreeInfo],
+      Helper.getClass,
+      classOf[Node[_]],
       classOf[SortedList[_]],
       classOf[Box],
       classOf[Point],
-      classOf[QuadTree])
+      classOf[AssignToPartitions],
+      RDD_Store.getClass,
+      SparkKNN_Arguments.getClass)
 }
 
 case class SparkKNN(rddLeft: RDD[Point], rddRight: RDD[Point], k: Int) {
@@ -226,7 +231,7 @@ case class SparkKNN(rddLeft: RDD[Point], rddRight: RDD[Point], k: Int) {
           val lstUId = QuadTreeOperations.spatialIdxRangeLookup(bvQTGlobalIndex.value, gridOp.computeBoxXY(point.x, point.y), k, gridOp.getErrorRange)
             .toList
 
-          val rowPointData: Any = new RowPointData(point, SortedList[Point](k, allowDuplicates = false), lstUId)
+          val rowPointData: Any = new RowData(point, SortedList[Point](k, allowDuplicates = false), lstUId)
 
           (mapUIdPartId(lstUId.head).assignedPart, rowPointData)
         })
@@ -286,7 +291,7 @@ case class SparkKNN(rddLeft: RDD[Point], rddRight: RDD[Point], k: Int) {
                 lstPartQT += qtInf
 
                 null
-              case rowPointData: RowPointData =>
+              case rowPointData: RowData =>
 
                 if (rowPointData.lstQuadTreeUId == null)
                   row
@@ -315,7 +320,7 @@ case class SparkKNN(rddLeft: RDD[Point], rddRight: RDD[Point], k: Int) {
         })
     })
 
-    rddPoint.mapPartitions(_.map(_._2 match { case rowPointData: RowPointData => rowPointData })
+    rddPoint.mapPartitions(_.map(_._2 match { case rowPointData: RowData => rowPointData })
       .map(rowPointData => (rowPointData.point, rowPointData.sortedList.map(nd => (nd.distance, nd.data)))))
   }
 
