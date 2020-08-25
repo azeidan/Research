@@ -9,6 +9,8 @@ import scala.collection.mutable.ListBuffer
 
 object QuadTreeOperations extends Serializable {
 
+  private val expandBy = math.sqrt(8) // 2 * math.sqrt(2)
+
   def nearestNeighbor(lstQTInf: ListBuffer[QuadTreeInfo], searchPoint: Point, sortSetSqDist: SortedList[Point], k: Int) {
 
     //    if (searchPoint.userData != null && searchPoint.userData.toString().equalsIgnoreCase("taxi_b_651809"))
@@ -130,7 +132,7 @@ object QuadTreeOperations extends Serializable {
     qTree
   }
 
-  def spatialIdxRangeLookup(quadTree: QuadTree, searchPointXY: (Long, Long), k: Int, expandBy: Double): Set[Int] = {
+  def spatialIdxRangeLookup(quadTree: QuadTree, searchPointXY: (Long, Long), k: Int /*, expandBy: Double*/): Set[Int] = {
 
     //    if (searchPointXY._1.toString().startsWith("26167") && searchPointXY._2.toString().startsWith("4966"))
     //      println
@@ -139,12 +141,12 @@ object QuadTreeOperations extends Serializable {
 
     val sPtBestQT = getBestQuadrant(quadTree, searchPoint, k)
 
-    val dim = expandBy + math.max(math.max(math.abs(searchPoint.x - sPtBestQT.boundary.left), math.abs(searchPoint.x - sPtBestQT.boundary.right)),
+    val dim = /*expandBy +*/ math.max(math.max(math.abs(searchPoint.x - sPtBestQT.boundary.left), math.abs(searchPoint.x - sPtBestQT.boundary.right)),
       math.max(math.abs(searchPoint.y - sPtBestQT.boundary.bottom), math.abs(searchPoint.y - sPtBestQT.boundary.top)))
 
     val searchRegion = Box(searchPoint, new Point(dim, dim))
 
-    val sortList = spatialIdxRangeLookupHelper(sPtBestQT, quadTree, searchRegion, k, expandBy)
+    val sortList = spatialIdxRangeLookupHelper(sPtBestQT, quadTree, searchRegion, k /*, expandBy*/)
 
     sortList
       .map(f = _.data.userData match {
@@ -154,7 +156,7 @@ object QuadTreeOperations extends Serializable {
       .toSet
   }
 
-  private def spatialIdxRangeLookupHelper(quadTreeFirst: QuadTree, quadTreeSecond: QuadTree, searchRegion: Box, k: Int, expandBy: Double) = {
+  private def spatialIdxRangeLookupHelper(quadTreeFirst: QuadTree, quadTreeSecond: QuadTree, searchRegion: Box, k: Int /*, expandBy: Double*/) = {
 
     //    var totalCount = 0
 
@@ -204,7 +206,7 @@ object QuadTreeOperations extends Serializable {
 
                       prevLastElem = elem
 
-                      searchRegion.halfDimension.x = math.sqrt(prevLastElem.distance).toLong + 1 + expandBy
+                      searchRegion.halfDimension.x = math.sqrt(prevLastElem.distance) + expandBy
                       searchRegion.halfDimension.y = searchRegion.halfDimension.x
 
                       currSqDim = math.pow(searchRegion.halfDimension.x, 2)

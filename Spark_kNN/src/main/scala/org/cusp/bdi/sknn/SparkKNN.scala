@@ -225,10 +225,10 @@ case class SparkKNN(rddLeft: RDD[Point], rddRight: RDD[Point], k: Int) {
 
         iter.map(point => {
 
-          //          if (point.userData.toString().equalsIgnoreCase("bus_1_b_409423"))
-          //            println
+//          if (point.userData.toString().equalsIgnoreCase("bus_1_b_409423"))
+//            println
 
-          val lstUId = QuadTreeOperations.spatialIdxRangeLookup(bvQTGlobalIndex.value, gridOp.computeBoxXY(point.x, point.y), k, gridOp.getErrorRange)
+          val lstUId = QuadTreeOperations.spatialIdxRangeLookup(bvQTGlobalIndex.value, gridOp.computeBoxXY(point.x, point.y), k /*, gridOp.getErrorRange*/)
             .toList
 
           val rowPointData: Any = new RowData(point, SortedList[Point](k, allowDuplicates = false), lstUId)
@@ -254,7 +254,7 @@ case class SparkKNN(rddLeft: RDD[Point], rddRight: RDD[Point], k: Int) {
           //          if (QuadTreeOperations.spatialIdxRangeLookup(bvQTGlobalIndex.value, row._1, k, gridOp.getErrorRange).map(mapUIdPartId(_).assignedPart).size >= 8)
           //            println(QuadTreeOperations.spatialIdxRangeLookup(bvQTGlobalIndex.value, row._1, k, gridOp.getErrorRange).map(mapUIdPartId(_).assignedPart).size)
 
-          QuadTreeOperations.spatialIdxRangeLookup(bvQTGlobalIndex.value, row._1, k, gridOp.getErrorRange).map(mapUIdPartId(_).assignedPart).size
+          QuadTreeOperations.spatialIdxRangeLookup(bvQTGlobalIndex.value, row._1, k /*, gridOp.getErrorRange*/).map(mapUIdPartId(_).assignedPart).size
         }).max)
       })
       .max
