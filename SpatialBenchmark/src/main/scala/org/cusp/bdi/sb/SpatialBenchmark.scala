@@ -23,7 +23,7 @@ object SpatialBenchmark extends Serializable {
     //        val clArgs = SB_CLArgs.LS_LionBus
     //        val clArgs = SB_CLArgs.LS_LionTPEP
     //        val clArgs = SB_CLArgs.SKNN_BusPoint_BusPointShift
-    //        val clArgs = SB_CLArgs.SKNN_RandomPoint_RandomPoint
+//            val clArgs = SB_CLArgs.SKNN_RandomPoint_RandomPoint
     val clArgs = CLArgsParser(args, SB_Arguments())
 
     val keyMatchInFileParser = instantiateClass[BenchmarkInputFileParser](clArgs.getParamValueString(SB_Arguments.keyMatchInFileParser))

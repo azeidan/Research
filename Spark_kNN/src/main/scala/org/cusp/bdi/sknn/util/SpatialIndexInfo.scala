@@ -3,7 +3,7 @@ package org.cusp.bdi.sknn.util
 import org.cusp.bdi.ds.Box
 import org.cusp.bdi.ds.qt.QuadTree
 
-class QuadTreeInfo {
+class SpatialIndexInfo {
 
   var uniqueIdentifier: Int = -9999
 

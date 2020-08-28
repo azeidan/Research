@@ -26,6 +26,8 @@ class PointBase extends Serializable /*with Comparable[PointBase]*/ {
       false
   }
 
+  def xy = (x, y)
+
   //  override def compareTo(other: PointBase): Int = {
   //
   //    val res = this.x.compareTo(other.x)

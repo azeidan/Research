@@ -7,7 +7,7 @@ import org.cusp.bdi.sknn.PartitionInfo
 /**
  * Based on Maximum Subarray algorithm (Kadane's)
  */
-case class AssignToPartitions(arrAttrQT: Array[PartitionInfo], maxSum: Long) {
+case class AssignToPartitions(arrPartInf: Array[PartitionInfo], maxSum: Long) {
 
   private var partCounter = 0
 
@@ -17,7 +17,7 @@ case class AssignToPartitions(arrAttrQT: Array[PartitionInfo], maxSum: Long) {
   def getPartitionCount: Int = partCounter
 
   // 1st, assign quadtrees with maximum total points
-  arrAttrQT.foreach(qtInf =>
+  arrPartInf.foreach(qtInf =>
     if (qtInf.totalPoints >= maxSum) {
 
       qtInf.assignedPart = partCounter
@@ -25,7 +25,7 @@ case class AssignToPartitions(arrAttrQT: Array[PartitionInfo], maxSum: Long) {
     })
 
   //  unassigned regions
-  var arrUnassigned: Array[PartitionInfo] = arrAttrQT.filter(_.assignedPart == -1).sortBy(_.totalPoints)
+  var arrUnassigned: Array[PartitionInfo] = arrPartInf.filter(_.assignedPart == -1).sortBy(_.totalPoints)
 
   while (!arrUnassigned.isEmpty) {
 
@@ -64,6 +64,6 @@ case class AssignToPartitions(arrAttrQT: Array[PartitionInfo], maxSum: Long) {
       idx += 1
     }
 
-    arrUnassigned = arrAttrQT.filter(_.assignedPart == -1).sortBy(_.totalPoints)
+    arrUnassigned = arrPartInf.filter(_.assignedPart == -1).sortBy(_.totalPoints)
   }
 }

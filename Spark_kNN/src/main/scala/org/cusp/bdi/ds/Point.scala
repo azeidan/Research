@@ -41,17 +41,6 @@ case class Point() extends PointBase {
       false
   }
 
-  //  override def compareTo(other: PointBase): Int = {
-  //
-  //    other match {
-  //      case point: Point =>
-  //        if (userData == null || point.userData == null)
-  //          super.compareTo(other)
-  //        else
-  //          userData.compareTo(point.userData)
-  //    }
-  //  }
-
   override def toString: String =
-    "(%.22f,%.22f,%s)".format(x, y, if (userData == null) "" else  userData.toString)
+    "(%.22f,%.22f,%s)".format(x, y, if (userData == null) "" else userData.toString)
 }

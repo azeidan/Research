@@ -2,7 +2,7 @@ package org.cusp.bdi.ds.qt
 
 import org.cusp.bdi.ds.{Box, Point}
 import org.cusp.bdi.sknn.GlobalIndexPointData
-import org.cusp.bdi.sknn.util.QuadTreeInfo
+import org.cusp.bdi.sknn.util.SpatialIndexInfo
 import org.cusp.bdi.util.{Helper, SortedList}
 
 import scala.collection.mutable.ListBuffer
@@ -11,15 +11,12 @@ object QuadTreeOperations extends Serializable {
 
   private val expandBy = math.sqrt(8) // 2 * math.sqrt(2)
 
-  def nearestNeighbor(lstQTInf: ListBuffer[QuadTreeInfo], searchPoint: Point, sortSetSqDist: SortedList[Point], k: Int) {
+  def nearestNeighbor(lstQTInf: ListBuffer[SpatialIndexInfo], searchPoint: Point, sortSetSqDist: SortedList[Point], k: Int) {
 
-    //    if (searchPoint.userData != null && searchPoint.userData.toString().equalsIgnoreCase("taxi_b_651809"))
-    //      println
+//    if (searchPoint.userData.toString().equalsIgnoreCase("yellow_3_a_772558"))
+//      println
 
     lstQTInf.foreach(qtInf => {
-
-      //      if (searchPoint.userData.toString().equalsIgnoreCase("bread_2_a_598733"))
-      //        println()
 
       var searchRegion: Box = null
 
@@ -67,8 +64,8 @@ object QuadTreeOperations extends Serializable {
             .filter(searchRegion.contains)
             .foreach(qtPoint => {
 
-              //            if (qtPoint.userData.toString().equalsIgnoreCase("Bread_2_B_27676"))
-              //              print("")
+//              if (qtPoint.userData.toString().equalsIgnoreCase("Yellow_3_B_467689"))
+//                println()
 
               val sqDist = Helper.squaredDist(searchRegion.center.x, searchRegion.center.y, qtPoint.x, qtPoint.y)
 
