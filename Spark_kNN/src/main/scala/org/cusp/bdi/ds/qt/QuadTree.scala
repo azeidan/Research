@@ -63,8 +63,8 @@ case class QuadTree(boundary: Box) extends Serializable {
       }
       else
       // switch to proper quadrant?
-        qTree = if (point.x <= qTree.boundary.center.x)
-          if (point.y >= qTree.boundary.center.y) {
+        qTree = if (point.x <= qTree.boundary.pointCenter.x)
+          if (point.y >= qTree.boundary.pointCenter.y) {
 
             if (qTree.topLeft == null)
               qTree.topLeft = new QuadTree(qTree.boundary.topLeftQuadrant /*, qTree*/)
@@ -78,7 +78,7 @@ case class QuadTree(boundary: Box) extends Serializable {
 
             qTree.bottomLeft
           }
-        else if (point.y >= qTree.boundary.center.y) {
+        else if (point.y >= qTree.boundary.pointCenter.y) {
 
           if (qTree.topRight == null)
             qTree.topRight = new QuadTree(qTree.boundary.topRightQuadrant /*, qTree*/)

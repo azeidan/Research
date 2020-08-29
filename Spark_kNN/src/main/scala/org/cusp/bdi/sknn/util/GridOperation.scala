@@ -8,9 +8,9 @@ class GridOperation(mbr: (Double, Double, Double, Double), totalRowCount: Long, 
 
   def getBoxWH = boxWH
 
-  def computeBoxXY(xy: (Double, Double)): (Long, Long) =
+  def computeBoxXY(xy: (Double, Double)): (Double, Double) =
     computeBoxXY(xy._1, xy._2)
 
-  def computeBoxXY(x: Double, y: Double): (Long, Long) =
-    (math.floor(x / boxWH).toLong, math.floor(y / boxWH).toLong)
+  def computeBoxXY(x: Double, y: Double): (Double, Double) =
+    (math.floor(x / boxWH), math.floor(y / boxWH))
 }
