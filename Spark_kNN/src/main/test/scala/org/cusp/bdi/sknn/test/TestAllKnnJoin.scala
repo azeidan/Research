@@ -5,8 +5,8 @@ import org.apache.hadoop.io.compress.GzipCodec
 import org.apache.spark.serializer.KryoSerializer
 import org.apache.spark.{SparkConf, SparkContext}
 import org.cusp.bdi.ds.Point
+import org.cusp.bdi.sknn.TypeSpatialIndex
 import org.cusp.bdi.util.CLArgsParser
-import org.cusp.bdi.util.sknn.SparkKNN_Local_CLArgs
 //import org.cusp.bdi.gm.GeoMatch
 import org.cusp.bdi.sknn.SparkKNN
 import org.cusp.bdi.sknn.util.{RDD_Store, SparkKNN_Arguments}
@@ -25,7 +25,7 @@ object TestAllKnnJoin {
     val startTime = System.currentTimeMillis()
     //    var startTime2 = startTime
 
-//            val clArgs = SparkKNN_Local_CLArgs.random_sample(SparkKNN_Arguments())
+    //            val clArgs = SparkKNN_Local_CLArgs.random_sample(SparkKNN_Arguments())
     val clArgs = CLArgsParser(args, SparkKNN_Arguments())
 
     //    val clArgs = SparkKNN_Local_CLArgs.busPoint_busPointShift(SparkKNN_Arguments())
@@ -59,26 +59,14 @@ object TestAllKnnJoin {
     val rddLeft = RDD_Store.getRDDPlain(sc, firstSet, minPartitions)
       .mapPartitions(_.map(firstSetParser))
       .filter(_ != null)
-      .mapPartitions(_.map(row => {
-
-        val point = new Point(row._2._1.toDouble, row._2._2.toDouble)
-        point.userData = row._1
-
-        point
-      }))
+      .mapPartitions(_.map(row => new Point(row._2._1.toDouble, row._2._2.toDouble, row._1)))
 
     val rddRight = RDD_Store.getRDDPlain(sc, secondSet, minPartitions)
       .mapPartitions(_.map(secondSetParser))
       .filter(_ != null)
-      .mapPartitions(_.map(row => {
+      .mapPartitions(_.map(row => new Point(row._2._1.toDouble, row._2._2.toDouble, row._1)))
 
-        val point = new Point(row._2._1.toDouble, row._2._2.toDouble)
-        point.userData = row._1
-
-        point
-      }))
-
-    val sparkKNN = SparkKNN(rddLeft, rddRight, kParam)
+    val sparkKNN = SparkKNN(rddLeft, rddRight, kParam, TypeSpatialIndex.quadTree)
 
     // during local test runs
     sparkKNN.minPartitions = minPartitions

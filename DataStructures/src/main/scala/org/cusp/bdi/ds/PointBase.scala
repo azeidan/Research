@@ -1,9 +1,10 @@
 package org.cusp.bdi.ds
 
-class PointBase extends Serializable /*with Comparable[PointBase]*/ {
+class PointBase() extends Serializable /*with Comparable[PointBase]*/ {
 
   var x = 0.0
   var y = 0.0
+
 
   def this(x: Double, y: Double) = {
 

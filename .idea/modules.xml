@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/Common/Common.iml" filepath="$PROJECT_DIR$/Common/Common.iml" />
+      <module fileurl="file://$PROJECT_DIR$/DataStructures/DataStructures.iml" filepath="$PROJECT_DIR$/DataStructures/DataStructures.iml" />
       <module fileurl="file://$PROJECT_DIR$/FW_GeoMatch/FW_GeoMatch.iml" filepath="$PROJECT_DIR$/FW_GeoMatch/FW_GeoMatch.iml" />
       <module fileurl="file://$PROJECT_DIR$/FW_LocationSpark/FW_LocationSpark.iml" filepath="$PROJECT_DIR$/FW_LocationSpark/FW_LocationSpark.iml" />
       <module fileurl="file://$PROJECT_DIR$/FW_LocationSpark_Src/FW_LocationSpark_Src.iml" filepath="$PROJECT_DIR$/FW_LocationSpark_Src/FW_LocationSpark_Src.iml" />

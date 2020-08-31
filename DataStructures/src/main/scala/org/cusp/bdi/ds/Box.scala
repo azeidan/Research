@@ -66,11 +66,11 @@ case class Box(pointCenter: PointBase, pointHalfXY: PointBase) extends Serializa
   def bottomLeftQuadrant: Box =
     Box(new PointBase(pointCenter.x - pointHalfXY.x / 2, pointCenter.y - pointHalfXY.y / 2), quarterDim)
 
-  def quarterDim =
-    new PointBase(pointHalfXY.x / 2, pointHalfXY.y / 2)
-
   def bottomRightQuadrant: Box =
     Box(new PointBase(pointCenter.x + pointHalfXY.x / 2, pointCenter.y - pointHalfXY.y / 2), quarterDim)
+
+  def quarterDim =
+    new PointBase(pointHalfXY.x / 2, pointHalfXY.y / 2)
 
   def mbr: String =
     "%f,%f,%f,%f".format(left, bottom, right, top)

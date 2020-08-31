@@ -1,19 +1,24 @@
-package org.cusp.bdi.ds.qt
+package org.cusp.bdi.sknn.ds.util
 
-import org.cusp.bdi.ds.{Box, Point}
+import org.cusp.bdi.ds.qt.QuadTree
 import org.cusp.bdi.sknn.GlobalIndexPointData
 import org.cusp.bdi.util.{Helper, SortedList}
+import org.cusp.bdi.ds.{Box, Point, PointBase, SpatialIndex}
 
 import scala.collection.mutable.ListBuffer
 
-object QuadTreeOperations extends Serializable {
+object QuadTreeOperations extends SpatialIndexOperations {
 
-  private val expandBy = math.sqrt(8) // 2 * math.sqrt(2)
+  private val expandBy = math.sqrt(8)
 
-  def nearestNeighbor(quadTree: QuadTree, searchPoint: Point, sortSetSqDist: SortedList[Point], k: Int) {
+  override def nearestNeighbor(spatialIndex: SpatialIndex, searchPoint: Point, sortSetSqDist: SortedList[Point], k: Int) {
 
     //    if (searchPoint.userData.toString().equalsIgnoreCase("yellow_3_a_772558"))
     //      println
+
+    val quadTree = spatialIndex match {
+      case qt: QuadTree => qt
+    }
 
     var searchRegion: Box = null
 
@@ -33,7 +38,7 @@ object QuadTreeOperations extends Serializable {
         math.max(math.abs(searchPoint.y - sPtBestQT.boundary.bottom), math.abs(searchPoint.y - sPtBestQT.boundary.top)))
     }
 
-    searchRegion = Box(searchPoint, new Point(dim, dim))
+    searchRegion = Box(searchPoint, new PointBase(dim, dim))
 
     pointsWithinRegion(sPtBestQT, quadTree, searchRegion, sortSetSqDist)
 
@@ -101,13 +106,10 @@ object QuadTreeOperations extends Serializable {
   private def intersects(quadTree: QuadTree, searchRegion: Box) =
     quadTree != null && searchRegion.intersects(quadTree.boundary)
 
-//  private def contains(quadTree: QuadTree, searchPoint: Point) =
-//    quadTree != null && quadTree.boundary.contains(searchPoint)
+  //  private def contains(quadTree: QuadTree, searchPoint: Point) =
+  //    quadTree != null && quadTree.boundary.contains(searchPoint)
 
-  private def contains(quadTree: QuadTree, searchXY: (Double, Double)) =
-    quadTree != null && quadTree.boundary.contains(searchXY._1, searchXY._2)
-
-  private def getBestQuadrant(quadTree: QuadTree, searchPoint: Point, k: Int) = {
+  private def getBestQuadrant(quadTree: QuadTree, searchPoint: PointBase, k: Int) = {
 
     // find leaf containing point
     var done = false
@@ -131,43 +133,23 @@ object QuadTreeOperations extends Serializable {
     qTree
   }
 
-  def findExact(quadTree: QuadTree, searchXY: (Double, Double)): Point = {
-
-    val lstQT = ListBuffer(quadTree)
-
-    lstQT.foreach(qTree => {
-      qTree.getLstPoint
-        .foreach(qtPoint =>
-          if (searchXY._1.equals(qtPoint.x) && searchXY._2.equals(qtPoint.y))
-            return qtPoint
-        )
-
-      if (contains(qTree.topLeft, searchXY))
-        lstQT += qTree.topLeft
-      else if (contains(qTree.topRight, searchXY))
-        lstQT += qTree.topRight
-      else if (contains(qTree.bottomLeft, searchXY))
-        lstQT += qTree.bottomLeft
-      else if (contains(qTree.bottomRight, searchXY))
-        lstQT += qTree.bottomRight
-    })
-
-    null
-  }
-
-  def spatialIdxRangeLookup(quadTree: QuadTree, searchXY: (Double, Double), k: Int): Set[Int] = {
+  override def spatialIdxRangeLookup(spatialIndex: SpatialIndex, searchXY: (Double, Double), k: Int): Set[Int] = {
 
     //    if (searchPointXY._1.toString().startsWith("26167") && searchPointXY._2.toString().startsWith("4966"))
     //      println
 
-    val searchPoint = new Point(searchXY._1, searchXY._2)
+    val quadTree = spatialIndex match {
+      case qt: QuadTree => qt
+    }
+
+    val searchPoint = new PointBase(searchXY._1, searchXY._2)
 
     val sPtBestQT = getBestQuadrant(quadTree, searchPoint, k)
 
     val dim = math.max(math.max(math.abs(searchPoint.x - sPtBestQT.boundary.left), math.abs(searchPoint.x - sPtBestQT.boundary.right)),
       math.max(math.abs(searchPoint.y - sPtBestQT.boundary.bottom), math.abs(searchPoint.y - sPtBestQT.boundary.top)))
 
-    val searchRegion = Box(searchPoint, new Point(dim, dim))
+    val searchRegion = Box(searchPoint, new PointBase(dim, dim))
 
     val sortList = spatialIdxRangeLookupHelper(sPtBestQT, quadTree, searchRegion, k)
 
