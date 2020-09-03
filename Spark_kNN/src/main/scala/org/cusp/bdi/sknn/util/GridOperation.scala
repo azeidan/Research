@@ -1,10 +1,10 @@
 package org.cusp.bdi.sknn.util
 
-class GridOperation(mbr: (Double, Double, Double, Double), totalRowCount: Long, k: Int) extends Serializable {
+final class GridOperation(mbrDS1Left: Double, mbrDS1Bottom: Double, mbrDS1Right: Double, mbrDS1Top: Double, totalRowCount: Long, k: Int) extends Serializable {
 
   private val pointPerBox = (totalRowCount.toDouble / k).toLong + 1
 
-  private val boxWH = math.max(math.ceil((mbr._4 - mbr._2) / pointPerBox), math.ceil((mbr._3 - mbr._1) / pointPerBox))
+  private val boxWH = math.max(math.ceil((mbrDS1Right - mbrDS1Left) / pointPerBox), math.ceil((mbrDS1Top - mbrDS1Bottom) / pointPerBox))
 
   def getBoxWH = boxWH
 

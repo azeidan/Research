@@ -3,22 +3,42 @@ package org.cusp.bdi.sknn.ds.util
 import org.cusp.bdi.ds.qt.QuadTree
 import org.cusp.bdi.sknn.GlobalIndexPointData
 import org.cusp.bdi.util.{Helper, SortedList}
-import org.cusp.bdi.ds.{Box, Point, PointBase, SpatialIndex}
+import org.cusp.bdi.ds.{Box, Point, PointBase}
 
 import scala.collection.mutable.ListBuffer
 
-object QuadTreeOperations extends SpatialIndexOperations {
+class QuadTree_kNN(_boundary: Box) extends QuadTree(_boundary) with SpatialIndex_kNN {
 
   private val expandBy = math.sqrt(8)
 
-  override def nearestNeighbor(spatialIndex: SpatialIndex, searchPoint: Point, sortSetSqDist: SortedList[Point], k: Int) {
+  def this(leftBot: (Double, Double), rightTop: (Double, Double)) {
+
+    this(null)
+
+    val pointHalfXY = new PointBase(((rightTop._1 - leftBot._1) + 1) / 2.0, ((rightTop._2 - leftBot._2) + 1) / 2.0)
+
+    this.boundary = Box(new PointBase(pointHalfXY.x + leftBot._1, pointHalfXY.y + leftBot._2), pointHalfXY)
+  }
+
+  def this(mbr: (Double, Double, Double, Double), gridBoxWH: Double) {
+
+    this(null)
+
+    val minX = mbr._1 * gridBoxWH
+    val minY = mbr._2 * gridBoxWH
+    val maxX = mbr._3 * gridBoxWH + gridBoxWH
+    val maxY = mbr._4 * gridBoxWH + gridBoxWH
+
+    val halfWidth = (maxX - minX) / 2
+    val halfHeight = (maxY - minY) / 2
+4
+    this.boundary = Box(new PointBase(halfWidth + minX, halfHeight + minY), new PointBase(halfWidth, halfHeight))
+  }
+
+  override def nearestNeighbor(searchPoint: Point, sortSetSqDist: SortedList[Point], k: Int) {
 
     //    if (searchPoint.userData.toString().equalsIgnoreCase("yellow_3_a_772558"))
     //      println
-
-    val quadTree = spatialIndex match {
-      case qt: QuadTree => qt
-    }
 
     var searchRegion: Box = null
 
@@ -30,7 +50,7 @@ object QuadTreeOperations extends SpatialIndexOperations {
       dim = math.sqrt(sortSetSqDist.last().distance)
     else {
 
-      sPtBestQT = getBestQuadrant(quadTree, searchPoint, k)
+      sPtBestQT = getBestQuadrant(searchPoint, k)
 
       //      val dim = math.ceil(math.sqrt(getFurthestCorner(searchPoint, sPtBestQT)._1))
 
@@ -40,7 +60,7 @@ object QuadTreeOperations extends SpatialIndexOperations {
 
     searchRegion = Box(searchPoint, new PointBase(dim, dim))
 
-    pointsWithinRegion(sPtBestQT, quadTree, searchRegion, sortSetSqDist)
+    pointsWithinRegion(sPtBestQT, searchRegion, sortSetSqDist)
 
     //      if (sPtBestQT != null)
     //        pointsWithinRegion(sPtBestQT, null, searchRegion, sortSetSqDist)
@@ -49,17 +69,17 @@ object QuadTreeOperations extends SpatialIndexOperations {
     //        pointsWithinRegion(qtInf.quadTree, sPtBestQT, searchRegion, sortSetSqDist)
   }
 
-  private def pointsWithinRegion(quadTreeFirst: QuadTree, quadTreeSecond: QuadTree, searchRegion: Box, sortSetSqDist: SortedList[Point]) {
+  private def pointsWithinRegion(startQT: QuadTree, searchRegion: Box, sortSetSqDist: SortedList[Point]) {
 
     //    if (searchRegion.intersects(quadTree.boundary)) {
 
-    var lstQT = ListBuffer(quadTreeFirst)
+    var lstQT = ListBuffer(startQT)
 
     var prevMaxSqrDist = if (sortSetSqDist.isEmpty()) -1 else sortSetSqDist.last().distance
 
     def process(startRound: Boolean) {
       lstQT.foreach(qTree =>
-        if (startRound || qTree != quadTreeFirst) {
+        if (startRound || qTree != startQT) {
 
           qTree.getLstPoint
             .foreach(qtPoint =>
@@ -93,12 +113,12 @@ object QuadTreeOperations extends SpatialIndexOperations {
       )
     }
 
-    if (quadTreeFirst != null)
+    if (startQT != null)
       process(true)
 
-    if (quadTreeFirst != quadTreeSecond) {
+    if (startQT != this) {
 
-      lstQT = ListBuffer(quadTreeSecond)
+      lstQT = ListBuffer(this)
       process(false)
     }
   }
@@ -109,11 +129,11 @@ object QuadTreeOperations extends SpatialIndexOperations {
   //  private def contains(quadTree: QuadTree, searchPoint: Point) =
   //    quadTree != null && quadTree.boundary.contains(searchPoint)
 
-  private def getBestQuadrant(quadTree: QuadTree, searchPoint: PointBase, k: Int) = {
+  private def getBestQuadrant(searchPoint: PointBase, k: Int) = {
 
     // find leaf containing point
     var done = false
-    var qTree = quadTree
+    var qTree: QuadTree = this
 
     def testQuad(qtQuad: QuadTree) =
       qtQuad != null && qtQuad.getTotalPoints >= k && qtQuad.boundary.contains(searchPoint.x, searchPoint.y)
@@ -133,25 +153,25 @@ object QuadTreeOperations extends SpatialIndexOperations {
     qTree
   }
 
-  override def spatialIdxRangeLookup(spatialIndex: SpatialIndex, searchXY: (Double, Double), k: Int): Set[Int] = {
+  override def spatialIdxRangeLookup(searchXY: (Double, Double), k: Int): Set[Int] = {
 
     //    if (searchPointXY._1.toString().startsWith("26167") && searchPointXY._2.toString().startsWith("4966"))
     //      println
 
-    val quadTree = spatialIndex match {
-      case qt: QuadTree => qt
-    }
+    //    val quadTree = quadTree match {
+    //      case qt: QuadTree => qt
+    //    }
 
     val searchPoint = new PointBase(searchXY._1, searchXY._2)
 
-    val sPtBestQT = getBestQuadrant(quadTree, searchPoint, k)
+    val sPtBestQT = getBestQuadrant(searchPoint, k)
 
     val dim = math.max(math.max(math.abs(searchPoint.x - sPtBestQT.boundary.left), math.abs(searchPoint.x - sPtBestQT.boundary.right)),
       math.max(math.abs(searchPoint.y - sPtBestQT.boundary.bottom), math.abs(searchPoint.y - sPtBestQT.boundary.top)))
 
     val searchRegion = Box(searchPoint, new PointBase(dim, dim))
 
-    val sortList = spatialIdxRangeLookupHelper(sPtBestQT, quadTree, searchRegion, k)
+    val sortList = spatialIdxRangeLookupHelper(sPtBestQT, searchRegion, k)
 
     sortList
       .map(f = _.data.userData match {
@@ -160,7 +180,7 @@ object QuadTreeOperations extends SpatialIndexOperations {
       .toSet
   }
 
-  private def spatialIdxRangeLookupHelper(quadTreeFirst: QuadTree, quadTreeSecond: QuadTree, searchRegion: Box, k: Int) = {
+  private def spatialIdxRangeLookupHelper(quadTreeStart: QuadTree, searchRegion: Box, k: Int) = {
 
     //    var totalCount = 0
 
@@ -169,7 +189,7 @@ object QuadTreeOperations extends SpatialIndexOperations {
     var currSqDim = math.pow(searchRegion.pointHalfXY.x, 2)
     var weight = 0L
 
-    var lstQT = ListBuffer(quadTreeFirst)
+    var lstQT = ListBuffer(quadTreeStart)
 
     def getNumPoints(point: Point): Long = point.userData match {
       case globalIndexPointData: GlobalIndexPointData => globalIndexPointData.numPoints
@@ -177,7 +197,7 @@ object QuadTreeOperations extends SpatialIndexOperations {
 
     def process(startRound: Boolean) {
       lstQT.foreach(qTree =>
-        if (startRound || qTree != quadTreeFirst) {
+        if (startRound || qTree != quadTreeStart) {
 
           qTree.getLstPoint
             .foreach(qtPoint =>
@@ -244,9 +264,9 @@ object QuadTreeOperations extends SpatialIndexOperations {
 
     process(true)
 
-    if (quadTreeFirst != quadTreeSecond) {
+    if (quadTreeStart != this) {
 
-      lstQT = ListBuffer(quadTreeSecond)
+      lstQT = ListBuffer(this)
       process(false)
     }
 

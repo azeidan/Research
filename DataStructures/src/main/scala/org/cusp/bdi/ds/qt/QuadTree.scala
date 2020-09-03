@@ -1,7 +1,7 @@
 package org.cusp.bdi.ds.qt
 
 import org.cusp.bdi.ds.qt.QuadTree.capacity
-import org.cusp.bdi.ds.{Box, Point, SpatialIndex}
+import org.cusp.bdi.ds.{Box, Point}
 
 import scala.collection.mutable.ListBuffer
 
@@ -10,15 +10,21 @@ object QuadTree extends Serializable {
   val capacity = 4
 }
 
-case class QuadTree(boundary: Box) extends SpatialIndex {
+class QuadTree extends Serializable {
 
+  private var totalPoints = 0L
   private val points = ListBuffer[Point]()
 
+  var boundary: Box = _
   var topLeft: QuadTree = _
   var topRight: QuadTree = _
   var bottomLeft: QuadTree = _
   var bottomRight: QuadTree = _
-  private var totalPoints = 0L
+
+  def this(boundary: Box) = {
+    this()
+    this.boundary = boundary
+  }
 
   //    var parent: QuadTree = null
 
@@ -26,7 +32,7 @@ case class QuadTree(boundary: Box) extends SpatialIndex {
 
   def getLstPoint: ListBuffer[Point] = points
 
-  override def findExact(searchXY: (Double, Double)): Point = {
+  def findExact(searchXY: (Double, Double)): Point = {
 
     val lstQT = ListBuffer(this)
 
@@ -50,7 +56,7 @@ case class QuadTree(boundary: Box) extends SpatialIndex {
     null
   }
 
-  override def insert(point: Point): Boolean = {
+  def insert(point: Point): Boolean = {
     if (!insertPoint(point))
       throw new Exception("Point insert failed: %s in QuadTree: %s".format(point, this))
 
@@ -110,7 +116,7 @@ case class QuadTree(boundary: Box) extends SpatialIndex {
     false
   }
 
-  override def getAllPoints: ListBuffer[ListBuffer[Point]] = {
+  def getAllPoints: ListBuffer[ListBuffer[Point]] = {
 
     val lstQT = ListBuffer(this)
 

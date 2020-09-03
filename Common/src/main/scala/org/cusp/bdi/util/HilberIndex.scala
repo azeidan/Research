@@ -33,7 +33,7 @@ object HilbertIndex {
 
         // if xy are out of range, don't compute the index
         if (xy._1 < n && xy._2 < n)
-            mapToIndex(n, new RefInt(xy._1), new RefInt(xy._2))
+            mapToIndex(n, RefInt(xy._1), RefInt(xy._2))
         else
             -1
     }
@@ -44,8 +44,8 @@ object HilbertIndex {
         var ry = 0
         var t = hIdx
 
-        val x = new RefInt(0)
-        val y = new RefInt(0)
+        val x = RefInt(0)
+        val y = RefInt(0)
 
         var s = 1
         while (s < n) {

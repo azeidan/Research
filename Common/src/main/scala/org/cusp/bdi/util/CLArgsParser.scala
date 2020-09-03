@@ -5,6 +5,7 @@
 
 package org.cusp.bdi.util
 
+import scala.collection.mutable
 import scala.collection.mutable.HashMap
 import scala.collection.mutable.ListBuffer
 
@@ -16,8 +17,8 @@ import scala.collection.mutable.ListBuffer
 case class CLArgsParser(args: Array[String], lstArgInfo: List[(String, String, Any, String)]) extends Serializable {
 
     private val SPACER = "       "
-    private val mapProgramArg = HashMap[String, Any]()
-    private var mapCLArgs: Map[String, String] = null
+    private val mapProgramArg = mutable.HashMap[String, Any]()
+    private var mapCLArgs: Map[String, String] = _
 
     def updateParamValue(paramInfo: (String, String, Any, String), newVal: Any) = {
 
@@ -30,7 +31,7 @@ case class CLArgsParser(args: Array[String], lstArgInfo: List[(String, String, A
     def getParamValueDouble(paramInfo: (String, String, Any, String)) = getParamValueString(paramInfo).toDouble
     def getParamValueFloat(paramInfo: (String, String, Any, String)) = getParamValueString(paramInfo).toFloat
     def getParamValueInt(paramInfo: (String, String, Any, String)) = getParamValueString(paramInfo).toInt
-    def getParamValueString(paramInfo: (String, String, Any, String)) = mapProgramArg.get(paramInfo._1.toLowerCase()).get.toString()
+    def getParamValueString(paramInfo: (String, String, Any, String)) = mapProgramArg(paramInfo._1.toLowerCase()).toString
     def getParamValueBoolean(paramInfo: (String, String, Any, String)) = getParamValueString(paramInfo).toLowerCase() match {
 
         case "t" | "true" | "y" => true
@@ -64,15 +65,15 @@ case class CLArgsParser(args: Array[String], lstArgInfo: List[(String, String, A
                     i += 1
             }
 
-            mapCLArgs = lstArgs.grouped(2).map(arr => arr(0).toLowerCase() -> arr(1)).toMap
+            mapCLArgs = lstArgs.grouped(2).map(arr => arr.head.toLowerCase() -> arr(1)).toMap
 
             lstArgInfo.foreach(t => {
 
                 val (key, valType, valDefault) = (t._1.toLowerCase(), t._2.toLowerCase(), t._3)
 
-                var paramVal = mapCLArgs.get("-" + key)
+                val paramVal = mapCLArgs.get("-" + key)
 
-                if (paramVal == None) {
+                if (paramVal.isEmpty) {
 
                     mapProgramArg += key -> valDefault
 
@@ -118,17 +119,17 @@ case class CLArgsParser(args: Array[String], lstArgInfo: List[(String, String, A
                     }
             })
 
-            if (mapProgramArg.size == 0 || missingArg)
+            if (mapProgramArg.isEmpty || missingArg)
                 throw new Exception(buildUsageString())
         }
         catch {
-            case ex: Exception => {
+            case ex: Exception =>
 
                 ex.printStackTrace()
 
                 val sb = StringBuilder.newBuilder
 
-                sb.append(ex.toString())
+                sb.append(ex.toString)
                     .append('\n')
                     .append("Number of args received ")
                     .append(args.length)
@@ -139,7 +140,6 @@ case class CLArgsParser(args: Array[String], lstArgInfo: List[(String, String, A
                 args.foreach(x => sb.append(x).append(" "))
 
                 throw new Exception(sb.toString())
-            }
         }
     }
 
@@ -157,10 +157,10 @@ case class CLArgsParser(args: Array[String], lstArgInfo: List[(String, String, A
 
     def toString(clazz: AnyRef) = {
 
-        var sb = StringBuilder.newBuilder
+        val sb = StringBuilder.newBuilder
 
         if (clazz != null)
-            sb.append(clazz.getClass().getName)
+            sb.append(clazz.getClass.getName)
                 .append("_")
 
         sb.append(SPACER)
@@ -182,7 +182,7 @@ case class CLArgsParser(args: Array[String], lstArgInfo: List[(String, String, A
 
             sb.append(" (Value ")
 
-            if (mapCLArgs.get("-" + key.toLowerCase()) == None)
+            if (!mapCLArgs.contains("-" + key.toLowerCase()))
                 if (valDefault == null)
                     sb.append("NOT Set")
                         .append(")")
@@ -192,7 +192,7 @@ case class CLArgsParser(args: Array[String], lstArgInfo: List[(String, String, A
                         .append(")")
             else
                 sb.append("set to: ")
-                    .append(mapProgramArg.get(key.toLowerCase()).get)
+                    .append(mapProgramArg(key.toLowerCase()))
 
             sb.append(", Desc: ")
                 .append(valDesc)
@@ -204,7 +204,7 @@ case class CLArgsParser(args: Array[String], lstArgInfo: List[(String, String, A
             .toString()
     }
 
-    override def toString() =
+    override def toString =
         this.toString(null)
 }
 

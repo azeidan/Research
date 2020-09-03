@@ -47,7 +47,7 @@ object LocalRunConsts {
 
   val pathGM_TPEP = "/media/cusp/Data/GeoMatch_Files/OutputFiles/Simba/Taxi_3_Grp1/"
   val pathSparkKNN_FW_Output_1 = pathGM_TPEP
-  val pathSparkKNN_FW_Output_2 = "/media/cusp/Data/GeoMatch_Files/OutputFiles/41/"
+  val pathSparkKNN_FW_Output_2 = "/media/cusp/Data/GeoMatch_Files/OutputFiles/766/"
 
   val pathGS_TPEP = "/media/cusp/Data/GeoMatch_Files/InputFiles/GeoSpark_LION_TPEP.csv"
   val pathLS_wgs_TPEP = "/media/cusp/Data/GeoMatch_Files/InputFiles/LocationSpark_LION_TPEP.csv"
