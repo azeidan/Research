@@ -1,5 +1,8 @@
 package org.cusp.bdi.ds
 
+import com.esotericsoftware.kryo.Kryo
+import com.esotericsoftware.kryo.io.{Input, Output}
+
 case class Point() extends PointBase {
 
   var userData: Any = _
@@ -12,8 +15,11 @@ case class Point() extends PointBase {
     this.y = y
   }
 
-  def this(point: Point) =
-    this(point.x, point.y)
+  def this(other: Point) = {
+
+    this(other.x, other.y)
+    this.userData = other.userData
+  }
 
   def this(x: Double, y: Double, userData: Any) = {
 
@@ -28,17 +34,22 @@ case class Point() extends PointBase {
   def this(xy: (Double, Double)) =
     this(xy._1, xy._2)
 
-  override def clone() =
-    new Point(x, y)
+  override def write(kryo: Kryo, output: Output): Unit = {
+    super.write(kryo, output)
+    kryo.writeClassAndObject(output, userData)
+  }
+
+  override def read(kryo: Kryo, input: Input): Unit = {
+    super.read(kryo, input)
+    userData = kryo.readClassAndObject(input)
+  }
 
   override def equals(other: Any): Boolean = other match {
     case pt: Point =>
       if (userData == null || pt.userData == null)
-        super.equals(other)
+        this.x.equals(pt.x) && this.y.equals(pt.y)
       else
         userData.equals(pt.userData)
-    case _ =>
-      false
   }
 
   override def toString: String =

@@ -120,7 +120,7 @@ object MatchDistAnalysis extends Serializable {
             else
               (0, 0, 1)
           })
-            .fold((0, 0, 0))((x, y) => (x._1 + y._1, x._2 + y._2, x._3 + y._3))
+            .reduce((x, y) => (x._1 + y._1, x._2 + y._2, x._3 + y._3))
 
           if (agreeCount._1 == classificationCount)
             Classifications.incrementInMap("", arr1, arr2, mapClassifications, Classifications.recordsSimilarMatch)

@@ -29,7 +29,7 @@ object HilbertIndex {
       * @param n, Hilbert's n
       * @param xy, the X and Y coordinates of the Hilbert box
       */
-    def computeIndex(n: Int, xy: (Int, Int)) = {
+    def computeIndex(n: Int, xy: (Int, Int)): Int = {
 
         // if xy are out of range, don't compute the index
         if (xy._1 < n && xy._2 < n)
@@ -38,7 +38,7 @@ object HilbertIndex {
             -1
     }
 
-    def reverseIndex(n: Int, hIdx: Int) = {
+    def reverseIndex(n: Int, hIdx: Int): (Int, Int) = {
 
         var rx = 0
         var ry = 0
@@ -63,7 +63,7 @@ object HilbertIndex {
         (x.i, y.i)
     }
 
-    def getNearbyIndexes(n: Int, hIdx: Int) = {
+    def getNearbyIndexes(n: Int, hIdx: Int): List[Int] = {
 
         val boxCoords = reverseIndex(n, hIdx)
 

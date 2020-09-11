@@ -11,7 +11,7 @@ case class Node[T](distance: Double, data: T) /*(implicit ev$1: T => Comparable[
     "%f, %s".format(distance, data)
 }
 
-case class SortedList[T](maxSize: Int, allowDuplicates: Boolean) /*(implicit ev$1: T => Comparable[_ >: T])*/ extends Serializable with Iterable[Node[T]] {
+case class SortedList[T](maxSize: Int) /*(implicit ev$1: T => Comparable[_ >: T])*/ extends Serializable with Iterable[Node[T]] {
 
   private var headNode: Node[T] = _
   private var lastNode: Node[T] = _
@@ -38,7 +38,7 @@ case class SortedList[T](maxSize: Int, allowDuplicates: Boolean) /*(implicit ev$
         currNode = currNode.next
       }
 
-      if (allowDuplicates || currNode == null || !currNode.data.equals(data)) {
+      if (currNode == null || !currNode.data.equals(data)) {
 
         nodeCount += 1
 
@@ -79,7 +79,7 @@ case class SortedList[T](maxSize: Int, allowDuplicates: Boolean) /*(implicit ev$
 
   def isFull: Boolean = nodeCount == maxSize
 
-  def discardAfter(node: Node[T]): Unit = {
+  def stopAt(node: Node[T]): Unit = {
 
     if (node != null && node.next != null) {
 
@@ -90,7 +90,7 @@ case class SortedList[T](maxSize: Int, allowDuplicates: Boolean) /*(implicit ev$
 
   override def size(): Int = nodeCount
 
-  def get(idx: Int) = {
+  def get(idx: Int): Node[T] = {
 
     var current = head()
     var i = 0

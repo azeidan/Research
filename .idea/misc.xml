@@ -11,6 +11,7 @@
         <option value="$PROJECT_DIR$/FW_Simba/pom.xml" />
         <option value="$PROJECT_DIR$/Spark_kNN/pom.xml" />
         <option value="$PROJECT_DIR$/DataStructures/pom.xml" />
+        <option value="$PROJECT_DIR$/SparkConfigTest/pom.xml" />
       </list>
     </option>
   </component>

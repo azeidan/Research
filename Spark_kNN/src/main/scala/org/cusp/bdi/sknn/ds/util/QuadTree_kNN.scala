@@ -4,12 +4,18 @@ import org.cusp.bdi.ds.qt.QuadTree
 import org.cusp.bdi.sknn.GlobalIndexPointData
 import org.cusp.bdi.util.{Helper, SortedList}
 import org.cusp.bdi.ds.{Box, Point, PointBase}
+import org.cusp.bdi.sknn.ds.util.QuadTree_kNN.expandBy
 
 import scala.collection.mutable.ListBuffer
 
-class QuadTree_kNN(_boundary: Box) extends QuadTree(_boundary) with SpatialIndex_kNN {
+object QuadTree_kNN {
 
   private val expandBy = math.sqrt(8)
+}
+
+class QuadTree_kNN(_boundary: Box) extends QuadTree(_boundary) with SpatialIndex_kNN {
+
+  //  override def getDepth: Long = depth
 
   def this(leftBot: (Double, Double), rightTop: (Double, Double)) {
 
@@ -31,7 +37,7 @@ class QuadTree_kNN(_boundary: Box) extends QuadTree(_boundary) with SpatialIndex
 
     val halfWidth = (maxX - minX) / 2
     val halfHeight = (maxY - minY) / 2
-4
+
     this.boundary = Box(new PointBase(halfWidth + minX, halfHeight + minY), new PointBase(halfWidth, halfHeight))
   }
 
@@ -61,12 +67,6 @@ class QuadTree_kNN(_boundary: Box) extends QuadTree(_boundary) with SpatialIndex
     searchRegion = Box(searchPoint, new PointBase(dim, dim))
 
     pointsWithinRegion(sPtBestQT, searchRegion, sortSetSqDist)
-
-    //      if (sPtBestQT != null)
-    //        pointsWithinRegion(sPtBestQT, null, searchRegion, sortSetSqDist)
-    //
-    //      if (qtInf.quadTree != sPtBestQT)
-    //        pointsWithinRegion(qtInf.quadTree, sPtBestQT, searchRegion, sortSetSqDist)
   }
 
   private def pointsWithinRegion(startQT: QuadTree, searchRegion: Box, sortSetSqDist: SortedList[Point]) {
@@ -126,9 +126,6 @@ class QuadTree_kNN(_boundary: Box) extends QuadTree(_boundary) with SpatialIndex
   private def intersects(quadTree: QuadTree, searchRegion: Box) =
     quadTree != null && searchRegion.intersects(quadTree.boundary)
 
-  //  private def contains(quadTree: QuadTree, searchPoint: Point) =
-  //    quadTree != null && quadTree.boundary.contains(searchPoint)
-
   private def getBestQuadrant(searchPoint: PointBase, k: Int) = {
 
     // find leaf containing point
@@ -158,10 +155,6 @@ class QuadTree_kNN(_boundary: Box) extends QuadTree(_boundary) with SpatialIndex
     //    if (searchPointXY._1.toString().startsWith("26167") && searchPointXY._2.toString().startsWith("4966"))
     //      println
 
-    //    val quadTree = quadTree match {
-    //      case qt: QuadTree => qt
-    //    }
-
     val searchPoint = new PointBase(searchXY._1, searchXY._2)
 
     val sPtBestQT = getBestQuadrant(searchPoint, k)
@@ -174,7 +167,7 @@ class QuadTree_kNN(_boundary: Box) extends QuadTree(_boundary) with SpatialIndex
     val sortList = spatialIdxRangeLookupHelper(sPtBestQT, searchRegion, k)
 
     sortList
-      .map(f = _.data.userData match {
+      .map(_.data.userData match {
         case globalIndexPointData: GlobalIndexPointData => globalIndexPointData.partitionIdx
       })
       .toSet
@@ -182,9 +175,7 @@ class QuadTree_kNN(_boundary: Box) extends QuadTree(_boundary) with SpatialIndex
 
   private def spatialIdxRangeLookupHelper(quadTreeStart: QuadTree, searchRegion: Box, k: Int) = {
 
-    //    var totalCount = 0
-
-    val sortList = SortedList[Point](Int.MaxValue, allowDuplicates = true)
+    val sortList = SortedList[Point](Int.MaxValue)
     var prevLastElem = sortList.head()
     var currSqDim = math.pow(searchRegion.pointHalfXY.x, 2)
     var weight = 0L
@@ -208,12 +199,14 @@ class QuadTree_kNN(_boundary: Box) extends QuadTree(_boundary) with SpatialIndex
 
                 val sqDist = Helper.squaredDist(searchRegion.pointCenter.x, searchRegion.pointCenter.y, qtPoint.x, qtPoint.y)
 
-                if (prevLastElem == null || sqDist <= currSqDim) {
-
+                // add point if it's within the search radius
+                if (prevLastElem == null || sqDist < currSqDim) {
                   sortList.add(sqDist, qtPoint)
 
                   weight += getNumPoints(qtPoint)
 
+                  // see if region can shrink if at least the last node can be dropped
+                  // if added node is the last one, region cannot shrink
                   if ((qtPoint != sortList.last().data || prevLastElem == null) && (weight - getNumPoints(sortList.last().data)) >= k) {
 
                     var elem = sortList.head()
@@ -222,10 +215,10 @@ class QuadTree_kNN(_boundary: Box) extends QuadTree(_boundary) with SpatialIndex
                     while (weight < k) {
 
                       elem = elem.next
-
                       weight += getNumPoints(elem.data)
                     }
 
+                    // cannot shrink if the limit node is the same as before
                     if (elem != prevLastElem) {
 
                       prevLastElem = elem
@@ -234,18 +227,14 @@ class QuadTree_kNN(_boundary: Box) extends QuadTree(_boundary) with SpatialIndex
                       searchRegion.pointHalfXY.y = searchRegion.pointHalfXY.x
 
                       currSqDim = math.pow(searchRegion.pointHalfXY.x, 2)
-                    }
 
-                    if (sortList.last().distance > currSqDim) {
-
-                      while (elem.next != null && elem.next.distance <= currSqDim) {
+                      while (elem.next != null && elem.next.distance < currSqDim) {
 
                         elem = elem.next
-
                         weight += getNumPoints(elem.data)
                       }
 
-                      sortList.discardAfter(elem)
+                      sortList.stopAt(elem)
                     }
                   }
                 }

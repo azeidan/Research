@@ -4,12 +4,7 @@ final class GridOperation(mbrDS1Left: Double, mbrDS1Bottom: Double, mbrDS1Right:
 
   private val pointPerBox = (totalRowCount.toDouble / k).toLong + 1
 
-  private val boxWH = math.max(math.ceil((mbrDS1Right - mbrDS1Left) / pointPerBox), math.ceil((mbrDS1Top - mbrDS1Bottom) / pointPerBox))
-
-  def getBoxWH = boxWH
-
-  def computeBoxXY(xy: (Double, Double)): (Double, Double) =
-    computeBoxXY(xy._1, xy._2)
+  val boxWH: Double = math.max(math.ceil((mbrDS1Right - mbrDS1Left) / pointPerBox), math.ceil((mbrDS1Top - mbrDS1Bottom) / pointPerBox))
 
   def computeBoxXY(x: Double, y: Double): (Double, Double) =
     (math.floor(x / boxWH), math.floor(y / boxWH))

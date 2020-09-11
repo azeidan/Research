@@ -1,10 +1,13 @@
 package org.cusp.bdi.ds
 
-class PointBase() extends Serializable /*with Comparable[PointBase]*/ {
+import com.esotericsoftware.kryo.io.{Input, Output}
+import com.esotericsoftware.kryo.{Kryo, KryoSerializable}
+
+class PointBase() extends KryoSerializable /*with Comparable[PointBase]*/ {
+
 
   var x = 0.0
   var y = 0.0
-
 
   def this(x: Double, y: Double) = {
 
@@ -20,14 +23,22 @@ class PointBase() extends Serializable /*with Comparable[PointBase]*/ {
   def this(xy: (Double, Double)) =
     this(xy._1, xy._2)
 
+  override def write(kryo: Kryo, output: Output): Unit = {
+    output.writeDouble(x)
+    output.writeDouble(y)
+  }
+
+  override def read(kryo: Kryo, input: Input): Unit = {
+    x = input.readDouble()
+    y = input.readDouble()
+  }
+
   override def equals(other: Any): Boolean = other match {
     case ptBase: PointBase =>
       this.x.equals(ptBase.x) && this.y.equals(ptBase.y)
-    case _ =>
-      false
   }
 
-  def xy = (x, y)
+  def xy: (Double, Double) = (x, y)
 
   //  override def compareTo(other: PointBase): Int = {
   //

@@ -6,22 +6,23 @@
 package org.cusp.bdi.util
 
 import java.io.File
+import java.util.logging.Logger
 
 import scala.collection.mutable.ListBuffer
 import scala.util.Random
 
 object Helper {
 
-  def isNullOrEmpty(arr: Array[_]) =
+  def isNullOrEmpty(arr: Array[_]): Boolean =
     arr == null || arr.isEmpty
 
-  def isNullOrEmpty(list: ListBuffer[_]) =
+  def isNullOrEmpty(list: ListBuffer[_]): Boolean =
     list == null || list.isEmpty
 
-  def isNullOrEmpty(str: String) =
+  def isNullOrEmpty(str: String): Boolean =
     str == null || str.isEmpty
 
-  def isNullOrEmpty(str: Object*) =
+  def isNullOrEmpty(str: Object*): Boolean =
     if (str == null)
       true
     else
@@ -30,16 +31,16 @@ object Helper {
   /**
    * Returns true is the parameter represents a "True" value as defined in LST_BOOL_VALS, false otherwise
    */
-  def isBooleanStr(objBool: Object) =
+  def isBooleanStr(objBool: Object): Boolean =
     toBoolean(objBool.toString)
 
-  def toBoolean(strBool: String) =
+  def toBoolean(strBool: String): Boolean =
     strBool.charAt(0).toUpper match {
       case 'T' | 'Y' => true
       case _ => false
     }
 
-  def floorNumStr(str: String) = {
+  def floorNumStr(str: String): String = {
 
     var idx = 0
 
@@ -51,7 +52,7 @@ object Helper {
   def indexOf(str: String, searchStr: String): Int =
     indexOf(str, searchStr, 1, 0)
 
-  def indexOf(str: String, searchStr: String, n: Int, startIdx: Int) =
+  def indexOf(str: String, searchStr: String, n: Int, startIdx: Int): Int =
     indexOfCommon(StringLikeObj(str, null), searchStr, n, startIdx)
 
   def indexOf(str: String, searchStr: String, nth: Int): Int =
@@ -60,7 +61,7 @@ object Helper {
   def indexOf(strBuild: StringBuilder, searchStr: String, nth: Int): Int =
     indexOfCommon(StringLikeObj(null, strBuild), searchStr, nth, 0)
 
-  def indexOf(strBuild: StringBuilder, searchStr: String, n: Int, startIdx: Int) =
+  def indexOf(strBuild: StringBuilder, searchStr: String, n: Int, startIdx: Int): Int =
     indexOfCommon(StringLikeObj(null, strBuild), searchStr, n, startIdx)
 
   /**
@@ -85,7 +86,7 @@ object Helper {
   }
 
   case class StringLikeObj(stringObj: String, strBuildObj: StringBuilder) {
-    def indexOf(str: String, fromIndex: Int) = {
+    def indexOf(str: String, fromIndex: Int): Int = {
       if (strBuildObj != null)
         strBuildObj.indexOf(str, fromIndex)
       else
@@ -120,7 +121,7 @@ object Helper {
   //    Array((minX, minY), (maxX, maxY))
   //  }
 
-  def getMBREnds(arrCoords: Array[(Double, Double)], expandBy: Double) = {
+  def getMBREnds(arrCoords: Array[(Double, Double)], expandBy: Double): Array[(Double, Double)] = {
 
     val xCoords = arrCoords.map(_._1)
     val yCoords = arrCoords.map(_._2)
@@ -156,15 +157,15 @@ object Helper {
   /**
    * Sends message(s) to the log belonging to the class when debug is turned on
    */
-  //  def logMessage(debugOn: Boolean, clazz: => Any, message: => Object) {
-  //    if (debugOn)
-  //      Logger.getLogger(clazz.getClass().getName).info("# " + message)
-  //  }
+  def logerSLf4J(debugOn: Boolean, clazz: => Any, message: => Object) {
+    if (debugOn)
+      Logger.getLogger(clazz.getClass.getName).info(message.toString)
+  }
 
   /**
    * Randomizes the output directory. This is used when running Spark in local mode for testing
    */
-  def randOutputDir(outputDir: String) = {
+  def randOutputDir(outputDir: String): String = {
 
     val randOutDir = StringBuilder.newBuilder
       .append(outputDir)
@@ -213,10 +214,10 @@ object Helper {
   //  def manhattanDist(x1: Double, y1: Double, x2: Double, y2: Double) =
   //    math.abs(x1 - x2) + math.abs(y1 - y2)
 
-  def squaredDist(x1: Double, y1: Double, x2: Double, y2: Double) =
+  def squaredDist(x1: Double, y1: Double, x2: Double, y2: Double): Double =
     math.pow(x1 - x2, 2) + math.pow(y1 - y2, 2)
 
-  def toByte(str: String) = {
+  def toByte(str: String): Long = {
     var idx = 0
     while (idx < str.length() && Character.isDigit(str.charAt(idx))) idx += 1
 

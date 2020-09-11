@@ -20,19 +20,19 @@ case class CLArgsParser(args: Array[String], lstArgInfo: List[(String, String, A
     private val mapProgramArg = mutable.HashMap[String, Any]()
     private var mapCLArgs: Map[String, String] = _
 
-    def updateParamValue(paramInfo: (String, String, Any, String), newVal: Any) = {
+    def updateParamValue(paramInfo: (String, String, Any, String), newVal: Any): CLArgsParser = {
 
         mapProgramArg.update(paramInfo._1.toLowerCase(), newVal)
 
         this
     }
 
-    def getParamValueChar(paramInfo: (String, String, Any, String)) = getParamValueString(paramInfo).charAt(0)
-    def getParamValueDouble(paramInfo: (String, String, Any, String)) = getParamValueString(paramInfo).toDouble
-    def getParamValueFloat(paramInfo: (String, String, Any, String)) = getParamValueString(paramInfo).toFloat
-    def getParamValueInt(paramInfo: (String, String, Any, String)) = getParamValueString(paramInfo).toInt
-    def getParamValueString(paramInfo: (String, String, Any, String)) = mapProgramArg(paramInfo._1.toLowerCase()).toString
-    def getParamValueBoolean(paramInfo: (String, String, Any, String)) = getParamValueString(paramInfo).toLowerCase() match {
+    def getParamValueChar(paramInfo: (String, String, Any, String)): Char = getParamValueString(paramInfo).charAt(0)
+    def getParamValueDouble(paramInfo: (String, String, Any, String)): Double = getParamValueString(paramInfo).toDouble
+    def getParamValueFloat(paramInfo: (String, String, Any, String)): Float = getParamValueString(paramInfo).toFloat
+    def getParamValueInt(paramInfo: (String, String, Any, String)): Int = getParamValueString(paramInfo).toInt
+    def getParamValueString(paramInfo: (String, String, Any, String)): String = mapProgramArg(paramInfo._1.toLowerCase()).toString
+    def getParamValueBoolean(paramInfo: (String, String, Any, String)): Boolean = getParamValueString(paramInfo).toLowerCase() match {
 
         case "t" | "true" | "y" => true
         case _ => false
@@ -143,7 +143,7 @@ case class CLArgsParser(args: Array[String], lstArgInfo: List[(String, String, A
         }
     }
 
-    def buildUsageString() = {
+    def buildUsageString(): String = {
 
         val sb = StringBuilder.newBuilder
 
@@ -155,7 +155,7 @@ case class CLArgsParser(args: Array[String], lstArgInfo: List[(String, String, A
             .toString()
     }
 
-    def toString(clazz: AnyRef) = {
+    def toString(clazz: AnyRef): String = {
 
         val sb = StringBuilder.newBuilder
 
@@ -204,7 +204,7 @@ case class CLArgsParser(args: Array[String], lstArgInfo: List[(String, String, A
             .toString()
     }
 
-    override def toString =
+    override def toString: String =
         this.toString(null)
 }
 

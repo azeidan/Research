@@ -9,6 +9,10 @@ trait SpatialIndex_kNN extends Serializable {
 
   def getTotalPoints: Long
 
+  //
+  //  def getDepth: Long
+  //
+
   def insert(point: Point): Boolean
 
   def getAllPoints: ListBuffer[ListBuffer[Point]]

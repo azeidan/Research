@@ -32,6 +32,7 @@
       <module name="GeoMatch" target="1.8" />
       <module name="LocalRunFiles" target="1.8" />
       <module name="Spark_kNN" target="1.8" />
+      <module name="SparkConfTest" target="1.5" />
       <module name="SpatialBenchmark" target="1.8" />
     </bytecodeTargetLevel>
   </component>
