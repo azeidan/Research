@@ -26,14 +26,15 @@ object TestAllKnnJoin {
     val startTime = System.currentTimeMillis()
     //    var startTime2 = startTime
 
-//                val clArgs = SparkKNN_Local_CLArgs.random_sample(SparkKNN_Arguments())
-    val clArgs = CLArgsParser(args, SparkKNN_Arguments())
+//    val clArgs = SparkKNN_Local_CLArgs.random_sample(SparkKNN_Arguments())
+            val clArgs = CLArgsParser(args, SparkKNN_Arguments())
 
     //    val clArgs = SparkKNN_Local_CLArgs.busPoint_busPointShift(SparkKNN_Arguments())
     //    val clArgs = SparkKNN_Local_CLArgs.busPoint_taxiPoint(SparkKNN_Arguments())
     //    val clArgs = SparkKNN_Local_CLArgs.tpepPoint_tpepPoint(SparkKNN_Arguments())
 
     val localMode = clArgs.getParamValueBoolean(SparkKNN_Arguments.local)
+    val debugMode = clArgs.getParamValueBoolean(SparkKNN_Arguments.debug)
     val firstSet = clArgs.getParamValueString(SparkKNN_Arguments.firstSet)
     val firstSetObjType = clArgs.getParamValueString(SparkKNN_Arguments.firstSetObjType)
     val firstSetParser = RDD_Store.getLineParser(firstSetObjType)
@@ -48,11 +49,12 @@ object TestAllKnnJoin {
     val sparkConf = new SparkConf()
       .setAppName(this.getClass.getName)
       .set("spark.serializer", classOf[KryoSerializer].getName)
+      //      .set("spark.driver.extraJavaOptions", "-Xss2048m")
       //      .registerKryoClasses(GeoMatch.getGeoMatchClasses())
       .registerKryoClasses(SparkKNN.getSparkKNNClasses)
 
     if (localMode)
-      sparkConf.setMaster("local[*]")
+      sparkConf.setMaster("local[32]")
         .set("spark.local.dir", LocalRunConsts.sparkWorkDir)
 
     val sc = new SparkContext(sparkConf)
@@ -67,13 +69,15 @@ object TestAllKnnJoin {
       .filter(_ != null)
       .mapPartitions(_.map(row => new Point(row._2._1.toDouble, row._2._2.toDouble, row._1)))
 
-    val sparkKNN = SparkKNN(rddLeft, rddRight, kParam, TypeSpatialIndex.quadTree)
+    val sparkKNN = SparkKNN(debugMode, rddLeft, rddRight, kParam, TypeSpatialIndex.quadTree)
 
     // during local test runs
-    sparkKNN.minPartitions = minPartitions
+    //    sparkKNN.minPartitions = minPartitions
 
-    //        val rddResult = sparkKNN.allKnnJoin()
-    val rddResult = sparkKNN.allKnnJoin()
+        val rddResult = sparkKNN.allKnnJoin()
+//    val rddResult = sparkKNN.knnJoin()
+
+//    println(rddResult.toDebugString)
 
     // delete output dir if exists
     val hdfs = FileSystem.get(sc.hadoopConfiguration)
