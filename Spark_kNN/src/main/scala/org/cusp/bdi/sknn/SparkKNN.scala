@@ -6,7 +6,7 @@ import org.apache.spark.storage.StorageLevel
 import org.apache.spark.util.SizeEstimator
 import org.cusp.bdi.ds.kt.KdTree
 import org.cusp.bdi.ds.qt.QuadTree
-import org.cusp.bdi.ds.{Box, Circle, Point, PointBase}
+import org.cusp.bdi.ds.{Rectangle, Circle, Point, PointBase}
 import org.cusp.bdi.sknn.ds.util.{KdTree_kNN, QuadTree_kNN, SpatialIndex_kNN}
 import org.cusp.bdi.sknn.util._
 import org.cusp.bdi.util.{Helper, Node, SortedList}
@@ -22,7 +22,7 @@ object TypeSpatialIndex extends Enumeration with Serializable {
 
 case class RangeInfo(seedObj: ((Double, Double), Long)) extends Serializable {
 
-  val lstBoxCoords: ListBuffer[((Double, Double), Long)] = ListBuffer[((Double, Double), Long)]()
+  val lstMBRCoords: ListBuffer[((Double, Double), Long)] = ListBuffer[((Double, Double), Long)]()
   var totalWeight = 0L
   val leftObj: ((Double, Double), Long) = seedObj
   var bottomObj: ((Double, Double), Long) = seedObj
@@ -57,7 +57,7 @@ object SparkKNN extends Serializable {
     Array(
       Helper.getClass,
       classOf[SortedList[_]],
-      classOf[Box],
+      classOf[Rectangle],
       classOf[Circle],
       classOf[Point],
       classOf[PointBase],
@@ -131,7 +131,7 @@ case class SparkKNN(debugMode: Boolean, rddLeft: RDD[Point], rddRight: RDD[Point
     var rangeInfo: RangeInfo = null
 
     rddRight
-      .mapPartitions(_.map(point => (gridOp.computeBoxXY(point.x, point.y), 1L))) // grid assignment
+      .mapPartitions(_.map(point => (gridOp.computeSquareXY(point.x, point.y), 1L))) // grid assignment
       .reduceByKey(_ + _) // summarize
       .collect
       .sorted // sorts by column then row ((0, 0), (0, 1), ..., (1, 0), (1, 1) ...)
@@ -143,7 +143,7 @@ case class SparkKNN(debugMode: Boolean, rddLeft: RDD[Point], rddRight: RDD[Point
           lstRangeInfo.append(rangeInfo)
         }
 
-        rangeInfo.lstBoxCoords.append(row)
+        rangeInfo.lstMBRCoords.append(row)
         rangeInfo.totalWeight += row._2
         rangeInfo.rightObj = row
 
@@ -160,7 +160,7 @@ case class SparkKNN(debugMode: Boolean, rddLeft: RDD[Point], rddRight: RDD[Point
 
     val globalIndex: SpatialIndex_kNN = typeSpatialIndex match {
       case qt if qt == TypeSpatialIndex.quadTree =>
-        new QuadTree_kNN(gridOp.computeBoxXY(rightDS_MBR_Left, rightDS_MBR_Bottom), gridOp.computeBoxXY(rightDS_MBR_Right, rightDS_MBR_Top))
+        new QuadTree_kNN(gridOp.computeSquareXY(rightDS_MBR_Left, rightDS_MBR_Bottom), gridOp.computeSquareXY(rightDS_MBR_Right, rightDS_MBR_Top))
       case kdt if kdt == TypeSpatialIndex.kdTree =>
         new KdTree_kNN()
     }
@@ -173,7 +173,7 @@ case class SparkKNN(debugMode: Boolean, rddLeft: RDD[Point], rddRight: RDD[Point
     startTime = System.currentTimeMillis
 
     arrRangeInfo.indices
-      .foreach(idx => arrRangeInfo(idx).lstBoxCoords
+      .foreach(idx => arrRangeInfo(idx).lstMBRCoords
         .foreach(row => globalIndex.insert(new Point(row._1._1, row._1._2, GlobalIndexPointData(row._2, idx)))))
 
     Helper.logerSLf4J(debugMode, SparkKNN, ">>GlobalIndex insert time in %,d MS. Points: %d".format(System.currentTimeMillis - startTime, globalIndex.getTotalPoints /*, globalIndex.getDepth*/))
@@ -186,7 +186,7 @@ case class SparkKNN(debugMode: Boolean, rddLeft: RDD[Point], rddRight: RDD[Point
 
     val rddSpIdx = rddRight
       .mapPartitions(_.map(point =>
-        (bvGlobalIndex.value.findExact(gridOp.computeBoxXY(point.x, point.y)).userData match {
+        (bvGlobalIndex.value.findExact(gridOp.computeSquareXY(point.x, point.y)).userData match {
           case globalIndexPointData: GlobalIndexPointData => globalIndexPointData.partitionIdx
         }, point)
       ))
@@ -203,7 +203,7 @@ case class SparkKNN(debugMode: Boolean, rddLeft: RDD[Point], rddRight: RDD[Point
         val startTime = System.currentTimeMillis
 
         val spatialIndex: SpatialIndex_kNN = typeSpatialIndex match {
-          case qt if qt == TypeSpatialIndex.quadTree => new QuadTree_kNN(bvArrMBR.value(pIdx), gridOp.boxWH)
+          case qt if qt == TypeSpatialIndex.quadTree => new QuadTree_kNN(bvArrMBR.value(pIdx), gridOp.squareLen)
           case kdt if kdt == TypeSpatialIndex.kdTree => new KdTree_kNN()
         }
 
@@ -228,7 +228,7 @@ case class SparkKNN(debugMode: Boolean, rddLeft: RDD[Point], rddRight: RDD[Point
 
       val (numR, (maxRowSize, totalRowCount, mbrLeft, mbrBott, mbrRight, mbrTop)) =
         rddLeft
-          .mapPartitions(_.map(point => (gridOp.computeBoxXY(point.x, point.y), (point.userData.toString.length, 1L, point.x, point.y, point.x, point.y))))
+          .mapPartitions(_.map(point => (gridOp.computeSquareXY(point.x, point.y), (point.userData.toString.length, 1L, point.x, point.y, point.x, point.y))))
           .reduceByKey((param1, param2) =>
             (math.max(param1._1, param2._1), param1._2 + param2._2, math.min(param1._3, param2._3), math.min(param1._4, param2._4), math.max(param1._5, param2._5), math.max(param1._6, param2._6)))
           .mapPartitions(iter =>
@@ -250,7 +250,7 @@ case class SparkKNN(debugMode: Boolean, rddLeft: RDD[Point], rddRight: RDD[Point
     }
     else
       rddLeft
-        .mapPartitions(_.map(point => gridOp.computeBoxXY(point.x, point.y)).toSet.iterator.map((row: (Double, Double)) => (row, Byte.MinValue)))
+        .mapPartitions(_.map(point => gridOp.computeSquareXY(point.x, point.y)).toSet.iterator.map((row: (Double, Double)) => (row, Byte.MinValue)))
         .reduceByKey((x, _) => x)
         .mapPartitions(iter => Iterator(iter.map(row => bvGlobalIndex.value.spatialIdxRangeLookup(row._1, k).size).max))
         .max
@@ -263,7 +263,7 @@ case class SparkKNN(debugMode: Boolean, rddLeft: RDD[Point], rddRight: RDD[Point
         //          if (point.userData.toString().equalsIgnoreCase("yellow_3_b_199313"))
         //            println
 
-        val lstPartitionId = bvGlobalIndex.value.spatialIdxRangeLookup(gridOp.computeBoxXY(point.x, point.y), k)
+        val lstPartitionId = bvGlobalIndex.value.spatialIdxRangeLookup(gridOp.computeSquareXY(point.x, point.y), k)
           .toList
 
         val rowPointData: Any = new RowData(point, SortedList[Point](k), Random.shuffle(lstPartitionId.tail))
@@ -321,7 +321,7 @@ case class SparkKNN(debugMode: Boolean, rddLeft: RDD[Point], rddRight: RDD[Point
     val rowData = new RowData(pointDummy, sortSetDummy, lstPartitionIdDummy)
     val spatialIndexDummy = typeSpatialIndex match {
       case qt if qt == TypeSpatialIndex.quadTree =>
-        new QuadTree_kNN(Box(new PointBase(0, 0), new PointBase(0, 0)))
+        new QuadTree_kNN(Rectangle(new PointBase(0, 0), new PointBase(0, 0)))
       case kdt if kdt == TypeSpatialIndex.kdTree =>
         new KdTree_kNN()
     }
@@ -333,10 +333,10 @@ case class SparkKNN(debugMode: Boolean, rddLeft: RDD[Point], rddRight: RDD[Point
     // exec mem cost = 1QT + 1Pt and matches
     val partObjCapacity = ((coreAvailableMemory - quadTreeCost - rowDataCost) / pointCost).toInt
 
-    var numParts = math.min((totalRowCount / partObjCapacity).toInt + 1, (rddRight.context.getExecutorMemoryStatus.size - 1) * coresPerExec)
+    var numParts = (totalRowCount / partObjCapacity).toInt + 1 //, (rddRight.context.getExecutorMemoryStatus.size - 1) * coresPerExec)
     if (numParts <= 1) numParts = rddRight.getNumPartitions
 
-    Helper.logerSLf4J(debugMode, SparkKNN, ">>execAvailableMemory=%d\texeOverheadMemory=%d\tcoresPerExec=%d\tcoreAvailableMemory=%d\tpointCost=%d\trowDataCost=%d\tquadTreeCost=%d\tpartObjCapacity=%d\tnumParts=%d".format(execAvailableMemory, exeOverheadMemory, coresPerExec, coreAvailableMemory, pointCost, rowDataCost, quadTreeCost, partObjCapacity, (totalRowCount / numParts).toInt + 1))
+    Helper.logerSLf4J(debugMode, SparkKNN, ">>execAvailableMemory=%d\texeOverheadMemory=%d\tcoresPerExec=%d\tcoreAvailableMemory=%d\tpointCost=%d\trowDataCost=%d\tquadTreeCost=%d\tpartObjCapacity=%d\tnumParts=%d".format(execAvailableMemory, exeOverheadMemory, coresPerExec, coreAvailableMemory, pointCost, rowDataCost, quadTreeCost, partObjCapacity, numParts))
 
     (totalRowCount / numParts).toInt + 1
   }

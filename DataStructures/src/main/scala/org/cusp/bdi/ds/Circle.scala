@@ -2,79 +2,80 @@ package org.cusp.bdi.ds
 
 case class Circle(center: PointBase) extends Serializable {
 
-    private var radius = 0.0
+  private var radius = 0.0
 
-    def setRadius(radius: Double): Unit =
-        this.radius = radius
+  def setRadius(radius: Double): Unit =
+    this.radius = radius
 
-    def getRadius: Double = radius
+  def getRadius: Double = radius
 
-    def this(center: PointBase, radius: Double) = {
+  def this(center: PointBase, radius: Double) = {
 
-        this(center)
-        this.radius = radius
-    }
+    this(center)
+    this.radius = radius
+  }
 
-    def left: Double = this.center.x - this.radius
-    def right: Double = this.center.x + this.radius
-    def top: Double = this.center.y + this.radius
-    def bottom: Double = this.center.y - this.radius
+  def left: Double = this.center.x - this.radius
 
-    def contains(box: Box): Boolean = {
+  def right: Double = this.center.x + this.radius
 
-        lazy val boxLeft = box.left
-        lazy val boxRight = box.right
-        lazy val boxTop = box.top
-        lazy val boxBottom = box.bottom
+  def top: Double = this.center.y + this.radius
 
-        contains(boxLeft, boxBottom, boxRight, boxTop)
-    }
+  def bottom: Double = this.center.y - this.radius
 
-    def intersects(mbr: (Double, Double, Double, Double)): Boolean =
-        intersects(mbr._1, mbr._2, mbr._3, mbr._4)
+  def contains(rect: Rectangle): Boolean = {
 
-    def contains(mbr: (Double, Double, Double, Double)): Boolean =
-        contains(mbr._1, mbr._2, mbr._3, mbr._4)
+    lazy val rectLeft = rect.left
+    lazy val rectRight = rect.right
+    lazy val rectTop = rect.top
+    lazy val rectBottom = rect.bottom
 
-    def contains(left: => Double, bottom: => Double, right: => Double, top: => Double): Boolean = {
+    contains(rectLeft, rectBottom, rectRight, rectTop)
+  }
 
-        lazy val circleLeft = this.left
-        lazy val circleRight = this.right
-        lazy val circleTop = this.top
-        lazy val circleBottom = this.bottom
+  def intersects(mbr: (Double, Double, Double, Double)): Boolean =
+    intersects(mbr._1, mbr._2, mbr._3, mbr._4)
 
-        !(left <= circleLeft ||
-            right >= circleRight ||
-            top >= circleTop ||
-            bottom <= circleBottom)
-    }
+  def contains(mbr: (Double, Double, Double, Double)): Boolean =
+    contains(mbr._1, mbr._2, mbr._3, mbr._4)
 
-    def intersects(otherLeft: => Double, otherBottom: => Double, otherRight: => Double, otherTop: => Double): Boolean = {
+  def contains(left: => Double, bottom: => Double, right: => Double, top: => Double): Boolean = {
 
-        lazy val circleLeft = this.center.x - this.radius
-        lazy val circleRight = this.center.x + this.radius
-        lazy val circleTop = this.center.y + this.radius
-        lazy val circleBottom = this.center.y - this.radius
+    lazy val circleLeft = this.left
+    lazy val circleRight = this.right
+    lazy val circleTop = this.top
+    lazy val circleBottom = this.bottom
 
-        !(otherLeft > circleRight ||
-            otherRight < circleLeft ||
-            otherBottom > circleTop ||
-            otherTop < circleBottom)
-    }
+    !(left <= circleLeft || right >= circleRight ||
+      top >= circleTop || bottom <= circleBottom)
+  }
 
-    def intersects(box: Box): Boolean = {
+  def intersects(otherLeft: => Double, otherBottom: => Double, otherRight: => Double, otherTop: => Double): Boolean = {
 
-        lazy val boxLeft = box.left
-        lazy val boxRight = box.right
-        lazy val boxTop = box.top
-        lazy val boxBottom = box.bottom
+    lazy val circleLeft = this.center.x - this.radius
+    lazy val circleRight = this.center.x + this.radius
+    lazy val circleTop = this.center.y + this.radius
+    lazy val circleBottom = this.center.y - this.radius
 
-        intersects(boxLeft, boxBottom, boxRight, boxTop)
-    }
+    !(otherLeft > circleRight ||
+      otherRight < circleLeft ||
+      otherBottom > circleTop ||
+      otherTop < circleBottom)
+  }
 
-    def expandRadius(expandBy: Double): Unit =
-        radius += expandBy
+  def intersects(rect: Rectangle): Boolean = {
 
-    override def toString: String =
-        "%f,%f,%f".format(center.x, center.y, radius)
+    lazy val rectLeft = rect.left
+    lazy val rectRight = rect.right
+    lazy val rectTop = rect.top
+    lazy val rectBottom = rect.bottom
+
+    intersects(rectLeft, rectBottom, rectRight, rectTop)
+  }
+
+  def expandRadius(expandBy: Double): Unit =
+    radius += expandBy
+
+  override def toString: String =
+    "%f,%f,%f".format(center.x, center.y, radius)
 }

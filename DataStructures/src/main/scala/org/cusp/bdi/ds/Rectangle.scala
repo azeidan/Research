@@ -1,11 +1,11 @@
 package org.cusp.bdi.ds
 
-case class Box(pointCenter: PointBase, pointHalfXY: PointBase) extends Serializable {
+case class Rectangle(pointCenter: PointBase, pointHalfXY: PointBase) extends Serializable {
 
-  def this(other: Box) =
+  def this(other: Rectangle) =
     this(new PointBase(other.pointCenter), new PointBase(other.pointHalfXY))
 
-  def contains(other: Box): Boolean =
+  def contains(other: Rectangle): Boolean =
     !(this.left > other.left || this.right < other.right ||
       this.bottom > other.bottom || this.top < other.top)
 
@@ -34,7 +34,7 @@ case class Box(pointCenter: PointBase, pointHalfXY: PointBase) extends Serializa
   def contains(mbr: (Double, Double, Double, Double)): Boolean =
     left <= mbr._1 && bottom <= mbr._2 && right >= mbr._3 && top >= mbr._4
 
-  def intersects(other: Box): Boolean = {
+  def intersects(other: Rectangle): Boolean = {
 
     lazy val otherLeft = other.left
     lazy val otherBottom = other.bottom
@@ -57,17 +57,17 @@ case class Box(pointCenter: PointBase, pointHalfXY: PointBase) extends Serializa
       thisBottom > otherTop)
   }
 
-  def topLeftQuadrant: Box =
-    Box(new PointBase(pointCenter.x - pointHalfXY.x / 2, pointCenter.y + pointHalfXY.y / 2), quarterDim)
+  def topLeftQuadrant: Rectangle =
+    Rectangle(new PointBase(pointCenter.x - pointHalfXY.x / 2, pointCenter.y + pointHalfXY.y / 2), quarterDim)
 
-  def topRightQuadrant: Box =
-    Box(new PointBase(pointCenter.x + pointHalfXY.x / 2, pointCenter.y + pointHalfXY.y / 2), quarterDim)
+  def topRightQuadrant: Rectangle =
+    Rectangle(new PointBase(pointCenter.x + pointHalfXY.x / 2, pointCenter.y + pointHalfXY.y / 2), quarterDim)
 
-  def bottomLeftQuadrant: Box =
-    Box(new PointBase(pointCenter.x - pointHalfXY.x / 2, pointCenter.y - pointHalfXY.y / 2), quarterDim)
+  def bottomLeftQuadrant: Rectangle =
+    Rectangle(new PointBase(pointCenter.x - pointHalfXY.x / 2, pointCenter.y - pointHalfXY.y / 2), quarterDim)
 
-  def bottomRightQuadrant: Box =
-    Box(new PointBase(pointCenter.x + pointHalfXY.x / 2, pointCenter.y - pointHalfXY.y / 2), quarterDim)
+  def bottomRightQuadrant: Rectangle =
+    Rectangle(new PointBase(pointCenter.x + pointHalfXY.x / 2, pointCenter.y - pointHalfXY.y / 2), quarterDim)
 
   def quarterDim =
     new PointBase(pointHalfXY.x / 2, pointHalfXY.y / 2)

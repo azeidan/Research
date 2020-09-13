@@ -3,7 +3,7 @@ package org.cusp.bdi.ds.qt
 import com.esotericsoftware.kryo.io.{Input, Output}
 import com.esotericsoftware.kryo.{Kryo, KryoSerializable}
 import org.cusp.bdi.ds.qt.QuadTree.capacity
-import org.cusp.bdi.ds.{Box, Point}
+import org.cusp.bdi.ds.{Rectangle, Point}
 
 import scala.collection.mutable.ListBuffer
 
@@ -19,13 +19,13 @@ class QuadTree extends KryoSerializable {
 
   //  var depth = 0L
 
-  var boundary: Box = _
+  var boundary: Rectangle = _
   var topLeft: QuadTree = _
   var topRight: QuadTree = _
   var bottomLeft: QuadTree = _
   var bottomRight: QuadTree = _
 
-  def this(boundary: Box) = {
+  def this(boundary: Rectangle) = {
     this()
     this.boundary = boundary
   }
@@ -67,7 +67,7 @@ class QuadTree extends KryoSerializable {
 
       qTree.totalPoints = input.readLong()
       qTree.boundary = kryo.readClassAndObject(input) match {
-        case bx: Box => bx
+        case bx: Rectangle => bx
       }
 
       qTree.points = kryo.readClassAndObject(input).asInstanceOf[ListBuffer[Point]]

@@ -26,7 +26,7 @@ case class SortedList[T](maxSize: Int) /*(implicit ev$1: T => Comparable[_ >: T]
 
   def add(distance: Double, data: T) {
 
-    if (!isFull || distance <= last().distance) {
+    if (!isFull || distance <= last.distance) {
 
       var prevNode: Node[T] = null
       var currNode = headNode
@@ -75,7 +75,7 @@ case class SortedList[T](maxSize: Int) /*(implicit ev$1: T => Comparable[_ >: T]
     }
   }
 
-  override def last(): Node[T] = lastNode
+  override def last: Node[T] = lastNode
 
   def isFull: Boolean = nodeCount == maxSize
 
@@ -88,11 +88,11 @@ case class SortedList[T](maxSize: Int) /*(implicit ev$1: T => Comparable[_ >: T]
     }
   }
 
-  override def size(): Int = nodeCount
+  override def size: Int = nodeCount
 
   def get(idx: Int): Node[T] = {
 
-    var current = head()
+    var current = head
     var i = 0
     while (i < idx) {
 
@@ -103,9 +103,9 @@ case class SortedList[T](maxSize: Int) /*(implicit ev$1: T => Comparable[_ >: T]
     current
   }
 
-  override def head(): Node[T] = headNode
+  override def head: Node[T] = headNode
 
-  override def iterator(): Iterator[Node[T]] = new AbstractIterator[Node[T]] {
+  override def iterator: Iterator[Node[T]] = new AbstractIterator[Node[T]] {
 
     var cursor: Node[T] = if (SortedList.this.isEmpty()) null else headNode
 

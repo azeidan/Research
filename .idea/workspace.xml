@@ -6,7 +6,7 @@
   </component>
   <component name="ArtifactsWorkspaceSettings">
     <artifacts-to-build>
-      <artifact name="SpatialBenchmark" />
+      <artifact name="Spark_kNN" />
     </artifacts-to-build>
   </component>
   <component name="AutoImportSettings">
@@ -31,66 +31,16 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ee761a9d-eff2-4086-b83a-8096819a4548" name="Default Changelist" comment="reduced number of mapParititions. swithced fold to reduce. rddLeft.partitionBy relies of rddRight.partitioner">
-      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+    <list default="true" id="ee761a9d-eff2-4086-b83a-8096819a4548" name="Default Changelist" comment="removed boolean from process function in QuadTree_kNN. multiple identifiers renamed">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Common/Common.iml" beforeDir="false" afterPath="$PROJECT_DIR$/Common/Common.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Common/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Common/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Common/src/main/scala/org/cusp/bdi/util/Helper.scala" beforeDir="false" afterPath="$PROJECT_DIR$/Common/src/main/scala/org/cusp/bdi/util/Helper.scala" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Common/src/main/scala/org/cusp/bdi/util/SortedList.scala" beforeDir="false" afterPath="$PROJECT_DIR$/Common/src/main/scala/org/cusp/bdi/util/SortedList.scala" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DataStructures/DataStructures.iml" beforeDir="false" afterPath="$PROJECT_DIR$/DataStructures/DataStructures.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DataStructures/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/DataStructures/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DataStructures/src/main/scala/org/cusp/bdi/ds/Point.scala" beforeDir="false" afterPath="$PROJECT_DIR$/DataStructures/src/main/scala/org/cusp/bdi/ds/Point.scala" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DataStructures/src/main/scala/org/cusp/bdi/ds/PointBase.scala" beforeDir="false" afterPath="$PROJECT_DIR$/DataStructures/src/main/scala/org/cusp/bdi/ds/PointBase.scala" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DataStructures/src/main/scala/org/cusp/bdi/ds/Box.scala" beforeDir="false" afterPath="$PROJECT_DIR$/DataStructures/src/main/scala/org/cusp/bdi/ds/Rectangle.scala" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DataStructures/src/main/scala/org/cusp/bdi/ds/Circle.scala" beforeDir="false" afterPath="$PROJECT_DIR$/DataStructures/src/main/scala/org/cusp/bdi/ds/Circle.scala" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DataStructures/src/main/scala/org/cusp/bdi/ds/qt/QuadTree.scala" beforeDir="false" afterPath="$PROJECT_DIR$/DataStructures/src/main/scala/org/cusp/bdi/ds/qt/QuadTree.scala" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DataStructures/target/classes/org/cusp/bdi/ds/Box$$anonfun$intersects$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/DataStructures/target/classes/org/cusp/bdi/ds/Box$$anonfun$intersects$2.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/DataStructures/target/classes/org/cusp/bdi/ds/Box$$anonfun$intersects$3.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/DataStructures/target/classes/org/cusp/bdi/ds/Box$$anonfun$intersects$4.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/DataStructures/target/classes/org/cusp/bdi/ds/Box$.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/DataStructures/target/classes/org/cusp/bdi/ds/Box.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/DataStructures/target/classes/org/cusp/bdi/ds/Circle$$anonfun$contains$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/DataStructures/target/classes/org/cusp/bdi/ds/Circle$$anonfun$contains$2.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/DataStructures/target/classes/org/cusp/bdi/ds/Circle$$anonfun$contains$3.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/DataStructures/target/classes/org/cusp/bdi/ds/Circle$$anonfun$contains$4.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/DataStructures/target/classes/org/cusp/bdi/ds/Circle$$anonfun$contains$5.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/DataStructures/target/classes/org/cusp/bdi/ds/Circle$$anonfun$contains$6.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/DataStructures/target/classes/org/cusp/bdi/ds/Circle$$anonfun$contains$7.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/DataStructures/target/classes/org/cusp/bdi/ds/Circle$$anonfun$contains$8.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/DataStructures/target/classes/org/cusp/bdi/ds/Circle$$anonfun$intersects$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/DataStructures/target/classes/org/cusp/bdi/ds/Circle$$anonfun$intersects$2.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/DataStructures/target/classes/org/cusp/bdi/ds/Circle$$anonfun$intersects$3.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/DataStructures/target/classes/org/cusp/bdi/ds/Circle$$anonfun$intersects$4.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/DataStructures/target/classes/org/cusp/bdi/ds/Circle$$anonfun$intersects$5.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/DataStructures/target/classes/org/cusp/bdi/ds/Circle$$anonfun$intersects$6.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/DataStructures/target/classes/org/cusp/bdi/ds/Circle$$anonfun$intersects$7.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/DataStructures/target/classes/org/cusp/bdi/ds/Circle$$anonfun$intersects$8.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/DataStructures/target/classes/org/cusp/bdi/ds/Circle$.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/DataStructures/target/classes/org/cusp/bdi/ds/Circle.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/DataStructures/target/classes/org/cusp/bdi/ds/Point$.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/DataStructures/target/classes/org/cusp/bdi/ds/Point.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/DataStructures/target/classes/org/cusp/bdi/ds/PointBase.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/DataStructures/target/classes/org/cusp/bdi/ds/kt/KdTree.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/DataStructures/target/classes/org/cusp/bdi/ds/qt/QuadTree$$anonfun$findExact$1$$anonfun$apply$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/DataStructures/target/classes/org/cusp/bdi/ds/qt/QuadTree$$anonfun$findExact$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/DataStructures/target/classes/org/cusp/bdi/ds/qt/QuadTree$$anonfun$getAllPoints$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/DataStructures/target/classes/org/cusp/bdi/ds/qt/QuadTree$$anonfun$getAllPoints$2.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/DataStructures/target/classes/org/cusp/bdi/ds/qt/QuadTree$.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/DataStructures/target/classes/org/cusp/bdi/ds/qt/QuadTree.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_GeoMatch/FW_GeoMatch.iml" beforeDir="false" afterPath="$PROJECT_DIR$/FW_GeoMatch/FW_GeoMatch.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/FW_Simba.iml" beforeDir="false" afterPath="$PROJECT_DIR$/FW_Simba/FW_Simba.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba_Source/FW_Simba_Source.iml" beforeDir="false" afterPath="$PROJECT_DIR$/FW_Simba_Source/FW_Simba_Source.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoMatch/GeoMatch.iml" beforeDir="false" afterPath="$PROJECT_DIR$/GeoMatch/GeoMatch.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LocalRunFiles/LocalRunFiles.iml" beforeDir="false" afterPath="$PROJECT_DIR$/LocalRunFiles/LocalRunFiles.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/LocalRunFiles/src/main/scala/org/cusp/bdi/util/LocalRunConsts.scala" beforeDir="false" afterPath="$PROJECT_DIR$/LocalRunFiles/src/main/scala/org/cusp/bdi/util/LocalRunConsts.scala" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/Spark_kNN.iml" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/Spark_kNN.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Spark_kNN/src/main/scala/org/cusp/bdi/sknn/SparkKNN.scala" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/src/main/scala/org/cusp/bdi/sknn/SparkKNN.scala" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/src/main/scala/org/cusp/bdi/sknn/ds/util/KdTree_kNN.scala" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/src/main/scala/org/cusp/bdi/sknn/ds/util/KdTree_kNN.scala" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Spark_kNN/src/main/scala/org/cusp/bdi/sknn/ds/util/QuadTree_kNN.scala" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/src/main/scala/org/cusp/bdi/sknn/ds/util/QuadTree_kNN.scala" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/src/main/scala/org/cusp/bdi/sknn/ds/util/SpatialIndex_kNN.scala" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/src/main/scala/org/cusp/bdi/sknn/ds/util/SpatialIndex_kNN.scala" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Spark_kNN/src/main/scala/org/cusp/bdi/sknn/util/GridOperation.scala" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/src/main/scala/org/cusp/bdi/sknn/util/GridOperation.scala" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SpatialBenchmark/src/main/scala/org/cusp/bdi/sb/MatchDistAnalysis.scala" beforeDir="false" afterPath="$PROJECT_DIR$/SpatialBenchmark/src/main/scala/org/cusp/bdi/sb/MatchDistAnalysis.scala" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -584,7 +534,8 @@
     <MESSAGE value="Created Module Datastructures" />
     <MESSAGE value="forward compute leftRDD stats in case allKNNJoin" />
     <MESSAGE value="reduced number of mapParititions. swithced fold to reduce. rddLeft.partitionBy relies of rddRight.partitioner" />
-    <option name="LAST_COMMIT_MESSAGE" value="reduced number of mapParititions. swithced fold to reduce. rddLeft.partitionBy relies of rddRight.partitioner" />
+    <MESSAGE value="removed boolean from process function in QuadTree_kNN. multiple identifiers renamed" />
+    <option name="LAST_COMMIT_MESSAGE" value="removed boolean from process function in QuadTree_kNN. multiple identifiers renamed" />
   </component>
   <component name="WindowStateProjectService">
     <state x="938" y="400" width="740" height="665" key="#Inspections" timestamp="1598293324740">
@@ -687,10 +638,10 @@
       <screen x="67" y="27" width="2493" height="1413" />
     </state>
     <state width="588" height="506" key="DebuggerActiveHint/67.27.2493.1413@67.27.2493.1413" timestamp="1599712064489" />
-    <state x="67" y="130" width="2263" height="1215" maximized="true" key="DiffContextDialog" timestamp="1598748644270">
+    <state x="67" y="130" width="2263" height="1215" maximized="true" key="DiffContextDialog" timestamp="1599950852009">
       <screen x="67" y="27" width="2493" height="1413" />
     </state>
-    <state x="67" y="130" width="2263" height="1215" maximized="true" key="DiffContextDialog/67.27.2493.1413@67.27.2493.1413" timestamp="1598748644270" />
+    <state x="67" y="130" width="2263" height="1215" maximized="true" key="DiffContextDialog/67.27.2493.1413@67.27.2493.1413" timestamp="1599950852009" />
     <state x="1145" y="453" width="370" height="572" key="EnvironmentVariablesDialog" timestamp="1595477521248">
       <screen x="67" y="27" width="2493" height="1413" />
     </state>
@@ -711,22 +662,22 @@
       <screen x="67" y="27" width="2493" height="1413" />
     </state>
     <state x="937" y="413" width="743" height="639" key="Github.UntrackedFilesDialog/67.27.2493.1413@67.27.2493.1413" timestamp="1594704490168" />
-    <state width="2449" height="327" key="GridCell.Tab.0.bottom" timestamp="1599809029335">
+    <state width="2449" height="327" key="GridCell.Tab.0.bottom" timestamp="1599952702401">
       <screen x="67" y="27" width="2493" height="1413" />
     </state>
-    <state width="2449" height="327" key="GridCell.Tab.0.bottom/67.27.2493.1413@67.27.2493.1413" timestamp="1599809029335" />
-    <state width="2449" height="327" key="GridCell.Tab.0.center" timestamp="1599809029335">
+    <state width="2449" height="327" key="GridCell.Tab.0.bottom/67.27.2493.1413@67.27.2493.1413" timestamp="1599952702401" />
+    <state width="2449" height="327" key="GridCell.Tab.0.center" timestamp="1599952702400">
       <screen x="67" y="27" width="2493" height="1413" />
     </state>
-    <state width="2449" height="327" key="GridCell.Tab.0.center/67.27.2493.1413@67.27.2493.1413" timestamp="1599809029335" />
-    <state width="2449" height="327" key="GridCell.Tab.0.left" timestamp="1599809029334">
+    <state width="2449" height="327" key="GridCell.Tab.0.center/67.27.2493.1413@67.27.2493.1413" timestamp="1599952702400" />
+    <state width="2449" height="327" key="GridCell.Tab.0.left" timestamp="1599952702400">
       <screen x="67" y="27" width="2493" height="1413" />
     </state>
-    <state width="2449" height="327" key="GridCell.Tab.0.left/67.27.2493.1413@67.27.2493.1413" timestamp="1599809029334" />
-    <state width="2449" height="327" key="GridCell.Tab.0.right" timestamp="1599809029335">
+    <state width="2449" height="327" key="GridCell.Tab.0.left/67.27.2493.1413@67.27.2493.1413" timestamp="1599952702400" />
+    <state width="2449" height="327" key="GridCell.Tab.0.right" timestamp="1599952702401">
       <screen x="67" y="27" width="2493" height="1413" />
     </state>
-    <state width="2449" height="327" key="GridCell.Tab.0.right/67.27.2493.1413@67.27.2493.1413" timestamp="1599809029335" />
+    <state width="2449" height="327" key="GridCell.Tab.0.right/67.27.2493.1413@67.27.2493.1413" timestamp="1599952702401" />
     <state width="2449" height="313" key="GridCell.Tab.1.bottom" timestamp="1599807752250">
       <screen x="67" y="27" width="2493" height="1413" />
     </state>
@@ -791,14 +742,14 @@
       <screen x="67" y="27" width="2493" height="1413" />
     </state>
     <state x="1028" y="581" width="582" height="320" key="classpath-attribute-editor/67.27.2493.1413@67.27.2493.1413" timestamp="1596865239837" />
-    <state x="135" y="40" width="2293" height="1215" key="com.intellij.history.integration.ui.views.DirectoryHistoryDialog" timestamp="1598748223798">
+    <state x="135" y="40" width="2293" height="1215" key="com.intellij.history.integration.ui.views.DirectoryHistoryDialog" timestamp="1599950852010">
       <screen x="67" y="27" width="2493" height="1413" />
     </state>
-    <state x="135" y="40" width="2293" height="1215" key="com.intellij.history.integration.ui.views.DirectoryHistoryDialog/67.27.2493.1413@67.27.2493.1413" timestamp="1598748223798" />
-    <state x="167" y="125" width="2263" height="1215" maximized="true" key="com.intellij.history.integration.ui.views.FileHistoryDialog" timestamp="1599713788905">
+    <state x="135" y="40" width="2293" height="1215" key="com.intellij.history.integration.ui.views.DirectoryHistoryDialog/67.27.2493.1413@67.27.2493.1413" timestamp="1599950852010" />
+    <state x="167" y="125" width="2253" height="1215" maximized="true" key="com.intellij.history.integration.ui.views.FileHistoryDialog" timestamp="1599942595786">
       <screen x="67" y="27" width="2493" height="1413" />
     </state>
-    <state x="167" y="125" width="2263" height="1215" maximized="true" key="com.intellij.history.integration.ui.views.FileHistoryDialog/67.27.2493.1413@67.27.2493.1413" timestamp="1599713788905" />
+    <state x="167" y="125" width="2253" height="1215" maximized="true" key="com.intellij.history.integration.ui.views.FileHistoryDialog/67.27.2493.1413@67.27.2493.1413" timestamp="1599942595786" />
     <state x="690" y="229" width="1237" height="1006" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser" timestamp="1598938173835">
       <screen x="67" y="27" width="2493" height="1413" />
     </state>
@@ -815,10 +766,10 @@
       <screen x="67" y="27" width="2493" height="1413" />
     </state>
     <state x="292" y="314" width="2293" height="1215" key="dock-window-2/67.27.2493.1413@67.27.2493.1413" timestamp="1594783317173" />
-    <state x="1040" y="301" width="1109" height="836" key="find.popup" timestamp="1599808163176">
+    <state x="1040" y="301" width="1109" height="836" key="find.popup" timestamp="1599951452336">
       <screen x="67" y="27" width="2493" height="1413" />
     </state>
-    <state x="1040" y="301" width="1109" height="836" key="find.popup/67.27.2493.1413@67.27.2493.1413" timestamp="1599808163176" />
+    <state x="1040" y="301" width="1109" height="836" key="find.popup/67.27.2493.1413@67.27.2493.1413" timestamp="1599951452336" />
     <state x="622" y="459" width="1372" height="547" key="new project wizard" timestamp="1599625268371">
       <screen x="67" y="27" width="2493" height="1413" />
     </state>
