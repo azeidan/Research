@@ -1,4 +1,4 @@
-package org.cusp.bdi.tools
+package tools
 
 import java.io.BufferedOutputStream
 import java.io.FileOutputStream

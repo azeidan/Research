@@ -1,4 +1,4 @@
-package org.cusp.bdi.tools
+package tools
 
 import java.io.File
 import java.nio.file.Files

@@ -1,4 +1,4 @@
-package org.cusp.bdi.tools
+package tools
 
 import scala.io.Source
 

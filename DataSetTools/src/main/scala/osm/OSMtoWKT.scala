@@ -1,4 +1,4 @@
-package org.cusp.bdi.tools.osm
+package osm
 
 import java.io.PrintWriter
 

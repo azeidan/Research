@@ -1,4 +1,4 @@
-package org.cusp.bdi.tools.spark
+package spark
 
 import org.apache.hadoop.io.compress.GzipCodec
 import org.apache.spark.{SparkConf, SparkContext}

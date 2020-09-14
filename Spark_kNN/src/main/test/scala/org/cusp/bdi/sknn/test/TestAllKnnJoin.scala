@@ -26,8 +26,8 @@ object TestAllKnnJoin {
     val startTime = System.currentTimeMillis()
     //    var startTime2 = startTime
 
-//    val clArgs = SparkKNN_Local_CLArgs.random_sample(SparkKNN_Arguments())
-            val clArgs = CLArgsParser(args, SparkKNN_Arguments())
+    //    val clArgs = SparkKNN_Local_CLArgs.random_sample(SparkKNN_Arguments())
+    val clArgs = CLArgsParser(args, SparkKNN_Arguments())
 
     //    val clArgs = SparkKNN_Local_CLArgs.busPoint_busPointShift(SparkKNN_Arguments())
     //    val clArgs = SparkKNN_Local_CLArgs.busPoint_taxiPoint(SparkKNN_Arguments())
@@ -41,6 +41,8 @@ object TestAllKnnJoin {
     val secondSet = clArgs.getParamValueString(SparkKNN_Arguments.secondSet)
     val secondSetObjType = clArgs.getParamValueString(SparkKNN_Arguments.secondSetObjType)
     val secondSetParser = RDD_Store.getLineParser(secondSetObjType)
+    val outDir = clArgs.getParamValueString(SparkKNN_Arguments.outDir)
+    //    val outDirTmp = "%s%s%s".format(outDir, Path.SEPARATOR, "tmp")
 
     val kParam = clArgs.getParamValueInt(SparkKNN_Arguments.k)
     val minPartitions = clArgs.getParamValueInt(SparkKNN_Arguments.minPartitions)
@@ -69,26 +71,25 @@ object TestAllKnnJoin {
       .filter(_ != null)
       .mapPartitions(_.map(row => new Point(row._2._1.toDouble, row._2._2.toDouble, row._1)))
 
-    val sparkKNN = SparkKNN(debugMode, rddLeft, rddRight, kParam, TypeSpatialIndex.quadTree)
+    val sparkKNN = SparkKNN(debugMode, kParam, TypeSpatialIndex.quadTree)
 
     // during local test runs
     //    sparkKNN.minPartitions = minPartitions
 
-        val rddResult = sparkKNN.allKnnJoin()
-//    val rddResult = sparkKNN.knnJoin()
+    val rddResult = sparkKNN.allKnnJoin(rddLeft, rddRight)
+    //        val rddResult = sparkKNN.knnJoin(rddLeft, rddRight)
 
-//    println(rddResult.toDebugString)
+    //    println(rddResult.toDebugString)
 
     // delete output dir if exists
     val hdfs = FileSystem.get(sc.hadoopConfiguration)
-    val path = new Path(clArgs.getParamValueString(SparkKNN_Arguments.outDir))
-    if (hdfs.exists(path))
-      hdfs.delete(path, true)
+    val path = new Path(outDir)
+    if (hdfs.exists(path)) hdfs.delete(path, true)
 
     rddResult.mapPartitions(_.map(row =>
       "%s,%.8f,%.8f;%s".format(row._1.userData, row._1.x, row._1.y, row._2.map(matchInfo =>
         "%.8f,%s".format(math.sqrt(matchInfo._1), matchInfo._2.userData)).mkString(";"))))
-      .saveAsTextFile(clArgs.getParamValueString(SparkKNN_Arguments.outDir), classOf[GzipCodec])
+      .saveAsTextFile(outDir, classOf[GzipCodec])
 
     if (clArgs.getParamValueBoolean(SparkKNN_Arguments.local)) {
 

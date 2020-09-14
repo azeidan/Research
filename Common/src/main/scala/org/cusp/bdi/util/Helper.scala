@@ -157,7 +157,7 @@ object Helper {
   /**
    * Sends message(s) to the log belonging to the class when debug is turned on
    */
-  def logerSLf4J(debugOn: Boolean, clazz: => Any, message: => Object) {
+  def loggerSLf4J(debugOn: Boolean, clazz: => Any, message: => Object) {
     if (debugOn)
       Logger.getLogger(clazz.getClass.getName).info(message.toString)
   }

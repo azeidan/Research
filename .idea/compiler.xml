@@ -11,12 +11,14 @@
         <module name="FW_GeoMatch" />
         <module name="FW_Simba" />
         <module name="GeoMatch" />
+        <module name="DataSetTools" />
         <module name="DataStructures" />
         <module name="LocalRunFiles" />
         <module name="Common" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="_____DataSetTools" target="1.8" />
       <module name="_FW_GeoMatch" target="1.8" />
       <module name="_FW_Simba" target="1.8" />
       <module name="Common" target="1.8" />
