@@ -7,16 +7,16 @@ package org.cusp.bdi.util
 
 abstract class Arguments {
 
-    val local = ("local", "Boolean", false, "(T=local, F=cluster)")
-    val debug = ("debug", "Boolean", false, "(T=show_debug, F=no_debug)")
-    val outDir = ("outDir", "String", null, "File location to write benchmark results")
-    val firstSet = ("firstSet", "String", null, "First data set input file path (LION Streets)")
-    val firstSetObj = ("firstSetObj", "String", null, "The object type indicator (e.g. LION_LineString, TPEP_Point ...)")
-    val secondSet = ("secondSet", "String", null, "Second data set input file path (Bus, TPEP, Yellow)")
-    val secondSetObj = ("secondSetObj", "String", null, "The object type indicator (e.g. LION_LineString, TPEP_Point ...)")
-    val errorRange = ("errorRange", "Double", 150, "Error range by which to adjust spacial objects")
-    val matchCount = ("matchCount", "Int", 3, "Number of matched geometries to keept (i.e. # points per streeet)")
-    val matchDist = ("matchDist", "Double", 150, "Maximum distance after which the match is discarded")
+    val local: (String, String, Boolean, String) = ("local", "Boolean", false, "(T=local, F=cluster)")
+    val debug: (String, String, Boolean, String) = ("debug", "Boolean", false, "(T=show_debug, F=no_debug)")
+    val outDir: (String, String, Null, String) = ("outDir", "String", null, "File location to write benchmark results")
+    val firstSet: (String, String, Null, String) = ("firstSet", "String", null, "First data set input file path (LION Streets)")
+    val firstSetObj: (String, String, Null, String) = ("firstSetObj", "String", null, "The object type indicator (e.g. LION_LineString, TPEP_Point ...)")
+    val secondSet: (String, String, Null, String) = ("secondSet", "String", null, "Second data set input file path (Bus, TPEP, Yellow)")
+    val secondSetObj: (String, String, Null, String) = ("secondSetObj", "String", null, "The object type indicator (e.g. LION_LineString, TPEP_Point ...)")
+    val errorRange: (String, String, Int, String) = ("errorRange", "Double", 150, "Error range by which to adjust spacial objects")
+    val matchCount: (String, String, Int, String) = ("matchCount", "Int", 3, "Number of matched geometries to keept (i.e. # points per streeet)")
+    val matchDist: (String, String, Int, String) = ("matchDist", "Double", 150, "Maximum distance after which the match is discarded")
 
     def apply() =
         List(local, debug, outDir, firstSet, firstSetObj, secondSet, secondSetObj, errorRange, matchCount, matchDist)
@@ -24,8 +24,8 @@ abstract class Arguments {
 
 class Arguments_QueryType extends Arguments {
 
-    val queryType = ("queryType", "String", null, "The query type (e.g. distance, kNN, range)")
+    val queryType: (String, String, Null, String) = ("queryType", "String", null, "The query type (e.g. distance, kNN, range)")
 
-    override def apply() =
+    override def apply(): List[(String, String, Any, String)] =
         super.apply() ++ List(queryType)
 }

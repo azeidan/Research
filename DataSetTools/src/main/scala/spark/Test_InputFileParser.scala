@@ -67,7 +67,7 @@ object Test_InputFileParser {
 
     // /gws/projects/project-taxi_capstone_2016/share/Bus_TripRecod_NAD83/part*.gz
     val count = sc.textFile("/gws/projects/project-taxi_capstone_2016/share/Bus_TripRecod_NAD83/part*")
-      .mapPartitions(iter => Array(iter.map(busPoints).filter(_ == null).map(x => 1L).sum).iterator)
+      .mapPartitions(iter => Array(iter.map(busPoints).filter(_ == null).map(_ => 1L).sum).iterator)
       .fold(0)(_ + _)
     println("Count: %d", count)
 

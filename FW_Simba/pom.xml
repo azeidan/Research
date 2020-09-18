@@ -13,8 +13,8 @@
   <dependencies>
 
     <dependency>
-      <groupId>LocalRunFiles</groupId>
-      <artifactId>LocalRunFiles</artifactId>
+      <groupId>Common_FW</groupId>
+      <artifactId>Common_FW</artifactId>
       <version>0.0.1-SNAPSHOT</version>
       <scope>provided</scope>
     </dependency>

@@ -205,7 +205,7 @@ class QuadTree extends KryoSerializable {
       if (qTree.bottomRight != null) lstQT += qTree.bottomRight
     })
 
-    lstQT.map(_.points) //.flatMap(_.seq)
+    lstQT.map(_.points)
   }
 
   override def toString: String =

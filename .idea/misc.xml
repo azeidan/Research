@@ -7,12 +7,12 @@
         <option value="$PROJECT_DIR$/LocalRunFiles/pom.xml" />
         <option value="$PROJECT_DIR$/GeoMatch/pom.xml" />
         <option value="$PROJECT_DIR$/FW_GeoMatch/pom.xml" />
-        <option value="$PROJECT_DIR$/FW_Simba_Source/pom.xml" />
-        <option value="$PROJECT_DIR$/FW_Simba/pom.xml" />
         <option value="$PROJECT_DIR$/Spark_kNN/pom.xml" />
         <option value="$PROJECT_DIR$/SparkConfigTest/pom.xml" />
         <option value="$PROJECT_DIR$/DataSetTools/pom.xml" />
         <option value="$PROJECT_DIR$/DataStructures/pom.xml" />
+        <option value="$PROJECT_DIR$/SpatialBenchmark/pom.xml" />
+        <option value="$PROJECT_DIR$/Common_FW/pom.xml" />
       </list>
     </option>
   </component>

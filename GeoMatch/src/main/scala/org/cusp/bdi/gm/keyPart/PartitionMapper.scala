@@ -104,7 +104,7 @@ object PartitionMapper {
 
             if (count >= partitionLoad) {
 
-                ret = (start, tuple._1, partitionCounter, setIdx.filter(hIdx => (hIdx < start || hIdx > tuple._1)))
+                ret = (start, tuple._1, partitionCounter, setIdx.filter(hIdx => hIdx < start || hIdx > tuple._1))
 
                 count = 0
                 setIdx = Set[Int]()
@@ -147,7 +147,7 @@ object PartitionMapper {
             .reduceByKey(_ + _)
             .sortByKey()
             .collect()
-            .map(row => ((partitionLookup(-999, row._1, arrPartMapping)._1), row._2))
+            .map(row => (partitionLookup(-999, row._1, arrPartMapping)._1, row._2))
             .groupBy(_._1)
             .map(row => (row._1, row._2.map(_._2).sum))
         //        mapSecondSetPartCounts.foreach(x => Helper.logMessage(true, PartitionMapper, "<<mapSecondSetPartCounts<<%d,%d".format(x._1, x._2)))

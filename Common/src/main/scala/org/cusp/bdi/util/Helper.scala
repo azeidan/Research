@@ -12,6 +12,8 @@ import scala.collection.mutable.ListBuffer
 import scala.util.Random
 
 object Helper {
+  def toString(bool: Boolean): String =
+    if (bool) "T" else "F"
 
   def isNullOrEmpty(arr: Array[_]): Boolean =
     arr == null || arr.isEmpty

@@ -9,7 +9,7 @@ import scala.collection.mutable.ListBuffer
 
 object InputFileParsers extends Serializable {
 
-    def nycLION = (line: String) => {
+    def nycLION: String => (String, Array[(String, String)]) = (line: String) => {
 
         try {
             val idx0 = line.indexOf(',')
@@ -30,10 +30,10 @@ object InputFileParsers extends Serializable {
         catch { case _: Exception => null }
     }
 
-    def nycLION_WGS84 = (line: String) =>
+    def nycLION_WGS84: String => (String, Array[(String, String)]) = (line: String) =>
         nycLION(line)
 
-    def nycLION_Segments = (line: String) => {
+    def nycLION_Segments: String => Array[(String, ((String, String), (String, String)))] = (line: String) => {
 
         val (streetID, coordArr) = nycLION(line)
 
@@ -49,7 +49,7 @@ object InputFileParsers extends Serializable {
 
                 val endPoint = coordArr(i)
 
-                lst.append((streetID, ((startPoint, endPoint))))
+                lst.append((streetID, (startPoint, endPoint)))
 
                 startPoint = endPoint
             })
@@ -58,19 +58,9 @@ object InputFileParsers extends Serializable {
         }
     }
 
-    def tpepPoints = (line: String) => {
+    def tpepPoints: String => (String, (String, String)) = (line: String) => {
 
-        val xy = getXY(line, 2, false)
-
-        if (xy == null)
-            null
-        else
-            (line, xy)
-    }
-
-    def tpepPoints_WGS84 = (line: String) => {
-
-        val xy = getXY(line, 2, false)
+        val xy = getXY(line, 2, removeDecimal = false)
 
         if (xy == null)
             null
@@ -78,19 +68,9 @@ object InputFileParsers extends Serializable {
             (line, xy)
     }
 
-    def taxiPoints = (line: String) => {
+    def tpepPoints_WGS84: String => (String, (String, String)) = (line: String) => {
 
-        val xy = getXY(line, 5, true)
-
-        if (xy == null)
-            null
-        else
-            (line, xy)
-    }
-
-    def taxiPoints_WGS84 = (line: String) => {
-
-        val xy = getXY(line, 5, false)
+        val xy = getXY(line, 2, removeDecimal = false)
 
         if (xy == null)
             null
@@ -98,9 +78,9 @@ object InputFileParsers extends Serializable {
             (line, xy)
     }
 
-    def busPoints = (line: String) => {
+    def taxiPoints: String => (String, (String, String)) = (line: String) => {
 
-        val xy = getXY(line, 1, true)
+        val xy = getXY(line, 5, removeDecimal = true)
 
         if (xy == null)
             null
@@ -108,9 +88,29 @@ object InputFileParsers extends Serializable {
             (line, xy)
     }
 
-    def busPoints_WGS84 = (line: String) => {
+    def taxiPoints_WGS84: String => (String, (String, String)) = (line: String) => {
 
-        val xy = getXY(line, 1, false)
+        val xy = getXY(line, 5, removeDecimal = false)
+
+        if (xy == null)
+            null
+        else
+            (line, xy)
+    }
+
+    def busPoints: String => (String, (String, String)) = (line: String) => {
+
+        val xy = getXY(line, 1, removeDecimal = true)
+
+        if (xy == null)
+            null
+        else
+            (line, xy)
+    }
+
+    def busPoints_WGS84: String => (String, (String, String)) = (line: String) => {
+
+        val xy = getXY(line, 1, removeDecimal = false)
 
         if (xy == null)
             null
@@ -118,7 +118,7 @@ object InputFileParsers extends Serializable {
             (line, (xy._2, xy._1)) // lon/lat reversed in data source
     }
 
-    def osmPoints_WGS84 = (line: String) => {
+    def osmPoints_WGS84: String => (String, (String, String)) = (line: String) => {
 
         try {
 

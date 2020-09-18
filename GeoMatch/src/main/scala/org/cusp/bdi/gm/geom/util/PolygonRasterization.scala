@@ -201,7 +201,7 @@ case class PolygonRasterization(_coordArrX: List[Int], _coordArrY: List[Int]) {
                 x1 = (xMinY(goblalEdges(i)) + 0.5).toInt
                 x2 = (xMinY(goblalEdges(i + 1)) + 0.5).toInt
 
-                (x1 until x2).foreach(x => appendToSet(((x, y)), setCoord))
+                (x1 until x2).foreach(x => appendToSet((x, y), setCoord))
             }
 
             updateXCoordinates()

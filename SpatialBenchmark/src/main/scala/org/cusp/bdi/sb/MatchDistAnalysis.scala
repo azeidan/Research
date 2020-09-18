@@ -5,7 +5,7 @@ import org.apache.hadoop.io.compress.GzipCodec
 import org.apache.spark.rdd.RDD
 import org.apache.spark.{SparkConf, SparkContext}
 import org.apache.spark.serializer.KryoSerializer
-import org.cusp.bdi.sb.examples.{BenchmarkInputFileParser, SB_Arguments, SB_CLArgs}
+import org.cusp.bdi.sb.examples.{BenchmarkInputFileParser, Arguments_Benchmark, Benchmark_Local_CLArgs}
 
 import scala.collection.mutable
 import scala.collection.mutable.ListBuffer
@@ -26,16 +26,16 @@ object MatchDistAnalysis extends Serializable {
     //        val clArgs = SB_CLArgs.LS_LionBus
     //        val clArgs = SB_CLArgs.LS_LionTPEP
     //        val clArgs = SB_CLArgs.SKNN_BusPoint_BusPointShift
-    val clArgs = SB_CLArgs.SKNN_RandomPoint_RandomPoint
+    val clArgs = Benchmark_Local_CLArgs.SKNN_RandomPoint_RandomPoint
     //        val clArgs = CLArgsParser(args, SB_Arguments())
 
-    val classificationCount = clArgs.getParamValueInt(SB_Arguments.classificationCount)
-    val testFWFileParser_1 = instantiateClass[BenchmarkInputFileParser](clArgs.getParamValueString(SB_Arguments.keyMatchInFileParser))
-    val testFWFileParser_2 = instantiateClass[BenchmarkInputFileParser](clArgs.getParamValueString(SB_Arguments.testFWInFileParser))
+    val classificationCount = clArgs.getParamValueInt(Arguments_Benchmark.classificationCount)
+    val testFWFileParser_1 = instantiateClass[BenchmarkInputFileParser](clArgs.getParamValueString(Arguments_Benchmark.keyMatchInFileParser))
+    val testFWFileParser_2 = instantiateClass[BenchmarkInputFileParser](clArgs.getParamValueString(Arguments_Benchmark.testFWInFileParser))
 
     val sparkConf = new SparkConf().setAppName("Spatial Benchmark")
 
-    if (clArgs.getParamValueBoolean(SB_Arguments.local))
+    if (clArgs.getParamValueBoolean(Arguments_Benchmark.local))
       sparkConf.setMaster("local[*]")
 
     sparkConf.set("spark.serializer", classOf[KryoSerializer].getName)
@@ -45,12 +45,12 @@ object MatchDistAnalysis extends Serializable {
 
     // delete output dir if exists
     val hdfs = FileSystem.get(sparkContext.hadoopConfiguration)
-    val path = new Path(clArgs.getParamValueString(SB_Arguments.outDir))
+    val path = new Path(clArgs.getParamValueString(Arguments_Benchmark.outDir))
     if (hdfs.exists(path))
       hdfs.delete(path, true)
 
-    val rdd1 = sparkContext.textFile(clArgs.getParamValueString(SB_Arguments.keyMatchInFile))
-    val rdd2 = sparkContext.textFile(clArgs.getParamValueString(SB_Arguments.testFWInFile))
+    val rdd1 = sparkContext.textFile(clArgs.getParamValueString(Arguments_Benchmark.keyMatchInFile))
+    val rdd2 = sparkContext.textFile(clArgs.getParamValueString(Arguments_Benchmark.testFWInFile))
 
     val rddUnique1: RDD[(String, (Array[(Double, String)], Array[(Double, String)]))] =
       filterDuplicateRows(classificationCount, rdd1, testFWFileParser_1.parseLine)
@@ -187,12 +187,12 @@ object MatchDistAnalysis extends Serializable {
       getFormatted(mapResults, Classifications.percent, recordsSecondOverMatched / recordsCount * 100))
 
     sparkContext.parallelize(lstResults, 1)
-      .saveAsTextFile(clArgs.getParamValueString(SB_Arguments.outDir), classOf[GzipCodec])
+      .saveAsTextFile(clArgs.getParamValueString(Arguments_Benchmark.outDir), classOf[GzipCodec])
 
-    if (clArgs.getParamValueBoolean(SB_Arguments.local)) {
+    if (clArgs.getParamValueBoolean(Arguments_Benchmark.local)) {
 
       printf("Total Time: %,.2f Sec%n", (System.currentTimeMillis() - startTime) / 1000.0)
-      println("Output idr: " + clArgs.getParamValueString(SB_Arguments.outDir))
+      println("Output idr: " + clArgs.getParamValueString(Arguments_Benchmark.outDir))
 
       lstResults.foreach(println)
     }

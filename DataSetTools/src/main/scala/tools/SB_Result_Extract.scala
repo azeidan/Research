@@ -10,7 +10,7 @@ import scala.collection.mutable.SortedSet
 object SB_Result_Extract {
   def main(args: Array[String]): Unit = {
 
-    val sSet = SortedSet[(String, String)]()
+//    val sSet = SortedSet[(String, String)]()
 
     new File("/media/cusp/Data/GeoMatch_Files/SpatialBenchmark/")
       .listFiles()

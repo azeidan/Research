@@ -18,8 +18,8 @@
     </dependency>
 
     <dependency>
-      <groupId>LocalRunFiles</groupId>
-      <artifactId>LocalRunFiles</artifactId>
+      <groupId>Common_FW</groupId>
+      <artifactId>Common_FW</artifactId>
       <version>0.0.1-SNAPSHOT</version>
       <scope>compile</scope>
     </dependency>
@@ -28,7 +28,7 @@
       <groupId>Common</groupId>
       <artifactId>Common</artifactId>
       <version>0.2</version>
-      <scope>provided</scope>
+      <scope>compile</scope>
     </dependency>
 
   </dependencies>
