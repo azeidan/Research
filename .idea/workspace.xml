@@ -16,13 +16,14 @@
     <loaded-modules>
       <module name="Common" />
       <module name="Common_FW" />
-      <module name="DataSetTools" />
       <module name="DataStructures" />
       <module name="FW_GeoMatch" />
       <module name="GeoMatch" />
       <module name="Research" />
       <module name="Spark_kNN" />
       <module name="SpatialBenchmark" />
+      <module name="FW_Simba" />
+      <module name="FW_Simba_Source" />
     </loaded-modules>
   </component>
   <component name="BranchesTreeState">
@@ -31,108 +32,77 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ee761a9d-eff2-4086-b83a-8096819a4548" name="Default Changelist" comment="1hr runtime on 100 partitions of Bus DS&#10;&#10;CLArgs fixes + LocalRunFiles project renamed to FW_Common">
-      <change afterPath="$PROJECT_DIR$/Common_FW/src/main/scala/org/cusp/bdi/util/Arguments.scala" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Common_FW/src/main/scala/org/cusp/bdi/util/InputFileParsers.scala" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Common_FW/target/classes/org/cusp/bdi/util/Arguments$.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Common_FW/target/classes/org/cusp/bdi/util/Arguments.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Common_FW/target/classes/org/cusp/bdi/util/InputFileParsers$$anonfun$busPoints$1.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Common_FW/target/classes/org/cusp/bdi/util/InputFileParsers$$anonfun$busPoints_WGS84$1.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Common_FW/target/classes/org/cusp/bdi/util/InputFileParsers$$anonfun$nycLION$1$$anonfun$1.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Common_FW/target/classes/org/cusp/bdi/util/InputFileParsers$$anonfun$nycLION$1.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Common_FW/target/classes/org/cusp/bdi/util/InputFileParsers$$anonfun$nycLION_Segments$1$$anonfun$apply$1.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Common_FW/target/classes/org/cusp/bdi/util/InputFileParsers$$anonfun$nycLION_Segments$1.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Common_FW/target/classes/org/cusp/bdi/util/InputFileParsers$$anonfun$nycLION_WGS84$1.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Common_FW/target/classes/org/cusp/bdi/util/InputFileParsers$$anonfun$osmPoints_WGS84$1.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Common_FW/target/classes/org/cusp/bdi/util/InputFileParsers$$anonfun$randPoints$1.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Common_FW/target/classes/org/cusp/bdi/util/InputFileParsers$$anonfun$taxiPoints$1.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Common_FW/target/classes/org/cusp/bdi/util/InputFileParsers$$anonfun$taxiPoints_WGS84$1.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Common_FW/target/classes/org/cusp/bdi/util/InputFileParsers$$anonfun$threePartLine$1.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Common_FW/target/classes/org/cusp/bdi/util/InputFileParsers$$anonfun$tpepPoints$1.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Common_FW/target/classes/org/cusp/bdi/util/InputFileParsers$$anonfun$tpepPoints_WGS84$1.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Common_FW/target/classes/org/cusp/bdi/util/InputFileParsers$.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Common_FW/target/classes/org/cusp/bdi/util/InputFileParsers.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Common_FW/target/classes/org/cusp/bdi/util/LocalRunConsts$.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Common_FW/target/classes/org/cusp/bdi/util/LocalRunConsts.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/DataStructures/target/classes/org/cusp/bdi/ds/Circle$$anonfun$contains$1.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/DataStructures/target/classes/org/cusp/bdi/ds/Circle$$anonfun$contains$2.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/DataStructures/target/classes/org/cusp/bdi/ds/Circle$$anonfun$contains$3.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/DataStructures/target/classes/org/cusp/bdi/ds/Circle$$anonfun$contains$4.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/DataStructures/target/classes/org/cusp/bdi/ds/Circle$$anonfun$contains$5.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/DataStructures/target/classes/org/cusp/bdi/ds/Circle$$anonfun$contains$6.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/DataStructures/target/classes/org/cusp/bdi/ds/Circle$$anonfun$contains$7.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/DataStructures/target/classes/org/cusp/bdi/ds/Circle$$anonfun$contains$8.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/DataStructures/target/classes/org/cusp/bdi/ds/Circle$$anonfun$intersects$1.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/DataStructures/target/classes/org/cusp/bdi/ds/Circle$$anonfun$intersects$2.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/DataStructures/target/classes/org/cusp/bdi/ds/Circle$$anonfun$intersects$3.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/DataStructures/target/classes/org/cusp/bdi/ds/Circle$$anonfun$intersects$4.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/DataStructures/target/classes/org/cusp/bdi/ds/Circle$$anonfun$intersects$5.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/DataStructures/target/classes/org/cusp/bdi/ds/Circle$$anonfun$intersects$6.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/DataStructures/target/classes/org/cusp/bdi/ds/Circle$$anonfun$intersects$7.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/DataStructures/target/classes/org/cusp/bdi/ds/Circle$$anonfun$intersects$8.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/DataStructures/target/classes/org/cusp/bdi/ds/Circle$.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/DataStructures/target/classes/org/cusp/bdi/ds/Circle.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/DataStructures/target/classes/org/cusp/bdi/ds/Point$.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/DataStructures/target/classes/org/cusp/bdi/ds/Point.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/DataStructures/target/classes/org/cusp/bdi/ds/PointBase.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/DataStructures/target/classes/org/cusp/bdi/ds/Rectangle$$anonfun$intersects$1.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/DataStructures/target/classes/org/cusp/bdi/ds/Rectangle$$anonfun$intersects$2.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/DataStructures/target/classes/org/cusp/bdi/ds/Rectangle$$anonfun$intersects$3.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/DataStructures/target/classes/org/cusp/bdi/ds/Rectangle$$anonfun$intersects$4.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/DataStructures/target/classes/org/cusp/bdi/ds/Rectangle$.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/DataStructures/target/classes/org/cusp/bdi/ds/Rectangle.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/DataStructures/target/classes/org/cusp/bdi/ds/kt/KdTree.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/DataStructures/target/classes/org/cusp/bdi/ds/qt/QuadTree$$anonfun$1.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/DataStructures/target/classes/org/cusp/bdi/ds/qt/QuadTree$$anonfun$getAllPoints$1.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/DataStructures/target/classes/org/cusp/bdi/ds/qt/QuadTree$$anonfun$getAllPoints$2.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/DataStructures/target/classes/org/cusp/bdi/ds/qt/QuadTree$$anonfun$read$1.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/DataStructures/target/classes/org/cusp/bdi/ds/qt/QuadTree$$anonfun$write$1.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/DataStructures/target/classes/org/cusp/bdi/ds/qt/QuadTree$.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/DataStructures/target/classes/org/cusp/bdi/ds/qt/QuadTree.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FW_Simba/src/test/scala/org/cusp/bdi/fw/simba/Simba_Local_CLArgs.scala" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Common/Common.iml" beforeDir="false" afterPath="$PROJECT_DIR$/Common/Common.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Common/src/main/scala/org/cusp/bdi/util/CLArgsParser.scala" beforeDir="false" afterPath="$PROJECT_DIR$/Common/src/main/scala/org/cusp/bdi/util/CLArgsParser.scala" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Common/src/main/scala/org/cusp/bdi/util/Helper.scala" beforeDir="false" afterPath="$PROJECT_DIR$/Common/src/main/scala/org/cusp/bdi/util/Helper.scala" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Common_FW/Common_FW.iml" beforeDir="false" afterPath="$PROJECT_DIR$/Common_FW/Common_FW.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Common_FW/target/classes/org/cusp/bdi/util/Arguments$.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Common_FW/target/classes/org/cusp/bdi/util/Arguments.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Common_FW/target/classes/org/cusp/bdi/util/InputFileParsers$$anonfun$busPoints$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Common_FW/target/classes/org/cusp/bdi/util/InputFileParsers$$anonfun$busPoints_WGS84$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Common_FW/target/classes/org/cusp/bdi/util/InputFileParsers$$anonfun$nycLION$1$$anonfun$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Common_FW/target/classes/org/cusp/bdi/util/InputFileParsers$$anonfun$nycLION$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Common_FW/target/classes/org/cusp/bdi/util/InputFileParsers$$anonfun$nycLION_Segments$1$$anonfun$apply$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Common_FW/target/classes/org/cusp/bdi/util/InputFileParsers$$anonfun$nycLION_Segments$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Common_FW/target/classes/org/cusp/bdi/util/InputFileParsers$$anonfun$nycLION_WGS84$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Common_FW/target/classes/org/cusp/bdi/util/InputFileParsers$$anonfun$osmPoints_WGS84$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Common_FW/target/classes/org/cusp/bdi/util/InputFileParsers$$anonfun$randPoints$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Common_FW/target/classes/org/cusp/bdi/util/InputFileParsers$$anonfun$taxiPoints$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Common_FW/target/classes/org/cusp/bdi/util/InputFileParsers$$anonfun$taxiPoints_WGS84$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Common_FW/target/classes/org/cusp/bdi/util/InputFileParsers$$anonfun$threePartLine$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Common_FW/target/classes/org/cusp/bdi/util/InputFileParsers$$anonfun$tpepPoints$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Common_FW/target/classes/org/cusp/bdi/util/InputFileParsers$$anonfun$tpepPoints_WGS84$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Common_FW/target/classes/org/cusp/bdi/util/InputFileParsers$.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Common_FW/target/classes/org/cusp/bdi/util/InputFileParsers.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Common_FW/target/classes/org/cusp/bdi/util/LocalRunConsts$.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Common_FW/target/classes/org/cusp/bdi/util/LocalRunConsts.class" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/DataSetTools/DataSetTools.iml" beforeDir="false" afterPath="$PROJECT_DIR$/DataSetTools/DataSetTools.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DataSetTools/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/DataSetTools/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DataSetTools/src/main/scala/spark/Test_InputFileParser.scala" beforeDir="false" afterPath="$PROJECT_DIR$/DataSetTools/src/main/scala/spark/Test_InputFileParser.scala" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DataSetTools/src/main/scala/tools/SB_Result_Extract.scala" beforeDir="false" afterPath="$PROJECT_DIR$/DataSetTools/src/main/scala/tools/SB_Result_Extract.scala" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DataStructures/DataStructures.iml" beforeDir="false" afterPath="$PROJECT_DIR$/DataStructures/DataStructures.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DataStructures/src/main/scala/org/cusp/bdi/ds/qt/QuadTree.scala" beforeDir="false" afterPath="$PROJECT_DIR$/DataStructures/src/main/scala/org/cusp/bdi/ds/qt/QuadTree.scala" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DataStructures/target/classes/org/cusp/bdi/ds/Circle$$anonfun$contains$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/DataStructures/target/classes/org/cusp/bdi/ds/Circle$$anonfun$contains$2.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/DataStructures/target/classes/org/cusp/bdi/ds/Circle$$anonfun$contains$3.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/DataStructures/target/classes/org/cusp/bdi/ds/Circle$$anonfun$contains$4.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/DataStructures/target/classes/org/cusp/bdi/ds/Circle$$anonfun$contains$5.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/DataStructures/target/classes/org/cusp/bdi/ds/Circle$$anonfun$contains$6.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/DataStructures/target/classes/org/cusp/bdi/ds/Circle$$anonfun$contains$7.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/DataStructures/target/classes/org/cusp/bdi/ds/Circle$$anonfun$contains$8.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/DataStructures/target/classes/org/cusp/bdi/ds/Circle$$anonfun$intersects$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/DataStructures/target/classes/org/cusp/bdi/ds/Circle$$anonfun$intersects$2.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/DataStructures/target/classes/org/cusp/bdi/ds/Circle$$anonfun$intersects$3.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/DataStructures/target/classes/org/cusp/bdi/ds/Circle$$anonfun$intersects$4.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/DataStructures/target/classes/org/cusp/bdi/ds/Circle$$anonfun$intersects$5.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/DataStructures/target/classes/org/cusp/bdi/ds/Circle$$anonfun$intersects$6.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/DataStructures/target/classes/org/cusp/bdi/ds/Circle$$anonfun$intersects$7.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/DataStructures/target/classes/org/cusp/bdi/ds/Circle$$anonfun$intersects$8.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/DataStructures/target/classes/org/cusp/bdi/ds/Circle$.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/DataStructures/target/classes/org/cusp/bdi/ds/Circle.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/DataStructures/target/classes/org/cusp/bdi/ds/Point$.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/DataStructures/target/classes/org/cusp/bdi/ds/Point.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/DataStructures/target/classes/org/cusp/bdi/ds/PointBase.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/DataStructures/target/classes/org/cusp/bdi/ds/Rectangle$$anonfun$intersects$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/DataStructures/target/classes/org/cusp/bdi/ds/Rectangle$$anonfun$intersects$2.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/DataStructures/target/classes/org/cusp/bdi/ds/Rectangle$$anonfun$intersects$3.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/DataStructures/target/classes/org/cusp/bdi/ds/Rectangle$$anonfun$intersects$4.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/DataStructures/target/classes/org/cusp/bdi/ds/Rectangle$.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/DataStructures/target/classes/org/cusp/bdi/ds/Rectangle.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/DataStructures/target/classes/org/cusp/bdi/ds/kt/KdTree.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/DataStructures/target/classes/org/cusp/bdi/ds/qt/QuadTree$$anonfun$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/DataStructures/target/classes/org/cusp/bdi/ds/qt/QuadTree$$anonfun$getAllPoints$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/DataStructures/target/classes/org/cusp/bdi/ds/qt/QuadTree$$anonfun$getAllPoints$2.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/DataStructures/target/classes/org/cusp/bdi/ds/qt/QuadTree$$anonfun$read$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/DataStructures/target/classes/org/cusp/bdi/ds/qt/QuadTree$$anonfun$write$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/DataStructures/target/classes/org/cusp/bdi/ds/qt/QuadTree$.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/DataStructures/target/classes/org/cusp/bdi/ds/qt/QuadTree.class" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/FW_GeoMatch/FW_GeoMatch.iml" beforeDir="false" afterPath="$PROJECT_DIR$/FW_GeoMatch/FW_GeoMatch.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_GeoMatch/src/main/scala/org/cusp/bdi/util/HelperObjects.scala" beforeDir="false" afterPath="$PROJECT_DIR$/FW_GeoMatch/src/main/scala/org/cusp/bdi/util/HelperObjects.scala" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_GeoMatch/src/main/scala/org/cusp/bdi/util/InputFileParsers.scala" beforeDir="false" afterPath="$PROJECT_DIR$/FW_GeoMatch/src/main/scala/org/cusp/bdi/util/InputFileParsers.scala" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/FW_Simba/FW_Simba.iml" beforeDir="false" afterPath="$PROJECT_DIR$/FW_Simba/FW_Simba.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/FW_Simba/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/src/test/scala/org/cusp/bdi/fw/simba/HelperObjects.scala" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/FW_Simba/src/test/scala/org/cusp/bdi/fw/simba/SIM_Example.scala" beforeDir="false" afterPath="$PROJECT_DIR$/FW_Simba/src/test/scala/org/cusp/bdi/fw/simba/SIM_Example.scala" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/src/test/scala/org/cusp/bdi/fw/simba/SIM_Example_Batch.scala" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/FW_Simba/src/test/scala/org/cusp/bdi/fw/simba/Simba_Local_CLArgs.scala" beforeDir="false" afterPath="$PROJECT_DIR$/FW_Simba/src/test/scala/org/cusp/bdi/fw/simba/Simba_Local_CLArgs.scala" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/FW_Simba_Source/FW_Simba_Source.iml" beforeDir="false" afterPath="$PROJECT_DIR$/FW_Simba_Source/FW_Simba_Source.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/GeoMatch/GeoMatch.iml" beforeDir="false" afterPath="$PROJECT_DIR$/GeoMatch/GeoMatch.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoMatch/src/main/scala/org/cusp/bdi/gm/geom/util/PolygonRasterization.scala" beforeDir="false" afterPath="$PROJECT_DIR$/GeoMatch/src/main/scala/org/cusp/bdi/gm/geom/util/PolygonRasterization.scala" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoMatch/src/main/scala/org/cusp/bdi/gm/keyPart/PartitionMapper.scala" beforeDir="false" afterPath="$PROJECT_DIR$/GeoMatch/src/main/scala/org/cusp/bdi/gm/keyPart/PartitionMapper.scala" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LocalRunFiles/LocalRunFiles.iml" beforeDir="false" afterPath="$PROJECT_DIR$/Common_FW/Common_FW.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LocalRunFiles/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Common_FW/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LocalRunFiles/src/main/scala/MatchOutputSummary.scala" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/LocalRunFiles/src/main/scala/org/cusp/bdi/util/HelperObjects.scala" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/LocalRunFiles/src/main/scala/org/cusp/bdi/util/InputFileParsers.scala" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/LocalRunFiles/src/main/scala/org/cusp/bdi/util/LocalRunConsts.scala" beforeDir="false" afterPath="$PROJECT_DIR$/Common_FW/src/main/scala/org/cusp/bdi/util/LocalRunConsts.scala" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LocalRunFiles/src/main/scala/org/cusp/bdi/util/sknn/SparkKNN_Local_CLArgs.scala" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/src/main/scala/sknn/SparkKNN_Local_CLArgs.scala" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Research.iml" beforeDir="false" afterPath="$PROJECT_DIR$/Research.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Spark_kNN/Spark_kNN.iml" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/Spark_kNN.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/src/main/scala/org/cusp/bdi/sknn/SparkKNN.scala" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/src/main/scala/org/cusp/bdi/sknn/SparkKNN.scala" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/src/main/scala/org/cusp/bdi/sknn/util/RDD_Store.scala" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/src/main/scala/org/cusp/bdi/sknn/util/RDD_Store.scala" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/src/main/scala/org/cusp/bdi/sknn/util/SparkKNN_Arguments.scala" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/src/main/test/scala/org/cusp/bdi/sknn/test/TestAllKnnJoin.scala" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/src/main/test/scala/org/cusp/bdi/sknn/test/TestAllKnnJoin.scala" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/SpatialBenchmark/SpatialBenchmark.iml" beforeDir="false" afterPath="$PROJECT_DIR$/SpatialBenchmark/SpatialBenchmark.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SpatialBenchmark/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/SpatialBenchmark/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SpatialBenchmark/src/main/scala/org/cusp/bdi/sb/MatchDistAnalysis.scala" beforeDir="false" afterPath="$PROJECT_DIR$/SpatialBenchmark/src/main/scala/org/cusp/bdi/sb/MatchDistAnalysis.scala" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SpatialBenchmark/src/main/scala/org/cusp/bdi/sb/SpatialBenchmark.scala" beforeDir="false" afterPath="$PROJECT_DIR$/SpatialBenchmark/src/main/scala/org/cusp/bdi/sb/SpatialBenchmark.scala" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SpatialBenchmark/src/main/scala/org/cusp/bdi/sb/examples/HelperObjects.scala" beforeDir="false" afterPath="$PROJECT_DIR$/SpatialBenchmark/src/main/scala/org/cusp/bdi/sb/examples/HelperObjects.scala" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -141,6 +111,9 @@
   </component>
   <component name="CodeStyleSettingsInfer">
     <option name="done" value="true" />
+  </component>
+  <component name="CompilerWorkspaceConfiguration">
+    <option name="PARALLEL_COMPILATION" value="true" />
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -165,6 +138,11 @@
       <MavenGeneralSettings>
         <option name="mavenHome" value="$APPLICATION_HOME_DIR$/plugins/maven/lib/maven3" />
       </MavenGeneralSettings>
+    </option>
+    <option name="importingSettings">
+      <MavenImportingSettings>
+        <option name="useMavenOutput" value="false" />
+      </MavenImportingSettings>
     </option>
   </component>
   <component name="ProjectCodeStyleSettingsMigration">
@@ -196,7 +174,7 @@
     <property name="restartRequiresConfirmation" value="false" />
     <property name="run.code.analysis.last.selected.profile" value="pProject Default" />
     <property name="scala_project_settings_configurable.last_selected_tab_index" value="0" />
-    <property name="settings.editor.selected.configurable" value="reference.settingsdialog.IDE.editor.colors.General" />
+    <property name="settings.editor.selected.configurable" value="project.propCompiler" />
   </component>
   <component name="RecentsManager">
     <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
@@ -228,7 +206,7 @@
       <recent name="$PROJECT_DIR$/DataSetTools/src/main/scala/org/cusp/bdi/tools/spark" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.SpatialBenchmark">
+  <component name="RunManager" selected="Application.SIM_Example">
     <configuration name="LogCleaner" type="Application" factoryName="Application" temporary="true">
       <option name="MAIN_CLASS_NAME" value="org.cusp.bdi.tools.LogCleaner" />
       <module name="Research" />
@@ -308,11 +286,11 @@
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Application.SIM_Example" />
         <item itemvalue="Application.LogCleaner" />
         <item itemvalue="Application.LogCleaner" />
         <item itemvalue="Scala REPL.Scala REPL" />
         <item itemvalue="Application.SIM_Example_Batch" />
-        <item itemvalue="Application.SIM_Example" />
       </list>
     </recent_temporary>
   </component>
@@ -550,14 +528,20 @@
       <option name="project" value="LOCAL" />
       <updated>1600102048621</updated>
     </task>
-    <option name="localTasksCounter" value="31" />
+    <task id="LOCAL-00031" summary="1hr runtime on 100 partitions of Bus DS&#10;&#10;CLArgs fixes + LocalRunFiles project renamed to FW_Common">
+      <created>1600408907649</created>
+      <option name="number" value="00031" />
+      <option name="presentableId" value="LOCAL-00031" />
+      <option name="project" value="LOCAL" />
+      <updated>1600408907649</updated>
+    </task>
+    <option name="localTasksCounter" value="32" />
     <servers />
   </component>
   <component name="UnloadedModulesList">
+    <module name="DataSetTools" />
     <module name="FW_LocationSpark" />
     <module name="FW_LocationSpark_Src" />
-    <module name="FW_Simba" />
-    <module name="FW_Simba_Source" />
   </component>
   <component name="Vcs.Log.History.Properties">
     <option name="COLUMN_ORDER">
@@ -662,14 +646,14 @@
       <screen x="67" y="27" width="2493" height="1413" />
     </state>
     <state x="808" y="291" width="1000" height="883" key="#Plugins/67.27.2493.1413@67.27.2493.1413" timestamp="1596075586448" />
-    <state x="523" y="184" width="1557" height="1060" key="#Project_Structure" timestamp="1600369997569">
+    <state x="523" y="184" width="1557" height="1060" key="#Project_Structure" timestamp="1600487440099">
       <screen x="67" y="27" width="2493" height="1413" />
     </state>
-    <state x="523" y="184" width="1557" height="1060" key="#Project_Structure/67.27.2493.1413@67.27.2493.1413" timestamp="1600369997569" />
-    <state x="1046" y="490" width="524" height="484" key="#com.intellij.codeInsight.editorActions.RestoreReferencesDialog" timestamp="1600375324294">
+    <state x="523" y="184" width="1557" height="1060" key="#Project_Structure/67.27.2493.1413@67.27.2493.1413" timestamp="1600487440099" />
+    <state x="1046" y="490" width="524" height="484" key="#com.intellij.codeInsight.editorActions.RestoreReferencesDialog" timestamp="1600490370313">
       <screen x="67" y="27" width="2493" height="1413" />
     </state>
-    <state x="1046" y="490" width="524" height="484" key="#com.intellij.codeInsight.editorActions.RestoreReferencesDialog/67.27.2493.1413@67.27.2493.1413" timestamp="1600375324294" />
+    <state x="1046" y="490" width="524" height="484" key="#com.intellij.codeInsight.editorActions.RestoreReferencesDialog/67.27.2493.1413@67.27.2493.1413" timestamp="1600490370313" />
     <state x="770" y="137" width="1409" height="1254" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1600025051379">
       <screen x="67" y="27" width="2493" height="1413" />
     </state>
@@ -778,22 +762,22 @@
       <screen x="67" y="27" width="2493" height="1413" />
     </state>
     <state x="937" y="413" width="743" height="639" key="Github.UntrackedFilesDialog/67.27.2493.1413@67.27.2493.1413" timestamp="1594704490168" />
-    <state width="2449" height="327" key="GridCell.Tab.0.bottom" timestamp="1600375634770">
+    <state width="2449" height="327" key="GridCell.Tab.0.bottom" timestamp="1600499208192">
       <screen x="67" y="27" width="2493" height="1413" />
     </state>
-    <state width="2449" height="327" key="GridCell.Tab.0.bottom/67.27.2493.1413@67.27.2493.1413" timestamp="1600375634770" />
-    <state width="2449" height="327" key="GridCell.Tab.0.center" timestamp="1600375634769">
+    <state width="2449" height="327" key="GridCell.Tab.0.bottom/67.27.2493.1413@67.27.2493.1413" timestamp="1600499208192" />
+    <state width="2449" height="327" key="GridCell.Tab.0.center" timestamp="1600499208192">
       <screen x="67" y="27" width="2493" height="1413" />
     </state>
-    <state width="2449" height="327" key="GridCell.Tab.0.center/67.27.2493.1413@67.27.2493.1413" timestamp="1600375634769" />
-    <state width="2449" height="327" key="GridCell.Tab.0.left" timestamp="1600375634768">
+    <state width="2449" height="327" key="GridCell.Tab.0.center/67.27.2493.1413@67.27.2493.1413" timestamp="1600499208192" />
+    <state width="2449" height="327" key="GridCell.Tab.0.left" timestamp="1600499208191">
       <screen x="67" y="27" width="2493" height="1413" />
     </state>
-    <state width="2449" height="327" key="GridCell.Tab.0.left/67.27.2493.1413@67.27.2493.1413" timestamp="1600375634768" />
-    <state width="2449" height="327" key="GridCell.Tab.0.right" timestamp="1600375634769">
+    <state width="2449" height="327" key="GridCell.Tab.0.left/67.27.2493.1413@67.27.2493.1413" timestamp="1600499208191" />
+    <state width="2449" height="327" key="GridCell.Tab.0.right" timestamp="1600499208192">
       <screen x="67" y="27" width="2493" height="1413" />
     </state>
-    <state width="2449" height="327" key="GridCell.Tab.0.right/67.27.2493.1413@67.27.2493.1413" timestamp="1600375634769" />
+    <state width="2449" height="327" key="GridCell.Tab.0.right/67.27.2493.1413@67.27.2493.1413" timestamp="1600499208192" />
     <state width="2449" height="313" key="GridCell.Tab.1.bottom" timestamp="1600372441435">
       <screen x="67" y="27" width="2493" height="1413" />
     </state>
@@ -810,6 +794,10 @@
       <screen x="67" y="27" width="2493" height="1413" />
     </state>
     <state width="2449" height="313" key="GridCell.Tab.1.right/67.27.2493.1413@67.27.2493.1413" timestamp="1600372441434" />
+    <state x="896" y="470" width="824" height="524" key="IDE.errors.dialog" timestamp="1600499685218">
+      <screen x="67" y="27" width="2493" height="1413" />
+    </state>
+    <state x="896" y="470" width="824" height="524" key="IDE.errors.dialog/67.27.2493.1413@67.27.2493.1413" timestamp="1600499685218" />
     <state x="306" y="152" width="1994" height="1160" key="MergeDialog" timestamp="1598301802825">
       <screen x="67" y="27" width="2493" height="1413" />
     </state>
@@ -826,10 +814,10 @@
       <screen x="67" y="27" width="2493" height="1413" />
     </state>
     <state x="882" y="369" width="853" height="727" key="RollbackChangesDialog/67.27.2493.1413@67.27.2493.1413" timestamp="1598309870654" />
-    <state x="248" y="280" width="1380" height="905" key="SettingsEditor" timestamp="1600325143085">
+    <state x="248" y="280" width="1380" height="905" key="SettingsEditor" timestamp="1600487277845">
       <screen x="67" y="27" width="2493" height="1413" />
     </state>
-    <state x="248" y="280" width="1380" height="905" key="SettingsEditor/67.27.2493.1413@67.27.2493.1413" timestamp="1600325143085" />
+    <state x="248" y="280" width="1380" height="905" key="SettingsEditor/67.27.2493.1413@67.27.2493.1413" timestamp="1600487277845" />
     <state x="167" y="125" width="2293" height="1215" key="ShowDiffWithBranchDialog" timestamp="1598303246727">
       <screen x="67" y="27" width="2493" height="1413" />
     </state>
@@ -842,10 +830,10 @@
       <screen x="67" y="27" width="2493" height="1413" />
     </state>
     <state x="1144" y="631" width="329" height="203" key="VCS.EditChangelistDialog/67.27.2493.1413@67.27.2493.1413" timestamp="1598309673598" />
-    <state x="828" y="335" width="1291" height="801" key="Vcs.Push.Dialog.v2" timestamp="1600102052642">
+    <state x="828" y="335" width="1291" height="801" key="Vcs.Push.Dialog.v2" timestamp="1600408915594">
       <screen x="67" y="27" width="2493" height="1413" />
     </state>
-    <state x="828" y="335" width="1291" height="801" key="Vcs.Push.Dialog.v2/67.27.2493.1413@67.27.2493.1413" timestamp="1600102052642" />
+    <state x="828" y="335" width="1291" height="801" key="Vcs.Push.Dialog.v2/67.27.2493.1413@67.27.2493.1413" timestamp="1600408915594" />
     <state x="1005" y="408" width="607" height="649" key="VcsDiffUtil.ChangesDialog" timestamp="1598748645020">
       <screen x="67" y="27" width="2493" height="1413" />
     </state>
@@ -900,40 +888,6 @@
     <state x="976" y="347" width="840" height="678" key="search.everywhere.popup/67.27.2493.1413@67.27.2493.1413" timestamp="1600321056398" />
   </component>
   <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="scala-line">
-          <url>file://$PROJECT_DIR$/Common/src/main/scala/org/cusp/bdi/util/CLArgsParser.scala</url>
-          <line>127</line>
-          <option name="timeStamp" value="13" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="scala-line">
-          <url>file://$PROJECT_DIR$/Common/src/main/scala/org/cusp/bdi/util/CLArgsParser.scala</url>
-          <line>114</line>
-          <option name="timeStamp" value="15" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="scala-line">
-          <url>file://$PROJECT_DIR$/Common/src/main/scala/org/cusp/bdi/util/CLArgsParser.scala</url>
-          <line>109</line>
-          <option name="timeStamp" value="16" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="scala-line">
-          <url>file://$PROJECT_DIR$/Common/src/main/scala/org/cusp/bdi/util/CLArgsParser.scala</url>
-          <line>100</line>
-          <option name="timeStamp" value="17" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="scala-line">
-          <url>file://$PROJECT_DIR$/Common/src/main/scala/org/cusp/bdi/util/CLArgsParser.scala</url>
-          <line>91</line>
-          <option name="timeStamp" value="18" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="scala-line">
-          <url>file://$PROJECT_DIR$/Common/src/main/scala/org/cusp/bdi/util/CLArgsParser.scala</url>
-          <line>82</line>
-          <option name="timeStamp" value="19" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
     <pin-to-top-manager>
       <pinned-members>
         <PinnedItemInfo parentTag="scala.Tuple2" memberName="_2" />
