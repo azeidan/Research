@@ -4,15 +4,14 @@ import org.cusp.bdi.util.{Arguments, CLArgsParser, InputFileParsers, LocalRunCon
 
 object SparkKNN_Local_CLArgs {
 
-  def apply(firstSet: String, firstSetObj: String, secondSet: String, secondSetObj: String, numPartitions: Int, k: Int): CLArgsParser =
-    CLArgsParser(Arguments(debug = true, firstSet, firstSetObj, secondSet, secondSetObj, numPartitions, k), Arguments.lstArgInfo())
+  def apply(firstSet: String, firstSetObj: String, secondSet: String, secondSetObj: String, k: Int): CLArgsParser =
+    CLArgsParser(Arguments(debug = true, firstSet, firstSetObj, secondSet, secondSetObj, k), Arguments.lstArgInfo())
 
   def random_sample(): CLArgsParser =
     apply(LocalRunConsts.pathRandSample_A_NAD83,
       InputFileParsers.CODE_THREE_PART_LINE,
       LocalRunConsts.pathRandSample_B_NAD83,
       InputFileParsers.CODE_THREE_PART_LINE,
-      17,
       10)
 
   //  def pathOSM_Point() =

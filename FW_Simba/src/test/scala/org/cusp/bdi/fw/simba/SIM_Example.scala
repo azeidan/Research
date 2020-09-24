@@ -2,27 +2,20 @@ package org.cusp.bdi.fw.simba
 
 import org.apache.hadoop.fs.{FileSystem, Path}
 import org.apache.hadoop.io.compress.GzipCodec
-import org.apache.spark.sql.Row
-import org.apache.spark.sql.simba.SimbaSession
-import org.cusp.bdi.util.{InputFileParsers, LocalRunConsts}
+import org.apache.spark.sql.{Dataset, Row}
+import org.apache.spark.sql.simba.{DataFrame, SimbaSession}
+import org.cusp.bdi.util.{Arguments, CLArgsParser, InputFileParsers, LocalRunConsts}
 
 import scala.collection.mutable
 
+case class PointData(x: Double, y: Double, other: String)
+
 object SIM_Example extends Serializable {
-
-  //  private val inputPath = "/media/ayman/Data/GeoMatch_Files/InputFiles/RandomSamples/"
-  //  private val inputPathOld = "/media/ayman/Data/GeoMatch_Files/InputFiles/RandomSamples_OLD/"
-
-  //    case class PointData(x: Double, y: Double)
-  //    case class LineSegmentData(start: Point, end: Point, other: String)
 
   def main(args: Array[String]): Unit = {
 
     val startTime = System.currentTimeMillis()
 
-    val clArgs = Simba_Local_CLArgs.random_sample
-
-    //    val clArgs = CLArgsParser(args, Arguments_Simba.lstArgInfo())
     //        val clArgs = SIM_CLArgs.taxi_taxi_1M_No_Trip
     //        val clArgs = SIM_CLArgs.randomPoints_randomPoints
     //        val clArgs = SIM_CLArgs.busPoint_busPointShift
@@ -33,13 +26,15 @@ object SIM_Example extends Serializable {
     //        val clArgs = SIM_CLArgs.lion_PolyRect_Taxi_Point
     //        val clArgs = SIM_CLArgs.OSM_Point_OSM_Point
 
+    val clArgs = Simba_Local_CLArgs.random_sample
+//        val clArgs = CLArgsParser(args, Arguments_Simba.lstArgInfo())
+
     val simbaBuilder = SimbaSession.builder()
       .appName(this.getClass.getName)
-      .config("simba.join.partitions", "50")
-      .config("simba.index.partitions", "50")
+//      .config("simba.index.partitions", "64") // from Simba's examples
       .config("spark.local.dir", LocalRunConsts.sparkWorkDir)
 
-    if (clArgs.getParamValueBoolean(Arguments_Simba.local)) {
+    if (clArgs.getParamValueBoolean(Arguments.local)) {
       simbaBuilder.config("spark.local.dir", LocalRunConsts.sparkWorkDir)
       simbaBuilder.master("local[*]")
     }
@@ -48,66 +43,49 @@ object SIM_Example extends Serializable {
 
     // delete output dir if exists
     val hdfs = FileSystem.get(simbaSession.sparkContext.hadoopConfiguration)
-    val path = new Path(clArgs.getParamValueString(Arguments_Simba.outDir))
+    val path = new Path(clArgs.getParamValueString(Arguments.outDir))
 
     if (hdfs.exists(path))
       hdfs.delete(path, true)
 
-    val DS1 = getDS(simbaSession, clArgs.getParamValueString(Arguments_Simba.firstSet), clArgs.getParamValueString(Arguments_Simba.firstSetObjType))
-      .repartition(clArgs.getParamValueInt(Arguments_Simba.numPartitions))
+    val DS1 = getDS(simbaSession, clArgs.getParamValueString(Arguments.firstSet), clArgs.getParamValueString(Arguments.firstSetObjType))
 
-    val DS2 = getDS(simbaSession, clArgs.getParamValueString(Arguments_Simba.secondSet), clArgs.getParamValueString(Arguments_Simba.secondSetObjType))
-      .repartition(clArgs.getParamValueInt(Arguments_Simba.numPartitions))
-
-    //        import simbaSession.implicits._
-    //        import simbaSession.simbaImplicits._
+    val DS2 = getDS(simbaSession, clArgs.getParamValueString(Arguments.secondSet), clArgs.getParamValueString(Arguments.secondSetObjType))
 
     import simbaSession.implicits._
     import simbaSession.simbaImplicits._
 
-    if (clArgs.getParamValueBoolean(Arguments_Simba.sortByEuclDist)) {
-
-      val res1 = DS1.knnJoin(DS2, Array("x", "y"), Array("x", "y"), 10)
+    if (clArgs.getParamValueBoolean(Arguments_Simba.sortByEuclDist))
+      DS1.knnJoin(DS2, Array("x", "y"), Array("x", "y"), 10)
         .rdd
         .mapPartitions(_.map(processRow))
         .reduceByKey(_ ++ _)
-
-      val res2 = DS2.knnJoin(DS1, Array("x", "y"), Array("x", "y"), 10)
-        .rdd
-        .mapPartitions(_.map(processRow))
-        .reduceByKey(_ ++ _)
-
-      res1
-        .union(res2)
+        .union(
+          DS2.knnJoin(DS1, Array("x", "y"), Array("x", "y"), 10)
+            .rdd
+            .mapPartitions(_.map(processRow))
+            .reduceByKey(_ ++ _)
+        )
         .mapPartitions(_.map(rowToString))
-        .saveAsTextFile(clArgs.getParamValueString(Arguments_Simba.outDir), classOf[GzipCodec])
-    }
-    else {
-
-      val res1 = DS1.knnJoin(DS2, Array("x", "y"), Array("x", "y"), 10)
-        .rdd
-
-      val res2 = DS2.knnJoin(DS1, Array("x", "y"), Array("x", "y"), 10)
-        .rdd
-
-      res1
-        .union(res2)
+        .saveAsTextFile(clArgs.getParamValueString(Arguments.outDir), classOf[GzipCodec])
+    else
+      DS1.knnJoin(DS2, Array("x", "y"), Array("x", "y"), 10).rdd
+        .union(DS2.knnJoin(DS1, Array("x", "y"), Array("x", "y"), 10).rdd)
         .mapPartitions(_.map(row => "%s,%.8f,%.8f".format(row.get(2).toString, row(0).toString.toDouble, row(1).toString.toDouble)))
-        .saveAsTextFile(clArgs.getParamValueString(Arguments_Simba.outDir), classOf[GzipCodec])
-    }
+        .saveAsTextFile(clArgs.getParamValueString(Arguments.outDir), classOf[GzipCodec])
 
     simbaSession.stop()
 
-    if (clArgs.getParamValueBoolean(Arguments_Simba.local)) {
+    if (clArgs.getParamValueBoolean(Arguments.local)) {
 
-      LocalRunConsts.logLocalRunEntry(LocalRunConsts.localRunLogFile, "sKNN",
-        clArgs.getParamValueString(Arguments_Simba.firstSet).substring(clArgs.getParamValueString(Arguments_Simba.firstSet).lastIndexOf("/") + 1),
-        clArgs.getParamValueString(Arguments_Simba.secondSet).substring(clArgs.getParamValueString(Arguments_Simba.secondSet).lastIndexOf("/") + 1),
-        clArgs.getParamValueString(Arguments_Simba.outDir).substring(clArgs.getParamValueString(Arguments_Simba.outDir).lastIndexOf("/") + 1),
+      LocalRunConsts.logLocalRunEntry(LocalRunConsts.localRunLogFile, "Simba",
+        clArgs.getParamValueString(Arguments.firstSet).substring(clArgs.getParamValueString(Arguments.firstSet).lastIndexOf("/") + 1),
+        clArgs.getParamValueString(Arguments.secondSet).substring(clArgs.getParamValueString(Arguments.secondSet).lastIndexOf("/") + 1),
+        clArgs.getParamValueString(Arguments.outDir).substring(clArgs.getParamValueString(Arguments.outDir).lastIndexOf("/") + 1),
         (System.currentTimeMillis() - startTime) / 1000.0)
 
       printf("Total Time: %,.4f Sec%n", (System.currentTimeMillis() - startTime) / 1000.0)
-      println("Output: %s".format(clArgs.getParamValueString(Arguments_Simba.outDir)))
+      println("Output: %s".format(clArgs.getParamValueString(Arguments.outDir)))
       println("Run Log: %s".format(LocalRunConsts.localRunLogFile))
     }
   }
@@ -156,7 +134,4 @@ object SIM_Example extends Serializable {
 
     (pointInfo, sSet)
   }
-
-  case class PointData(x: Double, y: Double, other: String)
-
 }

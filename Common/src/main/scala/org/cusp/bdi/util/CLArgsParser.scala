@@ -130,7 +130,7 @@ case class CLArgsParser(args: Array[String], lstArgInfo: List[(String, String, A
   }
 
   def buildUsageString(mapProgramArg: mutable.HashMap[String, Any]): String =
-    "%s%nAllowed Arguments: %n%s%s".format("Missing parameters or incorrect value types.", this, if (mapProgramArg == null) "" else mapProgramArg.mkString("\t\n"))
+    "%s%nAllowed Arguments: %n%s%s".format("Missing parameters or incorrect value types.", this.toString, if (mapProgramArg == null) "" else mapProgramArg.mkString("\t\n"))
 
   override def toString: String =
     lstArgInfo.map(t => {

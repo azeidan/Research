@@ -7,13 +7,12 @@ import org.apache.spark.{SparkConf, SparkContext}
 import org.cusp.bdi.ds.Point
 import org.cusp.bdi.sknn.TypeSpatialIndex
 import org.cusp.bdi.util.{Arguments, CLArgsParser, InputFileParsers}
-import sknn.SparkKNN_Local_CLArgs
 //import org.cusp.bdi.gm.GeoMatch
 import org.cusp.bdi.sknn.SparkKNN
-import org.cusp.bdi.sknn.util.RDD_Store
 import org.cusp.bdi.util.LocalRunConsts
 
 object TestAllKnnJoin {
+
   def main(args: Array[String]): Unit = {
 
     //    println(math.round(12.34))
@@ -26,8 +25,8 @@ object TestAllKnnJoin {
     val startTime = System.currentTimeMillis()
     //    var startTime2 = startTime
 
-//    val clArgs = SparkKNN_Local_CLArgs.random_sample()
-        val clArgs = CLArgsParser(args, Arguments.lstArgInfo())
+    //    val clArgs = SparkKNN_Local_CLArgs.random_sample()
+    val clArgs = CLArgsParser(args, Arguments.lstArgInfo())
 
     //    val clArgs = SparkKNN_Local_CLArgs.busPoint_busPointShift(Arguments())
     //    val clArgs = SparkKNN_Local_CLArgs.busPoint_taxiPoint(Arguments())
@@ -43,7 +42,7 @@ object TestAllKnnJoin {
     //    val outDirTmp = "%s%s%s".format(outDir, Path.SEPARATOR, "tmp")
 
     val kParam = clArgs.getParamValueInt(Arguments.k)
-    val numPartitions = clArgs.getParamValueInt(Arguments.numPartitions)
+    val numPartitions = if (clArgs.getParamValueBoolean(Arguments.local)) 17 else 0
     //        val sampleRate = clArgs.getParamValueDouble(Arguments.sampleRate)
 
     val sparkConf = new SparkConf()
@@ -58,20 +57,19 @@ object TestAllKnnJoin {
 
     val sc = new SparkContext(sparkConf)
 
-    val rddLeft = RDD_Store.getRDDPlain(sc, firstSet, numPartitions)
+    def getRDD(fileName: String) = if (numPartitions > 0) sc.textFile(fileName, numPartitions) else sc.textFile(fileName)
+
+    val rddLeft = getRDD(firstSet)
       .mapPartitions(_.map(InputFileParsers.getLineParser(firstSetObjType)))
       .filter(_ != null)
       .mapPartitions(_.map(row => new Point(row._2._1.toDouble, row._2._2.toDouble, row._1)))
 
-    val rddRight = RDD_Store.getRDDPlain(sc, secondSet, numPartitions)
+    val rddRight = getRDD(secondSet)
       .mapPartitions(_.map(InputFileParsers.getLineParser(secondSetObjType)))
       .filter(_ != null)
       .mapPartitions(_.map(row => new Point(row._2._1.toDouble, row._2._2.toDouble, row._1)))
 
     val sparkKNN = SparkKNN(debugMode, kParam, TypeSpatialIndex.quadTree)
-
-    // during local test runs
-    //    sparkKNN.numPartitions = numPartitions
 
     val rddResult = sparkKNN.allKnnJoin(rddLeft, rddRight)
     //        val rddResult = sparkKNN.knnJoin(rddLeft, rddRight)

@@ -73,10 +73,8 @@ object SparkKNN extends Serializable {
       classOf[QuadTree_kNN],
       classOf[SpatialIndex_kNN],
       classOf[GridOperation],
-      RDD_Store.getClass,
       Arguments.getClass,
-      classOf[Node[_]],
-      RDD_Store.getClass)
+      classOf[Node[_]])
 }
 
 case class SparkKNN(debugMode: Boolean, k: Int, typeSpatialIndex: TypeSpatialIndex.Value) extends Serializable {
@@ -290,7 +288,7 @@ case class SparkKNN(debugMode: Boolean, k: Int, typeSpatialIndex: TypeSpatialInd
                   spatialIndex.nearestNeighbor(rowPoint.point, rowPoint.sortedList, k)
 
                   val nextPIdx = if (rowPoint.lstPartitionId.isEmpty) row._1 else rowPoint.lstPartitionId.head
-                  rowPoint.lstPartitionId = if (rowPoint.lstPartitionId.isEmpty) null else /*Random.shuffle(*/rowPoint.lstPartitionId.tail
+                  rowPoint.lstPartitionId = if (rowPoint.lstPartitionId.isEmpty) null else /*Random.shuffle(*/ rowPoint.lstPartitionId.tail
 
                   (nextPIdx, rowPoint)
                 }
