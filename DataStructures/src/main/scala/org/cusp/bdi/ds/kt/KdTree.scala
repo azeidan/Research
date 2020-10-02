@@ -140,8 +140,6 @@ class KdTree extends KryoSerializable {
       kdtNode.totalPoints = arrPointsNode.length
 
       kdtNode match {
-        case node: KdtNode =>
-          node.rectMBR = computeRectMBR(arrPointsNode)
         case brn: KdtBranchRootNode =>
 
           val splitVal = if (splitX) arrPointsNode(arrPointsNode.length / 2).x else arrPointsNode(arrPointsNode.length / 2).y
@@ -161,6 +159,8 @@ class KdTree extends KryoSerializable {
             brn.right = new KdtBranchRootNode(arrPointsGT)
 
           queueProcess += ((brn.left, !splitX, arrPointsLT), (brn.right, !splitX, arrPointsGT))
+        case node: KdtNode =>
+          node.rectMBR = computeRectMBR(arrPointsNode)
       }
     }
 
@@ -190,6 +190,15 @@ class KdTree extends KryoSerializable {
 
     while (currNode != null) {
       currNode match {
+        case brn: KdtBranchRootNode =>
+          if (if (checkX) searchXY._1 == brn.arrSplitPoints.head.x else searchXY._2 == brn.arrSplitPoints.head.y) {
+            // checkX reversed for exact XY lookup
+            return brn.arrSplitPoints.filter(qtPoint => if (checkX) searchXY._2 == brn.arrSplitPoints.head.y else searchXY._1 == brn.arrSplitPoints.head.x).take(1).head
+          }
+          else if (if (checkX) searchXY._1 < brn.arrSplitPoints.head.x else searchXY._2 < brn.arrSplitPoints.head.y)
+            currNode = brn.left
+          else
+            currNode = brn.right
         case nd: KdtNode =>
 
           if (nd.rectMBR.contains(searchXY._1, searchXY._2)) {
@@ -199,14 +208,6 @@ class KdTree extends KryoSerializable {
             if (lst.nonEmpty)
               return lst.head
           }
-          else
-            currNode = null
-
-        case brn: KdtBranchRootNode =>
-          if (brn.left != null && (if (checkX) searchXY._1 else searchXY._2) < brn.splitVal)
-            currNode = brn.left
-          else if (brn.right != null)
-            currNode = brn.right
           else
             currNode = null
       }
@@ -225,11 +226,11 @@ class KdTree extends KryoSerializable {
     if (node != null) {
 
       node match {
-        case ln: KdtLeafNode =>
-          println("%s%s".format(delimiter, ln))
         case brn: KdtBranchRootNode =>
           printInOrder(brn.left, delimiter + "\t")
           printInOrder(brn.right, delimiter + "\t")
+        case node: KdtNode =>
+          println("%s%s".format(delimiter, node))
       }
     }
   }

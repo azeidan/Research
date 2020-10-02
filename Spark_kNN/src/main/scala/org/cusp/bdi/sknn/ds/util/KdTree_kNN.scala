@@ -1,6 +1,6 @@
 package org.cusp.bdi.sknn.ds.util
 
-import org.cusp.bdi.ds.kt.{KdTree, KdtBranchRootNode, KdtLeafNode, KdtNode}
+import org.cusp.bdi.ds.kt.{KdTree, KdtBranchRootNode, KdtNode}
 import org.cusp.bdi.ds.{Geom2D, Point, Rectangle}
 import org.cusp.bdi.sknn.GlobalIndexPointData
 import org.cusp.bdi.sknn.ds.util.SpatialIndex_kNN.{testAndAddPoint, updateMatchListAndRegion}
@@ -49,14 +49,18 @@ class KdTree_kNN() extends KdTree with SpatialIndex_kNN {
 
         if (node != skipBranchRootNode && searchRegion.intersects(node.rectMBR))
           node match {
-            case ln: KdtLeafNode =>
-              ln.arrPoints.foreach(testAndAddPoint(_, searchRegion, sortSetSqDist, prevMaxSqrDist))
             case brn: KdtBranchRootNode =>
-              if (brn.left != null && brn.left.rectMBR.intersects(searchRegion))
+
+              brn.arrSplitPoints.foreach(testAndAddPoint(_, searchRegion, sortSetSqDist, prevMaxSqrDist))
+
+              if (brn.left.rectMBR.intersects(searchRegion))
                 stackNode.push(brn.left)
 
-              if (brn.right != null && brn.right.rectMBR.intersects(searchRegion))
+              if (brn.right.rectMBR.intersects(searchRegion))
                 stackNode.push(brn.right)
+
+            case node: KdtNode =>
+              node.arrPoints.foreach(testAndAddPoint(_, searchRegion, sortSetSqDist, prevMaxSqrDist))
           }
       }
     }
@@ -107,15 +111,18 @@ class KdTree_kNN() extends KdTree with SpatialIndex_kNN {
 
         if (node != skipBranchRootNode && searchRegion.intersects(node.rectMBR))
           node match {
-            case ln: KdtLeafNode =>
-              ln.arrPoints.foreach(updateMatchListAndRegion(_, searchRegion, sortList, k, searchRegionInfo))
-
             case brn: KdtBranchRootNode =>
-              if (brn.left != null && brn.left.rectMBR.intersects(searchRegion))
+
+              brn.arrSplitPoints.foreach(updateMatchListAndRegion(_, searchRegion, sortList, k, searchRegionInfo))
+
+              if (brn.left.rectMBR.intersects(searchRegion))
                 stackNode.push(brn.left)
 
-              if (brn.right != null && brn.right.rectMBR.intersects(searchRegion))
+              if (brn.right.rectMBR.intersects(searchRegion))
                 stackNode.push(brn.right)
+
+            case node: KdtNode =>
+              node.arrPoints.foreach(updateMatchListAndRegion(_, searchRegion, sortList, k, searchRegionInfo))
           }
       }
     }
@@ -147,8 +154,8 @@ class KdTree_kNN() extends KdTree with SpatialIndex_kNN {
           else
             return nodeCurr
 
-        case kdtLeafNode: KdtLeafNode =>
-          return kdtLeafNode
+        case node: KdtNode =>
+          return node
       }
 
     null
