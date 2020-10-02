@@ -1,34 +1,48 @@
 package org.cusp.bdi.ds
 
-case class Rectangle(pointCenter: PointBase, pointHalfXY: PointBase) extends Serializable {
+case class Rectangle(center: Geom2D, halfXY: Geom2D) extends Serializable {
 
   def this(other: Rectangle) =
-    this(new PointBase(other.pointCenter), new PointBase(other.pointHalfXY))
+    this(new Geom2D(other.center), new Geom2D(other.halfXY))
 
   def contains(other: Rectangle): Boolean =
     !(this.left > other.left || this.right < other.right ||
       this.bottom > other.bottom || this.top < other.top)
 
-  def contains(point: PointBase): Boolean =
+  def contains(point: Geom2D): Boolean =
     contains(point.x, point.y)
 
   def contains(x: Double, y: Double): Boolean =
     !(x < left || x > right || y < bottom || y > top)
 
+  def mergeWith(other: Rectangle) = {
+
+    val minX = math.min(this.left, other.left)
+    val minY = math.min(this.bottom, other.bottom)
+    val maxX = math.max(this.right, other.right)
+    val maxY = math.max(this.top, other.top)
+
+    this.halfXY.x = (maxX - minX) / 2
+    this.halfXY.y = (maxY - minY) / 2
+
+    this.center.x = minX + this.halfXY.x
+    this.center.y = minY + this.halfXY.y
+  }
+
   def top: Double = {
-    pointCenter.y + pointHalfXY.y
+    center.y + halfXY.y
   }
 
   def bottom: Double = {
-    pointCenter.y - pointHalfXY.y
+    center.y - halfXY.y
   }
 
   def right: Double = {
-    pointCenter.x + pointHalfXY.x
+    center.x + halfXY.x
   }
 
   def left: Double = {
-    pointCenter.x - pointHalfXY.x
+    center.x - halfXY.x
   }
 
   def contains(mbr: (Double, Double, Double, Double)): Boolean =
@@ -58,23 +72,23 @@ case class Rectangle(pointCenter: PointBase, pointHalfXY: PointBase) extends Ser
   }
 
   def topLeftQuadrant: Rectangle =
-    Rectangle(new PointBase(pointCenter.x - pointHalfXY.x / 2, pointCenter.y + pointHalfXY.y / 2), quarterDim)
+    Rectangle(new Geom2D(center.x - halfXY.x / 2, center.y + halfXY.y / 2), quarterDim)
 
   def topRightQuadrant: Rectangle =
-    Rectangle(new PointBase(pointCenter.x + pointHalfXY.x / 2, pointCenter.y + pointHalfXY.y / 2), quarterDim)
+    Rectangle(new Geom2D(center.x + halfXY.x / 2, center.y + halfXY.y / 2), quarterDim)
 
   def bottomLeftQuadrant: Rectangle =
-    Rectangle(new PointBase(pointCenter.x - pointHalfXY.x / 2, pointCenter.y - pointHalfXY.y / 2), quarterDim)
+    Rectangle(new Geom2D(center.x - halfXY.x / 2, center.y - halfXY.y / 2), quarterDim)
 
   def bottomRightQuadrant: Rectangle =
-    Rectangle(new PointBase(pointCenter.x + pointHalfXY.x / 2, pointCenter.y - pointHalfXY.y / 2), quarterDim)
+    Rectangle(new Geom2D(center.x + halfXY.x / 2, center.y - halfXY.y / 2), quarterDim)
 
   def quarterDim =
-    new PointBase(pointHalfXY.x / 2, pointHalfXY.y / 2)
+    new Geom2D(halfXY.x / 2, halfXY.y / 2)
 
   def mbr: String =
     "%f,%f,%f,%f".format(left, bottom, right, top)
 
   override def toString: String =
-    "%s\t%s".format(pointCenter, pointHalfXY)
+    "%s\t%s".format(center, halfXY)
 }

@@ -1,4 +1,4 @@
-package org.cusp.bdi.sb.examples
+package org.cusp.bdi.sb.test.examples
 
 import org.cusp.bdi.util.Helper
 

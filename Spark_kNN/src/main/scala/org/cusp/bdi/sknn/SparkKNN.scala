@@ -6,7 +6,7 @@ import org.apache.spark.storage.StorageLevel
 import org.apache.spark.util.SizeEstimator
 import org.cusp.bdi.ds.kt.KdTree
 import org.cusp.bdi.ds.qt.QuadTree
-import org.cusp.bdi.ds.{Circle, Point, PointBase, Rectangle}
+import org.cusp.bdi.ds.{Circle, Geom2D, Point, Rectangle}
 import org.cusp.bdi.sknn.ds.util.{KdTree_kNN, QuadTree_kNN, SpatialIndex_kNN}
 import org.cusp.bdi.sknn.util._
 import org.cusp.bdi.util.{Arguments, Helper, Node, SortedList}
@@ -60,7 +60,7 @@ object SparkKNN extends Serializable {
       classOf[Rectangle],
       classOf[Circle],
       classOf[Point],
-      classOf[PointBase],
+      classOf[Geom2D],
       classOf[QuadTree],
       classOf[KdTree],
       SparkKNN.getClass,
@@ -164,21 +164,24 @@ case class SparkKNN(debugMode: Boolean, k: Int, typeSpatialIndex: TypeSpatialInd
         new KdTree_kNN()
     }
 
+    val bvArrMBR = rddRight.sparkContext.broadcast(lstRangeInfo.map(_.mbr).toArray)
+
     startTime = System.currentTimeMillis
 
-    var actualPartitionCount = 0
+    var actualPartitionCount = -1
 
-    lstRangeInfo.foreach(infoRange => {
-
-      infoRange.lstMBRCoords.foreach(row => globalIndex.insert(new Point(row._1._1, row._1._2, GlobalIndexPointData(row._2, actualPartitionCount))))
+    globalIndex.insert(lstRangeInfo.map(rangeInfo => {
 
       actualPartitionCount += 1
-    })
 
-    val bvArrMBR = rddRight.sparkContext.broadcast(lstRangeInfo.map(_.mbr).toArray)
-    Helper.loggerSLf4J(debugMode, SparkKNN, ">>GlobalIndex insert time in %,d MS. Points: %d".format(System.currentTimeMillis - startTime, globalIndex.getTotalPoints /*, globalIndex.getDepth*/))
+      rangeInfo.lstMBRCoords.map(row => new Point(row._1._1, row._1._2, GlobalIndexPointData(row._2, actualPartitionCount)))
+    })
+      .flatMap(_.seq)
+      .iterator)
 
     val bvGlobalIndex = rddRight.sparkContext.broadcast(globalIndex)
+
+    Helper.loggerSLf4J(debugMode, SparkKNN, ">>GlobalIndex insert time in %,d MS. Points: %s".format(System.currentTimeMillis - startTime, globalIndex))
 
     lstRangeInfo = null
 
@@ -189,7 +192,7 @@ case class SparkKNN(debugMode: Boolean, k: Int, typeSpatialIndex: TypeSpatialInd
         }, point)))
       .partitionBy(new Partitioner() { // group points
 
-        override def numPartitions: Int = actualPartitionCount
+        override def numPartitions: Int = actualPartitionCount + 1
 
         override def getPartition(key: Any): Int = key match {
           case pIdx: Int => pIdx // also used when partitioning rddPoint
@@ -204,11 +207,12 @@ case class SparkKNN(debugMode: Boolean, k: Int, typeSpatialIndex: TypeSpatialInd
           case kdt if kdt == TypeSpatialIndex.kdTree => new KdTree_kNN()
         }
 
-        iter.foreach(row => spatialIndex.insert(row._2))
+        if (pIdx == 7 || pIdx == 1 || pIdx == 0)
+          println(pIdx)
 
-        //        println(">2>\t%d\t%s".format(pIdx, spatialIndex.toString()))
+        spatialIndex.insert(iter.map(_._2))
 
-        Helper.loggerSLf4J(debugMode, SparkKNN, ">>SpatialIndex on partition %d time in %,d MS. Points: %d".format(pIdx, System.currentTimeMillis - startTime, spatialIndex.getTotalPoints /*, spatialIndex.getDepth*/))
+        Helper.loggerSLf4J(debugMode, SparkKNN, ">>SpatialIndex on partition %d time in %,d MS. Points: %s".format(pIdx, System.currentTimeMillis - startTime, spatialIndex))
 
         val any: Any = spatialIndex
 
@@ -255,26 +259,37 @@ case class SparkKNN(debugMode: Boolean, k: Int, typeSpatialIndex: TypeSpatialInd
     Helper.loggerSLf4J(debugMode, SparkKNN, ">>LeftDS numRounds time in %,d MS, numRounds: %d".format(System.currentTimeMillis - startTime, numRounds))
 
     var rddPoint = rddLeft
-      .mapPartitions(_.map(point => {
+      .mapPartitions(iter => iter.map(point => {
+
+        //        if (point.userData.toString().equalsIgnoreCase("taxi_1_a_298697"))
+        //          println
 
         val lstPartitionId = bvGlobalIndex.value.spatialIdxRangeLookup(bvGridOp.value.computeSquareXY(point.x, point.y), k)
           .toList
 
         val rowData: Any = new RowData(point, SortedList[Point](k), Random.shuffle(lstPartitionId.tail))
 
+        // println(">>>" + pidx + "\t" + (System.currentTimeMillis-start))
+
         (lstPartitionId.head, rowData)
       }))
 
-    (0 until numRounds).foreach(_ => {
+    (0 until numRounds).foreach(iterationNum => {
       rddPoint = rddSpIdx
         .union(new ShuffledRDD(rddPoint, rddSpIdx.partitioner.get))
-        .mapPartitions(iter => {
+        .mapPartitionsWithIndex((pIdx, iter) => {
+
+          val start = System.currentTimeMillis()
 
           val spatialIndex = iter.next._2 match {
             case spIdx: SpatialIndex_kNN => spIdx
           }
 
-          iter.map(row =>
+          val l = iter.map(row => {
+
+            if (pIdx == 7 || pIdx == 1 || pIdx == 0)
+              println(iterationNum)
+
             row._2 match {
               case rowPoint: RowData =>
 
@@ -282,7 +297,7 @@ case class SparkKNN(debugMode: Boolean, k: Int, typeSpatialIndex: TypeSpatialInd
                   row
                 else {
 
-                  //                  if (rowPoint.point.userData.toString().equalsIgnoreCase("yellow_3_b_995064"))
+                  //                   if (rowPoint.point.userData.toString().equalsIgnoreCase("taxi_1_a_298697"))
                   //                    println
 
                   spatialIndex.nearestNeighbor(rowPoint.point, rowPoint.sortedList, k)
@@ -292,18 +307,26 @@ case class SparkKNN(debugMode: Boolean, k: Int, typeSpatialIndex: TypeSpatialInd
 
                   (nextPIdx, rowPoint)
                 }
-            })
-        }
-        )
+            }
+          })
+
+          Helper.loggerSLf4J(debugMode, SparkKNN, ">>>Iteration#: %d Partition %d done in %d".format(iterationNum, pIdx, System.currentTimeMillis() - start))
+
+          l
+        })
 
       bvArrMBR.unpersist()
     })
 
-    println(">>>" + rddPoint.getNumPartitions)
+    //    println(">>>" + rddPoint.getNumPartitions)
 
-    rddPoint.map(row => row._2 match {
+    //    rddPoint.foreach(println)
+
+    rddPoint.map(_._2 match {
       case rowData: RowData => (rowData.point, rowData.sortedList.map(nd => (nd.distance, nd.data)))
     })
+    //
+    //    null
   }
 
   private def computeCapacity(rddRight: RDD[Point], maxRowSize: Int, totalRowCount: Long) = {
@@ -321,7 +344,7 @@ case class SparkKNN(debugMode: Boolean, k: Int, typeSpatialIndex: TypeSpatialInd
     val rowData = new RowData(pointDummy, sortSetDummy, lstPartitionIdDummy)
     val spatialIndexDummy = typeSpatialIndex match {
       case qt if qt == TypeSpatialIndex.quadTree =>
-        new QuadTree_kNN(Rectangle(new PointBase(0, 0), new PointBase(0, 0)))
+        new QuadTree_kNN(Rectangle(new Geom2D(0, 0), new Geom2D(0, 0)))
       case kdt if kdt == TypeSpatialIndex.kdTree =>
         new KdTree_kNN()
     }

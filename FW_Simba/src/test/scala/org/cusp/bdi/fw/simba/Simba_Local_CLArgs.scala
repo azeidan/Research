@@ -15,6 +15,7 @@ object Arguments_Simba extends Serializable {
       secondSet,
       secondSetObj,
       k,
+      "",
       (Arguments_Simba.sortByEuclDist._1, sortByEuclDist.toString))
 }
 

@@ -1,16 +1,16 @@
-package org.cusp.bdi.sb
+package org.cusp.bdi.sb.test
 
 import org.apache.hadoop.fs.{FileSystem, Path}
 import org.apache.hadoop.io.compress.GzipCodec
 import org.apache.spark.rdd.RDD
-import org.apache.spark.{SparkConf, SparkContext}
 import org.apache.spark.serializer.KryoSerializer
-import org.cusp.bdi.sb.examples.{BenchmarkInputFileParser, Arguments_Benchmark, Benchmark_Local_CLArgs}
+import org.apache.spark.{SparkConf, SparkContext}
+import org.cusp.bdi.sb.test.examples.{Arguments_Benchmark, BenchmarkInputFileParser, Benchmark_Local_CLArgs}
 
 import scala.collection.mutable
 import scala.collection.mutable.ListBuffer
 
-object MatchDistAnalysis extends Serializable {
+object SpatialBenchmarkGeoMatch extends Serializable {
 
   //  private val LOGGER = LogFactory.getLog(this.getClass())
 

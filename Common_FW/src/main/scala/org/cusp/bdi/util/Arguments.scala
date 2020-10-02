@@ -2,8 +2,8 @@ package org.cusp.bdi.util
 
 object Arguments extends Serializable {
 
-  def buildTuple[T](name: String, dataType: String, required: T, description: String): (String, String, T, String) =
-    (name, dataType, required, description)
+  def buildTuple[T](name: String, dataType: String, defaultValue: T, description: String): (String, String, T, String) =
+    (name, dataType, defaultValue, description)
 
   val local: (String, String, Boolean, String) = buildTuple("-local", "Boolean", false, "(T=local, F=cluster)")
   val debug: (String, String, Boolean, String) = buildTuple("-debug", "Boolean", false, "(T=show_debug, F=no_debug)")
@@ -13,10 +13,11 @@ object Arguments extends Serializable {
   val secondSet: (String, String, Null, String) = buildTuple("-secondSet", "String", null, "Second data set input file path (Bus, TPEP, Yellow)")
   val secondSetObjType: (String, String, Null, String) = buildTuple("-secondSetObjType", "String", null, "The object type indicator (e.g. LION_LineString, TPEP_Point ...)")
   val k: (String, String, Int, String) = buildTuple("-k", "Int", 3, "Value of k")
+  val indexType: (String, String, Null, String) = buildTuple("-indexType", "String", null, "qt for QuadTree, kdt for K-d Tree")
 
-  def lstArgInfo() = List(local, debug, outDir, firstSet, firstSetObjType, secondSet, secondSetObjType, k)
+  def lstArgInfo() = List(local, debug, outDir, firstSet, firstSetObjType, secondSet, secondSetObjType, k, indexType)
 
-  def apply(debug: Boolean, firstSet: String, firstSetObj: String, secondSet: String, secondSetObj: String, k: Int, other: (String, String)*): Array[String] =
+  def apply(debug: Boolean, firstSet: String, firstSetObj: String, secondSet: String, secondSetObj: String, k: Int, indexType: String, other: (String, String)*): Array[String] =
     Array(
       Arguments.local._1, " T",
       Arguments.debug._1, Helper.toString(debug),
@@ -25,7 +26,8 @@ object Arguments extends Serializable {
       Arguments.firstSetObjType._1, firstSetObj,
       Arguments.secondSet._1, secondSet,
       Arguments.secondSetObjType._1, secondSetObj,
-      Arguments.k._1, k.toString) ++
+      Arguments.k._1, k.toString,
+      Arguments.indexType._1, indexType) ++
       other.map(row => Array(row._1, row._2)).flatMap(_.seq)
 }
 

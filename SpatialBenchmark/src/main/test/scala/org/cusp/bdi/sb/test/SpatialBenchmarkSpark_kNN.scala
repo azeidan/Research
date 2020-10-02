@@ -1,13 +1,13 @@
-package org.cusp.bdi.sb
+package org.cusp.bdi.sb.test
 
 import org.apache.hadoop.fs.{FileSystem, Path}
 import org.apache.hadoop.io.compress.GzipCodec
 import org.apache.spark.serializer.KryoSerializer
 import org.apache.spark.{SparkConf, SparkContext}
-import org.cusp.bdi.sb.examples.{Arguments_Benchmark, BenchmarkInputFileParser, Benchmark_Local_CLArgs}
+import org.cusp.bdi.sb.test.examples.{Arguments_Benchmark, Benchmark_Local_CLArgs}
 import org.cusp.bdi.util.{CLArgsParser, LocalRunConsts}
 
-object SpatialBenchmark extends Serializable {
+object SpatialBenchmarkSpark_kNN extends Serializable {
 
   //    private val LOGGER = LogFactory.getLog(this.getClass())
 
@@ -23,11 +23,8 @@ object SpatialBenchmark extends Serializable {
     //        val clArgs = SB_CLArgs.LS_LionBus
     //        val clArgs = SB_CLArgs.LS_LionTPEP
     //        val clArgs = SB_CLArgs.SKNN_BusPoint_BusPointShift
-//            val clArgs = Benchmark_Local_CLArgs.SKNN_RandomPoint_RandomPoint
-    val clArgs = CLArgsParser(args, Arguments_Benchmark.lstArgInfo())
-
-    val keyMatchInFileParser = instantiateClass[BenchmarkInputFileParser](clArgs.getParamValueString(Arguments_Benchmark.keyMatchInFileParser))
-    val testFWInFileParser = instantiateClass[BenchmarkInputFileParser](clArgs.getParamValueString(Arguments_Benchmark.testFWInFileParser))
+                val clArgs = Benchmark_Local_CLArgs.SKNN_RandomPoint_RandomPoint
+//    val clArgs = CLArgsParser(args, Arguments_Benchmark.lstArgInfo())
 
     val sparkConf = new SparkConf().setAppName("Spatial Benchmark")
 
@@ -49,11 +46,14 @@ object SpatialBenchmark extends Serializable {
 
     val rddTestFW = sparkContext.textFile(clArgs.getParamValueString(Arguments_Benchmark.testFWInFile))
 
-    val compareResults = OutputsCompare(clArgs.getParamValueInt(Arguments_Benchmark.classificationCount), rddKeyMatch, keyMatchInFileParser, rddTestFW, testFWInFileParser)
+    val lstCompareResults = OutputsCompare(clArgs.getParamValueInt(Arguments_Benchmark.classificationCount),
+      rddKeyMatch, clArgs.getParamValueString(Arguments_Benchmark.keyMatchInFileParser),
+      rddTestFW, clArgs.getParamValueString(Arguments_Benchmark.testFWInFileParser))
+      .compare()
 
-    compareResults.append("Total Runtime: " + "%,d".format(System.currentTimeMillis() - startTime) + " ms")
+    lstCompareResults.append("Total Runtime: " + "%,d".format(System.currentTimeMillis() - startTime) + " ms")
 
-    sparkContext.parallelize(compareResults, 1)
+    sparkContext.parallelize(lstCompareResults, 1)
       .saveAsTextFile(clArgs.getParamValueString(Arguments_Benchmark.outDir), classOf[GzipCodec])
 
     if (clArgs.getParamValueBoolean(Arguments_Benchmark.local)) {
@@ -61,21 +61,11 @@ object SpatialBenchmark extends Serializable {
       LocalRunConsts.logLocalRunEntry(LocalRunConsts.benchmarkLogFile, "sKNN",
         clArgs.getParamValueString(Arguments_Benchmark.keyMatchInFile).substring(clArgs.getParamValueString(Arguments_Benchmark.keyMatchInFile).lastIndexOf("/") + 1),
         clArgs.getParamValueString(Arguments_Benchmark.testFWInFile).substring(clArgs.getParamValueString(Arguments_Benchmark.testFWInFile).lastIndexOf("/") + 1),
-        compareResults.mkString("\n"),
+        lstCompareResults.mkString("\n"),
         (System.currentTimeMillis() - startTime) / 1000.0)
 
       println("Output idr: " + clArgs.getParamValueString(Arguments_Benchmark.outDir))
-      compareResults.foreach(println)
+      lstCompareResults.foreach(println)
     }
-  }
-
-  def instantiateClass[T](className: String): T = {
-
-    var loadClass = className
-
-    if (className.endsWith("$"))
-      loadClass = className.substring(0, className.length() - 1)
-
-    Class.forName(loadClass).getConstructor().newInstance().asInstanceOf[T]
   }
 }

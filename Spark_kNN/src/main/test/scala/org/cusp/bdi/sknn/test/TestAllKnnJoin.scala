@@ -6,10 +6,8 @@ import org.apache.spark.serializer.KryoSerializer
 import org.apache.spark.{SparkConf, SparkContext}
 import org.cusp.bdi.ds.Point
 import org.cusp.bdi.sknn.TypeSpatialIndex
-import org.cusp.bdi.util.{Arguments, CLArgsParser, InputFileParsers}
-//import org.cusp.bdi.gm.GeoMatch
+import org.cusp.bdi.util.{Arguments, CLArgsParser, Helper, InputFileParsers, LocalRunConsts}
 import org.cusp.bdi.sknn.SparkKNN
-import org.cusp.bdi.util.LocalRunConsts
 
 object TestAllKnnJoin {
 
@@ -25,8 +23,8 @@ object TestAllKnnJoin {
     val startTime = System.currentTimeMillis()
     //    var startTime2 = startTime
 
-    //    val clArgs = SparkKNN_Local_CLArgs.random_sample()
-    val clArgs = CLArgsParser(args, Arguments.lstArgInfo())
+    val clArgs = SparkKNN_Local_CLArgs.random_sample()
+//        val clArgs = CLArgsParser(args, Arguments.lstArgInfo())
 
     //    val clArgs = SparkKNN_Local_CLArgs.busPoint_busPointShift(Arguments())
     //    val clArgs = SparkKNN_Local_CLArgs.busPoint_taxiPoint(Arguments())
@@ -42,6 +40,10 @@ object TestAllKnnJoin {
     //    val outDirTmp = "%s%s%s".format(outDir, Path.SEPARATOR, "tmp")
 
     val kParam = clArgs.getParamValueInt(Arguments.k)
+    val indexType = if (clArgs.getParamValueString(Arguments.indexType).equalsIgnoreCase("qt"))
+      TypeSpatialIndex.quadTree
+    else
+      TypeSpatialIndex.kdTree
     val numPartitions = if (clArgs.getParamValueBoolean(Arguments.local)) 17 else 0
     //        val sampleRate = clArgs.getParamValueDouble(Arguments.sampleRate)
 
@@ -69,10 +71,10 @@ object TestAllKnnJoin {
       .filter(_ != null)
       .mapPartitions(_.map(row => new Point(row._2._1.toDouble, row._2._2.toDouble, row._1)))
 
-    val sparkKNN = SparkKNN(debugMode, kParam, TypeSpatialIndex.quadTree)
+    val sparkKNN = SparkKNN(debugMode, kParam, indexType)
 
-    val rddResult = sparkKNN.allKnnJoin(rddLeft, rddRight)
-    //        val rddResult = sparkKNN.knnJoin(rddLeft, rddRight)
+//    val rddResult = sparkKNN.allKnnJoin(rddLeft, rddRight)
+                val rddResult = sparkKNN.knnJoin(rddLeft, rddRight)
 
     //    println(rddResult.toDebugString)
 
@@ -88,7 +90,7 @@ object TestAllKnnJoin {
 
     if (clArgs.getParamValueBoolean(Arguments.local)) {
 
-      LocalRunConsts.logLocalRunEntry(LocalRunConsts.localRunLogFile, "sKNN",
+      LocalRunConsts.logLocalRunEntry(LocalRunConsts.localRunLogFile, "sKNN_" + indexType,
         clArgs.getParamValueString(Arguments.firstSet).substring(clArgs.getParamValueString(Arguments.firstSet).lastIndexOf("/") + 1),
         clArgs.getParamValueString(Arguments.secondSet).substring(clArgs.getParamValueString(Arguments.secondSet).lastIndexOf("/") + 1),
         clArgs.getParamValueString(Arguments.outDir).substring(clArgs.getParamValueString(Arguments.outDir).lastIndexOf("/") + 1),

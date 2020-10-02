@@ -3,7 +3,7 @@ package org.cusp.bdi.ds
 import com.esotericsoftware.kryo.Kryo
 import com.esotericsoftware.kryo.io.{Input, Output}
 
-case class Point() extends PointBase {
+case class Point() extends Geom2D {
 
   var userData: Any = _
 
