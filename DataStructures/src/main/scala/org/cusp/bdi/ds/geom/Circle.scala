@@ -1,4 +1,4 @@
-package org.cusp.bdi.ds
+package org.cusp.bdi.ds.geom
 
 case class Circle(center: Geom2D) extends Serializable {
 

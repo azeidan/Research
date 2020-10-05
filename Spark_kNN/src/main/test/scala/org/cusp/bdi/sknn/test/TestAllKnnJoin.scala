@@ -4,9 +4,9 @@ import org.apache.hadoop.fs.{FileSystem, Path}
 import org.apache.hadoop.io.compress.GzipCodec
 import org.apache.spark.serializer.KryoSerializer
 import org.apache.spark.{SparkConf, SparkContext}
-import org.cusp.bdi.ds.Point
+import org.cusp.bdi.ds.geom.Point
 import org.cusp.bdi.sknn.TypeSpatialIndex
-import org.cusp.bdi.util.{Arguments, CLArgsParser, Helper, InputFileParsers, LocalRunConsts}
+import org.cusp.bdi.util.{Arguments, CLArgsParser, InputFileParsers, LocalRunConsts}
 import org.cusp.bdi.sknn.SparkKNN
 
 object TestAllKnnJoin {
@@ -23,8 +23,8 @@ object TestAllKnnJoin {
     val startTime = System.currentTimeMillis()
     //    var startTime2 = startTime
 
-    val clArgs = SparkKNN_Local_CLArgs.random_sample()
-//        val clArgs = CLArgsParser(args, Arguments.lstArgInfo())
+//        val clArgs = SparkKNN_Local_CLArgs.random_sample()
+    val clArgs = CLArgsParser(args, Arguments.lstArgInfo())
 
     //    val clArgs = SparkKNN_Local_CLArgs.busPoint_busPointShift(Arguments())
     //    val clArgs = SparkKNN_Local_CLArgs.busPoint_taxiPoint(Arguments())
@@ -37,7 +37,6 @@ object TestAllKnnJoin {
     val secondSet = clArgs.getParamValueString(Arguments.secondSet)
     val secondSetObjType = clArgs.getParamValueString(Arguments.secondSetObjType)
     val outDir = clArgs.getParamValueString(Arguments.outDir)
-    //    val outDirTmp = "%s%s%s".format(outDir, Path.SEPARATOR, "tmp")
 
     val kParam = clArgs.getParamValueInt(Arguments.k)
     val indexType = if (clArgs.getParamValueString(Arguments.indexType).equalsIgnoreCase("qt"))
@@ -50,7 +49,6 @@ object TestAllKnnJoin {
     val sparkConf = new SparkConf()
       .setAppName(this.getClass.getName)
       .set("spark.serializer", classOf[KryoSerializer].getName)
-      //      .registerKryoClasses(GeoMatch.getGeoMatchClasses())
       .registerKryoClasses(SparkKNN.getSparkKNNClasses)
 
     if (localMode)
@@ -73,8 +71,8 @@ object TestAllKnnJoin {
 
     val sparkKNN = SparkKNN(debugMode, kParam, indexType)
 
-//    val rddResult = sparkKNN.allKnnJoin(rddLeft, rddRight)
-                val rddResult = sparkKNN.knnJoin(rddLeft, rddRight)
+    val rddResult = sparkKNN.allKnnJoin(rddLeft, rddRight)
+    //                val rddResult = sparkKNN.knnJoin(rddLeft, rddRight)
 
     //    println(rddResult.toDebugString)
 

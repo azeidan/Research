@@ -1,4 +1,4 @@
-package org.cusp.bdi.ds
+package org.cusp.bdi.ds.geom
 
 import com.esotericsoftware.kryo.io.{Input, Output}
 import com.esotericsoftware.kryo.{Kryo, KryoSerializable}

@@ -1,4 +1,4 @@
-package org.cusp.bdi.ds
+package org.cusp.bdi.ds.geom
 
 case class Rectangle(center: Geom2D, halfXY: Geom2D) extends Serializable {
 
@@ -16,17 +16,21 @@ case class Rectangle(center: Geom2D, halfXY: Geom2D) extends Serializable {
     !(x < left || x > right || y < bottom || y > top)
 
   def mergeWith(other: Rectangle) = {
+    if (other != null) {
 
-    val minX = math.min(this.left, other.left)
-    val minY = math.min(this.bottom, other.bottom)
-    val maxX = math.max(this.right, other.right)
-    val maxY = math.max(this.top, other.top)
+      val minX = math.min(this.left, other.left)
+      val minY = math.min(this.bottom, other.bottom)
+      val maxX = math.max(this.right, other.right)
+      val maxY = math.max(this.top, other.top)
 
-    this.halfXY.x = (maxX - minX) / 2
-    this.halfXY.y = (maxY - minY) / 2
+      this.halfXY.x = (maxX - minX) / 2
+      this.halfXY.y = (maxY - minY) / 2
 
-    this.center.x = minX + this.halfXY.x
-    this.center.y = minY + this.halfXY.y
+      this.center.x = minX + this.halfXY.x
+      this.center.y = minY + this.halfXY.y
+    }
+
+    this
   }
 
   def top: Double = {

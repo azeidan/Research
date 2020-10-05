@@ -1,23 +1,28 @@
-package org.cusp.bdi.sknn.ds.util
+package org.cusp.bdi.ds
 
-import org.apache.spark.serializer.KryoSerializer
-import org.cusp.bdi.ds.{Point, Rectangle}
-import org.cusp.bdi.sknn.GlobalIndexPointData
-import org.cusp.bdi.util.{Helper, Node, SortedList}
+import com.esotericsoftware.kryo.KryoSerializable
+import org.cusp.bdi.ds.geom.{Point, Rectangle}
+import org.cusp.bdi.util.Helper
 
-import scala.collection.mutable.ListBuffer
+protected class SearchRegionInfo(_limitNode: Node[Point], _sqDim: Double) {
 
-class SearchRegionInfo(_limitNode: Node[Point], _sqDim: Double) {
   var limitNode: Node[Point] = _limitNode
   var sqDim: Double = _sqDim
   var weight: Long = 0L
 }
 
-class DoubleWrapper(_d: Double) {
-  var d = _d
+protected class DoubleWrapper(_d: Double) {
+  var d: Double = _d
 }
 
-object SpatialIndex_kNN {
+trait PointData extends Serializable {
+
+  def numPoints: Int
+
+  def equals(other: Any): Boolean
+}
+
+object SpatialIndex {
 
   val expandBy: Double = math.sqrt(8)
 
@@ -36,18 +41,19 @@ object SpatialIndex_kNN {
     }
   }
 
-  def updateMatchListAndRegion(point: Point, searchRegion: Rectangle, sortList: SortedList[Point], k: Int, searchRegionInfo: SearchRegionInfo): Unit = {
+  def updateMatchListAndRegion(point: Point, rectSearchRegion: Rectangle, sortList: SortedList[Point], k: Int, searchRegionInfo: SearchRegionInfo): Unit = {
 
     def getNumPoints(point: Point): Long = point.userData match {
-      case globalIndexPointData: GlobalIndexPointData => globalIndexPointData.numPoints
+      case pointData: PointData => pointData.numPoints
+      case _ => throw new ClassCastException("Point userdata must extend " + classOf[PointData].getName)
     }
 
-    if (searchRegion.contains(point)) {
+    if (rectSearchRegion.contains(point)) {
 
       //              if (qtPoint.x.toString().startsWith("26157") && qtPoint.y.toString().startsWith("4965"))
       //                print("")
 
-      val sqDistQTPoint = Helper.squaredDist(searchRegion.center.x, searchRegion.center.y, point.x, point.y)
+      val sqDistQTPoint = Helper.squaredDist(rectSearchRegion.center.x, rectSearchRegion.center.y, point.x, point.y)
 
       // add point if it's within the search radius
       if (searchRegionInfo.limitNode == null || sqDistQTPoint < searchRegionInfo.sqDim) {
@@ -72,10 +78,10 @@ object SpatialIndex_kNN {
 
             searchRegionInfo.limitNode = elem
 
-            searchRegion.halfXY.x = math.sqrt(searchRegionInfo.limitNode.distance) + expandBy
-            searchRegion.halfXY.y = searchRegion.halfXY.x
+            rectSearchRegion.halfXY.x = math.sqrt(searchRegionInfo.limitNode.distance) + expandBy
+            rectSearchRegion.halfXY.y = rectSearchRegion.halfXY.x
 
-            searchRegionInfo.sqDim = math.pow(searchRegion.halfXY.x, 2)
+            searchRegionInfo.sqDim = math.pow(rectSearchRegion.halfXY.x, 2)
 
             while (elem.next != null && elem.next.distance < searchRegionInfo.sqDim) {
 
@@ -92,7 +98,7 @@ object SpatialIndex_kNN {
   }
 }
 
-trait SpatialIndex_kNN extends Serializable {
+trait SpatialIndex extends KryoSerializable {
 
   def getTotalPoints: Int
 
@@ -102,5 +108,5 @@ trait SpatialIndex_kNN extends Serializable {
 
   def nearestNeighbor(searchPoint: Point, sortSetSqDist: SortedList[Point], k: Int)
 
-  def spatialIdxRangeLookup(searchXY: (Double, Double), k: Int): Set[Int]
+  def spatialIdxRangeLookup(searchXY: (Double, Double), k: Int): SortedList[Point]
 }
