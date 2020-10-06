@@ -3,18 +3,15 @@ package org.cusp.bdi.ds
 import com.esotericsoftware.kryo.io.{Input, Output}
 import com.esotericsoftware.kryo.{Kryo, KryoSerializable}
 import org.cusp.bdi.ds.KdTree.{computeRectMBR, nodeCapacity}
-import org.cusp.bdi.ds.SpatialIndex.{testAndAddPoint, updateMatchListAndRegion}
+import org.cusp.bdi.ds.SpatialIndex.testAndAddPoint
 import org.cusp.bdi.ds.geom.{Geom2D, Point, Rectangle}
+
 import scala.collection.mutable
 import scala.collection.mutable.ListBuffer
 
 object KdTree extends Serializable {
 
   val nodeCapacity = 4
-
-  //  val SER_MARKER_NULL: Byte = Byte.MinValue
-  //  val SER_MARKER_BRANCH_ROOT_NODE: Byte = 0.toByte
-  //  val SER_MARKER_LEAF_NODE: Byte = 1.toByte
 
   def computeRectMBR(arrPoints: Array[Point]): Rectangle = {
 
@@ -40,7 +37,7 @@ class KdtNode(_arrPoints: Array[Point]) extends KryoSerializable {
   var rectMBR: Rectangle = if (_arrPoints == null) null else computeRectMBR(_arrPoints)
 
   override def toString: String =
-    "%s\t%d".format(rectMBR, arrPoints.length)
+    "%s\t%d\t%s".format(rectMBR, arrPoints.length, rectMBR)
 
   override def write(kryo: Kryo, output: Output): Unit = {
 
@@ -72,30 +69,6 @@ final class KdtBranchRootNode(arrPoints: Array[Point]) extends KdtNode(null) {
     val strL = if (left == null) 'X' else '/'
 
     "%s\t%s\t%s".format(super.toString, strL, strR)
-  }
-
-  //  override def write(kryo: Kryo, output: Output): Unit = {
-  //
-  //    super.write(kryo, output)
-  //  }
-  //
-  //  override def read(kryo: Kryo, input: Input): Unit = {
-  //
-  //    super.read(kryo, input)
-  //  }
-}
-
-object TestKdTree {
-
-  def main(args: Array[String]): Unit = {
-
-    val lstPoint = ListBuffer(new Point(0.54, 0.93), new Point(0.96, 0.86), new Point(0.42, 0.67), new Point(0.11, 0.53), new Point(0.64, 0.29), new Point(0.27, 0.75), new Point(0.81, 0.63))
-
-    val kdt = new KdTree()
-    kdt.insert(lstPoint.iterator)
-    kdt.printInOrder()
-
-    println(kdt.findExact((9, 1)))
   }
 }
 
@@ -178,19 +151,6 @@ class KdTree extends SpatialIndex {
     // update MBRs
     updateMBR(this.root)
 
-    def updateMBR(kdtNode: KdtNode): Rectangle =
-      kdtNode match {
-        case brn: KdtBranchRootNode =>
-          brn.rectMBR
-            .mergeWith(if (brn.left == null) null else updateMBR(brn.left))
-            .mergeWith(if (brn.right == null) null else updateMBR(brn.right))
-
-          brn.rectMBR
-        case node: KdtNode =>
-          node.rectMBR
-        //        case _ => null
-      }
-
     true
   }
 
@@ -251,8 +211,6 @@ class KdTree extends SpatialIndex {
 
   override def write(kryo: Kryo, output: Output): Unit = {
 
-    //    println(">>> kdt serialization start " + root)
-
     val queueNode = mutable.Queue(this.root)
 
     while (queueNode.nonEmpty) {
@@ -267,13 +225,9 @@ class KdTree extends SpatialIndex {
         case _ =>
       }
     }
-
-    //    println(">>> kdt serialization done " + root)
   }
 
   override def read(kryo: Kryo, input: Input): Unit = {
-
-    //    println(">>> kdt de-serialization start " + root)
 
     this.root = kryo.readClassAndObject(input) match {
       case kdtNode: KdtNode => kdtNode
@@ -296,11 +250,9 @@ class KdTree extends SpatialIndex {
         case _ =>
       }
     }
-
-    //    println(">>> kdt de-serialization end " + root)
   }
 
-  override def nearestNeighbor(searchPoint: Point, sortSetSqDist: SortedList[Point], k: Int) {
+  override def nearestNeighbor(searchPoint: Point, sortSetSqDist: SortedList[Point]) {
 
     //    if (searchPoint.userData.toString().equalsIgnoreCase("taxi_1_a_298697"))
     //      println
@@ -308,7 +260,7 @@ class KdTree extends SpatialIndex {
     var searchRegion: Rectangle = null
     var sPtBestNode: KdtNode = null
 
-    sPtBestNode = getBestNode(searchPoint, k)
+    sPtBestNode = getBestNode(searchPoint, sortSetSqDist.maxSize)
 
     val dim =
       if (sortSetSqDist.isFull)
@@ -324,7 +276,7 @@ class KdTree extends SpatialIndex {
 
   private def pointsWithinRegion(sPtBestNode: KdtNode, searchRegion: Rectangle, sortSetSqDist: SortedList[Point]) {
 
-    val prevMaxSqrDist = new DoubleWrapper(if (sortSetSqDist.last == null) -1 else sortSetSqDist.last.distance)
+    var prevMaxSqrDist = if (sortSetSqDist.last == null) -1 else sortSetSqDist.last.distance
 
     def process(kdtNode: KdtNode, skipBranchRootNode: KdtNode) {
 
@@ -336,7 +288,7 @@ class KdTree extends SpatialIndex {
 
         if (node != skipBranchRootNode && searchRegion.intersects(node.rectMBR)) {
 
-          node.arrPoints.foreach(testAndAddPoint(_, searchRegion, sortSetSqDist, prevMaxSqrDist))
+          node.arrPoints.foreach(pt => prevMaxSqrDist = testAndAddPoint(pt, searchRegion, sortSetSqDist, prevMaxSqrDist))
 
           node match {
             case brn: KdtBranchRootNode =>
@@ -360,68 +312,7 @@ class KdTree extends SpatialIndex {
       process(this.root, sPtBestNode)
   }
 
-  override def spatialIdxRangeLookup(searchXY: (Double, Double), k: Int): SortedList[Point] = {
-
-    //    if (searchPointXY._1.toString().startsWith("26167") && searchPointXY._2.toString().startsWith("4966"))
-    //      println
-
-    val searchPoint = new Geom2D(searchXY._1, searchXY._2)
-
-    val sPtBestNode = getBestNode(searchPoint, k)
-
-    val dim = math.max(math.max(math.abs(searchPoint.x - sPtBestNode.rectMBR.left), math.abs(searchPoint.x - sPtBestNode.rectMBR.right)),
-      math.max(math.abs(searchPoint.y - sPtBestNode.rectMBR.bottom), math.abs(searchPoint.y - sPtBestNode.rectMBR.top)))
-
-    val searchRegion = Rectangle(searchPoint, new Geom2D(dim, dim))
-
-    spatialIdxRangeLookupHelper(sPtBestNode, searchRegion, k)
-    //      .map(_.data.userData match {
-    //        case globalIndexPointData: GlobalIndexPointData => globalIndexPointData.partitionIdx
-    //      })
-    //      .toSet
-  }
-
-  private def spatialIdxRangeLookupHelper(sPtBestNode: KdtNode, searchRegion: Rectangle, k: Int) = {
-
-    val sortList = SortedList[Point](Int.MaxValue)
-    val searchRegionInfo = new SearchRegionInfo(sortList.head, math.pow(searchRegion.halfXY.x, 2))
-
-    def process(branchRootNode: KdtNode, skipBranchRootNode: KdtNode) {
-
-      val stackNode = mutable.Stack(branchRootNode)
-
-      while (stackNode.nonEmpty) {
-
-        val node = stackNode.pop
-
-        if (node != skipBranchRootNode && searchRegion.intersects(node.rectMBR)) {
-
-          node.arrPoints.foreach(updateMatchListAndRegion(_, searchRegion, sortList, k, searchRegionInfo))
-
-          node match {
-            case brn: KdtBranchRootNode =>
-
-              if (brn.left != null && brn.left.rectMBR.intersects(searchRegion))
-                stackNode.push(brn.left)
-
-              if (brn.right != null && brn.right.rectMBR.intersects(searchRegion))
-                stackNode.push(brn.right)
-
-            case _ =>
-          }
-        }
-      }
-    }
-
-    process(sPtBestNode, null)
-
-    if (sPtBestNode != this.root)
-      process(this.root, sPtBestNode)
-
-    sortList
-  }
-
-  private def getBestNode(searchPoint: Geom2D, k: Int): KdtNode = {
+  def getBestNode(searchPoint: Geom2D, k: Int): KdtNode = {
 
     // find leaf containing point
     var nodeCurr = root
@@ -446,4 +337,17 @@ class KdTree extends SpatialIndex {
 
     null
   }
+
+  private def updateMBR(kdtNode: KdtNode): Rectangle =
+    kdtNode match {
+      case brn: KdtBranchRootNode =>
+        brn.rectMBR
+          .mergeWith(if (brn.left == null) null else updateMBR(brn.left))
+          .mergeWith(if (brn.right == null) null else updateMBR(brn.right))
+
+        brn.rectMBR
+      case node: KdtNode =>
+        node.rectMBR
+      //        case _ => null
+    }
 }

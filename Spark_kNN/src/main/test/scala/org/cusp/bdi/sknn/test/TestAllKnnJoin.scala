@@ -5,25 +5,17 @@ import org.apache.hadoop.io.compress.GzipCodec
 import org.apache.spark.serializer.KryoSerializer
 import org.apache.spark.{SparkConf, SparkContext}
 import org.cusp.bdi.ds.geom.Point
-import org.cusp.bdi.sknn.TypeSpatialIndex
+import org.cusp.bdi.sknn.{SparkKNN, TypeSpatialIndex}
 import org.cusp.bdi.util.{Arguments, CLArgsParser, InputFileParsers, LocalRunConsts}
-import org.cusp.bdi.sknn.SparkKNN
 
 object TestAllKnnJoin {
 
   def main(args: Array[String]): Unit = {
 
-    //    println(math.round(12.34))
-    //    println(math.round(12.45))
-    //    println(math.round(12.50))
-    //    println(math.round(12.51))
-    //    println(math.round(12.55))
-    //System.exit(0)
-
     val startTime = System.currentTimeMillis()
     //    var startTime2 = startTime
 
-//        val clArgs = SparkKNN_Local_CLArgs.random_sample()
+    //        val clArgs = SparkKNN_Local_CLArgs.random_sample()
     val clArgs = CLArgsParser(args, Arguments.lstArgInfo())
 
     //    val clArgs = SparkKNN_Local_CLArgs.busPoint_busPointShift(Arguments())

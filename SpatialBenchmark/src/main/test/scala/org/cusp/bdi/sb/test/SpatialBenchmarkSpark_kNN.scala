@@ -4,7 +4,6 @@ import org.apache.hadoop.fs.{FileSystem, Path}
 import org.apache.hadoop.io.compress.GzipCodec
 import org.apache.spark.serializer.KryoSerializer
 import org.apache.spark.{SparkConf, SparkContext}
-import org.cusp.bdi.sb.test.examples.{Arguments_Benchmark, Benchmark_Local_CLArgs}
 import org.cusp.bdi.util.{CLArgsParser, LocalRunConsts}
 
 object SpatialBenchmarkSpark_kNN extends Serializable {

@@ -3,7 +3,6 @@ package org.cusp.bdi.sb.test
 
 import org.apache.spark.rdd.RDD
 import org.apache.spark.rdd.RDD.rddToPairRDDFunctions
-import org.cusp.bdi.sb.test.examples.BenchmarkInputFileParser
 import org.cusp.bdi.util.Helper
 
 import scala.collection.mutable

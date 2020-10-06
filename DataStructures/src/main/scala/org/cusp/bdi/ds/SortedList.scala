@@ -17,6 +17,9 @@ case class SortedList[T](maxSize: Int) /*(implicit ev$1: T => Comparable[_ >: T]
   private var lastNode: Node[T] = _
   private var nodeCount = 0
 
+  def this() =
+    this(Int.MaxValue)
+
   def clear(): Unit = {
 
     headNode = null

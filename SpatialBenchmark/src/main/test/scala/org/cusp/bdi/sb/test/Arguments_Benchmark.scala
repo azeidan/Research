@@ -1,4 +1,4 @@
-package org.cusp.bdi.sb.test.examples
+package org.cusp.bdi.sb.test
 
 import org.cusp.bdi.util.{Arguments, Helper, LocalRunConsts}
 

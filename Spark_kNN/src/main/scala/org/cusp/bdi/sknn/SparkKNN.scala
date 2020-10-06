@@ -1,12 +1,12 @@
 package org.cusp.bdi.sknn
 
 import org.apache.spark.Partitioner
-import org.apache.spark.broadcast.Broadcast
 import org.apache.spark.rdd.{RDD, ShuffledRDD}
 import org.apache.spark.storage.StorageLevel
 import org.apache.spark.util.SizeEstimator
-import org.cusp.bdi.ds.geom.{Circle, Geom2D, Point, Rectangle}
 import org.cusp.bdi.ds._
+import org.cusp.bdi.ds.geom.{Circle, Geom2D, Point, Rectangle}
+import org.cusp.bdi.sknn.ds.util.{PointData, SpatialIdxRangeLookup}
 import org.cusp.bdi.sknn.util._
 import org.cusp.bdi.util.{Arguments, Helper}
 
@@ -62,6 +62,8 @@ object SparkKNN extends Serializable {
       classOf[Geom2D],
       classOf[QuadTree],
       classOf[KdTree],
+      classOf[KdtNode],
+      classOf[KdtBranchRootNode],
       SparkKNN.getClass,
       classOf[SparkKNN],
       classOf[RowData],
@@ -230,7 +232,7 @@ case class SparkKNN(debugMode: Boolean, k: Int, typeSpatialIndex: TypeSpatialInd
           .reduceByKey((param1, param2) =>
             (math.max(param1._1, param2._1), param1._2 + param2._2, math.min(param1._3, param2._3), math.min(param1._4, param2._4), math.max(param1._5, param2._5), math.max(param1._6, param2._6)))
           .mapPartitions(iter =>
-            Iterator(iter.map(row => (getLstPartition(bvGlobalIndex, row._1).size, row._2))
+            Iterator(iter.map(row => (SpatialIdxRangeLookup.getLstPartition(bvGlobalIndex.value, row._1, k).size, row._2))
               .reduce((param1, param2) =>
                 (math.max(param1._1, param2._1), (math.max(param1._2._1, param2._2._1), param1._2._2 + param2._2._2, math.min(param1._2._3, param2._2._3), math.min(param1._2._4, param2._2._4), math.max(param1._2._5, param2._2._5), math.max(param1._2._6, param2._2._6)))))
           )
@@ -250,7 +252,7 @@ case class SparkKNN(debugMode: Boolean, k: Int, typeSpatialIndex: TypeSpatialInd
       rddLeft
         .mapPartitions(_.map(point => bvGridOp.value.computeSquareXY(point.x, point.y)).toSet.iterator.map((row: (Double, Double)) => (row, Byte.MinValue)))
         .reduceByKey((x, _) => x)
-        .mapPartitions(iter => Iterator(iter.map(row => getLstPartition(bvGlobalIndex, row._1).size).max))
+        .mapPartitions(iter => Iterator(iter.map(row => SpatialIdxRangeLookup.getLstPartition(bvGlobalIndex.value, row._1, k).size).max))
         .max
 
     Helper.loggerSLf4J(debugMode, SparkKNN, ">>LeftDS numRounds time in %,d MS, numRounds: %d".format(System.currentTimeMillis - startTime, numRounds))
@@ -261,7 +263,7 @@ case class SparkKNN(debugMode: Boolean, k: Int, typeSpatialIndex: TypeSpatialInd
         //        if (point.userData.toString().equalsIgnoreCase("taxi_1_a_298697"))
         //          println
 
-        val lstPartitionId = getLstPartition(bvGlobalIndex, bvGridOp.value.computeSquareXY(point.x, point.y))
+        val lstPartitionId = SpatialIdxRangeLookup.getLstPartition(bvGlobalIndex.value, bvGridOp.value.computeSquareXY(point.x, point.y), k)
 
         val rowData: Any = new RowData(point, SortedList[Point](k), Random.shuffle(lstPartitionId.tail))
 
@@ -296,7 +298,7 @@ case class SparkKNN(debugMode: Boolean, k: Int, typeSpatialIndex: TypeSpatialInd
                   //                   if (rowPoint.point.userData.toString().equalsIgnoreCase("taxi_1_a_298697"))
                   //                    println
 
-                  spatialIndex.nearestNeighbor(rowPoint.point, rowPoint.sortedList, k)
+                  spatialIndex.nearestNeighbor(rowPoint.point, rowPoint.sortedList)
 
                   val nextPIdx = if (rowPoint.lstPartitionId.isEmpty) row._1 else rowPoint.lstPartitionId.head
                   rowPoint.lstPartitionId = if (rowPoint.lstPartitionId.isEmpty) null else /*Random.shuffle(*/ rowPoint.lstPartitionId.tail
@@ -379,12 +381,4 @@ case class SparkKNN(debugMode: Boolean, k: Int, typeSpatialIndex: TypeSpatialInd
 
     Rectangle(new Geom2D(halfWidth + minX, halfHeight + minY), new Geom2D(halfWidth, halfHeight))
   }
-
-  private def getLstPartition(bvGlobalIndex: Broadcast[SpatialIndex], searchXY: (Double, Double)) =
-    bvGlobalIndex.value.spatialIdxRangeLookup(searchXY, k)
-      .map(_.data.userData match {
-        case globalIndexPointData: GlobalIndexPointData => globalIndexPointData.partitionIdx
-      })
-      .toSet
-      .toList
 }

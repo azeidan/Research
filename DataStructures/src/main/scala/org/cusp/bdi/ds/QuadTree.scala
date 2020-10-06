@@ -2,8 +2,8 @@ package org.cusp.bdi.ds
 
 import com.esotericsoftware.kryo.Kryo
 import com.esotericsoftware.kryo.io.{Input, Output}
-import org.cusp.bdi.ds.QuadTree.{SER_MARKER, SER_MARKER_NULL, quadCapacity}
-import org.cusp.bdi.ds.SpatialIndex.{testAndAddPoint, updateMatchListAndRegion}
+import org.cusp.bdi.ds.QuadTree.{SER_MARKER, SER_MARKER_NULL, intersects, quadCapacity}
+import org.cusp.bdi.ds.SpatialIndex.testAndAddPoint
 import org.cusp.bdi.ds.geom.{Geom2D, Point, Rectangle}
 
 import scala.collection.mutable
@@ -15,6 +15,9 @@ object QuadTree extends Serializable {
 
   val SER_MARKER_NULL: Byte = Byte.MinValue
   val SER_MARKER: Byte = Byte.MaxValue
+
+  def intersects(quadTree: QuadTree, searchRegion: Rectangle): Boolean =
+    quadTree != null && searchRegion.intersects(quadTree.boundary)
 }
 
 class QuadTree(_boundary: Rectangle) extends SpatialIndex {
@@ -29,28 +32,6 @@ class QuadTree(_boundary: Rectangle) extends SpatialIndex {
   var bottomRight: QuadTree = _
 
   override def getTotalPoints: Int = totalPoints
-
-  override def nearestNeighbor(searchPoint: Point, sortSetSqDist: SortedList[Point], k: Int) {
-
-    //    if (searchPoint.userData.toString().equalsIgnoreCase("yellow_3_a_772558"))
-    //      println
-
-    var searchRegion: Rectangle = null
-
-    var sPtBestQT: QuadTree = null
-
-    sPtBestQT = getBestQuadrant(searchPoint, k)
-
-    val dim = if (sortSetSqDist.isFull)
-      math.sqrt(sortSetSqDist.last.distance)
-    else
-      math.max(math.max(math.abs(searchPoint.x - sPtBestQT.boundary.left), math.abs(searchPoint.x - sPtBestQT.boundary.right)),
-        math.max(math.abs(searchPoint.y - sPtBestQT.boundary.bottom), math.abs(searchPoint.y - sPtBestQT.boundary.top)))
-
-    searchRegion = Rectangle(searchPoint, new Geom2D(dim, dim))
-
-    pointsWithinRegion(sPtBestQT, searchRegion, sortSetSqDist)
-  }
 
   def findExact(searchXY: (Double, Double)): Point = {
 
@@ -140,24 +121,23 @@ class QuadTree(_boundary: Rectangle) extends SpatialIndex {
     throw new Exception("Point insert failed: %s in QuadTree: %s".format(point, this))
   }
 
-  def getAllPoints: ListBuffer[ListBuffer[Point]] = {
-
-    val lstQT = ListBuffer(this)
-
-    lstQT.map(qTree => {
-
-      if (qTree.topLeft != null) lstQT += qTree.topLeft
-      if (qTree.topRight != null) lstQT += qTree.topRight
-      if (qTree.bottomLeft != null) lstQT += qTree.bottomLeft
-      if (qTree.bottomRight != null) lstQT += qTree.bottomRight
-    })
-
-    lstQT.map(_.lstPoints)
-  }
+  //  def getAllPoints: ListBuffer[ListBuffer[Point]] = {
+  //
+  //    val lstQT = ListBuffer(this)
+  //
+  //    lstQT.map(qTree => {
+  //
+  //      if (qTree.topLeft != null) lstQT += qTree.topLeft
+  //      if (qTree.topRight != null) lstQT += qTree.topRight
+  //      if (qTree.bottomLeft != null) lstQT += qTree.bottomLeft
+  //      if (qTree.bottomRight != null) lstQT += qTree.bottomRight
+  //    })
+  //
+  //    lstQT.map(_.lstPoints)
+  //  }
 
   override def toString: String =
     "%s\t%d\t%d".format(boundary, lstPoints.size, totalPoints)
-
 
   override def write(kryo: Kryo, output: Output): Unit = {
 
@@ -214,29 +194,27 @@ class QuadTree(_boundary: Rectangle) extends SpatialIndex {
     }
   }
 
-  private def intersects(quadTree: QuadTree, searchRegion: Rectangle) =
-    quadTree != null && searchRegion.intersects(quadTree.boundary)
+  override def nearestNeighbor(searchPoint: Point, sortSetSqDist: SortedList[Point]) {
 
-  override def spatialIdxRangeLookup(searchXY: (Double, Double), k: Int): SortedList[Point] = {
-
-    //    if (searchPointXY._1.toString().startsWith("26167") && searchPointXY._2.toString().startsWith("4966"))
+    //    if (searchPoint.userData.toString().equalsIgnoreCase("yellow_3_a_772558"))
     //      println
 
-    val searchPoint = new Geom2D(searchXY._1, searchXY._2)
+    val sPtBestQT: QuadTree = getBestQuadrant(searchPoint, sortSetSqDist.maxSize)
 
-    val sPtBestQT = getBestQuadrant(searchPoint, k)
+    val dim = if (sortSetSqDist.isFull)
+      math.sqrt(sortSetSqDist.last.distance)
+    else
+      math.max(math.max(math.abs(searchPoint.x - sPtBestQT.boundary.left), math.abs(searchPoint.x - sPtBestQT.boundary.right)),
+        math.max(math.abs(searchPoint.y - sPtBestQT.boundary.bottom), math.abs(searchPoint.y - sPtBestQT.boundary.top)))
 
-    val dim = math.max(math.max(math.abs(searchPoint.x - sPtBestQT.boundary.left), math.abs(searchPoint.x - sPtBestQT.boundary.right)),
-      math.max(math.abs(searchPoint.y - sPtBestQT.boundary.bottom), math.abs(searchPoint.y - sPtBestQT.boundary.top)))
+    val rectSearchRegion = Rectangle(searchPoint, new Geom2D(dim, dim))
 
-    val searchRegion = Rectangle(searchPoint, new Geom2D(dim, dim))
-
-    spatialIdxRangeLookupHelper(sPtBestQT, searchRegion, k)
+    pointsWithinRegion(sPtBestQT, rectSearchRegion, sortSetSqDist)
   }
 
-  private def pointsWithinRegion(sPtBestQT: QuadTree, searchRegion: Rectangle, sortSetSqDist: SortedList[Point]) {
+  private def pointsWithinRegion(sPtBestQT: QuadTree, rectSearchRegion: Rectangle, sortSetSqDist: SortedList[Point]) {
 
-    val prevMaxSqrDist = new DoubleWrapper(if (sortSetSqDist.last == null) -1 else sortSetSqDist.last.distance)
+    var prevMaxSqrDist = if (sortSetSqDist.last == null) -1 else sortSetSqDist.last.distance
 
     def process(rootQT: QuadTree, skipQT: QuadTree) {
 
@@ -245,15 +223,15 @@ class QuadTree(_boundary: Rectangle) extends SpatialIndex {
       lstQT.foreach(qTree =>
         if (qTree != skipQT) {
 
-          qTree.lstPoints.foreach(testAndAddPoint(_, searchRegion, sortSetSqDist, prevMaxSqrDist))
+          qTree.lstPoints.foreach(pt => prevMaxSqrDist = testAndAddPoint(pt, rectSearchRegion, sortSetSqDist, prevMaxSqrDist))
 
-          if (intersects(qTree.topLeft, searchRegion))
+          if (intersects(qTree.topLeft, rectSearchRegion))
             lstQT += qTree.topLeft
-          if (intersects(qTree.topRight, searchRegion))
+          if (intersects(qTree.topRight, rectSearchRegion))
             lstQT += qTree.topRight
-          if (intersects(qTree.bottomLeft, searchRegion))
+          if (intersects(qTree.bottomLeft, rectSearchRegion))
             lstQT += qTree.bottomLeft
-          if (intersects(qTree.bottomRight, searchRegion))
+          if (intersects(qTree.bottomRight, rectSearchRegion))
             lstQT += qTree.bottomRight
         }
       )
@@ -266,13 +244,13 @@ class QuadTree(_boundary: Rectangle) extends SpatialIndex {
       process(this, sPtBestQT)
   }
 
-  private def getBestQuadrant(searchPoint: Geom2D, k: Int): QuadTree = {
+  def getBestQuadrant(searchPoint: Geom2D, minCount: Int): QuadTree = {
 
     // find leaf containing point
     var qTree: QuadTree = this
 
     def testQuad(qtQuad: QuadTree) =
-      qtQuad != null && qtQuad.totalPoints >= k && qtQuad.boundary.contains(searchPoint)
+      qtQuad != null && qtQuad.totalPoints >= minCount && qtQuad.boundary.contains(searchPoint)
 
     while (true)
       if (testQuad(qTree.topLeft))
@@ -287,38 +265,5 @@ class QuadTree(_boundary: Rectangle) extends SpatialIndex {
         return qTree
 
     null
-  }
-
-  private def spatialIdxRangeLookupHelper(sPtBestQT: QuadTree, searchRegion: Rectangle, k: Int) = {
-
-    val sortList = SortedList[Point](Int.MaxValue)
-    val currInfo = new SearchRegionInfo(sortList.head, math.pow(searchRegion.halfXY.x, 2))
-
-    def process(rootQT: QuadTree, skipQT: QuadTree) {
-
-      val lstQT = ListBuffer(rootQT)
-
-      lstQT.foreach(qTree =>
-        if (qTree != skipQT) {
-
-          qTree.lstPoints
-            .foreach(updateMatchListAndRegion(_, searchRegion, sortList, k, currInfo))
-          if (intersects(qTree.topLeft, searchRegion))
-            lstQT += qTree.topLeft
-          if (intersects(qTree.topRight, searchRegion))
-            lstQT += qTree.topRight
-          if (intersects(qTree.bottomLeft, searchRegion))
-            lstQT += qTree.bottomLeft
-          if (intersects(qTree.bottomRight, searchRegion))
-            lstQT += qTree.bottomRight
-        })
-    }
-
-    process(sPtBestQT, null)
-
-    if (sPtBestQT != this)
-      process(this, sPtBestQT)
-
-    sortList
   }
 }

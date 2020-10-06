@@ -15,7 +15,7 @@ case class Rectangle(center: Geom2D, halfXY: Geom2D) extends Serializable {
   def contains(x: Double, y: Double): Boolean =
     !(x < left || x > right || y < bottom || y > top)
 
-  def mergeWith(other: Rectangle) = {
+  def mergeWith(other: Rectangle): Rectangle = {
     if (other != null) {
 
       val minX = math.min(this.left, other.left)
