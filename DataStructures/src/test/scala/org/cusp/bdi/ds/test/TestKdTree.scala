@@ -4,17 +4,25 @@ import org.cusp.bdi.ds.KdTree
 import org.cusp.bdi.ds.geom.Point
 
 import scala.collection.mutable.ListBuffer
+import scala.io.Source
 
 object TestKdTree {
 
   def main(args: Array[String]): Unit = {
 
-    val lstPoint = ListBuffer(new Point(0.54, 0.93), new Point(0.96, 0.86), new Point(0.42, 0.67), new Point(0.11, 0.53), new Point(0.64, 0.29), new Point(0.27, 0.75), new Point(0.81, 0.63))
+    val iter = Source.fromFile("/media/ayman/Data/GeoMatch_Files/InputFiles/tbd.txt")
+      .getLines().take(8)
+      .map(_.split(","))
+      .map(arr => new Point(arr(1).toDouble, arr(2).toDouble, arr(0)))
+
 
     val kdt = new KdTree()
-    kdt.insert(lstPoint.iterator)
+    kdt.insert(iter)
+
+    println(kdt)
+
     kdt.printInOrder()
 
-    println(kdt.findExact((9, 1)))
+    //    println(kdt.findExact((9, 1)))
   }
 }

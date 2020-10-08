@@ -8,6 +8,7 @@ class Geom2D() extends KryoSerializable {
   var x = 0.0
   var y = 0.0
 
+
   def this(x: Double, y: Double) = {
 
     this()
@@ -15,6 +16,9 @@ class Geom2D() extends KryoSerializable {
     this.x = x
     this.y = y
   }
+
+  def this(dim: Double) =
+    this(dim, dim)
 
   def this(point: Geom2D) =
     this(point.x, point.y)

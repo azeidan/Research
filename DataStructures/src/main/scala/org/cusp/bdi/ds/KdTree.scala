@@ -2,7 +2,7 @@ package org.cusp.bdi.ds
 
 import com.esotericsoftware.kryo.io.{Input, Output}
 import com.esotericsoftware.kryo.{Kryo, KryoSerializable}
-import org.cusp.bdi.ds.KdTree.{computeRectMBR, nodeCapacity}
+import org.cusp.bdi.ds.KdTree.{computeMBR, nodeCapacity}
 import org.cusp.bdi.ds.SpatialIndex.testAndAddPoint
 import org.cusp.bdi.ds.geom.{Geom2D, Point, Rectangle}
 
@@ -13,20 +13,20 @@ object KdTree extends Serializable {
 
   val nodeCapacity = 4
 
-  def computeRectMBR(arrPoints: Array[Point]): Rectangle = {
+  def computeMBR(arrPoints: Array[Point]): Rectangle = {
 
-    if (arrPoints == null)
-      null
-    else {
+    //    if (arrPoints == null || arrPoints.length == 0)
+    //      null
+    //    else {
 
-      val ends = arrPoints
-        .map(point => (point.x, point.y, point.x, point.y))
-        .reduce((mbr1, mbr2) => (math.min(mbr1._1, mbr2._1), math.min(mbr1._2, mbr2._2), math.max(mbr1._3, mbr2._3), math.max(mbr1._4, mbr2._4)))
+    val ends = arrPoints
+      .map(point => (point.x, point.y, point.x, point.y))
+      .reduce((mbr1, mbr2) => (math.min(mbr1._1, mbr2._1), math.min(mbr1._2, mbr2._2), math.max(mbr1._3, mbr2._3), math.max(mbr1._4, mbr2._4)))
 
-      val halfXY = new Geom2D(((ends._3 - ends._1) + 1) / 2, ((ends._4 - ends._2) + 1) / 2)
+    val halfXY = new Geom2D(((ends._3 - ends._1) + 1) / 2, ((ends._4 - ends._2) + 1) / 2)
 
-      Rectangle(new Geom2D(ends._1 + halfXY.x, ends._2 + halfXY.y), halfXY)
-    }
+    Rectangle(new Geom2D(ends._1 + halfXY.x, ends._2 + halfXY.y), halfXY)
+    //    }
   }
 }
 
@@ -34,10 +34,10 @@ class KdtNode(_arrPoints: Array[Point]) extends KryoSerializable {
 
   var arrPoints: Array[Point] = _arrPoints
   var totalPoints: Int = if (_arrPoints == null) 0 else _arrPoints.length
-  var rectMBR: Rectangle = if (_arrPoints == null) null else computeRectMBR(_arrPoints)
+  var rectMBR: Rectangle = if (_arrPoints == null) null else computeMBR(_arrPoints)
 
   override def toString: String =
-    "%s\t%d\t%s".format(rectMBR, arrPoints.length, rectMBR)
+    "%s\t%d\t%d".format(rectMBR, arrPoints.length, totalPoints)
 
   override def write(kryo: Kryo, output: Output): Unit = {
 
@@ -106,6 +106,9 @@ class KdTree extends SpatialIndex {
     if (root != null)
       throw new IllegalStateException("KD Tree already built")
 
+    //    if (arrPoints.filter(_.userData.toString().equalsIgnoreCase("Bread_3_B_219256")).take(1).nonEmpty)
+    //      println
+
     if (arrPoints.length <= nodeCapacity)
       root = new KdtNode(arrPoints)
     else {
@@ -123,13 +126,23 @@ class KdTree extends SpatialIndex {
         // [EQ, LT, GT]
         val arrSplitLists = threeWayPartition(arrPointsNode, splitX)
 
+        //        if (arrSplitLists(0).filter(_.userData.toString().equalsIgnoreCase("Bread_3_B_219256")).take(1).nonEmpty)
+        //          println
+
         currNode.arrPoints = arrSplitLists(0)
-        currNode.rectMBR = computeRectMBR(arrSplitLists(0))
+        currNode.rectMBR = computeMBR(arrSplitLists(0))
+
+        //        if (arrSplitLists(0).filter(_.userData.toString.equalsIgnoreCase("Bread_3_B_219256")).take(1).nonEmpty)
+        //          println
 
         if (arrSplitLists(1).nonEmpty)
-          if (arrSplitLists(1).length <= nodeCapacity)
+          if (arrSplitLists(1).length <= nodeCapacity) {
+
             currNode.left = new KdtNode(arrSplitLists(1))
-          else {
+
+            //            if (arrSplitLists(1).filter(_.userData.toString().equalsIgnoreCase("Bread_3_B_219256")).take(1).nonEmpty)
+            //              println
+          } else {
 
             kdtBranchRootNode = new KdtBranchRootNode(arrSplitLists(1))
             currNode.left = kdtBranchRootNode
@@ -137,9 +150,13 @@ class KdTree extends SpatialIndex {
           }
 
         if (arrSplitLists(2).nonEmpty)
-          if (arrSplitLists(2).length <= nodeCapacity)
+          if (arrSplitLists(2).length <= nodeCapacity) {
+
             currNode.right = new KdtNode(arrSplitLists(2))
-          else {
+
+            //            if (arrSplitLists(2).filter(_.userData.toString().equalsIgnoreCase("Bread_3_B_219256")).take(1).nonEmpty)
+            //              println
+          } else {
 
             kdtBranchRootNode = new KdtBranchRootNode(arrSplitLists(2))
             currNode.right = kdtBranchRootNode
@@ -150,6 +167,25 @@ class KdTree extends SpatialIndex {
 
     // update MBRs
     updateMBR(this.root)
+
+    //    tmp(this.root)
+    //
+    //    def tmp(nd: KdtNode): Unit = {
+    //      nd match {
+    //        case kdtBranchRootNode: KdtBranchRootNode => {
+    //
+    //          if (kdtBranchRootNode.left != null)
+    //            if (kdtBranchRootNode.left.arrPoints.filter(_.userData.toString.equalsIgnoreCase("Bread_3_B_219256")).take(1).nonEmpty)
+    //              println
+    //
+    //          if (kdtBranchRootNode.left != null)
+    //            tmp(kdtBranchRootNode.left)
+    //          if (kdtBranchRootNode.right != null)
+    //            tmp(kdtBranchRootNode.right)
+    //        }
+    //        case _ =>
+    //      }
+    //    }
 
     true
   }
@@ -192,19 +228,18 @@ class KdTree extends SpatialIndex {
   def printInOrder(): Unit =
     printInOrder(root, "")
 
-  def printInOrder(node: KdtNode, delimiter: String): Unit = {
-
+  def printInOrder(node: KdtNode, delimiter: String): Unit =
     if (node != null) {
+
+      println("%s%s[%s]".format(delimiter, node, node.arrPoints.mkString(",")))
 
       node match {
         case brn: KdtBranchRootNode =>
           printInOrder(brn.left, delimiter + "\t")
           printInOrder(brn.right, delimiter + "\t")
-        case node: KdtNode =>
-          println("%s%s".format(delimiter, node))
+        case _ =>
       }
     }
-  }
 
   override def toString: String =
     "%s".format(root)
@@ -254,11 +289,11 @@ class KdTree extends SpatialIndex {
 
   override def nearestNeighbor(searchPoint: Point, sortSetSqDist: SortedList[Point]) {
 
-    //    if (searchPoint.userData.toString().equalsIgnoreCase("taxi_1_a_298697"))
-    //      println
-
     var searchRegion: Rectangle = null
     var sPtBestNode: KdtNode = null
+
+    if (searchPoint.userData.toString().equalsIgnoreCase("bread_3_a_822279"))
+      println()
 
     sPtBestNode = getBestNode(searchPoint, sortSetSqDist.maxSize)
 
@@ -286,15 +321,27 @@ class KdTree extends SpatialIndex {
 
         val node = stackNode.pop
 
-        if (node != skipBranchRootNode && searchRegion.intersects(node.rectMBR)) {
+        //        if (searchRegion.center match {
+        //          case pt: Point => pt.userData.toString().equalsIgnoreCase("bread_3_a_822279")
+        //          case _ => false
+        //        })
+        //          if (node.arrPoints.filter(_.userData.toString().equalsIgnoreCase("Bread_3_B_219256")).take(1).nonEmpty)
+        //        println
+
+        if (node != skipBranchRootNode && node.rectMBR.intersects(searchRegion)) {
 
           node.arrPoints.foreach(pt => prevMaxSqrDist = testAndAddPoint(pt, searchRegion, sortSetSqDist, prevMaxSqrDist))
 
           node match {
             case brn: KdtBranchRootNode =>
 
-              if (brn.left != null && brn.left.rectMBR.intersects(searchRegion))
+              if (brn.left != null && brn.left.rectMBR.intersects(searchRegion)) {
+
                 stackNode.push(brn.left)
+
+                //                if (brn.left.arrPoints.filter(_.userData.toString().equalsIgnoreCase("Bread_3_B_219256")).take(1).nonEmpty)
+                //                  println
+              }
 
               if (brn.right != null && brn.right.rectMBR.intersects(searchRegion))
                 stackNode.push(brn.right)
@@ -317,37 +364,44 @@ class KdTree extends SpatialIndex {
     // find leaf containing point
     var nodeCurr = root
 
-    def testNode(kdtNode: KdtNode) =
+    def testNode(kdtNode: KdtNode): Boolean =
       kdtNode != null && kdtNode.totalPoints >= k && kdtNode.rectMBR.contains(searchPoint)
 
-    while (true)
-      nodeCurr match {
+    var splitX = true
 
-        case brn: KdtBranchRootNode =>
-          if (testNode(brn.left))
-            nodeCurr = brn.left
-          else if (testNode(brn.right))
-            nodeCurr = brn.right
-          else
-            return nodeCurr
+    while (true) {
+      if ((if (splitX) nodeCurr.arrPoints.head.x else nodeCurr.arrPoints.head.y).equals(if (splitX) searchPoint.x else searchPoint.y))
+        return nodeCurr
+      else
+        nodeCurr match {
 
-        case node: KdtNode =>
-          return node
-      }
+          case brn: KdtBranchRootNode =>
+            if (testNode(brn.left))
+              nodeCurr = brn.left
+            else if (testNode(brn.right))
+              nodeCurr = brn.right
+            else
+              return nodeCurr
+
+          case node: KdtNode =>
+            return node
+        }
+
+      splitX = !splitX
+    }
 
     null
   }
 
-  private def updateMBR(kdtNode: KdtNode): Rectangle =
+  private def updateMBR(kdtNode: KdtNode): Rectangle = {
     kdtNode match {
       case brn: KdtBranchRootNode =>
         brn.rectMBR
           .mergeWith(if (brn.left == null) null else updateMBR(brn.left))
           .mergeWith(if (brn.right == null) null else updateMBR(brn.right))
-
-        brn.rectMBR
-      case node: KdtNode =>
-        node.rectMBR
-      //        case _ => null
+      case _: KdtNode =>
     }
+
+    kdtNode.rectMBR
+  }
 }

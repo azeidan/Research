@@ -260,8 +260,8 @@ case class SparkKNN(debugMode: Boolean, k: Int, typeSpatialIndex: TypeSpatialInd
     var rddPoint = rddLeft
       .mapPartitions(iter => iter.map(point => {
 
-        //        if (point.userData.toString().equalsIgnoreCase("taxi_1_a_298697"))
-        //          println
+//        if (point.userData.toString().equalsIgnoreCase("bread_3_a_822279"))
+//          println
 
         val lstPartitionId = SpatialIdxRangeLookup.getLstPartition(bvGlobalIndex.value, bvGridOp.value.computeSquareXY(point.x, point.y), k)
 
@@ -295,7 +295,7 @@ case class SparkKNN(debugMode: Boolean, k: Int, typeSpatialIndex: TypeSpatialInd
                   row
                 else {
 
-                  //                   if (rowPoint.point.userData.toString().equalsIgnoreCase("taxi_1_a_298697"))
+                  //                  if (rowPoint.point.userData.toString().equalsIgnoreCase("bread_3_a_822279"))
                   //                    println
 
                   spatialIndex.nearestNeighbor(rowPoint.point, rowPoint.sortedList)
@@ -364,9 +364,9 @@ case class SparkKNN(debugMode: Boolean, k: Int, typeSpatialIndex: TypeSpatialInd
 
   private def buildQTBoundary(mbrMin: (Double, Double), mbrMax: (Double, Double)): Rectangle = {
 
-    val pointHalfXY = new Geom2D(((mbrMax._1 - mbrMin._1) + 1) / 2.0, ((mbrMax._2 - mbrMin._2) + 1) / 2.0)
+    val halfXY = new Geom2D(((mbrMax._1 - mbrMin._1) + 1) / 2, ((mbrMax._2 - mbrMin._2) + 1) / 2)
 
-    Rectangle(new Geom2D(pointHalfXY.x + mbrMin._1, pointHalfXY.y + mbrMin._2), pointHalfXY)
+    Rectangle(new Geom2D(mbrMin._1 + halfXY.x, mbrMin._2 + halfXY.y), halfXY)
   }
 
   private def buildQTBoundary(mbr: (Double, Double, Double, Double), gridSquareLen: Double): Rectangle = {

@@ -17,7 +17,9 @@ trait PointData extends Serializable {
 
 object SpatialIdxRangeLookup extends Serializable {
 
-  case class SearchRegionInfo(rectSearchRegion: Rectangle, errorRange: Float) {
+  val errorRange: Float = math.sqrt(8).toFloat
+
+  case class SearchRegionInfo(rectSearchRegion: Rectangle) {
 
     val sortList: SortedList[Point] = new SortedList[Point]()
     var limitNode: Node[Point] = _
@@ -25,7 +27,6 @@ object SpatialIdxRangeLookup extends Serializable {
     var weight: Long = 0L
   }
 
-  val errorRange: Float = math.sqrt(8).toFloat
 
   def getLstPartition(spatialIndex: SpatialIndex, searchXY: (Double, Double), k: Int): List[Int] =
     (spatialIndex match {
@@ -38,7 +39,7 @@ object SpatialIdxRangeLookup extends Serializable {
       .toSet
       .toList
 
-  def lookup(quadTree: QuadTree, searchXY: (Double, Double), k: Int): SortedList[Point] = {
+  private def lookup(quadTree: QuadTree, searchXY: (Double, Double), k: Int): SortedList[Point] = {
 
     //    if (searchPointXY._1.toString().startsWith("26167") && searchPointXY._2.toString().startsWith("4966"))
     //      println
@@ -47,19 +48,7 @@ object SpatialIdxRangeLookup extends Serializable {
 
     val sPtBestQT = quadTree.getBestQuadrant(searchPoint, k)
 
-    val dim = math.max(math.max(math.abs(searchPoint.x - sPtBestQT.boundary.left), math.abs(searchPoint.x - sPtBestQT.boundary.right)),
-      math.max(math.abs(searchPoint.y - sPtBestQT.boundary.bottom), math.abs(searchPoint.y - sPtBestQT.boundary.top)))
-
-    val rectSearchRegion = Rectangle(searchPoint, new Geom2D(dim, dim))
-
-    val searchRegionInfo = SearchRegionInfo(rectSearchRegion, errorRange)
-
-    lookupHelper(sPtBestQT, quadTree, searchRegionInfo, k)
-
-    searchRegionInfo.sortList
-  }
-
-  private def lookupHelper(sPtBestQT: QuadTree, quadTree: QuadTree, searchRegionInfo: SearchRegionInfo, k: Int) {
+    val searchRegionInfo = buildSearchRegionInfo(searchPoint, sPtBestQT.boundary)
 
     def process(rootQT: QuadTree, skipQT: QuadTree) {
 
@@ -68,8 +57,8 @@ object SpatialIdxRangeLookup extends Serializable {
       lstQT.foreach(qt =>
         if (qt != skipQT) {
 
-          qt.lstPoints
-            .foreach(updateMatchListAndRegion(_, searchRegionInfo, k))
+          qt.lstPoints.foreach(updateMatchListAndRegion(_, searchRegionInfo, k))
+
           if (QuadTree.intersects(qt.topLeft, searchRegionInfo.rectSearchRegion))
             lstQT += qt.topLeft
           if (QuadTree.intersects(qt.topRight, searchRegionInfo.rectSearchRegion))
@@ -85,9 +74,27 @@ object SpatialIdxRangeLookup extends Serializable {
 
     if (sPtBestQT != quadTree)
       process(quadTree, sPtBestQT)
+
+    searchRegionInfo.sortList
   }
 
-  def lookup(kdTree: KdTree, searchXY: (Double, Double), k: Int): SortedList[Point] = {
+  private def buildSearchRegionInfo(searchPoint: Geom2D, rectMBR: Rectangle): SearchRegionInfo = {
+
+    //    val dim = math.max(math.max(math.abs(searchPoint.x - rectMBR.left), math.abs(searchPoint.x - rectMBR.right)),
+    //      math.max(math.abs(searchPoint.y - rectMBR.bottom), math.abs(searchPoint.y - rectMBR.top))) /*+ errorRange*/
+
+    val left = rectMBR.left
+    val bottom = rectMBR.bottom
+    val right = rectMBR.right
+    val top = rectMBR.top
+
+    val dim = math.sqrt(math.max(math.max(Helper.squaredDist(searchPoint.x, searchPoint.y, left, bottom), Helper.squaredDist(searchPoint.x, searchPoint.y, right, bottom)),
+      math.max(Helper.squaredDist(searchPoint.x, searchPoint.y, right, top), Helper.squaredDist(searchPoint.x, searchPoint.y, left, top))))
+
+    SearchRegionInfo(Rectangle(searchPoint, new Geom2D(dim)))
+  }
+
+  private def lookup(kdTree: KdTree, searchXY: (Double, Double), k: Int): SortedList[Point] = {
 
     //    if (searchPointXY._1.toString().startsWith("26167") && searchPointXY._2.toString().startsWith("4966"))
     //      println
@@ -96,19 +103,7 @@ object SpatialIdxRangeLookup extends Serializable {
 
     val sPtBestNode = kdTree.getBestNode(searchPoint, k)
 
-    val dim = math.max(math.max(math.abs(searchPoint.x - sPtBestNode.rectMBR.left), math.abs(searchPoint.x - sPtBestNode.rectMBR.right)),
-      math.max(math.abs(searchPoint.y - sPtBestNode.rectMBR.bottom), math.abs(searchPoint.y - sPtBestNode.rectMBR.top)))
-
-    val rectSearchRegion = Rectangle(searchPoint, new Geom2D(dim, dim))
-
-    val searchRegionInfo = SearchRegionInfo(rectSearchRegion, errorRange)
-
-    lookupHelper(sPtBestNode, kdTree, searchRegionInfo, k)
-
-    searchRegionInfo.sortList
-  }
-
-  private def lookupHelper(sPtBestNode: KdtNode, kdTree: KdTree, searchRegionInfo: SearchRegionInfo, k: Int): Unit = {
+    val searchRegionInfo = buildSearchRegionInfo(searchPoint, sPtBestNode.rectMBR)
 
     def process(branchRootNode: KdtNode, skipBranchRootNode: KdtNode) {
 
@@ -141,6 +136,8 @@ object SpatialIdxRangeLookup extends Serializable {
 
     if (sPtBestNode != kdTree.root)
       process(kdTree.root, sPtBestNode)
+
+    searchRegionInfo.sortList
   }
 
   private def updateMatchListAndRegion(point: Point, searchRegionInfo: SearchRegionInfo, k: Int): Unit = {
@@ -180,7 +177,7 @@ object SpatialIdxRangeLookup extends Serializable {
 
             searchRegionInfo.limitNode = elem
 
-            searchRegionInfo.rectSearchRegion.halfXY.x = math.sqrt(searchRegionInfo.limitNode.distance) + searchRegionInfo.errorRange
+            searchRegionInfo.rectSearchRegion.halfXY.x = math.sqrt(searchRegionInfo.limitNode.distance) + errorRange
             searchRegionInfo.rectSearchRegion.halfXY.y = searchRegionInfo.rectSearchRegion.halfXY.x
 
             searchRegionInfo.sqDim = math.pow(searchRegionInfo.rectSearchRegion.halfXY.x, 2)

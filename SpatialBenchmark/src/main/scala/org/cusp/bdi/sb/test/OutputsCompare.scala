@@ -3,6 +3,7 @@ package org.cusp.bdi.sb.test
 
 import org.apache.spark.rdd.RDD
 import org.apache.spark.rdd.RDD.rddToPairRDDFunctions
+import org.cusp.bdi.sb.test.OutputsCompare.COL_WIDTH
 import org.cusp.bdi.util.Helper
 
 import scala.collection.mutable
@@ -21,6 +22,10 @@ object OutputsCompare {
   val recordsFWUnderMatched = "Records framework undermatched"
   val recordsInFWOnly = "Records appeared in framework only"
   val recordsInKMOnly = "Records appeared in key match only"
+
+  val COL_WIDTH = Array(recordsBothNoMatch.length, recordsCount.length, recordsFWCorrectMatched.length, recordsFWFailedToMatch.length, recordsFWMismatch.length,
+    recordsFWOnlyMatched.length, recordsFWOverMatched.length, recordsFWUnderMatched.length, recordsInFWOnly.length, recordsInKMOnly.length)
+    .max
 }
 
 case class OutputsCompare(classificationCount: Int, rddKeyMatch: RDD[String],
@@ -235,19 +240,14 @@ case class OutputsCompare(classificationCount: Int, rddKeyMatch: RDD[String],
     }
   }
 
-  private def getFormatted(mapResults: mutable.HashMap[String, Long], key: String, default: AnyVal) = {
-
-    val opt = mapResults.get(key)
-    val value = if (opt.isEmpty) default else opt.get
-
-    // Long data type assumed a count
-    // Double data type assumed a percentage
-    value match {
-      case l: Long => "%41s".format(key) + ": " + "%,d".format(l)
-      case d: Double => "%41s".format(key) + ": " + "%.4f%%".format(d)
-      case _ => "%41s".format(key) + ": " + value
+  private def getFormatted(mapResults: mutable.HashMap[String, Long], key: String, default: AnyVal) =
+    mapResults.getOrElse(key, default) match {
+      // Long data type assumed a count
+      // Double data type assumed a percentage
+      case l: Long => ("%" + COL_WIDTH + "s: %,d").format(key, l)
+      case d: Double => ("%" + COL_WIDTH + "s: %.8e%%").format(key, d)
+      case other => ("%" + COL_WIDTH + "s: %s").format(key, other)
     }
-  }
 
   private def instantiateParser(className: String): BenchmarkInputFileParser = {
 
