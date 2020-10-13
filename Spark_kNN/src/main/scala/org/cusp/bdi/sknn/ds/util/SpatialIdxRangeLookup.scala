@@ -1,5 +1,7 @@
 package org.cusp.bdi.sknn.ds.util
 
+import org.cusp.bdi.ds.KdTree.testNode
+import org.cusp.bdi.ds.SpatialIndex.computeDimension
 import org.cusp.bdi.ds._
 import org.cusp.bdi.ds.geom.{Geom2D, Point, Rectangle}
 import org.cusp.bdi.sknn.GlobalIndexPointData
@@ -27,7 +29,6 @@ object SpatialIdxRangeLookup extends Serializable {
     var weight: Long = 0L
   }
 
-
   def getLstPartition(spatialIndex: SpatialIndex, searchXY: (Double, Double), k: Int): List[Int] =
     (spatialIndex match {
       case quadTree: QuadTree => lookup(quadTree, searchXY, k)
@@ -46,9 +47,9 @@ object SpatialIdxRangeLookup extends Serializable {
 
     val searchPoint = new Geom2D(searchXY._1, searchXY._2)
 
-    val sPtBestQT = quadTree.getBestQuadrant(searchPoint, k)
+    val sPtBestQT = quadTree.findBestQuadrant(searchPoint, k)
 
-    val searchRegionInfo = buildSearchRegionInfo(searchPoint, sPtBestQT.boundary)
+    val searchRegionInfo = buildSearchRegionInfo(searchPoint, sPtBestQT.rectBounds)
 
     def process(rootQT: QuadTree, skipQT: QuadTree) {
 
@@ -78,22 +79,6 @@ object SpatialIdxRangeLookup extends Serializable {
     searchRegionInfo.sortList
   }
 
-  private def buildSearchRegionInfo(searchPoint: Geom2D, rectMBR: Rectangle): SearchRegionInfo = {
-
-    //    val dim = math.max(math.max(math.abs(searchPoint.x - rectMBR.left), math.abs(searchPoint.x - rectMBR.right)),
-    //      math.max(math.abs(searchPoint.y - rectMBR.bottom), math.abs(searchPoint.y - rectMBR.top))) /*+ errorRange*/
-
-    val left = rectMBR.left
-    val bottom = rectMBR.bottom
-    val right = rectMBR.right
-    val top = rectMBR.top
-
-    val dim = math.sqrt(math.max(math.max(Helper.squaredDist(searchPoint.x, searchPoint.y, left, bottom), Helper.squaredDist(searchPoint.x, searchPoint.y, right, bottom)),
-      math.max(Helper.squaredDist(searchPoint.x, searchPoint.y, right, top), Helper.squaredDist(searchPoint.x, searchPoint.y, left, top))))
-
-    SearchRegionInfo(Rectangle(searchPoint, new Geom2D(dim)))
-  }
-
   private def lookup(kdTree: KdTree, searchXY: (Double, Double), k: Int): SortedList[Point] = {
 
     //    if (searchPointXY._1.toString().startsWith("26167") && searchPointXY._2.toString().startsWith("4966"))
@@ -101,44 +86,47 @@ object SpatialIdxRangeLookup extends Serializable {
 
     val searchPoint = new Geom2D(searchXY._1, searchXY._2)
 
-    val sPtBestNode = kdTree.getBestNode(searchPoint, k)
+    val sPtBestNodeInf = kdTree.findBestNode(searchPoint, k)
 
-    val searchRegionInfo = buildSearchRegionInfo(searchPoint, sPtBestNode.rectMBR)
+    val searchRegionInfo = buildSearchRegionInfo(searchPoint, sPtBestNodeInf._1.rectBounds)
 
-    def process(branchRootNode: KdtNode, skipBranchRootNode: KdtNode) {
+    def process(kdtNode: KdtNode, splitX: Boolean, skipBranchRootNode: KdtNode) {
 
-      val stackNode = mutable.Stack(branchRootNode)
+      val stackNode = mutable.Stack((kdtNode, splitX))
 
       while (stackNode.nonEmpty) {
 
-        val node = stackNode.pop
+        val (node, checkX) = stackNode.pop
 
-        if (node != skipBranchRootNode && searchRegionInfo.rectSearchRegion.intersects(node.rectMBR)) {
-
-          node.arrPoints.foreach(updateMatchListAndRegion(_, searchRegionInfo, k))
-
+        if (node != skipBranchRootNode)
           node match {
             case brn: KdtBranchRootNode =>
 
-              if (brn.left != null && brn.left.rectMBR.intersects(searchRegionInfo.rectSearchRegion))
-                stackNode.push(brn.left)
+              if (testNode(brn, checkX, searchRegionInfo.rectSearchRegion)) {
 
-              if (brn.right != null && brn.right.rectMBR.intersects(searchRegionInfo.rectSearchRegion))
-                stackNode.push(brn.right)
+                brn.lstPoints.foreach(updateMatchListAndRegion(_, searchRegionInfo, k))
 
-            case _ =>
+                if (brn.left != null)
+                  stackNode.push((brn.left, !checkX))
+
+                if (brn.right != null)
+                  stackNode.push((brn.right, !checkX))
+              }
+            case ln: KdtNode => ln.lstPoints.foreach(updateMatchListAndRegion(_, searchRegionInfo, k))
           }
-        }
       }
     }
 
-    process(sPtBestNode, null)
+    process(sPtBestNodeInf._1, sPtBestNodeInf._2, null)
 
-    if (sPtBestNode != kdTree.root)
-      process(kdTree.root, sPtBestNode)
+    if (sPtBestNodeInf._1 != kdTree.root)
+      process(kdTree.root, splitX = true, sPtBestNodeInf._1)
 
     searchRegionInfo.sortList
   }
+
+  private def buildSearchRegionInfo(searchPoint: Geom2D, rectMBR: Rectangle): SearchRegionInfo =
+    SearchRegionInfo(Rectangle(searchPoint, new Geom2D(computeDimension(searchPoint, rectMBR))))
 
   private def updateMatchListAndRegion(point: Point, searchRegionInfo: SearchRegionInfo, k: Int): Unit = {
 

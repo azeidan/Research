@@ -2,6 +2,14 @@ package org.cusp.bdi.ds.geom
 
 case class Rectangle(center: Geom2D, halfXY: Geom2D) extends Serializable {
 
+  def halveBy(splitAlongX: Boolean): (Rectangle, Rectangle) = {
+
+    val (newHalfX, newHalfY) = if (splitAlongX) (this.halfXY.x / 2, this.halfXY.y) else (this.halfXY.x, this.halfXY.y / 2)
+
+    (Rectangle(new Geom2D(this.left + newHalfX, this.bottom + newHalfY), new Geom2D(newHalfX, newHalfY)),
+      Rectangle(new Geom2D(this.right - newHalfX, this.top - newHalfY), new Geom2D(newHalfX, newHalfY)))
+  }
+
   def this(other: Rectangle) =
     this(new Geom2D(other.center), new Geom2D(other.halfXY))
 

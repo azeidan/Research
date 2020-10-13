@@ -23,7 +23,7 @@ object OutputsCompare {
   val recordsInFWOnly = "Records appeared in framework only"
   val recordsInKMOnly = "Records appeared in key match only"
 
-  val COL_WIDTH = Array(recordsBothNoMatch.length, recordsCount.length, recordsFWCorrectMatched.length, recordsFWFailedToMatch.length, recordsFWMismatch.length,
+  val COL_WIDTH: Int = Array(recordsBothNoMatch.length, recordsCount.length, recordsFWCorrectMatched.length, recordsFWFailedToMatch.length, recordsFWMismatch.length,
     recordsFWOnlyMatched.length, recordsFWOverMatched.length, recordsFWUnderMatched.length, recordsInFWOnly.length, recordsInKMOnly.length)
     .max
 }

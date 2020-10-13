@@ -2,10 +2,20 @@ package org.cusp.bdi.sknn.util
 
 final class GridOperation(mbrDS1Left: Double, mbrDS1Bottom: Double, mbrDS1Right: Double, mbrDS1Top: Double, totalRowCount: Long, k: Int) extends Serializable {
 
-  private val pointPerSquare = (totalRowCount.toDouble / k).toLong + 1
+  private val pointPerSquare: Int = {
 
-  val squareLen: Double = math.max(math.ceil((mbrDS1Right - mbrDS1Left) / pointPerSquare), math.ceil((mbrDS1Top - mbrDS1Bottom) / pointPerSquare))
+    val tmp = totalRowCount / k
+
+    if (tmp >= Int.MaxValue) Int.MaxValue else tmp.toInt + 1 // ceil(...
+  }
+
+  val squareDim: Int = {
+
+    val tmp = (math.max(mbrDS1Right - mbrDS1Left, mbrDS1Top - mbrDS1Bottom) / pointPerSquare)
+
+    if (tmp >= Int.MaxValue) Int.MaxValue else tmp.toInt + 1 // ceil(...
+  }
 
   def computeSquareXY(x: Double, y: Double): (Double, Double) =
-    (math.floor(x / squareLen), math.floor(y / squareLen))
+    (math.floor(x / squareDim), math.floor(y / squareDim))
 }
