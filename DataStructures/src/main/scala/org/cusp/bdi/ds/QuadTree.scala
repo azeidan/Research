@@ -2,7 +2,7 @@ package org.cusp.bdi.ds
 
 import com.esotericsoftware.kryo.Kryo
 import com.esotericsoftware.kryo.io.{Input, Output}
-import org.cusp.bdi.ds.QuadTree.{SER_MARKER, SER_MARKER_NULL, intersects, quadCapacity}
+import org.cusp.bdi.ds.QuadTree.{SER_MARKER, SER_MARKER_NULL, quadCapacity}
 import org.cusp.bdi.ds.SpatialIndex.{computeDimension, testAndAddPoint}
 import org.cusp.bdi.ds.geom.{Geom2D, Point, Rectangle}
 
@@ -16,8 +16,8 @@ object QuadTree extends Serializable {
   val SER_MARKER_NULL: Byte = Byte.MinValue
   val SER_MARKER: Byte = Byte.MaxValue
 
-  def intersects(quadTree: QuadTree, searchRegion: Rectangle): Boolean =
-    quadTree != null && searchRegion.intersects(quadTree.rectBounds)
+  //  def intersects(quadTree: QuadTree, searchRegion: Rectangle): Boolean =
+  //    quadTree != null && quadTree.rectBounds.intersects(searchRegion)
 }
 
 class QuadTree(_rectBounds: Rectangle) extends SpatialIndex {
@@ -59,9 +59,9 @@ class QuadTree(_rectBounds: Rectangle) extends SpatialIndex {
     null
   }
 
-  override def insert(iterPoints: Iterator[Point]): Boolean = {
+  override def insert(lstPoints: ListBuffer[Point]): Boolean = {
 
-    iterPoints.foreach(insertPoint)
+    lstPoints.foreach(insertPoint)
 
     true
   }
@@ -184,15 +184,12 @@ class QuadTree(_rectBounds: Rectangle) extends SpatialIndex {
     //    if (searchPoint.userData.toString().equalsIgnoreCase("yellow_3_a_772558"))
     //      println
 
-    val sPtBestQT: QuadTree = findBestQuadrant(searchPoint, sortSetSqDist.maxSize)
+    val sPtBestQT = findBestQuadrant(searchPoint, sortSetSqDist.maxSize)
 
     val dim = if (sortSetSqDist.isFull)
       math.sqrt(sortSetSqDist.last.distance)
     else
-    //      Double.MaxValue
       computeDimension(searchPoint, sPtBestQT.rectBounds)
-    //      math.max(math.max(math.abs(searchPoint.x - sPtBestQT.boundary.left), math.abs(searchPoint.x - sPtBestQT.boundary.right)),
-    //        math.max(math.abs(searchPoint.y - sPtBestQT.boundary.bottom), math.abs(searchPoint.y - sPtBestQT.boundary.top)))
 
     val rectSearchRegion = Rectangle(searchPoint, new Geom2D(dim))
 
@@ -203,19 +200,20 @@ class QuadTree(_rectBounds: Rectangle) extends SpatialIndex {
       val lstQT = ListBuffer(rootQT)
 
       lstQT.foreach(qTree =>
-        if (qTree != skipQT) {
+        if (qTree != skipQT)
+          if (rectSearchRegion.intersects(qTree.rectBounds)) {
 
-          qTree.lstPoints.foreach(pt => prevMaxSqrDist = testAndAddPoint(pt, rectSearchRegion, sortSetSqDist, prevMaxSqrDist))
+            qTree.lstPoints.foreach(pt => prevMaxSqrDist = testAndAddPoint(pt, rectSearchRegion, sortSetSqDist, prevMaxSqrDist))
 
-          if (intersects(qTree.topLeft, rectSearchRegion))
-            lstQT += qTree.topLeft
-          if (intersects(qTree.topRight, rectSearchRegion))
-            lstQT += qTree.topRight
-          if (intersects(qTree.bottomLeft, rectSearchRegion))
-            lstQT += qTree.bottomLeft
-          if (intersects(qTree.bottomRight, rectSearchRegion))
-            lstQT += qTree.bottomRight
-        }
+            if (qTree.topLeft != null)
+              lstQT += qTree.topLeft
+            if (qTree.topRight != null)
+              lstQT += qTree.topRight
+            if (qTree.bottomLeft != null)
+              lstQT += qTree.bottomLeft
+            if (qTree.bottomRight != null)
+              lstQT += qTree.bottomRight
+          }
       )
     }
 

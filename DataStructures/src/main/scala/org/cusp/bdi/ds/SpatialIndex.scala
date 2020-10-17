@@ -4,18 +4,23 @@ import com.esotericsoftware.kryo.KryoSerializable
 import org.cusp.bdi.ds.geom.{Geom2D, Point, Rectangle}
 import org.cusp.bdi.util.Helper
 
+import scala.collection.mutable.ListBuffer
+
 object SpatialIndex {
 
   //  val MAX_SEARCH_REGION_DIM = math.sqrt(Double.MaxValue)
 
-  def computeBounds(lstPoints: List[Point]): ((Double, Double), (Double, Double)) = {
+  def calcListInfo(iterPoints: Iterable[Point]): (Int, Rectangle) = {
 
-    var minX = Double.MaxValue
-    var minY = Double.MaxValue
-    var maxX = Double.MinValue
-    var maxY = Double.MinValue
+    val iter = iterPoints.iterator
+    val point = iter.next()
+    var size = 1
+    var (minX, minY, maxX, maxY) = (point.x, point.y, point.x, point.y)
 
-    for (point <- lstPoints) {
+    for (point <- iter) {
+
+      size += 1
+
       if (point.x < minX) minX = point.x
       else if (point.x > maxX) maxX = point.x
 
@@ -23,7 +28,7 @@ object SpatialIndex {
       else if (point.y > maxY) maxY = point.y
     }
 
-    ((minX, minY), (maxX, maxY))
+    (size, buildRectBounds((minX, minY), (maxX, maxY)))
   }
 
   def buildRectBounds(mbrEnds: ((Double, Double), (Double, Double))): Rectangle = {
@@ -71,7 +76,7 @@ trait SpatialIndex extends KryoSerializable {
 
   def getTotalPoints: Int
 
-  def insert(iterPoints: Iterator[Point]): Boolean
+  def insert(iterPoints: ListBuffer[Point]): Boolean
 
   def findExact(searchXY: (Double, Double)): Point
 

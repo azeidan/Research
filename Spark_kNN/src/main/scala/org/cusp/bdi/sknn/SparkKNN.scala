@@ -178,14 +178,11 @@ case class SparkKNN(debugMode: Boolean, k: Int, typeSpatialIndex: TypeSpatialInd
 
       rangeInfo.lstMBRCoords.map(row => new Point(row._1._1, row._1._2, GlobalIndexPointData(row._2, actualPartitionCount)))
     })
-      .flatMap(_.seq)
-      .iterator)
+      .flatMap(_.seq))
 
-//    println(SizeEstimator.estimate(globalIndex))
+    Helper.loggerSLf4J(debugMode, SparkKNN, ">>GlobalIndex insert time in %,d MS. Points: %s. Total Size: %d".format(System.currentTimeMillis - startTime, globalIndex, SizeEstimator.estimate(globalIndex)))
 
     val bvGlobalIndex = rddRight.sparkContext.broadcast(globalIndex)
-
-    Helper.loggerSLf4J(debugMode, SparkKNN, ">>GlobalIndex insert time in %,d MS. Points: %s".format(System.currentTimeMillis - startTime, globalIndex))
 
     lstRangeInfo = null
 
@@ -214,9 +211,9 @@ case class SparkKNN(debugMode: Boolean, k: Int, typeSpatialIndex: TypeSpatialInd
         //        if (pIdx == 7 || pIdx == 1 || pIdx == 0)
         //          println(pIdx)
 
-        spatialIndex.insert(iter.map(_._2))
+        spatialIndex.insert(ListBuffer[Point]() ++ iter.map(_._2))
 
-        Helper.loggerSLf4J(debugMode, SparkKNN, ">>SpatialIndex on partition %d time in %,d MS. Points: %s".format(pIdx, System.currentTimeMillis - startTime, spatialIndex))
+        Helper.loggerSLf4J(debugMode, SparkKNN, ">>SpatialIndex on partition %d time in %,d MS. Points: %s. Total Size: %d".format(pIdx, System.currentTimeMillis - startTime, spatialIndex, SizeEstimator.estimate(spatialIndex)))
 
         val any: Any = spatialIndex
 
@@ -288,7 +285,7 @@ case class SparkKNN(debugMode: Boolean, k: Int, typeSpatialIndex: TypeSpatialInd
             case spIdx: SpatialIndex => spIdx
           }
 
-          val l = iter.map(row => {
+          iter.map(row => {
 
             //            if (pIdx == 7 || pIdx == 1 || pIdx == 0)
             //              println(iterationNum)
@@ -312,10 +309,7 @@ case class SparkKNN(debugMode: Boolean, k: Int, typeSpatialIndex: TypeSpatialInd
                 }
             }
           })
-
-          Helper.loggerSLf4J(debugMode, SparkKNN, ">>>Iteration#: %d Partition %d done in %d".format(iterationNum, pIdx, System.currentTimeMillis() - start))
-
-          l
+          //          Helper.loggerSLf4J(debugMode, SparkKNN, ">>>Iteration#: %d Partition %d done in %d".format(iterationNum, pIdx, System.currentTimeMillis() - start))
         })
 
       bvArrMBR.unpersist()

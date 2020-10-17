@@ -1,13 +1,11 @@
 package org.cusp.bdi.sknn.ds.util
 
-import org.cusp.bdi.ds.KdTree.testNode
 import org.cusp.bdi.ds.SpatialIndex.computeDimension
 import org.cusp.bdi.ds._
 import org.cusp.bdi.ds.geom.{Geom2D, Point, Rectangle}
 import org.cusp.bdi.sknn.GlobalIndexPointData
 import org.cusp.bdi.util.Helper
 
-import scala.collection.mutable
 import scala.collection.mutable.ListBuffer
 
 trait PointData extends Serializable {
@@ -56,19 +54,20 @@ object SpatialIdxRangeLookup extends Serializable {
       val lstQT = ListBuffer(rootQT)
 
       lstQT.foreach(qt =>
-        if (qt != skipQT) {
+        if (qt != skipQT)
+          if (searchRegionInfo.rectSearchRegion.intersects(qt.rectBounds)) {
 
-          qt.lstPoints.foreach(updateMatchListAndRegion(_, searchRegionInfo, k))
+            qt.lstPoints.foreach(updateMatchListAndRegion(_, searchRegionInfo, k))
 
-          if (QuadTree.intersects(qt.topLeft, searchRegionInfo.rectSearchRegion))
-            lstQT += qt.topLeft
-          if (QuadTree.intersects(qt.topRight, searchRegionInfo.rectSearchRegion))
-            lstQT += qt.topRight
-          if (QuadTree.intersects(qt.bottomLeft, searchRegionInfo.rectSearchRegion))
-            lstQT += qt.bottomLeft
-          if (QuadTree.intersects(qt.bottomRight, searchRegionInfo.rectSearchRegion))
-            lstQT += qt.bottomRight
-        })
+            if (qt.topLeft != null)
+              lstQT += qt.topLeft
+            if (qt.topRight != null)
+              lstQT += qt.topRight
+            if (qt.bottomLeft != null)
+              lstQT += qt.bottomLeft
+            if (qt.bottomRight != null)
+              lstQT += qt.bottomRight
+          })
     }
 
     process(sPtBestQT, null)
@@ -86,41 +85,38 @@ object SpatialIdxRangeLookup extends Serializable {
 
     val searchPoint = new Geom2D(searchXY._1, searchXY._2)
 
-    val sPtBestNodeInf = kdTree.findBestNode(searchPoint, k)
+    val sPtBestNode = kdTree.findBestNode(searchPoint, k)
 
-    val searchRegionInfo = buildSearchRegionInfo(searchPoint, sPtBestNodeInf._1.rectBounds)
+    val searchRegionInfo = buildSearchRegionInfo(searchPoint, sPtBestNode.rectBounds)
 
-    def process(kdtNode: KdtNode, splitX: Boolean, skipBranchRootNode: KdtNode) {
+    def process(kdtNode: KdtNode, skipBranchRootNode: KdtNode) {
 
-      val stackNode = mutable.Stack((kdtNode, splitX))
+      val lstNodes = ListBuffer(kdtNode)
 
-      while (stackNode.nonEmpty) {
+      lstNodes.foreach(kdtNode =>
+        if (kdtNode != skipBranchRootNode)
+          if (searchRegionInfo.rectSearchRegion.intersects(kdtNode.rectBounds)) {
 
-        val (node, checkX) = stackNode.pop
+            kdtNode.iterPoints.foreach(updateMatchListAndRegion(_, searchRegionInfo, k))
 
-        if (node != skipBranchRootNode)
-          node match {
-            case brn: KdtBranchRootNode =>
-
-              if (testNode(brn, checkX, searchRegionInfo.rectSearchRegion)) {
-
-                brn.lstPoints.foreach(updateMatchListAndRegion(_, searchRegionInfo, k))
+            kdtNode match {
+              case brn: KdtBranchRootNode =>
 
                 if (brn.left != null)
-                  stackNode.push((brn.left, !checkX))
+                  lstNodes += brn.left
 
                 if (brn.right != null)
-                  stackNode.push((brn.right, !checkX))
-              }
-            case ln: KdtNode => ln.lstPoints.foreach(updateMatchListAndRegion(_, searchRegionInfo, k))
+                  lstNodes += brn.right
+              case _ =>
+            }
           }
-      }
+      )
     }
 
-    process(sPtBestNodeInf._1, sPtBestNodeInf._2, null)
+    process(sPtBestNode, null)
 
-    if (sPtBestNodeInf._1 != kdTree.root)
-      process(kdTree.root, splitX = true, sPtBestNodeInf._1)
+    if (sPtBestNode != kdTree.root)
+      process(kdTree.root, sPtBestNode)
 
     searchRegionInfo.sortList
   }

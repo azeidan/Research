@@ -35,21 +35,15 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ee761a9d-eff2-4086-b83a-8096819a4548" name="Default Changelist" comment="Simba fixes for local run&#10;introduced Arguments_Simba and flag to compute distance of matches">
-      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dictionaries/ayman.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dictionaries/ayman.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Common_FW/src/main/scala/org/cusp/bdi/util/LocalRunConsts.scala" beforeDir="false" afterPath="$PROJECT_DIR$/Common_FW/src/main/scala/org/cusp/bdi/util/LocalRunConsts.scala" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DataStructures/src/main/scala/org/cusp/bdi/ds/KdTree.scala" beforeDir="false" afterPath="$PROJECT_DIR$/DataStructures/src/main/scala/org/cusp/bdi/ds/KdTree.scala" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DataStructures/src/main/scala/org/cusp/bdi/ds/QuadTree.scala" beforeDir="false" afterPath="$PROJECT_DIR$/DataStructures/src/main/scala/org/cusp/bdi/ds/QuadTree.scala" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DataStructures/src/main/scala/org/cusp/bdi/ds/SpatialIndex.scala" beforeDir="false" afterPath="$PROJECT_DIR$/DataStructures/src/main/scala/org/cusp/bdi/ds/SpatialIndex.scala" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DataStructures/src/main/scala/org/cusp/bdi/ds/geom/Rectangle.scala" beforeDir="false" afterPath="$PROJECT_DIR$/DataStructures/src/main/scala/org/cusp/bdi/ds/geom/Rectangle.scala" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DataStructures/src/test/scala/org/cusp/bdi/ds/test/TestKdTree.scala" beforeDir="false" afterPath="$PROJECT_DIR$/DataStructures/src/test/scala/org/cusp/bdi/ds/test/TestKdTree.scala" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Spark_kNN/src/main/scala/org/cusp/bdi/sknn/SparkKNN.scala" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/src/main/scala/org/cusp/bdi/sknn/SparkKNN.scala" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Spark_kNN/src/main/scala/org/cusp/bdi/sknn/ds/util/SpatialIdxRangeLookup.scala" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/src/main/scala/org/cusp/bdi/sknn/ds/util/SpatialIdxRangeLookup.scala" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/src/main/scala/org/cusp/bdi/sknn/util/GridOperation.scala" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/src/main/scala/org/cusp/bdi/sknn/util/GridOperation.scala" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Spark_kNN/src/main/test/scala/org/cusp/bdi/sknn/test/SparkKNN_Local_CLArgs.scala" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/src/main/test/scala/org/cusp/bdi/sknn/test/SparkKNN_Local_CLArgs.scala" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Spark_kNN/src/main/test/scala/org/cusp/bdi/sknn/test/TestAllKnnJoin.scala" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/src/main/test/scala/org/cusp/bdi/sknn/test/TestAllKnnJoin.scala" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SpatialBenchmark/src/main/scala/org/cusp/bdi/sb/test/OutputsCompare.scala" beforeDir="false" afterPath="$PROJECT_DIR$/SpatialBenchmark/src/main/scala/org/cusp/bdi/sb/test/OutputsCompare.scala" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/SpatialBenchmark/src/main/test/scala/org/cusp/bdi/sb/test/SpatialBenchmarkSpark_kNN.scala" beforeDir="false" afterPath="$PROJECT_DIR$/SpatialBenchmark/src/main/test/scala/org/cusp/bdi/sb/test/SpatialBenchmarkSpark_kNN.scala" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -123,7 +117,7 @@
     <property name="restartRequiresConfirmation" value="false" />
     <property name="run.code.analysis.last.selected.profile" value="pProject Default" />
     <property name="scala_project_settings_configurable.last_selected_tab_index" value="0" />
-    <property name="settings.editor.selected.configurable" value="Scala Compiler" />
+    <property name="settings.editor.selected.configurable" value="Debugger_Data_Views_Java" />
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
@@ -244,8 +238,8 @@
       <item itemvalue="Application.TestAllKnnJoin" />
       <item itemvalue="Application.LogCleaner" />
       <item itemvalue="Application.SIM_Example_Batch" />
-      <item itemvalue="Application.TestKdTree" />
       <item itemvalue="Application.TestKdTree (1)" />
+      <item itemvalue="Application.TestKdTree" />
       <item itemvalue="Scala REPL.Scala REPL" />
     </list>
     <recent_temporary>
@@ -541,7 +535,14 @@
       <option name="project" value="LOCAL" />
       <updated>1602130444867</updated>
     </task>
-    <option name="localTasksCounter" value="38" />
+    <task id="LOCAL-00038" summary="K-d Tree not yet finalized">
+      <created>1602627359561</created>
+      <option name="number" value="00038" />
+      <option name="presentableId" value="LOCAL-00038" />
+      <option name="project" value="LOCAL" />
+      <updated>1602627359561</updated>
+    </task>
+    <option name="localTasksCounter" value="39" />
     <servers />
   </component>
   <component name="UnloadedModulesList">
@@ -616,8 +617,6 @@
     <ignored-roots>
       <path value="$PROJECT_DIR$" />
     </ignored-roots>
-    <MESSAGE value="Runtime @ 138.35" />
-    <MESSAGE value="Runtime @ 140.35" />
     <MESSAGE value="Added check by distance if whole record (distance + key) match fails" />
     <MESSAGE value="Code analysis fixes" />
     <MESSAGE value="runtime 98secs&#10;code analysis fixes" />
@@ -641,7 +640,9 @@
     <MESSAGE value="K-d Tree added" />
     <MESSAGE value="Simba fixes for local run&#10;introduced Arguments_Simba and flag to compute distance of matches" />
     <MESSAGE value="k-d tree accuracy fix" />
-    <option name="LAST_COMMIT_MESSAGE" value="k-d tree accuracy fix" />
+    <MESSAGE value="K-d Tree not yet finalized" />
+    <MESSAGE value="kd Tree @ 100% using Bus_3_Grp2 file. 1.5X slower than QT" />
+    <option name="LAST_COMMIT_MESSAGE" value="kd Tree @ 100% using Bus_3_Grp2 file. 1.5X slower than QT" />
   </component>
   <component name="WindowStateProjectService">
     <state x="938" y="400" width="740" height="665" key="#Inspections" timestamp="1598293324740">
@@ -660,11 +661,11 @@
       <screen x="67" y="27" width="2493" height="1413" />
     </state>
     <state x="353" y="161" width="1734" height="1219" key="#Project_Structure/67.27.2493.1413@67.27.2493.1413" timestamp="1601266376900" />
-    <state x="1049" y="490" width="524" height="491" key="#com.intellij.codeInsight.editorActions.RestoreReferencesDialog" timestamp="1602478287931">
+    <state x="1049" y="490" width="524" height="491" key="#com.intellij.codeInsight.editorActions.RestoreReferencesDialog" timestamp="1602797718285">
       <screen x="72" y="27" width="2488" height="1413" />
     </state>
     <state x="1046" y="490" width="524" height="484" key="#com.intellij.codeInsight.editorActions.RestoreReferencesDialog/67.27.2493.1413@67.27.2493.1413" timestamp="1601510341909" />
-    <state x="1049" y="490" width="524" height="491" key="#com.intellij.codeInsight.editorActions.RestoreReferencesDialog/72.27.2488.1413@72.27.2488.1413" timestamp="1602478287931" />
+    <state x="1049" y="490" width="524" height="491" key="#com.intellij.codeInsight.editorActions.RestoreReferencesDialog/72.27.2488.1413@72.27.2488.1413" timestamp="1602797718285" />
     <state x="774" y="137" width="1409" height="1278" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1602485659216">
       <screen x="72" y="27" width="2488" height="1413" />
     </state>
@@ -687,10 +688,11 @@
     </state>
     <state x="1121" y="426" width="450" height="613" key="#com.intellij.ide.util.MemberChooser/67.27.2493.1413@67.27.2493.1413" timestamp="1601524608543" />
     <state x="1124" y="426" width="374" height="614" key="#com.intellij.ide.util.MemberChooser/72.27.2488.1413@72.27.2488.1413" timestamp="1602135177013" />
-    <state x="1027" y="487" width="656" height="510" key="#com.intellij.ide.util.TreeClassChooserDialog" timestamp="1601177730169">
-      <screen x="67" y="27" width="2493" height="1413" />
+    <state x="1030" y="487" width="551" height="421" key="#com.intellij.ide.util.TreeClassChooserDialog" timestamp="1602810633243">
+      <screen x="72" y="27" width="2488" height="1413" />
     </state>
     <state x="1027" y="487" width="656" height="510" key="#com.intellij.ide.util.TreeClassChooserDialog/67.27.2493.1413@67.27.2493.1413" timestamp="1601177730169" />
+    <state x="1030" y="487" width="551" height="421" key="#com.intellij.ide.util.TreeClassChooserDialog/72.27.2488.1413@72.27.2488.1413" timestamp="1602810633243" />
     <state x="1018" y="402" width="687" height="661" key="#com.intellij.ide.util.frameworkSupport.AddFrameworkSupportDialog" timestamp="1600923434247">
       <screen x="67" y="27" width="2493" height="1413" />
     </state>
@@ -752,11 +754,11 @@
       <screen x="67" y="27" width="2493" height="1413" />
     </state>
     <state x="683" y="246" width="1251" height="973" key="CommitChangelistDialog2/67.27.2493.1413@67.27.2493.1413" timestamp="1598309685765" />
-    <state width="587" height="506" key="DebuggerActiveHint" timestamp="1602615565164">
+    <state width="587" height="506" key="DebuggerActiveHint" timestamp="1602826118173">
       <screen x="72" y="27" width="2488" height="1413" />
     </state>
     <state width="588" height="506" key="DebuggerActiveHint/67.27.2493.1413@67.27.2493.1413" timestamp="1601447622093" />
-    <state width="587" height="506" key="DebuggerActiveHint/72.27.2488.1413@72.27.2488.1413" timestamp="1602615565164" />
+    <state width="587" height="506" key="DebuggerActiveHint/72.27.2488.1413@72.27.2488.1413" timestamp="1602826118173" />
     <state x="67" y="130" width="2233" height="1215" maximized="true" key="DiffContextDialog" timestamp="1602621765905">
       <screen x="72" y="27" width="2488" height="1413" />
     </state>
@@ -782,46 +784,46 @@
       <screen x="67" y="27" width="2493" height="1413" />
     </state>
     <state x="937" y="413" width="743" height="639" key="Github.UntrackedFilesDialog/67.27.2493.1413@67.27.2493.1413" timestamp="1594704490168" />
-    <state width="2444" height="307" key="GridCell.Tab.0.bottom" timestamp="1602621761266">
+    <state width="2444" height="324" key="GridCell.Tab.0.bottom" timestamp="1602921269317">
       <screen x="72" y="27" width="2488" height="1413" />
     </state>
     <state width="2449" height="361" key="GridCell.Tab.0.bottom/67.27.2493.1413@67.27.2493.1413" timestamp="1601609014701" />
-    <state width="2444" height="307" key="GridCell.Tab.0.bottom/72.27.2488.1413@72.27.2488.1413" timestamp="1602621761266" />
-    <state width="2444" height="307" key="GridCell.Tab.0.center" timestamp="1602621761264">
+    <state width="2444" height="324" key="GridCell.Tab.0.bottom/72.27.2488.1413@72.27.2488.1413" timestamp="1602921269317" />
+    <state width="2444" height="324" key="GridCell.Tab.0.center" timestamp="1602921269316">
       <screen x="72" y="27" width="2488" height="1413" />
     </state>
     <state width="2449" height="361" key="GridCell.Tab.0.center/67.27.2493.1413@67.27.2493.1413" timestamp="1601609014701" />
-    <state width="2444" height="307" key="GridCell.Tab.0.center/72.27.2488.1413@72.27.2488.1413" timestamp="1602621761264" />
-    <state width="2444" height="307" key="GridCell.Tab.0.left" timestamp="1602621761263">
+    <state width="2444" height="324" key="GridCell.Tab.0.center/72.27.2488.1413@72.27.2488.1413" timestamp="1602921269316" />
+    <state width="2444" height="324" key="GridCell.Tab.0.left" timestamp="1602921269273">
       <screen x="72" y="27" width="2488" height="1413" />
     </state>
     <state width="2449" height="361" key="GridCell.Tab.0.left/67.27.2493.1413@67.27.2493.1413" timestamp="1601609014700" />
-    <state width="2444" height="307" key="GridCell.Tab.0.left/72.27.2488.1413@72.27.2488.1413" timestamp="1602621761263" />
-    <state width="2444" height="307" key="GridCell.Tab.0.right" timestamp="1602621761265">
+    <state width="2444" height="324" key="GridCell.Tab.0.left/72.27.2488.1413@72.27.2488.1413" timestamp="1602921269273" />
+    <state width="2444" height="324" key="GridCell.Tab.0.right" timestamp="1602921269317">
       <screen x="72" y="27" width="2488" height="1413" />
     </state>
     <state width="2449" height="361" key="GridCell.Tab.0.right/67.27.2493.1413@67.27.2493.1413" timestamp="1601609014701" />
-    <state width="2444" height="307" key="GridCell.Tab.0.right/72.27.2488.1413@72.27.2488.1413" timestamp="1602621761265" />
-    <state width="2444" height="307" key="GridCell.Tab.1.bottom" timestamp="1602620866567">
+    <state width="2444" height="324" key="GridCell.Tab.0.right/72.27.2488.1413@72.27.2488.1413" timestamp="1602921269317" />
+    <state width="2444" height="402" key="GridCell.Tab.1.bottom" timestamp="1602917679916">
       <screen x="72" y="27" width="2488" height="1413" />
     </state>
     <state width="2449" height="361" key="GridCell.Tab.1.bottom/67.27.2493.1413@67.27.2493.1413" timestamp="1601609014703" />
-    <state width="2444" height="307" key="GridCell.Tab.1.bottom/72.27.2488.1413@72.27.2488.1413" timestamp="1602620866567" />
-    <state width="2444" height="307" key="GridCell.Tab.1.center" timestamp="1602620866566">
+    <state width="2444" height="402" key="GridCell.Tab.1.bottom/72.27.2488.1413@72.27.2488.1413" timestamp="1602917679916" />
+    <state width="2444" height="402" key="GridCell.Tab.1.center" timestamp="1602917679916">
       <screen x="72" y="27" width="2488" height="1413" />
     </state>
     <state width="2449" height="361" key="GridCell.Tab.1.center/67.27.2493.1413@67.27.2493.1413" timestamp="1601609014702" />
-    <state width="2444" height="307" key="GridCell.Tab.1.center/72.27.2488.1413@72.27.2488.1413" timestamp="1602620866566" />
-    <state width="2444" height="307" key="GridCell.Tab.1.left" timestamp="1602620866565">
+    <state width="2444" height="402" key="GridCell.Tab.1.center/72.27.2488.1413@72.27.2488.1413" timestamp="1602917679916" />
+    <state width="2444" height="402" key="GridCell.Tab.1.left" timestamp="1602917679915">
       <screen x="72" y="27" width="2488" height="1413" />
     </state>
     <state width="2449" height="361" key="GridCell.Tab.1.left/67.27.2493.1413@67.27.2493.1413" timestamp="1601609014702" />
-    <state width="2444" height="307" key="GridCell.Tab.1.left/72.27.2488.1413@72.27.2488.1413" timestamp="1602620866565" />
-    <state width="2444" height="307" key="GridCell.Tab.1.right" timestamp="1602620866567">
+    <state width="2444" height="402" key="GridCell.Tab.1.left/72.27.2488.1413@72.27.2488.1413" timestamp="1602917679915" />
+    <state width="2444" height="402" key="GridCell.Tab.1.right" timestamp="1602917679916">
       <screen x="72" y="27" width="2488" height="1413" />
     </state>
     <state width="2449" height="361" key="GridCell.Tab.1.right/67.27.2493.1413@67.27.2493.1413" timestamp="1601609014702" />
-    <state width="2444" height="307" key="GridCell.Tab.1.right/72.27.2488.1413@72.27.2488.1413" timestamp="1602620866567" />
+    <state width="2444" height="402" key="GridCell.Tab.1.right/72.27.2488.1413@72.27.2488.1413" timestamp="1602917679916" />
     <state x="896" y="470" width="824" height="524" key="IDE.errors.dialog" timestamp="1600661551083">
       <screen x="67" y="27" width="2493" height="1413" />
     </state>
@@ -842,11 +844,11 @@
       <screen x="67" y="27" width="2493" height="1413" />
     </state>
     <state x="882" y="369" width="853" height="727" key="RollbackChangesDialog/67.27.2493.1413@67.27.2493.1413" timestamp="1598309870654" />
-    <state x="253" y="280" width="1007" height="737" key="SettingsEditor" timestamp="1602567362849">
+    <state x="253" y="280" width="1007" height="737" key="SettingsEditor" timestamp="1602810634233">
       <screen x="72" y="27" width="2488" height="1413" />
     </state>
     <state x="248" y="280" width="1380" height="905" key="SettingsEditor/67.27.2493.1413@67.27.2493.1413" timestamp="1601266323937" />
-    <state x="253" y="280" width="1007" height="737" key="SettingsEditor/72.27.2488.1413@72.27.2488.1413" timestamp="1602567362849" />
+    <state x="253" y="280" width="1007" height="737" key="SettingsEditor/72.27.2488.1413@72.27.2488.1413" timestamp="1602810634233" />
     <state x="167" y="125" width="2293" height="1215" key="ShowDiffWithBranchDialog" timestamp="1598303246727">
       <screen x="67" y="27" width="2493" height="1413" />
     </state>
@@ -863,11 +865,11 @@
       <screen x="67" y="27" width="2493" height="1413" />
     </state>
     <state x="1144" y="631" width="329" height="203" key="VCS.EditChangelistDialog/67.27.2493.1413@67.27.2493.1413" timestamp="1598309673598" />
-    <state x="831" y="335" width="800" height="535" key="Vcs.Push.Dialog.v2" timestamp="1602130447185">
+    <state x="831" y="335" width="800" height="535" key="Vcs.Push.Dialog.v2" timestamp="1602627369288">
       <screen x="72" y="27" width="2488" height="1413" />
     </state>
     <state x="828" y="335" width="1291" height="801" key="Vcs.Push.Dialog.v2/67.27.2493.1413@67.27.2493.1413" timestamp="1601615316467" />
-    <state x="831" y="335" width="800" height="535" key="Vcs.Push.Dialog.v2/72.27.2488.1413@72.27.2488.1413" timestamp="1602130447185" />
+    <state x="831" y="335" width="800" height="535" key="Vcs.Push.Dialog.v2/72.27.2488.1413@72.27.2488.1413" timestamp="1602627369288" />
     <state x="1005" y="408" width="607" height="649" key="VcsDiffUtil.ChangesDialog" timestamp="1601149790980">
       <screen x="67" y="27" width="2493" height="1413" />
     </state>
@@ -885,21 +887,21 @@
       <screen x="67" y="27" width="2493" height="1413" />
     </state>
     <state x="135" y="40" width="2293" height="1215" key="com.intellij.history.integration.ui.views.DirectoryHistoryDialog/67.27.2493.1413@67.27.2493.1413" timestamp="1599950852010" />
-    <state x="172" y="125" width="2199" height="1229" maximized="true" key="com.intellij.history.integration.ui.views.FileHistoryDialog" timestamp="1602616597756">
+    <state x="172" y="125" width="2189" height="1236" maximized="true" key="com.intellij.history.integration.ui.views.FileHistoryDialog" timestamp="1602916324547">
       <screen x="72" y="27" width="2488" height="1413" />
     </state>
     <state x="167" y="125" width="2223" height="1215" maximized="true" key="com.intellij.history.integration.ui.views.FileHistoryDialog/67.27.2493.1413@67.27.2493.1413" timestamp="1601573186312" />
-    <state x="172" y="125" width="2199" height="1229" maximized="true" key="com.intellij.history.integration.ui.views.FileHistoryDialog/72.27.2488.1413@72.27.2488.1413" timestamp="1602616597756" />
+    <state x="172" y="125" width="2189" height="1236" maximized="true" key="com.intellij.history.integration.ui.views.FileHistoryDialog/72.27.2488.1413@72.27.2488.1413" timestamp="1602916324547" />
     <state x="694" y="229" width="1237" height="1006" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser" timestamp="1602619228683">
       <screen x="72" y="27" width="2488" height="1413" />
     </state>
     <state x="690" y="229" width="1237" height="1006" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser/67.27.2493.1413@67.27.2493.1413" timestamp="1601530780323" />
     <state x="694" y="229" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser/72.27.2488.1413@72.27.2488.1413" timestamp="1602619228683" />
-    <state x="1072" y="440" width="881" height="632" key="com.intellij.xdebugger.impl.breakpoints.ui.BreakpointsDialogFactory$2" timestamp="1602620811159">
+    <state x="1197" y="305" width="881" height="632" key="com.intellij.xdebugger.impl.breakpoints.ui.BreakpointsDialogFactory$2" timestamp="1602917020693">
       <screen x="72" y="27" width="2488" height="1413" />
     </state>
     <state x="1070" y="440" width="1490" height="829" key="com.intellij.xdebugger.impl.breakpoints.ui.BreakpointsDialogFactory$2/67.27.2493.1413@67.27.2493.1413" timestamp="1601576861475" />
-    <state x="1072" y="440" width="881" height="632" key="com.intellij.xdebugger.impl.breakpoints.ui.BreakpointsDialogFactory$2/72.27.2488.1413@72.27.2488.1413" timestamp="1602620811159" />
+    <state x="1197" y="305" width="881" height="632" key="com.intellij.xdebugger.impl.breakpoints.ui.BreakpointsDialogFactory$2/72.27.2488.1413@72.27.2488.1413" timestamp="1602917020693" />
     <state x="172" y="125" width="2289" height="1215" key="dock-window-1" timestamp="1602401854648">
       <screen x="72" y="27" width="2488" height="1413" />
     </state>
@@ -910,11 +912,11 @@
     </state>
     <state x="292" y="314" width="2293" height="1215" key="dock-window-2/67.27.2493.1413@67.27.2493.1413" timestamp="1594783317173" />
     <state x="271" y="225" width="2289" height="1215" key="dock-window-2/72.27.2488.1413@72.27.2488.1413" timestamp="1602401854649" />
-    <state x="1043" y="301" width="1107" height="836" key="find.popup" timestamp="1602619882578">
+    <state x="1043" y="301" width="1107" height="836" key="find.popup" timestamp="1602918910751">
       <screen x="72" y="27" width="2488" height="1413" />
     </state>
     <state x="1040" y="301" width="1109" height="836" key="find.popup/67.27.2493.1413@67.27.2493.1413" timestamp="1601609647647" />
-    <state x="1043" y="301" width="1107" height="836" key="find.popup/72.27.2488.1413@72.27.2488.1413" timestamp="1602619882578" />
+    <state x="1043" y="301" width="1107" height="836" key="find.popup/72.27.2488.1413@72.27.2488.1413" timestamp="1602918910751" />
     <state x="622" y="459" width="1372" height="547" key="new project wizard" timestamp="1600923404121">
       <screen x="67" y="27" width="2493" height="1413" />
     </state>
@@ -935,13 +937,8 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="scala-line">
           <url>file://$PROJECT_DIR$/Spark_kNN/src/main/scala/org/cusp/bdi/sknn/SparkKNN.scala</url>
-          <line>185</line>
-          <option name="timeStamp" value="292" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="scala-line">
-          <url>file://$PROJECT_DIR$/Spark_kNN/src/main/scala/org/cusp/bdi/sknn/SparkKNN.scala</url>
-          <line>279</line>
-          <option name="timeStamp" value="293" />
+          <line>184</line>
+          <option name="timeStamp" value="3" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
