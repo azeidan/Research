@@ -2,6 +2,9 @@ package org.cusp.bdi.ds.geom
 
 case class Rectangle(center: Geom2D, halfXY: Geom2D) extends Serializable {
 
+  def this() =
+    this(new Geom2D(), new Geom2D())
+
   def halveBy(splitAlongX: Boolean): (Rectangle, Rectangle) = {
 
     val (newHalfX, newHalfY) = if (splitAlongX) (this.halfXY.x / 2, this.halfXY.y) else (this.halfXY.x, this.halfXY.y / 2)
@@ -19,6 +22,12 @@ case class Rectangle(center: Geom2D, halfXY: Geom2D) extends Serializable {
 
   def contains(point: Geom2D): Boolean =
     contains(point.x, point.y)
+
+  def containsX(x: Double) =
+    !(x < left || x > right)
+
+  def containsY(y: Double) =
+    !(y < bottom || y > top)
 
   def contains(x: Double, y: Double): Boolean =
     !(x < left || x > right || y < bottom || y > top)

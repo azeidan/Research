@@ -3,10 +3,15 @@ package org.cusp.bdi.sknn.test
 import org.apache.hadoop.fs.{FileSystem, Path}
 import org.apache.hadoop.io.compress.GzipCodec
 import org.apache.spark.serializer.KryoSerializer
+import org.apache.spark.util.SizeEstimator
 import org.apache.spark.{SparkConf, SparkContext}
+import org.cusp.bdi.ds.SpatialIndex.buildRectBounds
+import org.cusp.bdi.ds.{KdTree, KdtBranchRootNode, KdtNode, QuadTree}
 import org.cusp.bdi.ds.geom.Point
 import org.cusp.bdi.sknn.{SparkKNN, TypeSpatialIndex}
 import org.cusp.bdi.util.{Arguments, CLArgsParser, InputFileParsers, LocalRunConsts}
+
+import scala.io.Source
 
 object TestAllKnnJoin {
 
@@ -16,7 +21,7 @@ object TestAllKnnJoin {
     //    var startTime2 = startTime
 
     val clArgs = SparkKNN_Local_CLArgs.random_sample()
-//        val clArgs = CLArgsParser(args, Arguments.lstArgInfo())
+    //        val clArgs = CLArgsParser(args, Arguments.lstArgInfo())
 
     //    val clArgs = SparkKNN_Local_CLArgs.busPoint_busPointShift(Arguments())
     //    val clArgs = SparkKNN_Local_CLArgs.busPoint_taxiPoint(Arguments())

@@ -3,7 +3,7 @@ package org.cusp.bdi.ds
 import com.esotericsoftware.kryo.Kryo
 import com.esotericsoftware.kryo.io.{Input, Output}
 import org.cusp.bdi.ds.QuadTree.{SER_MARKER, SER_MARKER_NULL, quadCapacity}
-import org.cusp.bdi.ds.SpatialIndex.{computeDimension, testAndAddPoint}
+import org.cusp.bdi.ds.SpatialIndex.{KnnLookupInfo, testAndAddPoint}
 import org.cusp.bdi.ds.geom.{Geom2D, Point, Rectangle}
 
 import scala.collection.mutable
@@ -59,9 +59,12 @@ class QuadTree(_rectBounds: Rectangle) extends SpatialIndex {
     null
   }
 
-  override def insert(lstPoints: ListBuffer[Point]): Boolean = {
+  override def insert(iterPoints: Iterator[Point]): Boolean = {
 
-    lstPoints.foreach(insertPoint)
+    if (iterPoints.isEmpty)
+      throw new IllegalStateException("Empty point iterator")
+
+    iterPoints.foreach(insertPoint)
 
     true
   }
@@ -122,7 +125,7 @@ class QuadTree(_rectBounds: Rectangle) extends SpatialIndex {
   }
 
   override def toString: String =
-    "%s\t%d\t%d".format(rectBounds, lstPoints.size, totalPoints)
+    "%s\t%,d\t%,d".format(rectBounds, lstPoints.size, totalPoints)
 
   override def write(kryo: Kryo, output: Output): Unit = {
 
@@ -186,14 +189,16 @@ class QuadTree(_rectBounds: Rectangle) extends SpatialIndex {
 
     val sPtBestQT = findBestQuadrant(searchPoint, sortSetSqDist.maxSize)
 
-    val dim = if (sortSetSqDist.isFull)
-      math.sqrt(sortSetSqDist.last.distance)
-    else
-      computeDimension(searchPoint, sPtBestQT.rectBounds)
+    //    val dim = if (sortSetSqDist.isFull)
+    //      math.sqrt(sortSetSqDist.last.distance)
+    //    else
+    //      computeDimension(searchPoint, sPtBestQT.rectBounds)
+    //
+    //    val rectSearchRegion = Rectangle(searchPoint, new Geom2D(dim))
+    //
+    //    var prevMaxSqrDist = if (sortSetSqDist.last == null) -1 else sortSetSqDist.last.distance
 
-    val rectSearchRegion = Rectangle(searchPoint, new Geom2D(dim))
-
-    var prevMaxSqrDist = if (sortSetSqDist.last == null) -1 else sortSetSqDist.last.distance
+    val knnLookupInfo = KnnLookupInfo(searchPoint, sortSetSqDist, sPtBestQT.rectBounds)
 
     def process(rootQT: QuadTree, skipQT: QuadTree) {
 
@@ -201,9 +206,9 @@ class QuadTree(_rectBounds: Rectangle) extends SpatialIndex {
 
       lstQT.foreach(qTree =>
         if (qTree != skipQT)
-          if (rectSearchRegion.intersects(qTree.rectBounds)) {
+          if (knnLookupInfo.rectSearchRegion.intersects(qTree.rectBounds)) {
 
-            qTree.lstPoints.foreach(pt => prevMaxSqrDist = testAndAddPoint(pt, rectSearchRegion, sortSetSqDist, prevMaxSqrDist))
+            qTree.lstPoints.foreach(testAndAddPoint(_, knnLookupInfo))
 
             if (qTree.topLeft != null)
               lstQT += qTree.topLeft

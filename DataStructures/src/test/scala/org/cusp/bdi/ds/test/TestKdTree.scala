@@ -1,11 +1,5 @@
 package org.cusp.bdi.ds.test
 
-import org.cusp.bdi.ds.KdTree
-import org.cusp.bdi.ds.geom.Point
-
-import scala.collection.mutable.ListBuffer
-import scala.io.Source
-
 object TestKdTree {
 
   def main(args: Array[String]): Unit = {

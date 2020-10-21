@@ -4,22 +4,27 @@ import com.esotericsoftware.kryo.KryoSerializable
 import org.cusp.bdi.ds.geom.{Geom2D, Point, Rectangle}
 import org.cusp.bdi.util.Helper
 
-import scala.collection.mutable.ListBuffer
-
 object SpatialIndex {
 
-  //  val MAX_SEARCH_REGION_DIM = math.sqrt(Double.MaxValue)
+  case class KnnLookupInfo(searchPoint: Point, sortSetSqDist: SortedList[Point], rectBestNode: Rectangle) {
 
-  def calcListInfo(iterPoints: Iterable[Point]): (Int, Rectangle) = {
+    val dim = if (sortSetSqDist.isFull)
+      math.sqrt(sortSetSqDist.last.distance)
+    else
+      computeDimension(searchPoint, rectBestNode)
+
+    val rectSearchRegion = Rectangle(searchPoint, new Geom2D(dim))
+    var limitNode: Node[Point] = _
+    var prevMaxSqrDist: Double = if (sortSetSqDist.last == null) -1 else sortSetSqDist.last.distance
+  }
+
+  def buildRectBounds(iterPoints: Iterable[Point]): Rectangle = {
 
     val iter = iterPoints.iterator
     val point = iter.next()
-    var size = 1
     var (minX, minY, maxX, maxY) = (point.x, point.y, point.x, point.y)
 
     for (point <- iter) {
-
-      size += 1
 
       if (point.x < minX) minX = point.x
       else if (point.x > maxX) maxX = point.x
@@ -28,7 +33,7 @@ object SpatialIndex {
       else if (point.y > maxY) maxY = point.y
     }
 
-    (size, buildRectBounds((minX, minY), (maxX, maxY)))
+    buildRectBounds((minX, minY), (maxX, maxY))
   }
 
   def buildRectBounds(mbrEnds: ((Double, Double), (Double, Double))): Rectangle = {
@@ -52,23 +57,19 @@ object SpatialIndex {
       math.max(Helper.squaredDist(searchPoint.x, searchPoint.y, right, top), Helper.squaredDist(searchPoint.x, searchPoint.y, left, top))))
   }
 
-  def testAndAddPoint(point: Point, rectSearchRegion: Rectangle, sortSetSqDist: SortedList[Point], currMaxSqrDist: Double): Double = {
+  def testAndAddPoint(point: Point, knnLookupInfo: KnnLookupInfo) {
 
-    val sqDist = Helper.squaredDist(rectSearchRegion.center.x, rectSearchRegion.center.y, point.x, point.y)
+    val sqDist = Helper.squaredDist(knnLookupInfo.rectSearchRegion.center.x, knnLookupInfo.rectSearchRegion.center.y, point.x, point.y)
 
-    sortSetSqDist.add(sqDist, point)
+    knnLookupInfo.sortSetSqDist.add(sqDist, point)
 
-    var prevMaxSqrDist = currMaxSqrDist
+    if (knnLookupInfo.sortSetSqDist.isFull && knnLookupInfo.prevMaxSqrDist != knnLookupInfo.sortSetSqDist.last.distance) {
 
-    if (sortSetSqDist.isFull && prevMaxSqrDist != sortSetSqDist.last.distance) {
+      knnLookupInfo.prevMaxSqrDist = knnLookupInfo.sortSetSqDist.last.distance
 
-      prevMaxSqrDist = sortSetSqDist.last.distance
-
-      rectSearchRegion.halfXY.x = math.sqrt(prevMaxSqrDist)
-      rectSearchRegion.halfXY.y = rectSearchRegion.halfXY.x
+      knnLookupInfo.rectSearchRegion.halfXY.x = math.sqrt(knnLookupInfo.prevMaxSqrDist)
+      knnLookupInfo.rectSearchRegion.halfXY.y = knnLookupInfo.rectSearchRegion.halfXY.x
     }
-
-    prevMaxSqrDist
   }
 }
 
@@ -76,7 +77,7 @@ trait SpatialIndex extends KryoSerializable {
 
   def getTotalPoints: Int
 
-  def insert(iterPoints: ListBuffer[Point]): Boolean
+  def insert(iterPoints: Iterator[Point]): Boolean
 
   def findExact(searchXY: (Double, Double)): Point
 

@@ -1,0 +1,477 @@
+package org.cusp.bdi.ds
+
+import com.esotericsoftware.kryo.io.{Input, Output}
+import com.esotericsoftware.kryo.{Kryo, KryoSerializable}
+import org.cusp.bdi.ds.KdTree.{extractIterPoints, nodeCapacity}
+import org.cusp.bdi.ds.SpatialIndex.{buildRectBounds, computeDimension, testAndAddPoint}
+import org.cusp.bdi.ds.geom.{Geom2D, Point, Rectangle}
+
+import scala.collection.mutable
+import scala.collection.mutable.ListBuffer
+
+object KdTree extends Serializable {
+
+  val nodeCapacity = 1
+
+  def extractIterPoints(map: mutable.HashMap[Double, mutable.HashMap[Double, ListBuffer[Point]]]) =
+    map.values.map(_.values).flatMap(_.seq).flatMap(_.seq)
+}
+
+abstract class KdtNode extends KryoSerializable {
+
+  def totalPoints: Int
+
+  var iterPoints: Iterable[Point] = _
+  var rectPointBounds: Rectangle = _
+
+  override def toString: String =
+    "%s\t%,d".format(rectPointBounds, totalPoints)
+
+  def updateIterAndRect(map: mutable.HashMap[Double, mutable.HashMap[Double, ListBuffer[Point]]]) = {
+
+    if (map.isEmpty)
+      this.rectPointBounds = new Rectangle()
+    else {
+
+      this.iterPoints = extractIterPoints(map)
+      this.rectPointBounds = buildRectBounds(this.iterPoints)
+    }
+  }
+
+  override def write(kryo: Kryo, output: Output): Unit = {
+
+    kryo.writeClassAndObject(output, iterPoints)
+    kryo.writeClassAndObject(output, rectPointBounds)
+  }
+
+  override def read(kryo: Kryo, input: Input): Unit = {
+
+    iterPoints = kryo.readClassAndObject(input).asInstanceOf[ListBuffer[Point]]
+    rectPointBounds = kryo.readClassAndObject(input) match {
+      case rectangle: Rectangle => rectangle
+    }
+  }
+}
+
+final class KdtBranchRootNode extends KdtNode {
+
+  var totalPoints: Int = 0
+  var splitKey: Double = 0
+  var left: KdtNode = _
+  var right: KdtNode = _
+
+  def this(splitKey: Double) = {
+    this()
+    this.splitKey = splitKey
+  }
+
+  //  def this(totalPoints: Int) = {
+  //
+  //    this()
+  //    this.totalPoints = totalPoints
+  //  }
+  //
+  //  def this(mapHG: mutable.HashMap[Double, mutable.HashMap[Double, ListBuffer[Point]]], totalPoints: Int) = {
+  //
+  //    this()
+  //    this.totalPoints = totalPoints
+  //    extractPoints(mapHG)
+  //  }
+
+  override def toString: String = {
+
+    val strR = if (left == null) '-' else '\\'
+    val strL = if (left == null) '-' else '/'
+
+    "%s %s %s".format(super.toString(), strL, strR)
+  }
+
+  override def write(kryo: Kryo, output: Output): Unit = {
+
+    super.write(kryo, output)
+    output.writeInt(totalPoints)
+    output.writeDouble(splitKey)
+  }
+
+  override def read(kryo: Kryo, input: Input): Unit = {
+
+    super.read(kryo, input)
+    totalPoints = input.readInt()
+    splitKey = input.readDouble()
+  }
+}
+
+final class KdtLeafNode extends KdtNode {
+
+  override def totalPoints: Int = iterPoints.size
+
+  def this(map: mutable.HashMap[Double, mutable.HashMap[Double, ListBuffer[Point]]]) = {
+
+    this()
+    updateIterAndRect(map)
+  }
+
+}
+
+class KdTree(hgBarWidth: Int) extends SpatialIndex {
+
+  var root: KdtNode = _
+
+  def getTotalPoints: Int = root.totalPoints
+
+  override def insert(iterPoints: Iterator[Point]): Boolean = {
+
+    if (root != null)
+      throw new IllegalStateException("KD Tree already built")
+
+    if (iterPoints.isEmpty)
+      throw new IllegalStateException("Empty point iterator")
+
+    if (hgBarWidth < 1)
+      throw new IllegalStateException("Bar width must be >= 1")
+
+    val mapHG = mutable.HashMap[Double, mutable.HashMap[Double, ListBuffer[Point]]]()
+
+    var pointCount = 0
+
+    iterPoints.foreach(pt => {
+
+      pointCount += 1
+
+      val (keyX, keyY) = if (hgBarWidth == 1)
+        (pt.x.floor, pt.y.floor)
+      else
+        ((pt.x / hgBarWidth).floor, (pt.y / hgBarWidth).floor)
+
+      mapHG.getOrElseUpdate(keyX, mutable.HashMap[Double, ListBuffer[Point]]())
+        .getOrElseUpdate(keyY, ListBuffer[Point]()) += pt
+    })
+
+    val lstNodeInfo = ListBuffer[(KdtBranchRootNode, Boolean, mutable.HashMap[Double, mutable.HashMap[Double, ListBuffer[Point]]], mutable.HashMap[Double, mutable.HashMap[Double, ListBuffer[Point]]])]()
+
+    def buildNode(mapHG_node: mutable.HashMap[Double, mutable.HashMap[Double, ListBuffer[Point]]], splitX: Boolean) = {
+
+      if (mapHG_node.size <= nodeCapacity)
+        new KdtLeafNode(mapHG_node)
+      else {
+
+        val splitKey = if (splitX)
+          mapHG_node.mapValues(_.valuesIterator.map(_.size).sum).maxBy(_._2)._1 // mode
+        else
+          mapHG_node.valuesIterator.map(_.mapValues(_.size)).flatMap(_.seq).toList.groupBy(_._1).maxBy(_._2.size)._1 // mode
+
+        val mapParts = partitionMap(mapHG_node, splitKey, splitX)
+
+        //          val countLT = mapParts._1.valuesIterator.map(_.valuesIterator.size).sum
+        //          val countEQ = mapParts._2.valuesIterator.map(_.valuesIterator.size).sum
+
+        val kdtBranchRootNode = new KdtBranchRootNode(splitKey)
+
+        if (mapParts._2.size <= nodeCapacity) {
+
+          kdtBranchRootNode.updateIterAndRect(mapParts._2)
+
+          lstNodeInfo += ((kdtBranchRootNode, splitX, mapParts._1, mapParts._3))
+        }
+        else {
+
+          kdtBranchRootNode.updateIterAndRect(null)
+
+          lstNodeInfo += ((kdtBranchRootNode, splitX, mapParts._1 ++ mapParts._2, mapParts._3))
+        }
+
+        //if(mapParts._3.valuesIterator.map(_.mapValues(_.size)).flatMap(_.seq).toList.groupBy(_._1).isEmpty)
+        //  println(pointCount - countLT - countEQ)
+
+        kdtBranchRootNode
+      }
+    }
+
+    root = buildNode(mapHG, splitX = true)
+
+    lstNodeInfo.foreach(row => {
+
+      val (currNode, splitX, mapLeft, mapRight) = row
+
+      currNode.left = buildNode(mapLeft, !splitX)
+      currNode.right = buildNode(mapRight, !splitX)
+    })
+
+    updateBounds(this.root)
+
+    true
+  }
+
+  override def findExact(searchXY: (Double, Double)): Point = {
+
+    import org.cusp.bdi.ds.KdTree.extractIterPoints
+
+    var currNode = this.root
+
+    def checkNodePoints() = {
+
+      val lst = currNode.iterPoints.filter(pt => pt.x.equals(searchXY._1) && pt.y.equals(searchXY._2)).take(1)
+
+      if (lst.nonEmpty)
+        lst.head
+      else
+        null
+    }
+
+    val searchXY_grid = if (hgBarWidth == 1) (searchXY._1.floor, searchXY._2.floor) else ((searchXY._1 / hgBarWidth).floor, (searchXY._2 / hgBarWidth).floor)
+
+    var splitX = true
+
+    while (currNode != null)
+      currNode match {
+        case kdtBRN: KdtBranchRootNode =>
+
+          if ((if (splitX) searchXY_grid._1 else searchXY_grid._2) == kdtBRN.splitKey) {
+            val node = checkNodePoints()
+            if (node != null)
+              return node
+          }
+
+          (if (splitX) searchXY_grid._1 else searchXY_grid._2) match {
+            case key if key <= kdtBRN.splitKey => currNode = kdtBRN.left
+            case _ => currNode = kdtBRN.right
+          }
+          splitX = !splitX
+
+        case _ =>
+          return checkNodePoints()
+      }
+
+    null
+  }
+
+  def findBestNode(searchPoint: Geom2D, k: Int): KdtNode = {
+
+    // find leaf containing point
+    var currNode = root
+    val searchXY_grid = if (hgBarWidth == 1) (searchPoint.x.floor, searchPoint.y.floor) else ((searchPoint.x / hgBarWidth).floor, (searchPoint.y / hgBarWidth).floor)
+    var splitX = true
+
+    while (currNode != null)
+      currNode match {
+        case kdtBRN: KdtBranchRootNode =>
+
+          (if (splitX) searchXY_grid._1 else searchXY_grid._2) match {
+            case key if key == kdtBRN.splitKey =>
+              return currNode
+            case key if key < kdtBRN.splitKey =>
+              if (kdtBRN.left != null && kdtBRN.left.totalPoints >= k && kdtBRN.left.rectPointBounds.contains(searchPoint))
+                currNode = kdtBRN.left
+              else
+                return currNode
+            case _ =>
+              if (kdtBRN.right != null && kdtBRN.right.totalPoints >= k && kdtBRN.right.rectPointBounds.contains(searchPoint))
+                currNode = kdtBRN.right
+              else
+                return currNode
+          }
+          splitX = !splitX
+
+        case _: KdtNode =>
+          return currNode
+      }
+
+    null
+  }
+
+  //  def printInOrder(): Unit =
+  //    printInOrder(root, "")
+  //
+  //  def printInOrder(node: KdtNode, delimiter: String): Unit =
+  //    if (node != null) {
+  //
+  //      println("%s%s".format(delimiter, node))
+  //
+  //      node match {
+  //        case brn: KdtBranchRootNode =>
+  //          printInOrder(brn.left, delimiter + "\t")
+  //          printInOrder(brn.right, delimiter + "\t")
+  //        case _ =>
+  //      }
+  //    }
+
+  override def nearestNeighbor(searchPoint: Point, sortSetSqDist: SortedList[Point]) {
+
+    val sPtBestNode = findBestNode(searchPoint, sortSetSqDist.maxSize)
+
+    val dim = if (sortSetSqDist.isFull)
+      math.sqrt(sortSetSqDist.last.distance)
+    else
+      computeDimension(searchPoint, sPtBestNode.rectPointBounds)
+
+    val searchRegion = Rectangle(searchPoint, new Geom2D(dim))
+
+    var prevMaxSqrDist = if (sortSetSqDist.last == null) -1 else sortSetSqDist.last.distance
+
+    def process(kdtNode: KdtNode, skipKdtNode: KdtNode) {
+
+      val stackKdtNode = mutable.Stack(kdtNode)
+
+      while (stackKdtNode.nonEmpty) {
+
+        val kdtNode = stackKdtNode.pop()
+
+        if (kdtNode != skipKdtNode) {
+
+          kdtNode match {
+            case kdtBRN: KdtBranchRootNode =>
+
+              if (kdtBRN.left != null && searchRegion.intersects(kdtBRN.left.rectPointBounds))
+                stackKdtNode.push(kdtBRN.left)
+
+              if (kdtBRN.right != null && searchRegion.intersects(kdtBRN.right.rectPointBounds))
+                stackKdtNode.push(kdtBRN.right)
+            case _ =>
+          }
+
+          if (searchRegion.intersects(kdtNode.rectPointBounds))
+            kdtNode.iterPoints.foreach(pt => prevMaxSqrDist = testAndAddPoint(pt, searchRegion, sortSetSqDist, prevMaxSqrDist))
+        }
+      }
+    }
+
+    process(sPtBestNode, null)
+
+    if (sPtBestNode != this.root)
+      process(this.root, sPtBestNode)
+  }
+
+  //  private def partitionMap(mapHG_node: mutable.HashMap[Double, mutable.HashMap[Double, ListBuffer[Point]]], splitVal_key: Double, splitX: Boolean) = {
+  //
+  //    val mapLeft = mutable.HashMap[Double, mutable.HashMap[Double, ListBuffer[Point]]]()
+  //    val mapRight = mutable.HashMap[Double, mutable.HashMap[Double, ListBuffer[Point]]]()
+  //
+  //    if (splitX)
+  //      mapHG_node.foreach(keyMap =>
+  //        (keyMap._1 match {
+  //          case keyX if keyX <= splitVal_key => mapLeft
+  //          case _ => mapRight
+  //        })
+  //          += keyMap
+  //      )
+  //    else
+  //      mapHG_node.foreach(keyMap => {
+  //
+  //        val mapLeft_Y = mutable.HashMap[Double, ListBuffer[Point]]()
+  //        val mapRight_Y = mutable.HashMap[Double, ListBuffer[Point]]()
+  //
+  //        keyMap._2.foreach(keyLst =>
+  //          (keyLst._1 match {
+  //            case keyY if keyY <= splitVal_key => mapLeft_Y
+  //            case _ => mapRight_Y
+  //          })
+  //            += keyLst
+  //        )
+  //
+  //        mapLeft += ((keyMap._1, mapLeft_Y))
+  //        mapRight += ((keyMap._1, mapRight_Y))
+  //      })
+  //
+  //    (mapLeft.filter(_._2.nonEmpty), mapRight.filter(_._2.nonEmpty))
+  //  }
+
+  private def partitionMap(mapHG_node: mutable.HashMap[Double, mutable.HashMap[Double, ListBuffer[Point]]], splitVal_key: Double, splitX: Boolean) = {
+
+    val mapLT = mutable.HashMap[Double, mutable.HashMap[Double, ListBuffer[Point]]]()
+    val mapEQ = mutable.HashMap[Double, mutable.HashMap[Double, ListBuffer[Point]]]()
+    val mapGT = mutable.HashMap[Double, mutable.HashMap[Double, ListBuffer[Point]]]()
+
+    if (splitX)
+      mapHG_node.foreach(keyMap =>
+        (keyMap._1 match {
+          case keyX if keyX < splitVal_key => mapLT
+          case keyX if keyX == splitVal_key => mapEQ
+          case _ => mapGT
+        })
+          += keyMap
+      )
+    else
+      mapHG_node.foreach(keyMap => {
+
+        val mapLT_Y = mutable.HashMap[Double, ListBuffer[Point]]()
+        val mapEQ_Y = mutable.HashMap[Double, ListBuffer[Point]]()
+        val mapGT_Y = mutable.HashMap[Double, ListBuffer[Point]]()
+
+        keyMap._2.foreach(keyLst =>
+          (keyLst._1 match {
+            case keyY if keyY < splitVal_key => mapLT_Y
+            case keyY if keyY == splitVal_key => mapEQ_Y
+            case _ => mapGT_Y
+          })
+            += keyLst
+        )
+
+        mapLT += ((keyMap._1, mapLT_Y))
+        mapEQ += ((keyMap._1, mapEQ_Y))
+        mapGT += ((keyMap._1, mapGT_Y))
+      })
+
+    (mapLT.filter(_._2.nonEmpty), mapEQ.filter(_._2.nonEmpty), mapGT.filter(_._2.nonEmpty))
+  }
+
+  override def toString: String =
+    "%s".format(root)
+
+  override def write(kryo: Kryo, output: Output): Unit = {
+
+    val lstNode = ListBuffer(this.root)
+
+    lstNode.foreach(kdtNode => {
+
+      kryo.writeClassAndObject(output, kdtNode)
+
+      kdtNode match {
+        case brn: KdtBranchRootNode =>
+          lstNode += (brn.left, brn.right)
+        case _ =>
+      }
+    })
+  }
+
+  override def read(kryo: Kryo, input: Input): Unit = {
+
+    def readNode() = kryo.readClassAndObject(input) match {
+      case kdtNode: KdtNode => kdtNode
+    }
+
+    this.root = readNode()
+
+    val lstNode = ListBuffer(this.root)
+
+    lstNode.foreach {
+      case brn: KdtBranchRootNode =>
+        brn.left = readNode()
+        brn.right = readNode()
+
+        lstNode += (brn.left, brn.right)
+      case _ =>
+    }
+  }
+
+  private def updateBounds(kdtNode: KdtNode) {
+
+    kdtNode match {
+      case kdtBRN: KdtBranchRootNode =>
+
+        if (kdtBRN.left != null && kdtBRN.left.isInstanceOf[KdtBranchRootNode])
+          updateBounds(kdtBRN.left)
+
+        if (kdtBRN.right != null && kdtBRN.right.isInstanceOf[KdtBranchRootNode])
+          updateBounds(kdtBRN.right)
+
+        if (kdtBRN.left != null)
+          kdtBRN.rectPointBounds
+            .mergeWith(kdtBRN.left.rectPointBounds)
+
+        if (kdtBRN.right != null)
+          kdtBRN.rectPointBounds
+            .mergeWith(kdtBRN.right.rectPointBounds)
+      case _ =>
+    }
+  }
+}
