@@ -23,10 +23,10 @@ case class Rectangle(center: Geom2D, halfXY: Geom2D) extends Serializable {
   def contains(point: Geom2D): Boolean =
     contains(point.x, point.y)
 
-  def containsX(x: Double) =
+  def containsX(x: Double): Boolean =
     !(x < left || x > right)
 
-  def containsY(y: Double) =
+  def containsY(y: Double): Boolean =
     !(y < bottom || y > top)
 
   def contains(x: Double, y: Double): Boolean =
@@ -108,7 +108,7 @@ case class Rectangle(center: Geom2D, halfXY: Geom2D) extends Serializable {
     new Geom2D(halfXY.x / 2, halfXY.y / 2)
 
   def mbr: String =
-    "%f,%f,%f,%f".format(left, bottom, right, top)
+    "%.10f,%.10f,%.10f,%.10f".format(left, bottom, right, top)
 
   override def toString: String =
     "%s\t%s".format(center, halfXY)

@@ -8,7 +8,6 @@ class Geom2D() extends KryoSerializable {
   var x = 0.0
   var y = 0.0
 
-
   def this(x: Double, y: Double) = {
 
     this()
@@ -44,5 +43,5 @@ class Geom2D() extends KryoSerializable {
   def xy: (Double, Double) = (x, y)
 
   override def toString: String =
-    "(%.22f,%.22f)".format(x, y)
+    "(%.10f,%.10f)".format(x, y)
 }

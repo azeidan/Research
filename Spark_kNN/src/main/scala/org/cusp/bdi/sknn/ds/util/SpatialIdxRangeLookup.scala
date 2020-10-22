@@ -99,7 +99,7 @@ object SpatialIdxRangeLookup extends Serializable {
 
       while (stackKdtNode.nonEmpty) {
 
-        val (kdtNode, splitX) = stackKdtNode.pop()
+        val (kdtNode, splitX_child) = stackKdtNode.pop()
 
         if (kdtNode != skipKdtNode) {
 
@@ -109,18 +109,18 @@ object SpatialIdxRangeLookup extends Serializable {
           kdtNode match {
             case kdtBRN: KdtBranchRootNode =>
 
-              computeSplitKeyLoc(idxRangeLookupInfo.rectSearchRegion, kdtBRN, kdTree.getHGBarWidth, splitX) match {
+              computeSplitKeyLoc(idxRangeLookupInfo.rectSearchRegion, kdtBRN, kdTree.getHGBarWidth, splitX_child) match {
                 case -1 =>
                   if (kdtBRN.left != null)
-                    stackKdtNode.push((kdtBRN.left, !splitX))
+                    stackKdtNode.push((kdtBRN.left, !splitX_child))
                 case 1 =>
                   if (kdtBRN.right != null)
-                    stackKdtNode.push((kdtBRN.right, !splitX))
+                    stackKdtNode.push((kdtBRN.right, !splitX_child))
                 case _ =>
                   if (kdtBRN.left != null)
-                    stackKdtNode.push((kdtBRN.left, !splitX))
+                    stackKdtNode.push((kdtBRN.left, !splitX_child))
                   if (kdtBRN.right != null)
-                    stackKdtNode.push((kdtBRN.right, !splitX))
+                    stackKdtNode.push((kdtBRN.right, !splitX_child))
               }
 
             case _ =>

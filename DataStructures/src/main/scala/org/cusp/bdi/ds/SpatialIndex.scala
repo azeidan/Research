@@ -8,13 +8,12 @@ object SpatialIndex {
 
   case class KnnLookupInfo(searchPoint: Point, sortSetSqDist: SortedList[Point], rectBestNode: Rectangle) {
 
-    val dim = if (sortSetSqDist.isFull)
+    private def dim = if (sortSetSqDist.isFull)
       math.sqrt(sortSetSqDist.last.distance)
     else
       computeDimension(searchPoint, rectBestNode)
 
-    val rectSearchRegion = Rectangle(searchPoint, new Geom2D(dim))
-    var limitNode: Node[Point] = _
+    val rectSearchRegion: Rectangle = Rectangle(searchPoint, new Geom2D(dim))
     var prevMaxSqrDist: Double = if (sortSetSqDist.last == null) -1 else sortSetSqDist.last.distance
   }
 

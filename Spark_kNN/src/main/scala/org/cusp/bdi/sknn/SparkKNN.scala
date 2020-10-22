@@ -259,8 +259,8 @@ case class SparkKNN(debugMode: Boolean, k: Int, typeSpatialIndex: TypeSpatialInd
     var rddPoint = rddLeft
       .mapPartitions(iter => iter.map(point => {
 
-        //        if (point.userData.toString().equalsIgnoreCase("bread_3_a_822279"))
-        //          println
+        //                if (point.userData.toString().equalsIgnoreCase("yellow_2_a_776229"))
+        //                  println
 
         val lstPartitionId = SpatialIdxRangeLookup.getLstPartition(bvGlobalIndex.value, bvGridOp.value.computeSquareXY(point.x, point.y), k)
 
@@ -281,7 +281,7 @@ case class SparkKNN(debugMode: Boolean, k: Int, typeSpatialIndex: TypeSpatialInd
           }
 
           var start = -1L
-          var countKNN = 0L
+          //          var countKNN = 0L
 
           iter.map(row => {
 
@@ -291,19 +291,21 @@ case class SparkKNN(debugMode: Boolean, k: Int, typeSpatialIndex: TypeSpatialInd
             //            if (pIdx == 7 || pIdx == 1 || pIdx == 0)
             //              println(iterationNum)
 
-            val res = row._2 match {
+            row._2 match {
               case rowPoint: RowData =>
 
                 if (rowPoint.lstPartitionId == null)
                   row
                 else {
 
-                  countKNN += 1
+                  //                  countKNN += 1
 
-                  //                  if (rowPoint.point.userData.toString().equalsIgnoreCase("bread_3_a_822279"))
+                  //                  if (pIdx == 17 && rowPoint.point.userData.toString().equalsIgnoreCase("yellow_2_a_776229"))
                   //                    println
+
                   //if (iterationNum == 0 && pIdx == 17)
                   //  println
+
                   spatialIndex.nearestNeighbor(rowPoint.point, rowPoint.sortedList)
 
                   val nextPIdx = if (rowPoint.lstPartitionId.isEmpty) row._1 else rowPoint.lstPartitionId.head
@@ -313,10 +315,10 @@ case class SparkKNN(debugMode: Boolean, k: Int, typeSpatialIndex: TypeSpatialInd
                 }
             }
 
-            if (!iter.hasNext)
-              Helper.loggerSLf4J(debugMode, SparkKNN, ">>kNN Iteration#: %d Partition %d done in %,d. Total partition kNN ONLY points: %,d".format(iterationNum, pIdx, System.currentTimeMillis() - start, countKNN))
-
-            res
+            //            if (!iter.hasNext)
+            //              Helper.loggerSLf4J(debugMode, SparkKNN, ">>kNN Round#: %d Partition %d done in %,d. Total partition kNN ONLY points: %,d".format(iterationNum, pIdx, System.currentTimeMillis() - start, countKNN))
+            //
+            //            res
           })
         })
 
