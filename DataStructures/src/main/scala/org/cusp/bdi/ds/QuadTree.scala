@@ -198,7 +198,7 @@ class QuadTree(_rectBounds: Rectangle) extends SpatialIndex {
     //
     //    var prevMaxSqrDist = if (sortSetSqDist.last == null) -1 else sortSetSqDist.last.distance
 
-    val knnLookupInfo = KnnLookupInfo(searchPoint, sortSetSqDist, sPtBestQT.rectBounds)
+    val knnLookupInfo = new KnnLookupInfo(searchPoint, sortSetSqDist, sPtBestQT.rectBounds)
 
     def process(rootQT: QuadTree, skipQT: QuadTree) {
 

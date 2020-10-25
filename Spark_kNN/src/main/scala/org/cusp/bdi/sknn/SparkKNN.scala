@@ -37,9 +37,9 @@ case class RangeInfo(seedObj: ((Double, Double), Int)) extends Serializable {
 
 case class RowData(point: Point, sortedList: SortedList[Point]) extends Serializable {
 
-  var lstPartitionId: List[Int] = _
+  var lstPartitionId: ListBuffer[Int] = _
 
-  def this(point: Point, sortedList: SortedList[Point], lstPartitionId: List[Int]) {
+  def this(point: Point, sortedList: SortedList[Point], lstPartitionId: ListBuffer[Int]) {
 
     this(point, sortedList)
 
@@ -196,7 +196,11 @@ case class SparkKNN(debugMode: Boolean, k: Int, typeSpatialIndex: TypeSpatialInd
         override def numPartitions: Int = actualPartitionCount + 1
 
         override def getPartition(key: Any): Int = key match {
-          case pIdx: Int => pIdx // also used when partitioning rddPoint
+          case pIdx: Int => // also used when partitioning rddPoint
+            pIdx match {
+              case -1 => Random.nextInt(actualPartitionCount)
+              case _ => pIdx
+            }
         }
       })
       .mapPartitionsWithIndex((pIdx, iter) => { // build spatial index
@@ -210,7 +214,7 @@ case class SparkKNN(debugMode: Boolean, k: Int, typeSpatialIndex: TypeSpatialInd
 
         spatialIndex.insert(iter.map(_._2))
 
-        Helper.loggerSLf4J(debugMode, SparkKNN, ">>SpatialIndex on partition %d time in %,d MS. Points: %s. Total Size: %d".format(pIdx, System.currentTimeMillis - startTime, spatialIndex, SizeEstimator.estimate(spatialIndex)))
+        Helper.loggerSLf4J(debugMode, SparkKNN, ">>SpatialIndex on partition %d time in %,d MS. Index: %s. Total Size: %d".format(pIdx, System.currentTimeMillis - startTime, spatialIndex, SizeEstimator.estimate(spatialIndex)))
 
         val any: Any = spatialIndex
 
@@ -259,16 +263,22 @@ case class SparkKNN(debugMode: Boolean, k: Int, typeSpatialIndex: TypeSpatialInd
     var rddPoint = rddLeft
       .mapPartitions(iter => iter.map(point => {
 
-        //                if (point.userData.toString().equalsIgnoreCase("yellow_2_a_776229"))
-        //                  println
+        //        if (point.userData.toString().equalsIgnoreCase("bus_3_a_360105"))
+        //          println
 
-        val lstPartitionId = SpatialIdxRangeLookup.getLstPartition(bvGlobalIndex.value, bvGridOp.value.computeSquareXY(point.x, point.y), k)
+        var lstPartitionId = SpatialIdxRangeLookup.getLstPartition(bvGlobalIndex.value, bvGridOp.value.computeSquareXY(point.x, point.y), k)
 
-        val rowData: Any = new RowData(point, SortedList[Point](k), Random.shuffle(lstPartitionId.tail))
+        while (lstPartitionId.size < numRounds) lstPartitionId += -1
+
+        lstPartitionId = Random.shuffle(lstPartitionId)
+        //        println(lstPartitionId.mkString("<<\t"))
+        //        val nextPIdx = if (lstPartitionId.head == -1) Random.nextInt(actualPartitionCount) else lstPartitionId.head
+
+        val rDataPoint: Any = new RowData(point, SortedList[Point](k), lstPartitionId.tail)
 
         // println(">>>" + pidx + "\t" + (System.currentTimeMillis-start))
 
-        (lstPartitionId.head, rowData)
+        (lstPartitionId.head, rDataPoint)
       }))
 
     (0 until numRounds).foreach(iterationNum => {
@@ -291,33 +301,35 @@ case class SparkKNN(debugMode: Boolean, k: Int, typeSpatialIndex: TypeSpatialInd
             //            if (pIdx == 7 || pIdx == 1 || pIdx == 0)
             //              println(iterationNum)
 
-            row._2 match {
-              case rowPoint: RowData =>
+            /*val res = */ row._2 match {
+              case rDataPoint: RowData =>
 
-                if (rowPoint.lstPartitionId == null)
-                  row
-                else {
+                //                if (rowPoint.lstPartitionId == null)
+                //                  row
+                //                else {
 
-                  //                  countKNN += 1
+                //                countKNN += 1
 
-                  //                  if (pIdx == 17 && rowPoint.point.userData.toString().equalsIgnoreCase("yellow_2_a_776229"))
-                  //                    println
+                //                  if (pIdx == 17 && rowPoint.point.userData.toString().equalsIgnoreCase("bus_3_a_360105"))
+                //                    println
 
-                  //if (iterationNum == 0 && pIdx == 17)
-                  //  println
+                //if (iterationNum == 0 && pIdx == 17)
+                //  println
 
-                  spatialIndex.nearestNeighbor(rowPoint.point, rowPoint.sortedList)
+                if (row._1 != -1)
+                  spatialIndex.nearestNeighbor(rDataPoint.point, rDataPoint.sortedList)
 
-                  val nextPIdx = if (rowPoint.lstPartitionId.isEmpty) row._1 else rowPoint.lstPartitionId.head
-                  rowPoint.lstPartitionId = if (rowPoint.lstPartitionId.isEmpty) null else /*Random.shuffle(*/ rowPoint.lstPartitionId.tail
+                //                val nextPIdx = if (rowPoint.lstPartitionId.isEmpty) row._1 else rowPoint.lstPartitionId.head
+                val nextPIdx = if (rDataPoint.lstPartitionId.isEmpty) -1 else rDataPoint.lstPartitionId.head
+                rDataPoint.lstPartitionId = if (rDataPoint.lstPartitionId.isEmpty) null else rDataPoint.lstPartitionId.tail
 
-                  (nextPIdx, rowPoint)
-                }
+                (nextPIdx, rDataPoint)
+              //                }
             }
 
             //            if (!iter.hasNext)
             //              Helper.loggerSLf4J(debugMode, SparkKNN, ">>kNN Round#: %d Partition %d done in %,d. Total partition kNN ONLY points: %,d".format(iterationNum, pIdx, System.currentTimeMillis() - start, countKNN))
-            //
+
             //            res
           })
         })
@@ -347,7 +359,7 @@ case class SparkKNN(debugMode: Boolean, k: Int, typeSpatialIndex: TypeSpatialInd
 
     val pointDummy = new Point(0, 0, Array.fill[Char](maxRowSize)(' ').mkString(""))
     val sortSetDummy = SortedList[Point](k)
-    val lstPartitionIdDummy = List.fill[Int](rddRight.getNumPartitions)(0)
+    val lstPartitionIdDummy = ListBuffer.fill[Int](rddRight.getNumPartitions)(0)
     val rowDataDummy = new RowData(pointDummy, sortSetDummy, lstPartitionIdDummy)
     val spatialIndexDummy = typeSpatialIndex match {
       case qt if qt == TypeSpatialIndex.quadTree =>

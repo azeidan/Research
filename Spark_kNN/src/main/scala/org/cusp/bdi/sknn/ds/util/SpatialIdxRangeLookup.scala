@@ -1,6 +1,6 @@
 package org.cusp.bdi.sknn.ds.util
 
-import org.cusp.bdi.ds.KdTree.{buildRectBoundsFromNodePath, computeSplitKeyLoc}
+import org.cusp.bdi.ds.KdTree.computeSplitKeyLoc
 import org.cusp.bdi.ds.SpatialIndex.computeDimension
 import org.cusp.bdi.ds._
 import org.cusp.bdi.ds.geom.{Geom2D, Point, Rectangle}
@@ -29,7 +29,7 @@ object SpatialIdxRangeLookup extends Serializable {
     var weight: Long = 0L
   }
 
-  def getLstPartition(spatialIndex: SpatialIndex, searchXY: (Double, Double), k: Int): List[Int] =
+  def getLstPartition(spatialIndex: SpatialIndex, searchXY: (Double, Double), k: Int): ListBuffer[Int] =
     (spatialIndex match {
       case quadTree: QuadTree => lookup(quadTree, searchXY, k)
       case kdTree: KdTree => lookup(kdTree, searchXY, k)
@@ -38,7 +38,7 @@ object SpatialIdxRangeLookup extends Serializable {
         case globalIndexPointData: GlobalIndexPointData => globalIndexPointData.partitionIdx
       })
       .toSet
-      .toList
+      .to[ListBuffer]
 
   private def lookup(quadTree: QuadTree, searchXY: (Double, Double), k: Int): SortedList[Point] = {
 
@@ -87,11 +87,12 @@ object SpatialIdxRangeLookup extends Serializable {
 
     val searchPoint = new Geom2D(searchXY._1, searchXY._2)
 
-    val sPtBestNodeInfo = kdTree.findBestNode(searchPoint, k)
-    val sPtBestNode = sPtBestNodeInfo._1.top
-    var splitX = sPtBestNodeInfo._2
+    var (sPtBestNode, splitX) = kdTree.findBestNode(searchPoint, k)
 
-    val idxRangeLookupInfo = IdxRangeLookupInfo(Rectangle(searchPoint, new Geom2D(computeDimension(searchPoint, buildRectBoundsFromNodePath(sPtBestNodeInfo._1)))))
+    val idxRangeLookupInfo = IdxRangeLookupInfo(Rectangle(searchPoint, new Geom2D(computeDimension(searchPoint, sPtBestNode match {
+      case kdtBRN: KdtBranchRootNode => kdtBRN.rectSubtreeBounds
+      case _ => sPtBestNode.rectPointBounds
+    }))))
 
     def process(kdtNode: KdtNode, skipKdtNode: KdtNode) {
 

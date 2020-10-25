@@ -6,15 +6,23 @@ import org.cusp.bdi.util.Helper
 
 object SpatialIndex {
 
-  case class KnnLookupInfo(searchPoint: Point, sortSetSqDist: SortedList[Point], rectBestNode: Rectangle) {
+  case class KnnLookupInfo(searchPoint: Point, sortSetSqDist: SortedList[Point]) {
 
-    private def dim = if (sortSetSqDist.isFull)
-      math.sqrt(sortSetSqDist.last.distance)
-    else
-      computeDimension(searchPoint, rectBestNode)
+    var rectSearchRegion: Rectangle = _
+    var prevMaxSqrDist: Double = -1
 
-    val rectSearchRegion: Rectangle = Rectangle(searchPoint, new Geom2D(dim))
-    var prevMaxSqrDist: Double = if (sortSetSqDist.last == null) -1 else sortSetSqDist.last.distance
+    def this(searchPoint: Point, sortSetSqDist: SortedList[Point], rectBestNode: Rectangle) = {
+
+      this(searchPoint, sortSetSqDist)
+
+      def dim = if (sortSetSqDist.isFull)
+        math.sqrt(sortSetSqDist.last.distance)
+      else
+        computeDimension(this.searchPoint, rectBestNode)
+
+      this.rectSearchRegion = Rectangle(this.searchPoint, new Geom2D(dim))
+      this.prevMaxSqrDist = if (sortSetSqDist.last == null) -1 else sortSetSqDist.last.distance
+    }
   }
 
   def buildRectBounds(iterPoints: Iterable[Point]): Rectangle = {
