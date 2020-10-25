@@ -563,7 +563,14 @@
       <option name="project" value="LOCAL" />
       <updated>1603348323407</updated>
     </task>
-    <option name="localTasksCounter" value="42" />
+    <task id="LOCAL-00042" summary="Before changing kd tree to not store points in root nodes">
+      <created>1603654412896</created>
+      <option name="number" value="00042" />
+      <option name="presentableId" value="LOCAL-00042" />
+      <option name="project" value="LOCAL" />
+      <updated>1603654412896</updated>
+    </task>
+    <option name="localTasksCounter" value="43" />
     <servers />
   </component>
   <component name="UnloadedModulesList">
@@ -670,10 +677,6 @@
       <screen x="67" y="27" width="2493" height="1413" />
     </state>
     <state x="938" y="400" width="740" height="665" key="#Inspections/67.27.2493.1413@67.27.2493.1413" timestamp="1598293324740" />
-    <state x="1183" y="599" width="811" height="531" key="#Notifications" timestamp="1594705139893">
-      <screen x="67" y="27" width="2493" height="1413" />
-    </state>
-    <state x="1183" y="599" width="811" height="531" key="#Notifications/67.27.2493.1413@67.27.2493.1413" timestamp="1594705139893" />
     <state x="808" y="291" width="1000" height="883" key="#Plugins" timestamp="1596075586448">
       <screen x="67" y="27" width="2493" height="1413" />
     </state>
@@ -797,26 +800,26 @@
     </state>
     <state x="935" y="476" width="878" height="513" key="FileChooserDialogImpl/67.27.2493.1413@67.27.2493.1413" timestamp="1600923293941" />
     <state x="938" y="476" key="FileChooserDialogImpl/72.27.2488.1413@72.27.2488.1413" timestamp="1602620912632" />
-    <state width="2444" height="290" key="GridCell.Tab.0.bottom" timestamp="1603440084690">
+    <state width="2444" height="290" key="GridCell.Tab.0.bottom" timestamp="1603654408597">
       <screen x="72" y="27" width="2488" height="1413" />
     </state>
     <state width="2449" height="361" key="GridCell.Tab.0.bottom/67.27.2493.1413@67.27.2493.1413" timestamp="1601609014701" />
-    <state width="2444" height="290" key="GridCell.Tab.0.bottom/72.27.2488.1413@72.27.2488.1413" timestamp="1603440084690" />
-    <state width="2444" height="290" key="GridCell.Tab.0.center" timestamp="1603440084689">
+    <state width="2444" height="290" key="GridCell.Tab.0.bottom/72.27.2488.1413@72.27.2488.1413" timestamp="1603654408597" />
+    <state width="2444" height="290" key="GridCell.Tab.0.center" timestamp="1603654408596">
       <screen x="72" y="27" width="2488" height="1413" />
     </state>
     <state width="2449" height="361" key="GridCell.Tab.0.center/67.27.2493.1413@67.27.2493.1413" timestamp="1601609014701" />
-    <state width="2444" height="290" key="GridCell.Tab.0.center/72.27.2488.1413@72.27.2488.1413" timestamp="1603440084689" />
-    <state width="2444" height="290" key="GridCell.Tab.0.left" timestamp="1603440084688">
+    <state width="2444" height="290" key="GridCell.Tab.0.center/72.27.2488.1413@72.27.2488.1413" timestamp="1603654408596" />
+    <state width="2444" height="290" key="GridCell.Tab.0.left" timestamp="1603654408594">
       <screen x="72" y="27" width="2488" height="1413" />
     </state>
     <state width="2449" height="361" key="GridCell.Tab.0.left/67.27.2493.1413@67.27.2493.1413" timestamp="1601609014700" />
-    <state width="2444" height="290" key="GridCell.Tab.0.left/72.27.2488.1413@72.27.2488.1413" timestamp="1603440084688" />
-    <state width="2444" height="290" key="GridCell.Tab.0.right" timestamp="1603440084689">
+    <state width="2444" height="290" key="GridCell.Tab.0.left/72.27.2488.1413@72.27.2488.1413" timestamp="1603654408594" />
+    <state width="2444" height="290" key="GridCell.Tab.0.right" timestamp="1603654408596">
       <screen x="72" y="27" width="2488" height="1413" />
     </state>
     <state width="2449" height="361" key="GridCell.Tab.0.right/67.27.2493.1413@67.27.2493.1413" timestamp="1601609014701" />
-    <state width="2444" height="290" key="GridCell.Tab.0.right/72.27.2488.1413@72.27.2488.1413" timestamp="1603440084689" />
+    <state width="2444" height="290" key="GridCell.Tab.0.right/72.27.2488.1413@72.27.2488.1413" timestamp="1603654408596" />
     <state width="2444" height="414" key="GridCell.Tab.1.bottom" timestamp="1603435856265">
       <screen x="72" y="27" width="2488" height="1413" />
     </state>
@@ -878,11 +881,11 @@
       <screen x="67" y="27" width="2493" height="1413" />
     </state>
     <state x="1144" y="631" width="329" height="203" key="VCS.EditChangelistDialog/67.27.2493.1413@67.27.2493.1413" timestamp="1598309673598" />
-    <state x="831" y="335" width="800" height="535" key="Vcs.Push.Dialog.v2" timestamp="1603348328607">
+    <state x="831" y="335" width="800" height="535" key="Vcs.Push.Dialog.v2" timestamp="1603654717905">
       <screen x="72" y="27" width="2488" height="1413" />
     </state>
     <state x="828" y="335" width="1291" height="801" key="Vcs.Push.Dialog.v2/67.27.2493.1413@67.27.2493.1413" timestamp="1601615316467" />
-    <state x="831" y="335" width="800" height="535" key="Vcs.Push.Dialog.v2/72.27.2488.1413@72.27.2488.1413" timestamp="1603348328607" />
+    <state x="831" y="335" width="800" height="535" key="Vcs.Push.Dialog.v2/72.27.2488.1413@72.27.2488.1413" timestamp="1603654717905" />
     <state x="1005" y="408" width="607" height="649" key="VcsDiffUtil.ChangesDialog" timestamp="1601149790980">
       <screen x="67" y="27" width="2493" height="1413" />
     </state>
@@ -918,12 +921,10 @@
     <state x="172" y="125" width="2289" height="1215" key="dock-window-1" timestamp="1602401854648">
       <screen x="72" y="27" width="2488" height="1413" />
     </state>
-    <state x="167" y="125" width="2293" height="1215" key="dock-window-1/67.27.2493.1413@67.27.2493.1413" timestamp="1594783317173" />
     <state x="172" y="125" width="2289" height="1215" key="dock-window-1/72.27.2488.1413@72.27.2488.1413" timestamp="1602401854648" />
     <state x="271" y="225" width="2289" height="1215" key="dock-window-2" timestamp="1602401854649">
       <screen x="72" y="27" width="2488" height="1413" />
     </state>
-    <state x="292" y="314" width="2293" height="1215" key="dock-window-2/67.27.2493.1413@67.27.2493.1413" timestamp="1594783317173" />
     <state x="271" y="225" width="2289" height="1215" key="dock-window-2/72.27.2488.1413@72.27.2488.1413" timestamp="1602401854649" />
     <state x="1043" y="301" width="1107" height="836" key="find.popup" timestamp="1603439652671">
       <screen x="72" y="27" width="2488" height="1413" />
