@@ -1,4 +1,4 @@
-package org.cusp.bdi.ds
+package org.cusp.bdi.ds.util
 
 import scala.collection.AbstractIterator
 import scala.collection.immutable.Iterable
@@ -78,8 +78,6 @@ case class SortedList[T](maxSize: Int) /*(implicit ev$1: T => Comparable[_ >: T]
     }
   }
 
-  override def last: Node[T] = lastNode
-
   def isFull: Boolean = nodeCount == maxSize
 
   def stopAt(node: Node[T]): Unit = {
@@ -90,8 +88,6 @@ case class SortedList[T](maxSize: Int) /*(implicit ev$1: T => Comparable[_ >: T]
       lastNode.next = null
     }
   }
-
-  override def size: Int = nodeCount
 
   def get(idx: Int): Node[T] = {
 
@@ -107,6 +103,10 @@ case class SortedList[T](maxSize: Int) /*(implicit ev$1: T => Comparable[_ >: T]
   }
 
   override def head: Node[T] = headNode
+
+  override def last: Node[T] = lastNode
+
+  override def size: Int = nodeCount
 
   override def iterator: Iterator[Node[T]] = new AbstractIterator[Node[T]] {
 

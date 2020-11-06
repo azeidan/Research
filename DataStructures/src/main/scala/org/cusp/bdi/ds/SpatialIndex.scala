@@ -2,6 +2,7 @@ package org.cusp.bdi.ds
 
 import com.esotericsoftware.kryo.KryoSerializable
 import org.cusp.bdi.ds.geom.{Geom2D, Point, Rectangle}
+import org.cusp.bdi.ds.util.SortedList
 import org.cusp.bdi.util.Helper
 
 object SpatialIndex {
@@ -11,27 +12,27 @@ object SpatialIndex {
     var rectSearchRegion: Rectangle = _
     var prevMaxSqrDist: Double = -1
 
-    def this(searchPoint: Point, sortSetSqDist: SortedList[Point], rectBestNode: Rectangle) = {
+    def this(searchPoint: Point, sortSetSqDist: SortedList[Point], rectBestNode: => Rectangle) = {
 
       this(searchPoint, sortSetSqDist)
 
-      def dim = if (sortSetSqDist.isFull)
-        math.sqrt(sortSetSqDist.last.distance)
-      else
-        computeDimension(this.searchPoint, rectBestNode)
+      def dim = if (sortSetSqDist.isFull) math.sqrt(sortSetSqDist.last.distance) else computeDimension(this.searchPoint, rectBestNode)
 
       this.rectSearchRegion = Rectangle(this.searchPoint, new Geom2D(dim))
       this.prevMaxSqrDist = if (sortSetSqDist.last == null) -1 else sortSetSqDist.last.distance
     }
   }
 
-  def buildRectBounds(iterPoints: Iterable[Point]): Rectangle = {
+  def computeSizeAndBounds(iterPoints: Iterable[Point]): (Int, Rectangle) = {
 
     val iter = iterPoints.iterator
     val point = iter.next()
     var (minX, minY, maxX, maxY) = (point.x, point.y, point.x, point.y)
+    var count = 1
 
     for (point <- iter) {
+
+      count += 1
 
       if (point.x < minX) minX = point.x
       else if (point.x > maxX) maxX = point.x
@@ -40,7 +41,7 @@ object SpatialIndex {
       else if (point.y > maxY) maxY = point.y
     }
 
-    buildRectBounds((minX, minY), (maxX, maxY))
+    (count, buildRectBounds((minX, minY), (maxX, maxY)))
   }
 
   def buildRectBounds(mbrEnds: ((Double, Double), (Double, Double))): Rectangle = {
@@ -51,9 +52,6 @@ object SpatialIndex {
   }
 
   def computeDimension(searchPoint: Geom2D, rectMBR: Rectangle): Double = {
-
-    //    val dim = math.max(math.max(math.abs(searchPoint.x - rectMBR.left), math.abs(searchPoint.x - rectMBR.right)),
-    //      math.max(math.abs(searchPoint.y - rectMBR.bottom), math.abs(searchPoint.y - rectMBR.top))) /*+ errorRange*/
 
     val left = rectMBR.left
     val bottom = rectMBR.bottom

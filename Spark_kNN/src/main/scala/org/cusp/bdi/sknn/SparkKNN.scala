@@ -7,6 +7,9 @@ import org.apache.spark.util.SizeEstimator
 import org.cusp.bdi.ds.SpatialIndex.buildRectBounds
 import org.cusp.bdi.ds._
 import org.cusp.bdi.ds.geom.{Circle, Geom2D, Point, Rectangle}
+import org.cusp.bdi.ds.kdt.{KdTree, KdtBranchRootNode, KdtNode}
+import org.cusp.bdi.ds.qt.QuadTree
+import org.cusp.bdi.ds.util.{Node, SortedList}
 import org.cusp.bdi.sknn.ds.util.{PointData, SpatialIdxRangeLookup}
 import org.cusp.bdi.sknn.util._
 import org.cusp.bdi.util.{Arguments, Helper}
@@ -159,11 +162,12 @@ case class SparkKNN(debugMode: Boolean, k: Int, typeSpatialIndex: TypeSpatialInd
     //    lstRangeInfo.foreach(rInf => println(">1>\t%d\t%d\t%d\t%d\t%d".format(rInf.assignedPartition, rInf.left, rInf.bottom, rInf.right, rInf.top)))
 
     // create global index
+    val rectBounds = buildRectBounds(bvGridOp.value.computeSquareXY(rightDS_MBR_Left, rightDS_MBR_Bottom), bvGridOp.value.computeSquareXY(rightDS_MBR_Right, rightDS_MBR_Top))
     val globalIndex: SpatialIndex = typeSpatialIndex match {
-      case qt if qt == TypeSpatialIndex.quadTree =>
-        new QuadTree(buildRectBounds(bvGridOp.value.computeSquareXY(rightDS_MBR_Left, rightDS_MBR_Bottom), bvGridOp.value.computeSquareXY(rightDS_MBR_Right, rightDS_MBR_Top)))
-      case kdt if kdt == TypeSpatialIndex.kdTree =>
-        new KdTree(1)
+      case TypeSpatialIndex.quadTree =>
+        new QuadTree(rectBounds)
+      case TypeSpatialIndex.kdTree =>
+        new KdTree(rectBounds, 1)
     }
 
     val bvArrMBR = rddRight.sparkContext.broadcast(lstRangeInfo.map(_.mbr).toArray)
@@ -207,10 +211,19 @@ case class SparkKNN(debugMode: Boolean, k: Int, typeSpatialIndex: TypeSpatialInd
 
         val startTime = System.currentTimeMillis
 
+        val rectBounds = scaleAndBuildRectBounds(bvArrMBR.value(pIdx), bvGridOp.value.squareDim)
+
         val spatialIndex: SpatialIndex = typeSpatialIndex match {
-          case qt if qt == TypeSpatialIndex.quadTree => new QuadTree(scaleAndBuildRectBounds(bvArrMBR.value(pIdx), bvGridOp.value.squareDim))
-          case kdt if kdt == TypeSpatialIndex.kdTree => new KdTree(bvGridOp.value.squareDim)
+          case qt if qt == TypeSpatialIndex.quadTree => new QuadTree(rectBounds)
+          case kdt if kdt == TypeSpatialIndex.kdTree => new KdTree(rectBounds, bvGridOp.value.squareDim)
         }
+
+//        if (pIdx == 0)
+//          println()
+//        if (pIdx == 0)
+//          spatialIndex.insert(iter.map(_._2))
+//        else
+//          spatialIndex.insert(iter.map(_._2).take(10))
 
         spatialIndex.insert(iter.map(_._2))
 
@@ -219,7 +232,8 @@ case class SparkKNN(debugMode: Boolean, k: Int, typeSpatialIndex: TypeSpatialInd
         val any: Any = spatialIndex
 
         Iterator((pIdx, any))
-      }, preservesPartitioning = true)
+      }
+        , preservesPartitioning = true)
       .persist(StorageLevel.MEMORY_ONLY)
 
     //    lstRangeInfo.foreach(row => println(">2>\t%s".format(row)))
@@ -291,30 +305,27 @@ case class SparkKNN(debugMode: Boolean, k: Int, typeSpatialIndex: TypeSpatialInd
           }
 
           var start = -1L
-          //          var countKNN = 0L
+          var countKNN = 0L
 
           iter.map(row => {
 
             if (start == -1)
               start = System.currentTimeMillis()
 
-            //            if (pIdx == 7 || pIdx == 1 || pIdx == 0)
-            //              println(iterationNum)
-
-            /*val res = */ row._2 match {
+            val res = row._2 match {
               case rDataPoint: RowData =>
 
                 //                if (rowPoint.lstPartitionId == null)
                 //                  row
                 //                else {
 
-                //                countKNN += 1
+                countKNN += 1
 
                 //                  if (pIdx == 17 && rowPoint.point.userData.toString().equalsIgnoreCase("bus_3_a_360105"))
                 //                    println
 
-                //if (iterationNum == 0 && pIdx == 17)
-                //  println
+                //                if ( /*iterationNum == 0 && */ pIdx == 0)
+                //                  println(iterationNum)
 
                 if (row._1 != -1)
                   spatialIndex.nearestNeighbor(rDataPoint.point, rDataPoint.sortedList)
@@ -327,10 +338,10 @@ case class SparkKNN(debugMode: Boolean, k: Int, typeSpatialIndex: TypeSpatialInd
               //                }
             }
 
-            //            if (!iter.hasNext)
-            //              Helper.loggerSLf4J(debugMode, SparkKNN, ">>kNN Round#: %d Partition %d done in %,d. Total partition kNN ONLY points: %,d".format(iterationNum, pIdx, System.currentTimeMillis() - start, countKNN))
+            if (!iter.hasNext)
+              Helper.loggerSLf4J(debugMode, SparkKNN, ">>kNN Round#: %d Partition %d done in %,d. Total partition kNN ONLY points: %,d".format(iterationNum, pIdx, System.currentTimeMillis() - start, countKNN))
 
-            //            res
+            res
           })
         })
 
@@ -365,7 +376,7 @@ case class SparkKNN(debugMode: Boolean, k: Int, typeSpatialIndex: TypeSpatialInd
       case qt if qt == TypeSpatialIndex.quadTree =>
         new QuadTree(Rectangle(new Geom2D(0, 0), new Geom2D(0, 0)))
       case kdt if kdt == TypeSpatialIndex.kdTree =>
-        new KdTree(1)
+        new KdTree(Rectangle(new Geom2D(0, 0), new Geom2D(0, 0)), 1)
     }
 
     val pointCost = SizeEstimator.estimate(pointDummy)

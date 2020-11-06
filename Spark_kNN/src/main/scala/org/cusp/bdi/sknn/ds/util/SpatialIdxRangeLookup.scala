@@ -1,13 +1,15 @@
 package org.cusp.bdi.sknn.ds.util
 
-import org.cusp.bdi.ds.KdTree.computeSplitKeyLoc
+import org.cusp.bdi.ds.kdt.KdTree.findSearchRegionLocation
 import org.cusp.bdi.ds.SpatialIndex.computeDimension
 import org.cusp.bdi.ds._
 import org.cusp.bdi.ds.geom.{Geom2D, Point, Rectangle}
+import org.cusp.bdi.ds.kdt.{KdTree, KdtBranchRootNode, KdtLeafNode, KdtNode}
+import org.cusp.bdi.ds.qt.QuadTree
+import org.cusp.bdi.ds.util.{Node, SortedList}
 import org.cusp.bdi.sknn.GlobalIndexPointData
 import org.cusp.bdi.util.Helper
 
-import scala.collection.mutable
 import scala.collection.mutable.ListBuffer
 
 trait PointData extends Serializable {
@@ -21,12 +23,21 @@ object SpatialIdxRangeLookup extends Serializable {
 
   val errorRange: Float = math.sqrt(8).toFloat
 
-  case class IdxRangeLookupInfo(rectSearchRegion: Rectangle) {
+  class IdxRangeLookupInfo {
 
+    var rectSearchRegion: Rectangle = _
     val sortList: SortedList[Point] = new SortedList[Point]()
     var limitNode: Node[Point] = _
-    var sqDim: Double = math.pow(rectSearchRegion.halfXY.x, 2)
+    var sqrDim: Double = 0
     var weight: Long = 0L
+
+    def this(searchPoint: Geom2D, rectBestNode: Rectangle) = {
+
+      this()
+
+      rectSearchRegion = Rectangle(searchPoint, new Geom2D(computeDimension(searchPoint, rectBestNode)))
+      sqrDim = math.pow(rectSearchRegion.halfXY.x, 2)
+    }
   }
 
   def getLstPartition(spatialIndex: SpatialIndex, searchXY: (Double, Double), k: Int): ListBuffer[Int] =
@@ -49,7 +60,7 @@ object SpatialIdxRangeLookup extends Serializable {
 
     val sPtBestQT = quadTree.findBestQuadrant(searchPoint, k)
 
-    val idxRangeLookupInfo = IdxRangeLookupInfo(Rectangle(searchPoint, new Geom2D(computeDimension(searchPoint, sPtBestQT.rectBounds))))
+    val idxRangeLookupInfo = new IdxRangeLookupInfo(searchPoint, sPtBestQT.rectBounds)
 
     def process(rootQT: QuadTree, skipQT: QuadTree) {
 
@@ -89,45 +100,36 @@ object SpatialIdxRangeLookup extends Serializable {
 
     var (sPtBestNode, splitX) = kdTree.findBestNode(searchPoint, k)
 
-    val idxRangeLookupInfo = IdxRangeLookupInfo(Rectangle(searchPoint, new Geom2D(computeDimension(searchPoint, sPtBestNode match {
-      case kdtBRN: KdtBranchRootNode => kdtBRN.rectSubtreeBounds
-      case _ => sPtBestNode.rectPointBounds
-    }))))
+    val idxRangeLookupInfo = new IdxRangeLookupInfo(searchPoint, sPtBestNode.rectNodeBounds)
 
     def process(kdtNode: KdtNode, skipKdtNode: KdtNode) {
 
-      val stackKdtNode = mutable.Stack((kdtNode, splitX))
+      val lstKdtNode = ListBuffer((kdtNode, splitX))
 
-      while (stackKdtNode.nonEmpty) {
-
-        val (kdtNode, splitX_child) = stackKdtNode.pop()
-
-        if (kdtNode != skipKdtNode) {
-
-          if (idxRangeLookupInfo.rectSearchRegion.intersects(kdtNode.rectPointBounds))
-            kdtNode.iterPoints.foreach(updateMatchListAndRegion(_, idxRangeLookupInfo, k))
-
-          kdtNode match {
+      lstKdtNode.foreach(row =>
+        if (row._1 != skipKdtNode)
+          row._1 match {
             case kdtBRN: KdtBranchRootNode =>
 
-              computeSplitKeyLoc(idxRangeLookupInfo.rectSearchRegion, kdtBRN, kdTree.getHGBarWidth, splitX_child) match {
-                case -1 =>
-                  if (kdtBRN.left != null)
-                    stackKdtNode.push((kdtBRN.left, !splitX_child))
-                case 1 =>
-                  if (kdtBRN.right != null)
-                    stackKdtNode.push((kdtBRN.right, !splitX_child))
+              findSearchRegionLocation(idxRangeLookupInfo.rectSearchRegion, kdtBRN.splitVal, row._2) match {
+                case 'L' =>
+                  if (kdtBRN.left != null && idxRangeLookupInfo.rectSearchRegion.intersects(kdtBRN.left.rectNodeBounds))
+                    lstKdtNode += ((kdtBRN.left, !row._2))
+                case 'R' =>
+                  if (kdtBRN.right != null && idxRangeLookupInfo.rectSearchRegion.intersects(kdtBRN.right.rectNodeBounds))
+                    lstKdtNode += ((kdtBRN.right, !row._2))
                 case _ =>
-                  if (kdtBRN.left != null)
-                    stackKdtNode.push((kdtBRN.left, !splitX_child))
-                  if (kdtBRN.right != null)
-                    stackKdtNode.push((kdtBRN.right, !splitX_child))
+                  if (kdtBRN.left != null && idxRangeLookupInfo.rectSearchRegion.intersects(kdtBRN.left.rectNodeBounds))
+                    lstKdtNode += ((kdtBRN.left, !row._2))
+                  if (kdtBRN.right != null && idxRangeLookupInfo.rectSearchRegion.intersects(kdtBRN.right.rectNodeBounds))
+                    lstKdtNode += ((kdtBRN.right, !row._2))
               }
 
-            case _ =>
+            case kdtLeafNode: KdtLeafNode =>
+              if (idxRangeLookupInfo.rectSearchRegion.intersects(kdtLeafNode.rectNodeBounds))
+                kdtLeafNode.lstPoints.foreach(updateMatchListAndRegion(_, idxRangeLookupInfo, k))
           }
-        }
-      }
+      )
     }
 
     process(sPtBestNode, null)
@@ -159,14 +161,15 @@ object SpatialIdxRangeLookup extends Serializable {
       val sqDistQTPoint = Helper.squaredDist(idxRangeLookupInfo.rectSearchRegion.center.x, idxRangeLookupInfo.rectSearchRegion.center.y, point.x, point.y)
 
       // add point if it's within the search radius
-      if (idxRangeLookupInfo.limitNode == null || sqDistQTPoint < idxRangeLookupInfo.sqDim) {
+      if (idxRangeLookupInfo.limitNode == null || sqDistQTPoint < idxRangeLookupInfo.sqrDim) {
 
         idxRangeLookupInfo.sortList.add(sqDistQTPoint, point)
 
         idxRangeLookupInfo.weight += getNumPoints(point)
 
         // see if region can shrink if at least the last node can be dropped
-        if ((idxRangeLookupInfo.limitNode == null || idxRangeLookupInfo.sortList.last.data != point) && (idxRangeLookupInfo.weight - getNumPoints(idxRangeLookupInfo.sortList.last.data)) >= k) {
+        if ((idxRangeLookupInfo.limitNode == null || idxRangeLookupInfo.sortList.last.data != point) &&
+          (idxRangeLookupInfo.weight - getNumPoints(idxRangeLookupInfo.sortList.last.data)) >= k) {
 
           var elem = idxRangeLookupInfo.sortList.head
           var newWeight = getNumPoints(elem.data)
@@ -184,9 +187,9 @@ object SpatialIdxRangeLookup extends Serializable {
             idxRangeLookupInfo.rectSearchRegion.halfXY.x = math.sqrt(idxRangeLookupInfo.limitNode.distance) + errorRange
             idxRangeLookupInfo.rectSearchRegion.halfXY.y = idxRangeLookupInfo.rectSearchRegion.halfXY.x
 
-            idxRangeLookupInfo.sqDim = math.pow(idxRangeLookupInfo.rectSearchRegion.halfXY.x, 2)
+            idxRangeLookupInfo.sqrDim = math.pow(idxRangeLookupInfo.rectSearchRegion.halfXY.x, 2)
 
-            while (elem.next != null && elem.next.distance < idxRangeLookupInfo.sqDim) {
+            while (elem.next != null && elem.next.distance < idxRangeLookupInfo.sqrDim) {
 
               elem = elem.next
               newWeight += getNumPoints(elem.data)

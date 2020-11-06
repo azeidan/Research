@@ -1,10 +1,12 @@
-package org.cusp.bdi.ds
+package org.cusp.bdi.ds.qt
 
 import com.esotericsoftware.kryo.Kryo
 import com.esotericsoftware.kryo.io.{Input, Output}
-import org.cusp.bdi.ds.QuadTree.{SER_MARKER, SER_MARKER_NULL, quadCapacity}
+import org.cusp.bdi.ds.SpatialIndex
 import org.cusp.bdi.ds.SpatialIndex.{KnnLookupInfo, testAndAddPoint}
 import org.cusp.bdi.ds.geom.{Geom2D, Point, Rectangle}
+import org.cusp.bdi.ds.qt.QuadTree.{SER_MARKER, SER_MARKER_NULL, quadCapacity}
+import org.cusp.bdi.ds.util.SortedList
 
 import scala.collection.mutable
 import scala.collection.mutable.ListBuffer

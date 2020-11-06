@@ -3,15 +3,10 @@ package org.cusp.bdi.sknn.test
 import org.apache.hadoop.fs.{FileSystem, Path}
 import org.apache.hadoop.io.compress.GzipCodec
 import org.apache.spark.serializer.KryoSerializer
-import org.apache.spark.util.SizeEstimator
 import org.apache.spark.{SparkConf, SparkContext}
-import org.cusp.bdi.ds.SpatialIndex.buildRectBounds
-import org.cusp.bdi.ds.{KdTree, KdtBranchRootNode, KdtNode, QuadTree}
 import org.cusp.bdi.ds.geom.Point
 import org.cusp.bdi.sknn.{SparkKNN, TypeSpatialIndex}
-import org.cusp.bdi.util.{Arguments, CLArgsParser, InputFileParsers, LocalRunConsts}
-
-import scala.io.Source
+import org.cusp.bdi.util.{Arguments, InputFileParsers, LocalRunConsts}
 
 object TestAllKnnJoin {
 
@@ -69,7 +64,7 @@ object TestAllKnnJoin {
     val sparkKNN = SparkKNN(debugMode, kParam, indexType)
 
     val rddResult = sparkKNN.allKnnJoin(rddLeft, rddRight)
-    //                val rddResult = sparkKNN.knnJoin(rddLeft, rddRight)
+//                    val rddResult = sparkKNN.knnJoin(rddLeft, rddRight)
 
     //    println(rddResult.toDebugString)
 
