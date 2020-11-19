@@ -11,6 +11,18 @@ object TestKdTree {
 
   def main(args: Array[String]): Unit = {
 
+//    val arr = Array(5, 6, 7, 8, 9, 10)
+//
+//    arr.toStream.map(i => {
+//
+//      println(i)
+//
+//      i % 2
+//    })
+////      .filter(_ == 0)
+//      .take(2)
+//      .foreach(println)
+
     val lstPoints = ListBuffer(new Point(3119.0000000000000000000000, 719),
       new Point(3119.0000000000000000000000, 721),
       new Point(3119.0000000000000000000000, 722),

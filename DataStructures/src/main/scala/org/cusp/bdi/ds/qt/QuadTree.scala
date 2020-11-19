@@ -6,7 +6,7 @@ import org.cusp.bdi.ds.SpatialIndex
 import org.cusp.bdi.ds.SpatialIndex.{KnnLookupInfo, testAndAddPoint}
 import org.cusp.bdi.ds.geom.{Geom2D, Point, Rectangle}
 import org.cusp.bdi.ds.qt.QuadTree.{SER_MARKER, SER_MARKER_NULL, quadCapacity}
-import org.cusp.bdi.ds.util.SortedList
+import org.cusp.bdi.ds.sortset.SortedList
 
 import scala.collection.mutable
 import scala.collection.mutable.ListBuffer
@@ -17,9 +17,6 @@ object QuadTree extends Serializable {
 
   val SER_MARKER_NULL: Byte = Byte.MinValue
   val SER_MARKER: Byte = Byte.MaxValue
-
-  //  def intersects(quadTree: QuadTree, searchRegion: Rectangle): Boolean =
-  //    quadTree != null && quadTree.rectBounds.intersects(searchRegion)
 }
 
 class QuadTree(_rectBounds: Rectangle) extends SpatialIndex {
@@ -160,8 +157,6 @@ class QuadTree(_rectBounds: Rectangle) extends SpatialIndex {
         case _ => new QuadTree(null)
       }
 
-    //    instantiateQT() // gets rid of the root QT marker
-
     val queueQT = mutable.Queue(this)
 
     while (queueQT.nonEmpty) {
@@ -190,15 +185,6 @@ class QuadTree(_rectBounds: Rectangle) extends SpatialIndex {
     //      println
 
     val sPtBestQT = findBestQuadrant(searchPoint, sortSetSqDist.maxSize)
-
-    //    val dim = if (sortSetSqDist.isFull)
-    //      math.sqrt(sortSetSqDist.last.distance)
-    //    else
-    //      computeDimension(searchPoint, sPtBestQT.rectBounds)
-    //
-    //    val rectSearchRegion = Rectangle(searchPoint, new Geom2D(dim))
-    //
-    //    var prevMaxSqrDist = if (sortSetSqDist.last == null) -1 else sortSetSqDist.last.distance
 
     val knnLookupInfo = new KnnLookupInfo(searchPoint, sortSetSqDist, sPtBestQT.rectBounds)
 

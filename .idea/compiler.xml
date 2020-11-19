@@ -7,7 +7,9 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="Spark_kNN" />
+        <module name="FW_Simba_Source" />
         <module name="Common_FW" />
+        <module name="FW_Simba" />
         <module name="DataStructures" />
         <module name="SpatialBenchmark" />
         <module name="Common" />
@@ -15,6 +17,7 @@
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="_____DataSetTools" target="1.8" />
+      <module name="___FW_Simba" target="1.8" />
       <module name="_FW_GeoMatch" target="1.8" />
       <module name="_FW_Simba" target="1.8" />
       <module name="_KD-Tree-scala-master" target="1.8" />

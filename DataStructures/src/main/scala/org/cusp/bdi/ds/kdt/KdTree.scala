@@ -1,25 +1,17 @@
 package org.cusp.bdi.ds.kdt
 
+import com.esotericsoftware.kryo.Kryo
 import com.esotericsoftware.kryo.io.{Input, Output}
-import com.esotericsoftware.kryo.{Kryo, KryoSerializable}
 import org.cusp.bdi.ds.SpatialIndex
 import org.cusp.bdi.ds.SpatialIndex.{KnnLookupInfo, testAndAddPoint}
 import org.cusp.bdi.ds.geom.{Geom2D, Point, Rectangle}
-import org.cusp.bdi.ds.kdt.KdTree.{TypeArrLst, TypeMatrixLst, findSearchRegionLocation, nodeCapacity}
-import org.cusp.bdi.ds.util.SortedList
+import org.cusp.bdi.ds.kdt.KdTree.findSearchRegionLocation
+import org.cusp.bdi.ds.sortset.SortedList
 
 import scala.collection.mutable
 import scala.collection.mutable.ListBuffer
 
 object KdTree extends Serializable {
-
-  type TypeArrLst = Array[ListBuffer[Point]]
-  type TypeMatrixLst = Array[TypeArrLst]
-
-  //  type TypeLstOfKeyLst = ListBuffer[(Int, ListBuffer[Point])]
-  //  type TypeLstOfKeyKeyLst = ListBuffer[(Int, TypeLstOfKeyLst)]
-
-  val nodeCapacity = 4
 
   def findSearchRegionLocation(searchRegion: Rectangle, nodeSplitVal: Double, splitX: Boolean): Char = {
 
@@ -36,97 +28,25 @@ object KdTree extends Serializable {
   }
 }
 
-abstract class KdtNode extends KryoSerializable {
-
-  def totalPoints: Int
-
-  var rectNodeBounds: Rectangle = _
-
-  override def toString: String =
-    "%s\t%,d".format(rectNodeBounds, totalPoints)
-
-  override def write(kryo: Kryo, output: Output): Unit =
-    kryo.writeClassAndObject(output, rectNodeBounds)
-
-  override def read(kryo: Kryo, input: Input): Unit =
-    rectNodeBounds = kryo.readClassAndObject(input) match {
-      case rectangle: Rectangle => rectangle
-    }
-}
-
-final class KdtBranchRootNode extends KdtNode {
-
-  private var _totalPoints: Int = 0
-  var splitVal: Double = 0
-  var left: KdtNode = _
-  var right: KdtNode = _
-
-  override def totalPoints: Int = _totalPoints
-
-  def totalPoints(totalPoints: Int) {
-    this._totalPoints = totalPoints
-  }
-
-  def this(splitVal: Double, totalPoints: Int) = {
-
-    this()
-    this.splitVal = splitVal
-    this._totalPoints = totalPoints
-  }
-
-  override def toString: String =
-    "%s\t[%,.4f]\t%s %s".format(super.toString, splitVal, if (left == null) '-' else '/', if (right == null) '-' else '\\')
-
-  override def write(kryo: Kryo, output: Output) {
-
-    super.write(kryo, output)
-    output.writeInt(_totalPoints)
-    output.writeDouble(splitVal)
-  }
-
-  override def read(kryo: Kryo, input: Input) {
-
-    super.read(kryo, input)
-    _totalPoints = input.readInt()
-    splitVal = input.readDouble()
-  }
-}
-
-final class KdtLeafNode extends KdtNode {
-
-  var lstPoints: ListBuffer[Point] = _
-
-  override def totalPoints: Int = lstPoints.size
-
-  def this(lstPoints: ListBuffer[Point], rectNodeBounds: Rectangle) = {
-
-    this()
-    this.lstPoints = lstPoints
-    this.rectNodeBounds = rectNodeBounds
-  }
-
-  override def write(kryo: Kryo, output: Output): Unit = {
-
-    super.write(kryo, output)
-
-    kryo.writeClassAndObject(output, lstPoints)
-  }
-
-  override def read(kryo: Kryo, input: Input): Unit = {
-
-    super.read(kryo, input)
-
-    lstPoints = kryo.readClassAndObject(input).asInstanceOf[ListBuffer[Point]]
-  }
-}
-
-class KdTree(rectBounds: Rectangle, hgGroupWidth: Int) extends SpatialIndex {
+class KdTree extends SpatialIndex {
 
   var root: KdtNode = _
 
-  private val lowerBounds = (rectBounds.left, rectBounds.bottom)
+  private var rectBounds: Rectangle = _
+  private var hgGroupWidth = -1
 
-  def getTotalPoints: Int = root.totalPoints
+  def getTotalPoints: Int =
+    root.totalPoints
+
+  def this(rectBounds: Rectangle, hgGroupWidth: Int) = {
+    this()
+
+    if (hgGroupWidth < 1) throw new IllegalStateException("Histogram bar width must be >= 1")
+    if (rectBounds == null) throw new IllegalStateException("Rectangle bounds cannot be null")
+
+    this.rectBounds = rectBounds
+    this.hgGroupWidth = hgGroupWidth
+  }
 
   override def insert(iterPoints: Iterator[Point]): Boolean = {
 
@@ -134,55 +54,24 @@ class KdTree(rectBounds: Rectangle, hgGroupWidth: Int) extends SpatialIndex {
 
     if (iterPoints.isEmpty) throw new IllegalStateException("Empty point iterator")
 
-    if (hgGroupWidth < 1) throw new IllegalStateException("Bar width must be >= 1")
+    val queueNode = mutable.Queue[(KdtBranchRootNode, Boolean, AVLSplitInfo, AVLSplitInfo)]()
 
-    var pointCount = 0
+    val lowerBounds = (rectBounds.left, rectBounds.bottom)
 
-    var matrixHistogram: TypeMatrixLst = null
-    val (histogramMaxX, histogramMaxY) = (((rectBounds.right - lowerBounds._1) / hgGroupWidth).toInt, ((rectBounds.top - lowerBounds._2) / hgGroupWidth).toInt)
+    var avlSplitInfo = AVLSplitInfo(iterPoints, hgGroupWidth, lowerBounds)
 
-    val setIdxX = mutable.SortedSet[Int]()
-    val setIdxY = mutable.SortedSet[Int]()
+    root = buildNode(avlSplitInfo, splitX = true, queueNode, lowerBounds)
+    avlSplitInfo = null
 
-    matrixHistogram = new Array(histogramMaxX + 1)
+    while (queueNode.nonEmpty) {
 
-    iterPoints.foreach(pt => {
+      val (currNode, splitX, avlSplitInfoLeft, avlSplitInfoRight) = queueNode.dequeue()
 
-      pointCount += 1
-
-      val (idxX, idxY) = (((pt.x - lowerBounds._1) / hgGroupWidth).toInt, ((pt.y - lowerBounds._2) / hgGroupWidth).toInt)
-
-      if (matrixHistogram(idxX) == null) {
-
-        matrixHistogram(idxX) = new TypeArrLst(histogramMaxY + 1)
-        setIdxX += idxX
-      }
-
-      if (matrixHistogram(idxX)(idxY) == null) {
-
-        matrixHistogram(idxX)(idxY) = ListBuffer()
-        setIdxY += idxY
-      }
-
-      matrixHistogram(idxX)(idxY) += pt
-    })
-
-    val arrIdxX = setIdxX.toArray
-    val arrIdxY = setIdxY.toArray
-    val matrixSplitInfo = MatrixSplitInfo(matrixHistogram, pointCount, arrIdxX, 0, arrIdxX.length - 1, arrIdxY, 0, arrIdxY.length - 1)
-
-    val lstNodeIndo = ListBuffer[(KdtBranchRootNode, Boolean, MatrixSplitInfo, MatrixSplitInfo)]()
-
-    root = buildNode(matrixSplitInfo, splitX = true, lstNodeIndo)
-
-    lstNodeIndo.foreach(row => {
-
-      val (currNode, splitX, msiLeftNode, msiRightNode) = row
-      //      if (msiLeftNode.pointCount == 786)
-      //        println
-      currNode.left = buildNode(msiLeftNode, !splitX, lstNodeIndo)
-      currNode.right = buildNode(msiRightNode, !splitX, lstNodeIndo)
-    })
+      if (avlSplitInfoLeft != null)
+        currNode.left = buildNode(avlSplitInfoLeft, !splitX, queueNode, lowerBounds)
+      if (avlSplitInfoRight != null)
+        currNode.right = buildNode(avlSplitInfoRight, !splitX, queueNode, lowerBounds)
+    }
 
     this.root match {
       case kdtBRN: KdtBranchRootNode =>
@@ -190,33 +79,28 @@ class KdTree(rectBounds: Rectangle, hgGroupWidth: Int) extends SpatialIndex {
       case _ =>
     }
 
+    this.rectBounds = null
+
     true
   }
 
-  private def buildNode(matrixSplitInfo: MatrixSplitInfo, splitX: Boolean, lstNodeInfo: ListBuffer[(KdtBranchRootNode, Boolean, MatrixSplitInfo, MatrixSplitInfo)]) =
-    matrixSplitInfo match {
+  private def buildNode(avlSplitInfo: AVLSplitInfo, splitX: Boolean, queueNode: mutable.Queue[(KdtBranchRootNode, Boolean, AVLSplitInfo, AVLSplitInfo)], lowerBounds: (Double, Double)) =
+    if (avlSplitInfo.canPartition) {
 
-      case null =>
-        null
-      case _ =>
+      val avlSplitInfoParts = avlSplitInfo.partition()
 
-        if (matrixSplitInfo.pointCount <= nodeCapacity || !matrixSplitInfo.canPartition(splitX)) {
+      val splitVal = avlSplitInfoParts._1 * hgGroupWidth + (if (splitX) lowerBounds._1 else lowerBounds._2) + hgGroupWidth - 1e-6
 
-          val pointInf = matrixSplitInfo.extractPointInfo()
-          new KdtLeafNode(pointInf._1, pointInf._2)
-        }
-        else {
+      val kdtBranchRootNode = new KdtBranchRootNode(splitVal, avlSplitInfo.pointCount)
 
-          val matrixSplitInfoParts = matrixSplitInfo.partition(splitX)
+      queueNode += ((kdtBranchRootNode, splitX, avlSplitInfoParts._2, avlSplitInfoParts._3))
 
-          val splitVal = matrixSplitInfoParts._1.getSplitIdx(splitX) * hgGroupWidth + hgGroupWidth + (if (splitX) lowerBounds._1 else lowerBounds._2) - 1e-6
+      kdtBranchRootNode
+    }
+    else {
 
-          val kdtBranchRootNode = new KdtBranchRootNode(splitVal, matrixSplitInfo.pointCount)
-
-          lstNodeInfo += ((kdtBranchRootNode, splitX, matrixSplitInfoParts._1, matrixSplitInfoParts._2))
-
-          kdtBranchRootNode
-        }
+      val pointInf = avlSplitInfo.extractPointInfo()
+      new KdtLeafNode(pointInf._1, pointInf._2)
     }
 
   override def findExact(searchXY: (Double, Double)): Point = {
@@ -257,11 +141,10 @@ class KdTree(rectBounds: Rectangle, hgGroupWidth: Int) extends SpatialIndex {
               currNode = kdtBRN.left
             else
               return (currNode, splitX)
-          else //
-            if (kdtBRN.right != null && kdtBRN.right.totalPoints >= k)
-              currNode = kdtBRN.right
-            else
-              return (currNode, splitX)
+          else if (kdtBRN.right != null && kdtBRN.right.totalPoints >= k)
+            currNode = kdtBRN.right
+          else
+            return (currNode, splitX)
 
           splitX = !splitX
 
@@ -274,8 +157,8 @@ class KdTree(rectBounds: Rectangle, hgGroupWidth: Int) extends SpatialIndex {
 
   override def nearestNeighbor(searchPoint: Point, sortSetSqDist: SortedList[Point]) {
 
-    //        if (searchPoint.userData.toString.equalsIgnoreCase("yellow_1_a_419114"))
-    //          println
+//    if (searchPoint.userData.toString.equalsIgnoreCase("yellow_1_a_313565"))
+//      println
 
     var (sPtBestNode, splitX) = findBestNode(searchPoint, sortSetSqDist.maxSize)
 
@@ -283,9 +166,12 @@ class KdTree(rectBounds: Rectangle, hgGroupWidth: Int) extends SpatialIndex {
 
     def process(kdtNode: KdtNode, skipKdtNode: KdtNode) {
 
-      val lstKdtNode = ListBuffer((kdtNode, splitX))
+      val queueKdtNode = mutable.Queue((kdtNode, splitX))
 
-      lstKdtNode.foreach(row =>
+      while (queueKdtNode.nonEmpty) {
+
+        val row = queueKdtNode.dequeue()
+
         if (row._1 != skipKdtNode)
           row._1 match {
             case kdtBRN: KdtBranchRootNode =>
@@ -293,22 +179,22 @@ class KdTree(rectBounds: Rectangle, hgGroupWidth: Int) extends SpatialIndex {
               findSearchRegionLocation(knnLookupInfo.rectSearchRegion, kdtBRN.splitVal, row._2) match {
                 case 'L' =>
                   if (kdtBRN.left != null && knnLookupInfo.rectSearchRegion.intersects(kdtBRN.left.rectNodeBounds))
-                    lstKdtNode += ((kdtBRN.left, !row._2))
+                    queueKdtNode += ((kdtBRN.left, !row._2))
                 case 'R' =>
                   if (kdtBRN.right != null && knnLookupInfo.rectSearchRegion.intersects(kdtBRN.right.rectNodeBounds))
-                    lstKdtNode += ((kdtBRN.right, !row._2))
+                    queueKdtNode += ((kdtBRN.right, !row._2))
                 case _ =>
                   if (kdtBRN.left != null && knnLookupInfo.rectSearchRegion.intersects(kdtBRN.left.rectNodeBounds))
-                    lstKdtNode += ((kdtBRN.left, !row._2))
+                    queueKdtNode += ((kdtBRN.left, !row._2))
                   if (kdtBRN.right != null && knnLookupInfo.rectSearchRegion.intersects(kdtBRN.right.rectNodeBounds))
-                    lstKdtNode += ((kdtBRN.right, !row._2))
+                    queueKdtNode += ((kdtBRN.right, !row._2))
               }
 
             case kdtLeafNode: KdtLeafNode =>
               if (knnLookupInfo.rectSearchRegion.intersects(kdtLeafNode.rectNodeBounds))
                 kdtLeafNode.lstPoints.foreach(testAndAddPoint(_, knnLookupInfo))
           }
-      )
+      }
     }
 
     process(sPtBestNode, null)
@@ -319,462 +205,6 @@ class KdTree(rectBounds: Rectangle, hgGroupWidth: Int) extends SpatialIndex {
       process(this.root, sPtBestNode)
     }
   }
-
-  //  private def partitionMatrix(matrixSplit: MatrixSplitInfo, pointCountInMap: Int, splitX: Boolean, lowerBounds: (Double, Double)) = {
-  //
-  //    var splitVal = -1.0
-  //    var countLTEQ = 0
-  //
-  //    //      }
-  //    //
-  //    //
-  //    //      val iterX = matrixHistogram.iterator
-  //    //
-  //    //      while (iterX.hasNext) {
-  //    //
-  //    //        val lstKeyXY = iterX.next
-  //    //        var size = lstKeyXY._2.map(_._2.size).sum
-  //    //
-  //    //        if (countLTEQ + size <= pointCountHalf) {
-  //    //
-  //    //          lstKeyXY_LEQ += lstKeyXY
-  //    //
-  //    //          countLTEQ += size
-  //    //        } else {
-  //    //
-  //    //          val lstParts = lstKeyXY._2.map(row => row._2.map(pt => (row._1, pt))).flatMap(_.seq).sortBy(_._2.x).splitAt(pointCountHalf - countLTEQ)
-  //    //
-  //    //          countLTEQ += lstParts._1.size
-  //    //
-  //    //          splitVal = lstParts._2.head._2.x - 1e-6
-  //    //
-  //    //          lstKeyXY_LEQ += ((lstKeyXY._1, lstParts._1.groupBy(_._1).mapValues(_.map(_._2)).to[ListBuffer].sortBy(_._1)))
-  //    //          lstKeyXY_GT += ((lstKeyXY._1, lstParts._2.groupBy(_._1).mapValues(_.map(_._2)).to[ListBuffer].sortBy(_._1)))
-  //    //
-  //    //          lstKeyXY_GT ++= iterX
-  //    //        }
-  //    //      }
-  //    //    }
-  //    //    else {
-  //    //
-  //    //      val iterKeyY_Count = matrixHistogram.map(_._2).flatMap(_.seq).sortBy(_._1).iterator
-  //    //      var lstKeyY_Lst: ListBuffer[(Int, ListBuffer[Point])] = null
-  //    //      var count = 0
-  //    //      var splitKeyY = -1
-  //    //      var continue = true
-  //    //
-  //    //      while (continue) {
-  //    //
-  //    //        val keyY_Lst = iterKeyY_Count.next
-  //    //
-  //    //        if (count + keyY_Lst._2.size <= pointCountHalf || splitKeyY == keyY_Lst._1) {
-  //    //
-  //    //          if (splitKeyY != keyY_Lst._1)
-  //    //            lstKeyY_Lst = ListBuffer()
-  //    //
-  //    //          splitKeyY = keyY_Lst._1
-  //    //          lstKeyY_Lst += keyY_Lst
-  //    //          count += keyY_Lst._2.size
-  //    //        }
-  //    //        else {
-  //    //
-  //    //          splitVal = lstKeyY_Lst.map(_._2.map(_.y)).flatMap(_.seq).sortBy(identity).take(pointCountHalf).last
-  //    //
-  //    //          continue = false
-  //    //        }
-  //    //      }
-  //    //
-  //    //      val iterX = matrixHistogram.iterator
-  //    //
-  //    //      while (iterX.hasNext) {
-  //    //
-  //    //        val lstKeyXY = iterX.next
-  //    //
-  //    //        val lstLEQ = new TypeLstOfKeyLst()
-  //    //        val lstGT = new TypeLstOfKeyLst()
-  //    //
-  //    //        lstKeyXY._2.foreach(lstKeyY => {
-  //    //          lstKeyY._1.compareTo(splitKeyY).signum match {
-  //    //            case 1 =>
-  //    //              lstGT += lstKeyY
-  //    //            case -1 =>
-  //    //              lstLEQ += lstKeyY
-  //    //              countLTEQ = lstKeyY._2.size
-  //    //            case 0 =>
-  //    //              val lstParts = lstKeyY._2.partition(_.y <= splitKeyY)
-  //    //
-  //    //              countLTEQ += lstParts._1.size
-  //    //
-  //    //              if (lstParts._1.nonEmpty)
-  //    //                lstLEQ += ((lstKeyY._1, lstParts._1))
-  //    //              if (lstParts._2.nonEmpty)
-  //    //                lstGT += ((lstKeyY._1, lstParts._2))
-  //    //          }
-  //    //
-  //    //          lstKeyXY_LEQ += ((lstKeyXY._1, lstLEQ))
-  //    //          lstKeyXY_GT += ((lstKeyXY._1, lstGT))
-  //    //        })
-  //    //      }
-  //    //    }
-  //    //
-  //    //    (splitVal, lstKeyXY_LEQ, countLTEQ, lstKeyXY_GT, pointCountInMap - countLTEQ)
-  //  }
-
-
-  //  private def partitionMatrix(lstKeyXY: TypeLstOfKeyKeyLst, pointCountInMap: Int, splitX: Boolean, lowerBounds: (Double, Double)) = {
-  //
-  //    val lstKeyXY_LEQ = new TypeLstOfKeyKeyLst()
-  //    val lstKeyXY_GT = new TypeLstOfKeyKeyLst()
-  //
-  //    var meanCoord = -1.0
-  //    var countLTEQ = 0
-  //
-  //    if (lstKeyXY.size > 1 || lstKeyXY.head._2.size > 1)
-  //      if (splitX) {
-  //
-  //        //        if (pointCountInMap == 6395) {
-  //        //          //          lstKeyXY.foreach(kxLst => {
-  //        //          //            val lst = kxLst._2.map(kyLst => "%d\t%s".format(kyLst._1, kyLst._2.map(pt => "%.2f\t%.2f%n".format(pt.x, pt.y))))
-  //        //          //
-  //        //          //            println("%d\t%s".format(kxLst._1, lst.mkString("\t")))
-  //        //          //          })
-  //        //
-  //        //          val count = lstKeyXY.map(keyXY_Lst => keyXY_Lst._2.map(_._2.size).sum).sum
-  //        //          val sum = lstKeyXY.map(keyXY_Lst => keyXY_Lst._1.toDouble * keyXY_Lst._2.map(_._2.size).sum).sum
-  //        //
-  //        //        }
-  //        val meanHG = lstKeyXY.map(keyXY_Lst => keyXY_Lst._1.toDouble * keyXY_Lst._2.map(_._2.size).sum).sum / pointCountInMap
-  //        val meanHG_flr = meanHG.toInt
-  //        meanCoord = meanHG - 1 + lowerBounds._1
-  //
-  //        // partition
-  //        val lstLEQ_Y = new TypeLstOfKeyLst()
-  //        val lstGT_Y = new TypeLstOfKeyLst()
-  //        val iter = lstKeyXY.iterator
-  //
-  //        while (iter.hasNext) {
-  //
-  //          val keyXY_Lst = iter.next
-  //
-  //          keyXY_Lst._1.compareTo(meanHG_flr).signum match {
-  //            case 1 =>
-  //              lstKeyXY_LEQ += keyXY_Lst
-  //            case -1 =>
-  //              lstKeyXY_LEQ += keyXY_Lst
-  //              countLTEQ += keyXY_Lst._2.size
-  //            case _ =>
-  //
-  //              keyXY_Lst._2.foreach(keyY_Lst => {
-  //
-  //                val lstParts = keyY_Lst._2.partition(_.x <= meanCoord)
-  //
-  //                if (lstParts._1.nonEmpty) {
-  //
-  //                  lstLEQ_Y += ((keyY_Lst._1, lstParts._1))
-  //                  countLTEQ += lstParts._1.size
-  //                }
-  //
-  //                if (lstParts._2.nonEmpty)
-  //                  lstGT_Y += ((keyY_Lst._1, lstParts._2))
-  //              })
-  //
-  //              if (lstLEQ_Y.nonEmpty) lstKeyXY_LEQ += ((keyXY_Lst._1, lstLEQ_Y))
-  //              if (lstGT_Y.nonEmpty) lstKeyXY_GT += ((keyXY_Lst._1, lstGT_Y))
-  //
-  //              // done the rest is just >
-  //              iter.foreach(lstKeyXY_GT += _)
-  //          }
-  //        }
-  //      }
-  //      else {
-  //
-  //        val meanHG = lstKeyXY.map(_._2).map(_.map(keyY_Lst => keyY_Lst._1.toDouble * keyY_Lst._2.size).sum).sum / pointCountInMap
-  //        val meanHG_flr = meanHG.toInt
-  //        meanCoord = meanHG - 1 + lowerBounds._2
-  //
-  //        lstKeyXY.foreach(keyXY_Lst => {
-  //
-  //          val lstLEQ_Y = new TypeLstOfKeyLst()
-  //          val lstGT_Y = new TypeLstOfKeyLst()
-  //          val iter = keyXY_Lst._2.iterator
-  //
-  //          while (iter.hasNext) {
-  //
-  //            val keyY_Lst = iter.next
-  //
-  //            keyY_Lst._1.compareTo(meanHG_flr).signum match {
-  //              case -1 =>
-  //                lstGT_Y += keyY_Lst
-  //              case 1 =>
-  //                lstLEQ_Y += keyY_Lst
-  //                countLTEQ += keyY_Lst._2.size
-  //              case _ =>
-  //
-  //                val lstParts = keyY_Lst._2.partition(_.y <= meanCoord)
-  //
-  //                if (lstParts._1.nonEmpty) {
-  //
-  //                  lstLEQ_Y += ((keyY_Lst._1, lstParts._1))
-  //                  countLTEQ += lstParts._1.size
-  //                }
-  //
-  //                if (lstParts._2.nonEmpty)
-  //                  lstGT_Y += ((keyY_Lst._1, lstParts._2))
-  //
-  //                // done the rest is just >
-  //                iter.foreach(lstGT_Y += _)
-  //            }
-  //          }
-  //
-  //          if (lstLEQ_Y.nonEmpty) lstKeyXY_LEQ += ((keyXY_Lst._1, lstLEQ_Y))
-  //          if (lstGT_Y.nonEmpty) lstKeyXY_GT += ((keyXY_Lst._1, lstGT_Y))
-  //        })
-  //      }
-  //
-  //    (meanCoord, lstKeyXY_LEQ, countLTEQ, lstKeyXY_GT, pointCountInMap - countLTEQ)
-  //
-  //    /*
-  //    private def partitionMatrix(mapHG_node: TypeMapKeyXY_Lst, pointCountInMap: Int, splitX: Boolean) = {
-  //
-  //    val mapLEQ = new TypeMapKeyXY_Lst()
-  //    val mapGT = new TypeMapKeyXY_Lst()
-  //
-  //    var meanHG = -1.0
-  //    var countLTEQ = 0
-  //
-  //    if (mapHG_node.size > 1)
-  //      if (splitX) {
-  //
-  //        meanHG = mapHG_node.map(keyXY_Lst => keyXY_Lst._1._1 * keyXY_Lst._2.size).sum / pointCountInMap
-  //        val meanHG_flr: Double = meanHG.toLong
-  //
-  //        mapHG_node.foreach(keyXY_Lst =>
-  //          keyXY_Lst._1._1.compareTo(meanHG_flr).signum match {
-  //            case -1 =>
-  //              mapLEQ += keyXY_Lst
-  //              countLTEQ += keyXY_Lst._2.size
-  //            case 1 =>
-  //              mapGT += keyXY_Lst
-  //            case _ =>
-  //
-  //              val lstParts = keyXY_Lst._2.partition(_.x <= meanHG)
-  //
-  //              if (lstParts._1.nonEmpty) {
-  //
-  //                mapLEQ += ((keyXY_Lst._1, lstParts._1))
-  //                countLTEQ += lstParts._1.size
-  //              }
-  //
-  //              if (lstParts._2.nonEmpty)
-  //                mapGT += ((keyXY_Lst._1, lstParts._2))
-  //          }
-  //        )
-  //      }
-  //      else {
-  //
-  //        meanHG = mapHG_node.map(keyXY_Lst => keyXY_Lst._1._2 * keyXY_Lst._2.size).sum / pointCountInMap
-  //        val meanHG_flr: Double = meanHG.toLong
-  //
-  //        mapHG_node.foreach(keyXY_Lst =>
-  //          keyXY_Lst._1._2.compareTo(meanHG_flr).signum match {
-  //            case -1 =>
-  //              mapLEQ += keyXY_Lst
-  //              countLTEQ += keyXY_Lst._2.size
-  //            case 1 =>
-  //              mapGT += keyXY_Lst
-  //            case _ =>
-  //
-  //              val lstParts = keyXY_Lst._2.partition(_.y <= meanHG)
-  //
-  //              if (lstParts._1.nonEmpty) {
-  //
-  //                mapLEQ += ((keyXY_Lst._1, lstParts._1))
-  //                countLTEQ += lstParts._1.size
-  //              }
-  //
-  //              if (lstParts._2.nonEmpty)
-  //                mapGT += ((keyXY_Lst._1, lstParts._2))
-  //          }
-  //        )
-  //      }private def partitionMatrix(mapHG_node: TypeMapKeyXY_Lst, pointCountInMap: Int, splitX: Boolean) = {
-  //
-  //    val mapLEQ = new TypeMapKeyXY_Lst()
-  //    val mapGT = new TypeMapKeyXY_Lst()
-  //
-  //    var meanHG = -1.0
-  //    var countLTEQ = 0
-  //
-  //    if (mapHG_node.size > 1)
-  //      if (splitX) {
-  //
-  //        meanHG = mapHG_node.map(keyXY_Lst => keyXY_Lst._1._1 * keyXY_Lst._2.size).sum / pointCountInMap
-  //        val meanHG_flr: Double = meanHG.toLong
-  //
-  //        mapHG_node.foreach(keyXY_Lst =>
-  //          keyXY_Lst._1._1.compareTo(meanHG_flr).signum match {
-  //            case -1 =>
-  //              mapLEQ += keyXY_Lst
-  //              countLTEQ += keyXY_Lst._2.size
-  //            case 1 =>
-  //              mapGT += keyXY_Lst
-  //            case _ =>
-  //
-  //              val lstParts = keyXY_Lst._2.partition(_.x <= meanHG)
-  //
-  //              if (lstParts._1.nonEmpty) {
-  //
-  //                mapLEQ += ((keyXY_Lst._1, lstParts._1))
-  //                countLTEQ += lstParts._1.size
-  //              }
-  //
-  //              if (lstParts._2.nonEmpty)
-  //                mapGT += ((keyXY_Lst._1, lstParts._2))
-  //          }
-  //        )
-  //      }
-  //      else {
-  //
-  //        meanHG = mapHG_node.map(keyXY_Lst => keyXY_Lst._1._2 * keyXY_Lst._2.size).sum / pointCountInMap
-  //        val meanHG_flr: Double = meanHG.toLong
-  //
-  //        mapHG_node.foreach(keyXY_Lst =>
-  //          keyXY_Lst._1._2.compareTo(meanHG_flr).signum match {
-  //            case -1 =>
-  //              mapLEQ += keyXY_Lst
-  //              countLTEQ += keyXY_Lst._2.size
-  //            case 1 =>
-  //              mapGT += keyXY_Lst
-  //            case _ =>
-  //
-  //              val lstParts = keyXY_Lst._2.partition(_.y <= meanHG)
-  //
-  //              if (lstParts._1.nonEmpty) {
-  //
-  //                mapLEQ += ((keyXY_Lst._1, lstParts._1))
-  //                countLTEQ += lstParts._1.size
-  //              }
-  //
-  //              if (lstParts._2.nonEmpty)
-  //                mapGT += ((keyXY_Lst._1, lstParts._2))
-  //          }
-  //        )
-  //      }
-  //     */
-  //
-  //    //    if (splitX)
-  //    //      mapHG_node.keys.to[mutable.SortedSet].foreach(keyX => {
-  //    //
-  //    //        var mapAddTo = (if (splitVal == -1.0) mapLEQ else mapGT)
-  //    //          .getOrElseUpdate(keyX, new TypeMapKeyLst())
-  //    //
-  //    //        mapHG_node(keyX).foreach(keyYLst => {
-  //    //
-  //    //          mapAddTo += keyYLst
-  //    //
-  //    //          if (splitVal == -1) {
-  //    //
-  //    //            max = keyYLst._2.maxBy(_.x).x
-  //    //            countLTEQ += keyYLst._2.size
-  //    //
-  //    //            if (countLTEQ >= pointLimit) {
-  //    //
-  //    //              splitVal = max
-  //    //              mapAddTo = mapGT.getOrElseUpdate(keyX, new TypeMapKeyLst())
-  //    //            }
-  //    //          }
-  //    //        })
-  //    //      })
-  //    //    else {
-  //    //
-  //    //      val arrKeyY = iterKeyY.toArray
-  //    //
-  //    //      if (arrKeyY.length > 1)
-  //    //        arrKeyY.sortBy(x => (x._2, x._1))
-  //    //          .foreach(row => {
-  //    //
-  //    //            val map = (if (splitVal == -1.0) mapLEQ else mapGT)
-  //    //              .getOrElseUpdate(row._1, new TypeMapKeyLst())
-  //    //
-  //    //            map += ((row._2, row._3))
-  //    //
-  //    //            if (splitVal == -1) {
-  //    //
-  //    //              max = row._3.maxBy(_.y).y
-  //    //              countLTEQ += row._3.size
-  //    //
-  //    //              if (countLTEQ >= pointLimit)
-  //    //                splitVal = max
-  //    //            }
-  //    //          })
-  //    //    }
-  //    //
-  //    //
-  //    //    (splitVal, mapLEQ, countLTEQ, mapGT, pointCountInMap - countLTEQ)
-  //  }
-
-  //  private def partitionMatrix(mapHG_node: TypeMapKeyMap, splitVal_key: Double, splitX: Boolean) = {
-  //
-  //    val mapLEQ = new TypeMapKeyMap()
-  //    val mapGT = new TypeMapKeyMap()
-  //
-  //    if (splitX)
-  //      mapHG_node.foreach(keyMap => (if (keyMap._1.compare(splitVal_key) <= 0) mapLEQ else mapGT) += keyMap)
-  //    else
-  //      mapHG_node.foreach(keyMap => {
-  //
-  //        val mapLEQ_Y = new TypeMapKeyLst()
-  //        val mapGT_Y = new TypeMapKeyLst()
-  //
-  //        keyMap._2.foreach(keyLst => (if (keyLst._1.compare(splitVal_key) <= 0) mapLEQ_Y else mapGT_Y) += keyLst)
-  //
-  //        if (mapLEQ_Y.nonEmpty) mapLEQ += ((keyMap._1, mapLEQ_Y))
-  //
-  //        if (mapGT_Y.nonEmpty) mapGT += ((keyMap._1, mapGT_Y))
-  //      })
-  //
-  //    (mapLEQ, mapGT)
-  //  }
-  //  private def partitionMatrix(mapHG_node: mutable.HashMap[Double, mutable.HashMap[Double, ListBuffer[Point]]], splitVal_key: Double, splitX: Boolean) = {
-  //
-  //    val mapLT = mutable.HashMap[Double, mutable.HashMap[Double, ListBuffer[Point]]]()
-  //    val mapEQ = mutable.HashMap[Double, mutable.HashMap[Double, ListBuffer[Point]]]()
-  //    val mapGT = mutable.HashMap[Double, mutable.HashMap[Double, ListBuffer[Point]]]()
-  //
-  //    if (splitX)
-  //      mapHG_node.foreach(keyMap =>
-  //        (keyMap._1.compare(splitVal_key).signum match {
-  //          case -1 => mapLT
-  //          case 0 => mapEQ
-  //          case _ => mapGT
-  //        })
-  //          += keyMap
-  //      )
-  //    else
-  //      mapHG_node.foreach(keyMap => {
-  //
-  //        val mapLT_Y = mutable.HashMap[Double, ListBuffer[Point]]()
-  //        val mapEQ_Y = mutable.HashMap[Double, ListBuffer[Point]]()
-  //        val mapGT_Y = mutable.HashMap[Double, ListBuffer[Point]]()
-  //
-  //        keyMap._2.foreach(keyLst =>
-  //          (keyLst._1.compare(splitVal_key).signum match {
-  //            case -1 => mapLT_Y
-  //            case 0 => mapEQ_Y
-  //            case _ => mapGT_Y
-  //          })
-  //            += keyLst
-  //        )
-  //
-  //        if (mapLT_Y.nonEmpty)
-  //          mapLT += ((keyMap._1, mapLT_Y))
-  //        if (mapEQ_Y.nonEmpty)
-  //          mapEQ += ((keyMap._1, mapEQ_Y))
-  //        if (mapGT_Y.nonEmpty)
-  //          mapGT += ((keyMap._1, mapGT_Y))
-  //      })
-  //
-  //    (mapLT, mapEQ, mapGT)
-  //  }
 
   override def toString: String =
     "%s".format(root)
@@ -831,20 +261,13 @@ class KdTree(rectBounds: Rectangle, hgGroupWidth: Int) extends SpatialIndex {
         case _ =>
       }
 
-    if (kdtBranchRootNode.left != null) {
-
+    if (kdtBranchRootNode.left != null)
       kdtBranchRootNode.rectNodeBounds = new Rectangle(kdtBranchRootNode.left.rectNodeBounds)
-      //      kdtBranchRootNode.totalPoints(kdtBranchRootNode.left.totalPoints)
-    }
 
-    if (kdtBranchRootNode.right != null) {
-
+    if (kdtBranchRootNode.right != null)
       if (kdtBranchRootNode.rectNodeBounds == null)
         kdtBranchRootNode.rectNodeBounds = new Rectangle(kdtBranchRootNode.right.rectNodeBounds)
       else
         kdtBranchRootNode.rectNodeBounds.mergeWith(kdtBranchRootNode.right.rectNodeBounds)
-
-      //      kdtBranchRootNode.totalPoints(kdtBranchRootNode.totalPoints + kdtBranchRootNode.right.totalPoints)
-    }
   }
 }

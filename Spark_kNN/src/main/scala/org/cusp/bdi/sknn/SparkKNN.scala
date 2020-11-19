@@ -9,7 +9,7 @@ import org.cusp.bdi.ds._
 import org.cusp.bdi.ds.geom.{Circle, Geom2D, Point, Rectangle}
 import org.cusp.bdi.ds.kdt.{KdTree, KdtBranchRootNode, KdtNode}
 import org.cusp.bdi.ds.qt.QuadTree
-import org.cusp.bdi.ds.util.{Node, SortedList}
+import org.cusp.bdi.ds.sortset.{Node, SortedList}
 import org.cusp.bdi.sknn.ds.util.{PointData, SpatialIdxRangeLookup}
 import org.cusp.bdi.sknn.util._
 import org.cusp.bdi.util.{Arguments, Helper}
@@ -82,16 +82,18 @@ object SparkKNN extends Serializable {
 
 case class SparkKNN(debugMode: Boolean, k: Int, typeSpatialIndex: TypeSpatialIndex.Value) extends Serializable {
 
-  def knnJoin(rddLeft: RDD[Point], rddRight: RDD[Point]): RDD[(Point, Iterable[(Double, Point)])] =
-    knnJoinExecute(rddLeft, rddRight, isAllJoin = false)
+  //  def knnJoin(rddLeft: RDD[Point], rddRight: RDD[Point]): RDD[(Point, Iterable[(Double, Point)])] =
+  //    knnJoinExecute(rddLeft, rddRight, isAllJoin = false)
 
-  def allKnnJoin(rddLeft: RDD[Point], rddRight: RDD[Point]): RDD[(Point, Iterable[(Double, Point)])] =
-    knnJoinExecute(rddLeft, rddRight, isAllJoin = true)
-      .union(knnJoinExecute(rddRight, rddLeft, isAllJoin = false))
+  //  def allKnnJoin(rddLeft: RDD[Point], rddRight: RDD[Point]): RDD[(Point, Iterable[(Double, Point)])] =
+  //    knnJoinExecute(rddLeft, rddRight, isAllJoin = true)
+  //      .union(knnJoinExecute(rddRight, rddLeft, isAllJoin = false))
+  //
+  //  var (leftDS_MaxRowSize, leftDS_TotalRowCount, leftDS_MBR_Left, leftDS_MBR_Bottom, leftDS_MBR_Right, leftDS_MBR_Top) = (-1, -1L, -1.0, -1.0, -1.0, -1.0)
 
-  var (leftDS_MaxRowSize, leftDS_TotalRowCount, leftDS_MBR_Left, leftDS_MBR_Bottom, leftDS_MBR_Right, leftDS_MBR_Top) = (-1, -1L, -1.0, -1.0, -1.0, -1.0)
+  //  private def knnJoinExecute(rddLeft: RDD[Point], rddRight: RDD[Point]/*, isAllJoin: Boolean*/): RDD[(Point, Iterable[(Double, Point)])] = {
 
-  private def knnJoinExecute(rddLeft: RDD[Point], rddRight: RDD[Point], isAllJoin: Boolean): RDD[(Point, Iterable[(Double, Point)])] = {
+  def knnJoin(rddLeft: RDD[Point], rddRight: RDD[Point]): RDD[(Point, Iterable[(Double, Point)])] = {
 
     Helper.loggerSLf4J(debugMode, SparkKNN, ">>Start")
     Helper.loggerSLf4J(debugMode, SparkKNN, ">>rddLeft.getNumPartitions: %d".format(rddLeft.getNumPartitions))
@@ -100,16 +102,16 @@ case class SparkKNN(debugMode: Boolean, k: Int, typeSpatialIndex: TypeSpatialInd
     var startTime = System.currentTimeMillis
 
     val (rightDS_MaxRowSize, rightDS_TotalRowCount, rightDS_MBR_Left, rightDS_MBR_Bottom, rightDS_MBR_Right, rightDS_MBR_Top) =
-      if (leftDS_MaxRowSize == -1)
-        rddRight.mapPartitions(iter =>
-          Iterator(iter.map(point => (point.userData.toString.length, 1L, point.x, point.y, point.x, point.y))
-            .reduce((param1, param2) =>
-              (math.max(param1._1, param2._1), param1._2 + param2._2, math.min(param1._3, param2._3), math.min(param1._4, param2._4), math.max(param1._5, param2._5), math.max(param1._6, param2._6))))
-        )
+    //      if (leftDS_MaxRowSize == -1)
+      rddRight.mapPartitions(iter =>
+        Iterator(iter.map(point => (point.userData.toString.length, 1L, point.x, point.y, point.x, point.y))
           .reduce((param1, param2) =>
-            (math.max(param1._1, param2._1), param1._2 + param2._2, math.min(param1._3, param2._3), math.min(param1._4, param2._4), math.max(param1._5, param2._5), math.max(param1._6, param2._6)))
-      else
-        (leftDS_MaxRowSize, leftDS_TotalRowCount, leftDS_MBR_Left, leftDS_MBR_Bottom, leftDS_MBR_Right, leftDS_MBR_Top)
+            (math.max(param1._1, param2._1), param1._2 + param2._2, math.min(param1._3, param2._3), math.min(param1._4, param2._4), math.max(param1._5, param2._5), math.max(param1._6, param2._6))))
+      )
+        .reduce((param1, param2) =>
+          (math.max(param1._1, param2._1), param1._2 + param2._2, math.min(param1._3, param2._3), math.min(param1._4, param2._4), math.max(param1._5, param2._5), math.max(param1._6, param2._6)))
+    //      else
+    //        (leftDS_MaxRowSize, leftDS_TotalRowCount, leftDS_MBR_Left, leftDS_MBR_Bottom, leftDS_MBR_Right, leftDS_MBR_Top)
 
     Helper.loggerSLf4J(debugMode, SparkKNN, ">>Right DS info time in %,d MS".format(System.currentTimeMillis - startTime))
     Helper.loggerSLf4J(debugMode, SparkKNN, ">>rightDS_MaxRowSize:%d\trightDS_TotalRowCount:%d\trightDS_MBR_Left:%.8f\trightDS_MBR_Bottom:%.8f\trightDS_MBR_Right:%.8f\trightDS_MBR_Top:%.8f".format(rightDS_MaxRowSize, rightDS_TotalRowCount, rightDS_MBR_Left, rightDS_MBR_Bottom, rightDS_MBR_Right, rightDS_MBR_Top))
@@ -180,6 +182,9 @@ case class SparkKNN(debugMode: Boolean, k: Int, typeSpatialIndex: TypeSpatialInd
 
       actualPartitionCount += 1
 
+      //      if (rangeInfo.lstMBRCoords.find(row => row._1._1.toInt.equals(28329) && row._1._2.toInt.equals(6059)).nonEmpty)
+      //        println()
+
       rangeInfo.lstMBRCoords.map(row => new Point(row._1._1, row._1._2, GlobalIndexPointData(row._2, actualPartitionCount)))
     })
       .flatMap(_.seq).iterator)
@@ -218,16 +223,16 @@ case class SparkKNN(debugMode: Boolean, k: Int, typeSpatialIndex: TypeSpatialInd
           case kdt if kdt == TypeSpatialIndex.kdTree => new KdTree(rectBounds, bvGridOp.value.squareDim)
         }
 
-//        if (pIdx == 0)
-//          println()
-//        if (pIdx == 0)
-//          spatialIndex.insert(iter.map(_._2))
-//        else
-//          spatialIndex.insert(iter.map(_._2).take(10))
+        //        if (pIdx == 0)
+        //          println()
+        //        if (pIdx == 0)
+        //          spatialIndex.insert(iter.map(_._2))
+        //        else
+        //          spatialIndex.insert(iter.map(_._2).take(10))
 
         spatialIndex.insert(iter.map(_._2))
 
-        Helper.loggerSLf4J(debugMode, SparkKNN, ">>SpatialIndex on partition %d time in %,d MS. Index: %s. Total Size: %d".format(pIdx, System.currentTimeMillis - startTime, spatialIndex, SizeEstimator.estimate(spatialIndex)))
+        Helper.loggerSLf4J(debugMode, SparkKNN, ">>SpatialIndex on partition %d time in %,d MS. Index: %s. Total Size: %,d".format(pIdx, System.currentTimeMillis - startTime, spatialIndex, SizeEstimator.estimate(spatialIndex)))
 
         val any: Any = spatialIndex
 
@@ -241,43 +246,49 @@ case class SparkKNN(debugMode: Boolean, k: Int, typeSpatialIndex: TypeSpatialInd
 
     startTime = System.currentTimeMillis
 
-    val numRounds = if (isAllJoin) {
+    //    val numRounds = if (isAllJoin) {
+    //
+    //      val (numR, (maxRowSize, totalRowCount, mbrLeft, mbrBott, mbrRight, mbrTop)) =
+    //        rddLeft
+    //          .mapPartitions(_.map(point => (bvGridOp.value.computeSquareXY(point.x, point.y), (point.userData.toString.length, 1L, point.x, point.y, point.x, point.y))))
+    //          .reduceByKey((param1, param2) =>
+    //            (math.max(param1._1, param2._1), param1._2 + param2._2, math.min(param1._3, param2._3), math.min(param1._4, param2._4), math.max(param1._5, param2._5), math.max(param1._6, param2._6)))
+    //          .mapPartitions(iter =>
+    //            Iterator(iter.map(row => (SpatialIdxRangeLookup.getLstPartition(bvGlobalIndex.value, row._1, k).size, row._2))
+    //              .reduce((param1, param2) =>
+    //                (math.max(param1._1, param2._1), (math.max(param1._2._1, param2._2._1), param1._2._2 + param2._2._2, math.min(param1._2._3, param2._2._3), math.min(param1._2._4, param2._2._4), math.max(param1._2._5, param2._2._5), math.max(param1._2._6, param2._2._6)))))
+    //          )
+    //          .reduce((param1, param2) =>
+    //            (math.max(param1._1, param2._1), (math.max(param1._2._1, param2._2._1), param1._2._2 + param2._2._2, math.min(param1._2._3, param2._2._3), math.min(param1._2._4, param2._2._4), math.max(param1._2._5, param2._2._5), math.max(param1._2._6, param2._2._6))))
+    //
+    //      leftDS_MaxRowSize = maxRowSize
+    //      leftDS_TotalRowCount = totalRowCount
+    //      leftDS_MBR_Left = mbrLeft
+    //      leftDS_MBR_Bottom = mbrBott
+    //      leftDS_MBR_Right = mbrRight
+    //      leftDS_MBR_Top = mbrTop
+    //
+    //      numR
+    //    }
+    //    else
+    //      rddLeft
+    //        .mapPartitions(_.map(point => bvGridOp.value.computeSquareXY(point.x, point.y)).toSet.iterator.map((row: (Double, Double)) => (row, Byte.MinValue)))
+    //        .reduceByKey((x, _) => x)
+    //        .mapPartitions(iter => Iterator(iter.map(row => SpatialIdxRangeLookup.getLstPartition(bvGlobalIndex.value, row._1, k).size).max))
+    //        .max
 
-      val (numR, (maxRowSize, totalRowCount, mbrLeft, mbrBott, mbrRight, mbrTop)) =
-        rddLeft
-          .mapPartitions(_.map(point => (bvGridOp.value.computeSquareXY(point.x, point.y), (point.userData.toString.length, 1L, point.x, point.y, point.x, point.y))))
-          .reduceByKey((param1, param2) =>
-            (math.max(param1._1, param2._1), param1._2 + param2._2, math.min(param1._3, param2._3), math.min(param1._4, param2._4), math.max(param1._5, param2._5), math.max(param1._6, param2._6)))
-          .mapPartitions(iter =>
-            Iterator(iter.map(row => (SpatialIdxRangeLookup.getLstPartition(bvGlobalIndex.value, row._1, k).size, row._2))
-              .reduce((param1, param2) =>
-                (math.max(param1._1, param2._1), (math.max(param1._2._1, param2._2._1), param1._2._2 + param2._2._2, math.min(param1._2._3, param2._2._3), math.min(param1._2._4, param2._2._4), math.max(param1._2._5, param2._2._5), math.max(param1._2._6, param2._2._6)))))
-          )
-          .reduce((param1, param2) =>
-            (math.max(param1._1, param2._1), (math.max(param1._2._1, param2._2._1), param1._2._2 + param2._2._2, math.min(param1._2._3, param2._2._3), math.min(param1._2._4, param2._2._4), math.max(param1._2._5, param2._2._5), math.max(param1._2._6, param2._2._6))))
-
-      leftDS_MaxRowSize = maxRowSize
-      leftDS_TotalRowCount = totalRowCount
-      leftDS_MBR_Left = mbrLeft
-      leftDS_MBR_Bottom = mbrBott
-      leftDS_MBR_Right = mbrRight
-      leftDS_MBR_Top = mbrTop
-
-      numR
-    }
-    else
-      rddLeft
-        .mapPartitions(_.map(point => bvGridOp.value.computeSquareXY(point.x, point.y)).toSet.iterator.map((row: (Double, Double)) => (row, Byte.MinValue)))
-        .reduceByKey((x, _) => x)
-        .mapPartitions(iter => Iterator(iter.map(row => SpatialIdxRangeLookup.getLstPartition(bvGlobalIndex.value, row._1, k).size).max))
-        .max
+    val numRounds = rddLeft
+      .mapPartitions(_.map(point => bvGridOp.value.computeSquareXY(point.x, point.y)).toSet.iterator.map((row: (Double, Double)) => (row, Byte.MinValue)))
+      .reduceByKey((x, _) => x)
+      .mapPartitions(iter => Iterator(iter.map(row => SpatialIdxRangeLookup.getLstPartition(bvGlobalIndex.value, row._1, k).size).max))
+      .max
 
     Helper.loggerSLf4J(debugMode, SparkKNN, ">>LeftDS numRounds time in %,d MS, numRounds: %d".format(System.currentTimeMillis - startTime, numRounds))
 
     var rddPoint = rddLeft
       .mapPartitions(iter => iter.map(point => {
 
-        //        if (point.userData.toString().equalsIgnoreCase("bus_3_a_360105"))
+        //        if (point.userData.toString().equalsIgnoreCase("yellow_1_a_313565"))
         //          println
 
         var lstPartitionId = SpatialIdxRangeLookup.getLstPartition(bvGlobalIndex.value, bvGridOp.value.computeSquareXY(point.x, point.y), k)
@@ -321,8 +332,8 @@ case class SparkKNN(debugMode: Boolean, k: Int, typeSpatialIndex: TypeSpatialInd
 
                 countKNN += 1
 
-                //                  if (pIdx == 17 && rowPoint.point.userData.toString().equalsIgnoreCase("bus_3_a_360105"))
-                //                    println
+                //                if (row._1 != -1&&rDataPoint.point.userData.toString().equalsIgnoreCase("yellow_1_a_313565"))
+                //                  println(spatialIndex.nearestNeighbor(rDataPoint.point, rDataPoint.sortedList))
 
                 //                if ( /*iterationNum == 0 && */ pIdx == 0)
                 //                  println(iterationNum)

@@ -2,7 +2,7 @@ package org.cusp.bdi.ds
 
 import com.esotericsoftware.kryo.KryoSerializable
 import org.cusp.bdi.ds.geom.{Geom2D, Point, Rectangle}
-import org.cusp.bdi.ds.util.SortedList
+import org.cusp.bdi.ds.sortset.SortedList
 import org.cusp.bdi.util.Helper
 
 object SpatialIndex {
@@ -21,27 +21,6 @@ object SpatialIndex {
       this.rectSearchRegion = Rectangle(this.searchPoint, new Geom2D(dim))
       this.prevMaxSqrDist = if (sortSetSqDist.last == null) -1 else sortSetSqDist.last.distance
     }
-  }
-
-  def computeSizeAndBounds(iterPoints: Iterable[Point]): (Int, Rectangle) = {
-
-    val iter = iterPoints.iterator
-    val point = iter.next()
-    var (minX, minY, maxX, maxY) = (point.x, point.y, point.x, point.y)
-    var count = 1
-
-    for (point <- iter) {
-
-      count += 1
-
-      if (point.x < minX) minX = point.x
-      else if (point.x > maxX) maxX = point.x
-
-      if (point.y < minY) minY = point.y
-      else if (point.y > maxY) maxY = point.y
-    }
-
-    (count, buildRectBounds((minX, minY), (maxX, maxY)))
   }
 
   def buildRectBounds(mbrEnds: ((Double, Double), (Double, Double))): Rectangle = {
@@ -87,6 +66,4 @@ trait SpatialIndex extends KryoSerializable {
   def findExact(searchXY: (Double, Double)): Point
 
   def nearestNeighbor(searchPoint: Point, sortSetSqDist: SortedList[Point])
-
-  //  def spatialIdxRangeLookup(searchXY: (Double, Double), k: Int): SortedList[Point]
 }

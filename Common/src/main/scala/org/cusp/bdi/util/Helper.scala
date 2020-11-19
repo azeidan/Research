@@ -12,6 +12,30 @@ import scala.collection.mutable.ListBuffer
 import scala.util.Random
 
 object Helper {
+
+  def indexOfBSearch(arrSortedValues: IndexedSeq[Int], lookupKeyValue: Int): Boolean = {
+
+    if (lookupKeyValue >= arrSortedValues.head && lookupKeyValue <= arrSortedValues.last) {
+
+      var lowerIdx = 0
+      var upperIdx = arrSortedValues.length - 1
+
+      while (lowerIdx <= upperIdx) {
+
+        val midIdx = lowerIdx + (upperIdx - lowerIdx) / 2
+
+        if (arrSortedValues(midIdx) == lookupKeyValue)
+          return true
+        else if (arrSortedValues(midIdx) > lookupKeyValue)
+          upperIdx = midIdx - 1
+        else
+          lowerIdx = midIdx + 1
+      }
+    }
+
+    false
+  }
+
   def toString(bool: Boolean): String =
     if (bool) "T" else "F"
 

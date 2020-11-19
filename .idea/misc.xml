@@ -10,6 +10,8 @@
         <option value="$PROJECT_DIR$/DataStructures/pom.xml" />
         <option value="$PROJECT_DIR$/SpatialBenchmark/pom.xml" />
         <option value="$PROJECT_DIR$/Common_FW/pom.xml" />
+        <option value="$PROJECT_DIR$/FW_Simba_Source/pom.xml" />
+        <option value="$PROJECT_DIR$/FW_Simba/pom.xml" />
       </list>
     </option>
   </component>

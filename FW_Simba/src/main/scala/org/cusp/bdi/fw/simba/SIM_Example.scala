@@ -27,11 +27,11 @@ object SIM_Example extends Serializable {
     //        val clArgs = SIM_CLArgs.OSM_Point_OSM_Point
 
     val clArgs = Simba_Local_CLArgs.random_sample
-//        val clArgs = CLArgsParser(args, Arguments_Simba.lstArgInfo())
+    //        val clArgs = CLArgsParser(args, Arguments_Simba.lstArgInfo())
 
     val simbaBuilder = SimbaSession.builder()
       .appName(this.getClass.getName)
-//      .config("simba.index.partitions", "64") // from Simba's examples
+      //      .config("simba.index.partitions", "64") // from Simba's examples
       .config("spark.local.dir", LocalRunConsts.sparkWorkDir)
 
     if (clArgs.getParamValueBoolean(Arguments.local)) {
@@ -60,17 +60,17 @@ object SIM_Example extends Serializable {
         .rdd
         .mapPartitions(_.map(processRow))
         .reduceByKey(_ ++ _)
-        .union(
-          DS2.knnJoin(DS1, Array("x", "y"), Array("x", "y"), 10)
-            .rdd
-            .mapPartitions(_.map(processRow))
-            .reduceByKey(_ ++ _)
-        )
+        //        .union(
+        //          DS2.knnJoin(DS1, Array("x", "y"), Array("x", "y"), 10)
+        //            .rdd
+        //            .mapPartitions(_.map(processRow))
+        //            .reduceByKey(_ ++ _)
+        //        )
         .mapPartitions(_.map(rowToString))
         .saveAsTextFile(clArgs.getParamValueString(Arguments.outDir), classOf[GzipCodec])
     else
       DS1.knnJoin(DS2, Array("x", "y"), Array("x", "y"), 10).rdd
-        .union(DS2.knnJoin(DS1, Array("x", "y"), Array("x", "y"), 10).rdd)
+        //        .union(DS2.knnJoin(DS1, Array("x", "y"), Array("x", "y"), 10).rdd)
         .mapPartitions(_.map(row => "%s,%.8f,%.8f".format(row.get(2).toString, row(0).toString.toDouble, row(1).toString.toDouble)))
         .saveAsTextFile(clArgs.getParamValueString(Arguments.outDir), classOf[GzipCodec])
 

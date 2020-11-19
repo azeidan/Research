@@ -6,7 +6,7 @@ import org.cusp.bdi.ds._
 import org.cusp.bdi.ds.geom.{Geom2D, Point, Rectangle}
 import org.cusp.bdi.ds.kdt.{KdTree, KdtBranchRootNode, KdtLeafNode, KdtNode}
 import org.cusp.bdi.ds.qt.QuadTree
-import org.cusp.bdi.ds.util.{Node, SortedList}
+import org.cusp.bdi.ds.sortset.{Node, SortedList}
 import org.cusp.bdi.sknn.GlobalIndexPointData
 import org.cusp.bdi.util.Helper
 

@@ -1,4 +1,4 @@
-package org.cusp.bdi.ds.util
+package org.cusp.bdi.ds.sortset
 
 import scala.collection.AbstractIterator
 import scala.collection.immutable.Iterable

@@ -6,7 +6,7 @@ import org.apache.spark.serializer.KryoSerializer
 import org.apache.spark.{SparkConf, SparkContext}
 import org.cusp.bdi.ds.geom.Point
 import org.cusp.bdi.sknn.{SparkKNN, TypeSpatialIndex}
-import org.cusp.bdi.util.{Arguments, InputFileParsers, LocalRunConsts}
+import org.cusp.bdi.util.{Arguments, CLArgsParser, InputFileParsers, LocalRunConsts}
 
 object TestAllKnnJoin {
 
@@ -15,8 +15,8 @@ object TestAllKnnJoin {
     val startTime = System.currentTimeMillis()
     //    var startTime2 = startTime
 
-    val clArgs = SparkKNN_Local_CLArgs.random_sample()
-//            val clArgs = CLArgsParser(args, Arguments.lstArgInfo())
+//    val clArgs = SparkKNN_Local_CLArgs.random_sample()
+                val clArgs = CLArgsParser(args, Arguments.lstArgInfo())
 
     //    val clArgs = SparkKNN_Local_CLArgs.busPoint_busPointShift(Arguments())
     //    val clArgs = SparkKNN_Local_CLArgs.busPoint_taxiPoint(Arguments())
@@ -63,8 +63,8 @@ object TestAllKnnJoin {
 
     val sparkKNN = SparkKNN(debugMode, kParam, indexType)
 
-    val rddResult = sparkKNN.allKnnJoin(rddLeft, rddRight)
-//                    val rddResult = sparkKNN.knnJoin(rddLeft, rddRight)
+    //    val rddResult = sparkKNN.allKnnJoin(rddLeft, rddRight)
+    val rddResult = sparkKNN.knnJoin(rddLeft, rddRight)
 
     //    println(rddResult.toDebugString)
 
