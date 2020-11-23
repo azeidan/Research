@@ -166,10 +166,9 @@ case class SparkKNN(debugMode: Boolean, k: Int, typeSpatialIndex: TypeSpatialInd
     // create global index
     val rectBounds = buildRectBounds(bvGridOp.value.computeSquareXY(rightDS_MBR_Left, rightDS_MBR_Bottom), bvGridOp.value.computeSquareXY(rightDS_MBR_Right, rightDS_MBR_Top))
     val globalIndex: SpatialIndex = typeSpatialIndex match {
-      case TypeSpatialIndex.quadTree =>
-        new QuadTree(rectBounds)
-      case TypeSpatialIndex.kdTree =>
-        new KdTree(rectBounds, 1)
+      case TypeSpatialIndex.quadTree => new QuadTree(rectBounds)
+      case TypeSpatialIndex.kdTree => new KdTree(rectBounds, 1)
+      case _ => throw new IllegalArgumentException("Invalid Spatial Index Type")
     }
 
     val bvArrMBR = rddRight.sparkContext.broadcast(lstRangeInfo.map(_.mbr).toArray)
@@ -219,8 +218,9 @@ case class SparkKNN(debugMode: Boolean, k: Int, typeSpatialIndex: TypeSpatialInd
         val rectBounds = scaleAndBuildRectBounds(bvArrMBR.value(pIdx), bvGridOp.value.squareDim)
 
         val spatialIndex: SpatialIndex = typeSpatialIndex match {
-          case qt if qt == TypeSpatialIndex.quadTree => new QuadTree(rectBounds)
-          case kdt if kdt == TypeSpatialIndex.kdTree => new KdTree(rectBounds, bvGridOp.value.squareDim)
+          case TypeSpatialIndex.quadTree => new QuadTree(rectBounds)
+          case TypeSpatialIndex.kdTree => new KdTree(rectBounds, bvGridOp.value.squareDim)
+          case _ => throw new IllegalArgumentException("Invalid Spatial Index Type")
         }
 
         //        if (pIdx == 0)
@@ -332,8 +332,8 @@ case class SparkKNN(debugMode: Boolean, k: Int, typeSpatialIndex: TypeSpatialInd
 
                 countKNN += 1
 
-                //                if (row._1 != -1&&rDataPoint.point.userData.toString().equalsIgnoreCase("yellow_1_a_313565"))
-                //                  println(spatialIndex.nearestNeighbor(rDataPoint.point, rDataPoint.sortedList))
+//                if (row._1 != -1 && rDataPoint.point.userData.toString().equalsIgnoreCase("bread_3_a_892097"))
+//                  println(spatialIndex.nearestNeighbor(rDataPoint.point, rDataPoint.sortedList))
 
                 //                if ( /*iterationNum == 0 && */ pIdx == 0)
                 //                  println(iterationNum)
@@ -384,10 +384,12 @@ case class SparkKNN(debugMode: Boolean, k: Int, typeSpatialIndex: TypeSpatialInd
     val lstPartitionIdDummy = ListBuffer.fill[Int](rddRight.getNumPartitions)(0)
     val rowDataDummy = new RowData(pointDummy, sortSetDummy, lstPartitionIdDummy)
     val spatialIndexDummy = typeSpatialIndex match {
-      case qt if qt == TypeSpatialIndex.quadTree =>
+      case TypeSpatialIndex.quadTree =>
         new QuadTree(Rectangle(new Geom2D(0, 0), new Geom2D(0, 0)))
-      case kdt if kdt == TypeSpatialIndex.kdTree =>
+      case TypeSpatialIndex.kdTree =>
         new KdTree(Rectangle(new Geom2D(0, 0), new Geom2D(0, 0)), 1)
+      case _ =>
+        throw new IllegalArgumentException("Invalid Spatial Index Type")
     }
 
     val pointCost = SizeEstimator.estimate(pointDummy)

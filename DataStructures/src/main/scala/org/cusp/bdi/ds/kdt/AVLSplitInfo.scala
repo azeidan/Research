@@ -23,20 +23,9 @@ object AVLSplitInfo {
 
       pointCount += 1
 
-//      if ("%.8f".format(pt.x).equals("%.8f".format(991536.5981783416)) && "%.8f".format(pt.y).equals("%.8f".format(212070.11550337818))) {
-//
-//        println(lowerBounds)
-//        val a = pt.x - lowerBounds._1
-//        val b = a / hgGroupWidth
-//        val c = b.toInt
-//        println(c)
-//      }
-
-
       val idxX = ((pt.x - lowerBounds._1) / hgGroupWidth).toInt
       val idxY = ((pt.y - lowerBounds._2) / hgGroupWidth).toInt
-//if(idxX<0 || idxY<0)
-//  println
+
       setCoordY += idxY
 
       val avlNode = avlHistogram.getOrElseInsert(idxX)
@@ -64,9 +53,6 @@ case class AVLSplitInfo(avlHistogram: TypeAVL, otherIndexCount: Int, pointCount:
 
     avlHistogram.allNodes
       .foreach(_.data.foreach(row => {
-
-//        if ("%.8f".format(row._2.x).equals("%.8f".format(991536.5981783416)) && "%.8f".format(row._2.y).equals("%.8f".format(212070.11550337818)))
-//          println()
 
         lstPoints += row._2
 

@@ -16,6 +16,18 @@
         </dependency>
 
         <dependency>
+            <groupId>archery_2.11</groupId>
+            <artifactId>archery_2.11</artifactId>
+            <version>0.4.0</version>
+        </dependency>
+
+        <!--        <dependency>-->
+        <!--            <groupId>org.locationtech.jts</groupId>-->
+        <!--            <artifactId>jts-core</artifactId>-->
+        <!--            <version>1.17.1</version>-->
+        <!--        </dependency>-->
+
+        <dependency>
             <groupId>com.esotericsoftware</groupId>
             <artifactId>kryo</artifactId>
             <version>4.0.0</version>

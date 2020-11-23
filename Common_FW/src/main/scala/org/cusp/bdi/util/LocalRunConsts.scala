@@ -37,9 +37,9 @@ object LocalRunConsts {
   val pathKM_RandomPointsNonUniform = ""
 
   //  val pathGM_TPEP = "/media/cusp/Data/GeoMatch_Files/OutputFiles/Simba/Bus_2_Grp1/"
-  val pathGM_TPEP = "/media/cusp/Data/GeoMatch_Files/OutputFiles/Simba/Taxi_1_Grp1/"
+  val pathGM_TPEP = "/media/cusp/Data/GeoMatch_Files/OutputFiles/Simba/Bread_3_Grp2/"
   val pathSparkKNN_FW_Output_1: String = pathGM_TPEP
-  val pathSparkKNN_FW_Output_2 = "/media/cusp/Data/GeoMatch_Files/OutputFiles/446/"
+  val pathSparkKNN_FW_Output_2 = "/media/cusp/Data/GeoMatch_Files/OutputFiles/936/"
 
   val pathGS_TPEP = "/media/cusp/Data/GeoMatch_Files/InputFiles/GeoSpark_LION_TPEP.csv"
   val pathLS_wgs_TPEP = "/media/cusp/Data/GeoMatch_Files/InputFiles/LocationSpark_LION_TPEP.csv"

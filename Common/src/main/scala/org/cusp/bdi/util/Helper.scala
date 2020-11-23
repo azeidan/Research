@@ -240,7 +240,7 @@ object Helper {
   //  def manhattanDist(x1: Double, y1: Double, x2: Double, y2: Double) =
   //    math.abs(x1 - x2) + math.abs(y1 - y2)
 
-  def squaredDist(x1: Double, y1: Double, x2: Double, y2: Double): Double =
+  def squaredEuclideanDist(x1: Double, y1: Double, x2: Double, y2: Double): Double =
     math.pow(x1 - x2, 2) + math.pow(y1 - y2, 2)
 
   def toByte(str: String): Long = {

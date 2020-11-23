@@ -6,7 +6,7 @@ import org.apache.spark.serializer.KryoSerializer
 import org.apache.spark.{SparkConf, SparkContext}
 import org.cusp.bdi.ds.geom.Point
 import org.cusp.bdi.sknn.{SparkKNN, TypeSpatialIndex}
-import org.cusp.bdi.util.{Arguments, CLArgsParser, InputFileParsers, LocalRunConsts}
+import org.cusp.bdi.util.{Arguments, InputFileParsers, LocalRunConsts}
 
 object TestAllKnnJoin {
 
@@ -15,8 +15,8 @@ object TestAllKnnJoin {
     val startTime = System.currentTimeMillis()
     //    var startTime2 = startTime
 
-//    val clArgs = SparkKNN_Local_CLArgs.random_sample()
-                val clArgs = CLArgsParser(args, Arguments.lstArgInfo())
+        val clArgs = SparkKNN_Local_CLArgs.random_sample()
+//    val clArgs = CLArgsParser(args, Arguments.lstArgInfo())
 
     //    val clArgs = SparkKNN_Local_CLArgs.busPoint_busPointShift(Arguments())
     //    val clArgs = SparkKNN_Local_CLArgs.busPoint_taxiPoint(Arguments())
@@ -31,12 +31,14 @@ object TestAllKnnJoin {
     val outDir = clArgs.getParamValueString(Arguments.outDir)
 
     val kParam = clArgs.getParamValueInt(Arguments.k)
-    val indexType = if (clArgs.getParamValueString(Arguments.indexType).equalsIgnoreCase("qt"))
-      TypeSpatialIndex.quadTree
-    else
-      TypeSpatialIndex.kdTree
+
+    val indexType = clArgs.getParamValueString(Arguments.indexType).toLowerCase() match {
+      case "qt" => TypeSpatialIndex.quadTree
+      case "kdt" => TypeSpatialIndex.kdTree
+      case _ => throw new IllegalArgumentException("Invalid Spatial Index Type")
+    }
+
     val numPartitions = if (clArgs.getParamValueBoolean(Arguments.local)) 17 else 0
-    //        val sampleRate = clArgs.getParamValueDouble(Arguments.sampleRate)
 
     val sparkConf = new SparkConf()
       .setAppName(this.getClass.getName)

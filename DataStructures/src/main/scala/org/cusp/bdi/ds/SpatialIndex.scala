@@ -37,13 +37,13 @@ object SpatialIndex {
     val right = rectMBR.right
     val top = rectMBR.top
 
-    math.sqrt(math.max(math.max(Helper.squaredDist(searchPoint.x, searchPoint.y, left, bottom), Helper.squaredDist(searchPoint.x, searchPoint.y, right, bottom)),
-      math.max(Helper.squaredDist(searchPoint.x, searchPoint.y, right, top), Helper.squaredDist(searchPoint.x, searchPoint.y, left, top))))
+    math.sqrt(math.max(math.max(Helper.squaredEuclideanDist(searchPoint.x, searchPoint.y, left, bottom), Helper.squaredEuclideanDist(searchPoint.x, searchPoint.y, right, bottom)),
+      math.max(Helper.squaredEuclideanDist(searchPoint.x, searchPoint.y, right, top), Helper.squaredEuclideanDist(searchPoint.x, searchPoint.y, left, top))))
   }
 
   def testAndAddPoint(point: Point, knnLookupInfo: KnnLookupInfo) {
 
-    val sqDist = Helper.squaredDist(knnLookupInfo.rectSearchRegion.center.x, knnLookupInfo.rectSearchRegion.center.y, point.x, point.y)
+    val sqDist = Helper.squaredEuclideanDist(knnLookupInfo.rectSearchRegion.center.x, knnLookupInfo.rectSearchRegion.center.y, point.x, point.y)
 
     knnLookupInfo.sortSetSqDist.add(sqDist, point)
 

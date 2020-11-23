@@ -157,9 +157,6 @@ class KdTree extends SpatialIndex {
 
   override def nearestNeighbor(searchPoint: Point, sortSetSqDist: SortedList[Point]) {
 
-//    if (searchPoint.userData.toString.equalsIgnoreCase("yellow_1_a_313565"))
-//      println
-
     var (sPtBestNode, splitX) = findBestNode(searchPoint, sortSetSqDist.maxSize)
 
     val knnLookupInfo = new KnnLookupInfo(searchPoint, sortSetSqDist, sPtBestNode.rectNodeBounds)

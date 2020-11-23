@@ -26,7 +26,7 @@ object SIM_Example extends Serializable {
     //        val clArgs = SIM_CLArgs.lion_PolyRect_Taxi_Point
     //        val clArgs = SIM_CLArgs.OSM_Point_OSM_Point
 
-    val clArgs = Simba_Local_CLArgs.random_sample
+    val clArgs = Simba_Local_CLArgs.random_sample()
     //        val clArgs = CLArgsParser(args, Arguments_Simba.lstArgInfo())
 
     val simbaBuilder = SimbaSession.builder()

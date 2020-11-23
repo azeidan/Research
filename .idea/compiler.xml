@@ -21,6 +21,7 @@
       <module name="_FW_GeoMatch" target="1.8" />
       <module name="_FW_Simba" target="1.8" />
       <module name="_KD-Tree-scala-master" target="1.8" />
+      <module name="Archery-master" target="1.5" />
       <module name="Common" target="1.8" />
       <module name="Common_FW" target="1.8" />
       <module name="DataSetTools" target="1.8" />

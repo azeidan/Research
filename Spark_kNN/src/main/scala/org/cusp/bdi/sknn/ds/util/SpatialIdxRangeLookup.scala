@@ -1,9 +1,9 @@
 package org.cusp.bdi.sknn.ds.util
 
-import org.cusp.bdi.ds.kdt.KdTree.findSearchRegionLocation
 import org.cusp.bdi.ds.SpatialIndex.computeDimension
 import org.cusp.bdi.ds._
 import org.cusp.bdi.ds.geom.{Geom2D, Point, Rectangle}
+import org.cusp.bdi.ds.kdt.KdTree.findSearchRegionLocation
 import org.cusp.bdi.ds.kdt.{KdTree, KdtBranchRootNode, KdtLeafNode, KdtNode}
 import org.cusp.bdi.ds.qt.QuadTree
 import org.cusp.bdi.ds.sortset.{Node, SortedList}
@@ -158,7 +158,7 @@ object SpatialIdxRangeLookup extends Serializable {
       //              if (qtPoint.x.toString().startsWith("26157") && qtPoint.y.toString().startsWith("4965"))
       //                print("")
 
-      val sqDistQTPoint = Helper.squaredDist(idxRangeLookupInfo.rectSearchRegion.center.x, idxRangeLookupInfo.rectSearchRegion.center.y, point.x, point.y)
+      val sqDistQTPoint = Helper.squaredEuclideanDist(idxRangeLookupInfo.rectSearchRegion.center.x, idxRangeLookupInfo.rectSearchRegion.center.y, point.x, point.y)
 
       // add point if it's within the search radius
       if (idxRangeLookupInfo.limitNode == null || sqDistQTPoint < idxRangeLookupInfo.sqrDim) {

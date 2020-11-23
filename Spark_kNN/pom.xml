@@ -19,12 +19,6 @@
     </dependency>
 
     <dependency>
-      <groupId>org.locationtech.jts</groupId>
-      <artifactId>jts-core</artifactId>
-      <version>1.16.1</version>
-    </dependency>
-
-    <dependency>
       <groupId>Common_FW</groupId>
       <artifactId>Common_FW</artifactId>
       <version>0.0.1-SNAPSHOT</version>
