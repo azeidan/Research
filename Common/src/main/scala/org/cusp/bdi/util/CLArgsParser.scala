@@ -47,7 +47,7 @@ case class CLArgsParser(args: Array[String], lstArgInfo: List[(String, String, A
 
   def buildArgMap() {
 
-    var missingArg = args == null || args.isEmpty || args.length != lstArgInfo.size * 2
+    var missingArg = args == null || args.isEmpty || args.length != lstArgInfo.length * 2
 
     try {
       if (missingArg)
@@ -125,7 +125,7 @@ case class CLArgsParser(args: Array[String], lstArgInfo: List[(String, String, A
 
         //        ex.printStackTrace()
 
-        throw new Exception("%s %d out of the expected %d%n%s%n%n%s".format("Number of args received", args.length, lstArgInfo.size * 2, args.mkString(" "), ex.toString))
+        throw new Exception("%s %d out of the expected %d%n%s%n%n%s".format("Number of args received", args.length, lstArgInfo.length * 2, args.mkString(" "), ex.toString))
     }
   }
 

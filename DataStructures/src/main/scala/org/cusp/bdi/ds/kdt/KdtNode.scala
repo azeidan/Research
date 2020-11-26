@@ -33,10 +33,6 @@ final class KdtBranchRootNode extends KdtNode {
 
   override def totalPoints: Int = _totalPoints
 
-  def totalPoints(totalPoints: Int) {
-    this._totalPoints = totalPoints
-  }
-
   def this(splitVal: Double, totalPoints: Int) = {
 
     this()
@@ -66,7 +62,7 @@ final class KdtLeafNode extends KdtNode {
 
   var lstPoints: ListBuffer[Point] = _
 
-  override def totalPoints: Int = lstPoints.size
+  override def totalPoints: Int = lstPoints.length
 
   def this(lstPoints: ListBuffer[Point], rectNodeBounds: Rectangle) = {
 

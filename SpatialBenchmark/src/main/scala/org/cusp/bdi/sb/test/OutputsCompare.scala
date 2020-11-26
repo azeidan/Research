@@ -155,7 +155,7 @@ case class OutputsCompare(classificationCount: Int, rddKeyMatch: RDD[String],
             correctStreetCount = arrMatchIdxs.take(classificationCount)
               .seq
               .groupBy(identity)
-              .mapValues(_.size)
+              .mapValues(_.length)
               .toArray
               .sortBy(_._1)
               .map(tuple => if ((0 until classificationCount).contains(tuple._1)) 1 else 0).sum

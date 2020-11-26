@@ -80,7 +80,7 @@ class QuadTree(_rectBounds: Rectangle) extends SpatialIndex {
 
         qTree.totalPoints += 1
 
-        if (qTree.lstPoints.size < quadCapacity) {
+        if (qTree.lstPoints.length < quadCapacity) {
 
           qTree.lstPoints += point
           return true
@@ -124,7 +124,7 @@ class QuadTree(_rectBounds: Rectangle) extends SpatialIndex {
   }
 
   override def toString: String =
-    "%s\t%,d\t%,d".format(rectBounds, lstPoints.size, totalPoints)
+    "%s\t%,d\t%,d".format(rectBounds, lstPoints.length, totalPoints)
 
   override def write(kryo: Kryo, output: Output): Unit = {
 

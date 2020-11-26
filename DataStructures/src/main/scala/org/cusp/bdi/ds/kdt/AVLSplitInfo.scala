@@ -81,7 +81,7 @@ case class AVLSplitInfo(avlHistogram: TypeAVL, otherIndexCount: Int, pointCount:
           if (avlNodeNew.data == null)
             avlNodeNew.data = new TypeAVL_Data()
 
-          avlNodeNew.data += ((currNode.keyValue, row._2))
+          avlNodeNew.data += ((currNode.nodeValue, row._2))
         })
 
     // find the split node
@@ -89,7 +89,7 @@ case class AVLSplitInfo(avlHistogram: TypeAVL, otherIndexCount: Int, pointCount:
     var pointCountPart1 = 0
     val stackNode = mutable.Stack[AVLNode[TypeAVL_Data]]()
     var currNode = avlHistogram.rootNode
-    var splitKeyValue = currNode.keyValue
+    var splitNodeValue = currNode.nodeValue
     val avlHistogramPart1 = new TypeAVL()
     val avlHistogramPart2 = new TypeAVL()
     var otherIndexCountPart1 = 0
@@ -108,11 +108,11 @@ case class AVLSplitInfo(avlHistogram: TypeAVL, otherIndexCount: Int, pointCount:
       currNode = stackNode.pop
 
       if (collectPart1)
-        if (pointCountPart1 == 0 || (pointCountPart1 + currNode.data.size <= pointCountHalf && (currNode != null || stackNode.nonEmpty))) {
+        if (pointCountPart1 == 0 || (pointCountPart1 + currNode.data.length <= pointCountHalf && (currNode != null || stackNode.nonEmpty))) {
 
-          splitKeyValue = currNode.keyValue
+          splitNodeValue = currNode.nodeValue
 
-          pointCountPart1 += currNode.data.size
+          pointCountPart1 += currNode.data.length
 
           otherIndexCountPart1 += 1
 
@@ -142,6 +142,6 @@ case class AVLSplitInfo(avlHistogram: TypeAVL, otherIndexCount: Int, pointCount:
     else
       new AVLSplitInfo(avlHistogramPart2, otherIndexCountPart2, pointCount - pointCountPart1)
 
-    (splitKeyValue, avlSplitInfoPart1, avlSplitInfoPart2)
+    (splitNodeValue, avlSplitInfoPart1, avlSplitInfoPart2)
   }
 }

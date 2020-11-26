@@ -1,41 +1,18 @@
 package org.cusp.bdi.ds.bt
 
-import org.cusp.bdi.ds.bt.AVLTree.{heightDiff, nodeHeight}
-
 import scala.collection.mutable.ListBuffer
 import scala.collection.{AbstractIterator, mutable}
 
-object AVLTree {
-
-  def apply[T]() =
-    new AVLTree[T]
-
-  def nodeHeight(node: AVLNode[_]): Int =
-    if (node == null)
-      0
-    else
-      node.treeHeight
-
-  def max(x: Int, y: Int): Int =
-    if (x > y) x else y
-
-  def heightDiff(node: AVLNode[_]): Int =
-    if (node == null)
-      0
-    else
-      nodeHeight(node.left) - nodeHeight(node.right)
-}
-
-class AVLTree[T] extends Serializable /* with Iterable[AVLNode[T]]*/ {
+class AVLTree[T] extends Serializable {
 
   var rootNode: AVLNode[T] = _
 
-  def lookupKeyValue(valueLookup: Int): AVLNode[T] = {
+  def lookupValue(valueLookup: Int): AVLNode[T] = {
 
     var currNode = rootNode
 
     while (currNode != null)
-      valueLookup.compare(currNode.keyValue).signum match {
+      valueLookup.compare(currNode.nodeValue).signum match {
         case -1 =>
           currNode = currNode.left
         case 0 =>
@@ -47,87 +24,148 @@ class AVLTree[T] extends Serializable /* with Iterable[AVLNode[T]]*/ {
     null
   }
 
-  def getOrElseInsert(insertKey: Int): AVLNode[T] = {
+  def getOrElseInsert(newValue: Int): AVLNode[T] = {
 
-    val newNode = new AVLNode[T](insertKey)
+    def updateParentLink(stackNodes: mutable.Stack[AVLNode[T]], currNode: AVLNode[T], newSubtreeRoot: AVLNode[T]): Unit =
+      if (stackNodes.nonEmpty)
+        currNode.nodeValue.compare(stackNodes.top.nodeValue).signum match {
+          case -1 =>
+            stackNodes.top.left = newSubtreeRoot
+          case _ =>
+            stackNodes.top.right = newSubtreeRoot
+        }
 
-    val res = getOrElseInsert(rootNode, newNode)
+    var newNode = new AVLNode[T](newValue)
 
-    rootNode = res._1
+    if (rootNode == null)
+      rootNode = newNode
+    else {
 
-    res._2
-  }
+      var stackNodes = mutable.Stack[AVLNode[T]]()
 
-  def getOrElseInsert(newNode: AVLNode[T]): AVLNode[T] = {
+      var currNode = rootNode
 
-    val res = getOrElseInsert(rootNode, newNode)
+      while (currNode != null) {
 
-    rootNode = res._1
+        stackNodes.push(currNode)
 
-    if (newNode != res._2)
-      throw new Exception("Duplicate Node")
+        newValue.compare(currNode.nodeValue).signum match {
+          case -1 =>
+            if (currNode.left == null) {
+
+              currNode.left = newNode
+              currNode = null
+            }
+            else
+              currNode = currNode.left
+          case 0 =>
+            newNode = currNode
+            stackNodes = mutable.Stack[AVLNode[T]]()
+            currNode = null
+          case 1 =>
+            if (currNode.right == null) {
+
+              currNode.right = newNode
+              currNode = null
+            }
+            else
+              currNode = currNode.right
+        }
+      }
+
+      while (stackNodes.nonEmpty) {
+
+        currNode = stackNodes.pop
+
+        currNode.treeHeight = 1 + max(nodeHeight(currNode.left), nodeHeight(currNode.right))
+
+        val hDiff = nodeHeight(currNode.left) - nodeHeight(currNode.right)
+
+        if (hDiff.abs > 1)
+          hDiff.signum match {
+            case -1 =>
+              if (newValue < currNode.right.nodeValue) {
+
+                currNode.right = rotateRight(currNode.right)
+
+                updateParentLink(stackNodes, currNode, rotateLeft(currNode))
+              }
+              else
+                updateParentLink(stackNodes, currNode, rotateLeft(currNode))
+            case _ =>
+              if (newValue < currNode.left.nodeValue)
+                updateParentLink(stackNodes, currNode, rotateRight(currNode))
+              else {
+
+                currNode.left = rotateLeft(currNode.left)
+
+                updateParentLink(stackNodes, currNode, rotateRight(currNode))
+              }
+          }
+      }
+    }
 
     newNode
   }
 
-  private def getOrElseInsert(currNode: AVLNode[T], newNode: AVLNode[T]): (AVLNode[T], AVLNode[T]) = {
-
-    var valueNode = rootNode
-
-    if (currNode == null) {
-
-      valueNode = newNode
-
-      return (valueNode, valueNode)
-    } else {
-
-      newNode.keyValue.compare(currNode.keyValue).signum match {
-        case -1 =>
-
-          val res = getOrElseInsert(currNode.left, newNode)
-          currNode.left = res._1
-          valueNode = res._2
-        case 0 =>
-          return (currNode, currNode)
-        case 1 =>
-
-          val res = getOrElseInsert(currNode.right, newNode)
-          currNode.right = res._1
-          valueNode = res._2
-      }
-
-      currNode.treeHeight = 1 + AVLTree.max(nodeHeight(currNode.left), nodeHeight(currNode.right))
-
-      val hDiff = heightDiff(currNode)
-
-      if (hDiff > 1) {
-
-        val keyDiff = newNode.keyValue - currNode.left.keyValue
-
-        if (keyDiff < 0)
-          return (rotateRight(currNode), valueNode)
-        else if (keyDiff > 0) {
-
-          currNode.left = rotateLeft(currNode.left)
-          return (rotateRight(currNode), valueNode)
-        }
-      }
-      else if (hDiff < -1) {
-
-        val keyDiff = newNode.keyValue - currNode.right.keyValue
-
-        if (keyDiff < 0) {
-
-          currNode.right = rotateRight(currNode.right)
-          return (rotateLeft(currNode), valueNode)
-        }
-        else if (keyDiff > 0)
-          return (rotateLeft(currNode), valueNode)
-      }
-    }
-
-    (currNode, valueNode)
-  }
+  //  private def getOrElseInsert(currNode: AVLNode[T], newNode: AVLNode[T]): (AVLNode[T], AVLNode[T]) = {
+  //
+  //    var valueNode = rootNode
+  //
+  //    if (currNode == null) {
+  //
+  //      valueNode = newNode
+  //
+  //      return (valueNode, valueNode)
+  //    } else {
+  //
+  //      newNode.nodeValue.compare(currNode.nodeValue).signum match {
+  //        case -1 =>
+  //
+  //          val res = getOrElseInsert(currNode.left, newNode)
+  //          currNode.left = res._1
+  //          valueNode = res._2
+  //        case 0 =>
+  //          return (currNode, currNode)
+  //        case 1 =>
+  //
+  //          val res = getOrElseInsert(currNode.right, newNode)
+  //          currNode.right = res._1
+  //          valueNode = res._2
+  //      }
+  //
+  //      currNode.treeHeight = 1 + AVLTree.max(nodeHeight(currNode.left), nodeHeight(currNode.right))
+  //
+  //      val hDiff = heightDiff(currNode)
+  //
+  //      if (hDiff > 1) {
+  //
+  //        val keyDiff = newNode.nodeValue - currNode.left.nodeValue
+  //
+  //        if (keyDiff < 0)
+  //          return (rotateRight(currNode), valueNode)
+  //        else if (keyDiff > 0) {
+  //
+  //          currNode.left = rotateLeft(currNode.left)
+  //          return (rotateRight(currNode), valueNode)
+  //        }
+  //      }
+  //      else if (hDiff < -1) {
+  //
+  //        val keyDiff = newNode.nodeValue - currNode.right.nodeValue
+  //
+  //        if (keyDiff < 0) {
+  //
+  //          currNode.right = rotateRight(currNode.right)
+  //          return (rotateLeft(currNode), valueNode)
+  //        }
+  //        else if (keyDiff > 0)
+  //          return (rotateLeft(currNode), valueNode)
+  //      }
+  //    }
+  //
+  //    (currNode, valueNode)
+  //  }
 
   def allNodes: Iterator[AVLNode[T]] = new AbstractIterator[AVLNode[T]] {
 
@@ -150,6 +188,19 @@ class AVLTree[T] extends Serializable /* with Iterable[AVLNode[T]]*/ {
       }
       else
         throw new NoSuchElementException("next on empty Iterator")
+  }
+
+  def printIndented(): Unit =
+    printIndented(rootNode, "", isLeft = false)
+
+  private def printIndented(node: AVLNode[T], indent: String, isLeft: Boolean): Unit = {
+
+    if (node != null) {
+
+      println(indent + (if (isLeft) "|__" else "|__") + node.nodeValue)
+      printIndented(node.left, indent + (if (isLeft) "|  " else "   "), isLeft = true)
+      printIndented(node.right, indent + (if (isLeft) "|  " else "   "), isLeft = false)
+    }
   }
 
   def inOrder(): ListBuffer[AVLNode[T]] = {
@@ -176,36 +227,51 @@ class AVLTree[T] extends Serializable /* with Iterable[AVLNode[T]]*/ {
     retLst
   }
 
-  private def rotateRight(node: AVLNode[T]) = {
+  override def toString: String =
+    rootNode.toString
 
-    val newSubtreeRoot = node.left
+  private def rotateRight(nodePivot: AVLNode[T]) = {
+
+    val newSubtreeRoot = nodePivot.left
     val temp = newSubtreeRoot.right
 
     // rotate
-    newSubtreeRoot.right = node
-    node.left = temp
+    newSubtreeRoot.right = nodePivot
+    nodePivot.left = temp
 
-    node.treeHeight = AVLTree.max(nodeHeight(node.left), nodeHeight(node.right)) + 1
-    newSubtreeRoot.treeHeight = AVLTree.max(nodeHeight(newSubtreeRoot.left), nodeHeight(newSubtreeRoot.right)) + 1
+    nodePivot.treeHeight = max(nodeHeight(nodePivot.left), nodeHeight(nodePivot.right)) + 1
+    newSubtreeRoot.treeHeight = max(nodeHeight(newSubtreeRoot.left), nodeHeight(newSubtreeRoot.right)) + 1
+
+    if (nodePivot == rootNode)
+      rootNode = newSubtreeRoot
 
     newSubtreeRoot
   }
 
-  private def rotateLeft(node: AVLNode[T]) = {
+  private def rotateLeft(nodePivot: AVLNode[T]) = {
 
-    val newSubtreeRoot = node.right
+    val newSubtreeRoot = nodePivot.right
     val temp = newSubtreeRoot.left
 
     // rotate
-    newSubtreeRoot.left = node
-    node.right = temp
+    newSubtreeRoot.left = nodePivot
+    nodePivot.right = temp
 
-    node.treeHeight = AVLTree.max(nodeHeight(node.left), nodeHeight(node.right)) + 1
-    newSubtreeRoot.treeHeight = AVLTree.max(nodeHeight(newSubtreeRoot.left), nodeHeight(newSubtreeRoot.right)) + 1
+    nodePivot.treeHeight = max(nodeHeight(nodePivot.left), nodeHeight(nodePivot.right)) + 1
+    newSubtreeRoot.treeHeight = max(nodeHeight(newSubtreeRoot.left), nodeHeight(newSubtreeRoot.right)) + 1
+
+    if (nodePivot == rootNode)
+      rootNode = newSubtreeRoot
 
     newSubtreeRoot
   }
 
-  override def toString: String =
-    rootNode.toString
+  private def nodeHeight(node: AVLNode[_]): Int =
+    if (node == null)
+      0
+    else
+      node.treeHeight
+
+  private def max(x: Int, y: Int): Int =
+    if (x > y) x else y
 }

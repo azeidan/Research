@@ -134,10 +134,10 @@ object SpatialIdxRangeLookup extends Serializable {
 
     process(sPtBestNode, null)
 
-    if (sPtBestNode != kdTree.root) {
+    if (sPtBestNode != kdTree.rootNode) {
 
       splitX = true
-      process(kdTree.root, sPtBestNode)
+      process(kdTree.rootNode, sPtBestNode)
     }
 
     idxRangeLookupInfo.sortList

@@ -30,13 +30,13 @@ object KdTree extends Serializable {
 
 class KdTree extends SpatialIndex {
 
-  var root: KdtNode = _
+  var rootNode: KdtNode = _
 
   private var rectBounds: Rectangle = _
   private var hgGroupWidth = -1
 
   def getTotalPoints: Int =
-    root.totalPoints
+    rootNode.totalPoints
 
   def this(rectBounds: Rectangle, hgGroupWidth: Int) = {
     this()
@@ -50,7 +50,7 @@ class KdTree extends SpatialIndex {
 
   override def insert(iterPoints: Iterator[Point]): Boolean = {
 
-    if (root != null) throw new IllegalStateException("KD Tree already built")
+    if (rootNode != null) throw new IllegalStateException("KD Tree already built")
 
     if (iterPoints.isEmpty) throw new IllegalStateException("Empty point iterator")
 
@@ -60,7 +60,7 @@ class KdTree extends SpatialIndex {
 
     var avlSplitInfo = AVLSplitInfo(iterPoints, hgGroupWidth, lowerBounds)
 
-    root = buildNode(avlSplitInfo, splitX = true, queueNode, lowerBounds)
+    rootNode = buildNode(avlSplitInfo, splitX = true, queueNode, lowerBounds)
     avlSplitInfo = null
 
     while (queueNode.nonEmpty) {
@@ -73,11 +73,7 @@ class KdTree extends SpatialIndex {
         currNode.right = buildNode(avlSplitInfoRight, !splitX, queueNode, lowerBounds)
     }
 
-    this.root match {
-      case kdtBRN: KdtBranchRootNode =>
-        updateBoundsAndTotalPoint(kdtBRN)
-      case _ =>
-    }
+    updateBoundsAndTotalPoint()
 
     this.rectBounds = null
 
@@ -85,6 +81,7 @@ class KdTree extends SpatialIndex {
   }
 
   private def buildNode(avlSplitInfo: AVLSplitInfo, splitX: Boolean, queueNode: mutable.Queue[(KdtBranchRootNode, Boolean, AVLSplitInfo, AVLSplitInfo)], lowerBounds: (Double, Double)) =
+
     if (avlSplitInfo.canPartition) {
 
       val avlSplitInfoParts = avlSplitInfo.partition()
@@ -105,7 +102,7 @@ class KdTree extends SpatialIndex {
 
   override def findExact(searchXY: (Double, Double)): Point = {
 
-    var currNode = this.root
+    var currNode = this.rootNode
     var splitX = true
 
     while (currNode != null)
@@ -129,7 +126,7 @@ class KdTree extends SpatialIndex {
   def findBestNode(searchPoint: Geom2D, k: Int): (KdtNode, Boolean) = {
 
     // find leaf containing point
-    var currNode = root
+    var currNode = rootNode
     var splitX = true
 
     while (true)
@@ -196,19 +193,19 @@ class KdTree extends SpatialIndex {
 
     process(sPtBestNode, null)
 
-    if (sPtBestNode != this.root) {
+    if (sPtBestNode != this.rootNode) {
 
       splitX = true
-      process(this.root, sPtBestNode)
+      process(this.rootNode, sPtBestNode)
     }
   }
 
   override def toString: String =
-    "%s".format(root)
+    "%s".format(rootNode)
 
   override def write(kryo: Kryo, output: Output): Unit = {
 
-    val lstNode = ListBuffer(this.root)
+    val lstNode = ListBuffer(this.rootNode)
 
     lstNode.foreach(kdtNode => {
 
@@ -228,9 +225,9 @@ class KdTree extends SpatialIndex {
       case kdtNode: KdtNode => kdtNode
     }
 
-    this.root = readNode()
+    this.rootNode = readNode()
 
-    val lstNode = ListBuffer(this.root)
+    val lstNode = ListBuffer(this.rootNode)
 
     lstNode.foreach {
       case brn: KdtBranchRootNode =>
@@ -242,29 +239,68 @@ class KdTree extends SpatialIndex {
     }
   }
 
-  private def updateBoundsAndTotalPoint(kdtBranchRootNode: KdtBranchRootNode) {
+  private def updateBoundsAndTotalPoint() {
 
-    if (kdtBranchRootNode.left != null)
-      kdtBranchRootNode.left match {
-        case kdtBRN: KdtBranchRootNode =>
-          updateBoundsAndTotalPoint(kdtBRN)
+    val startBranchRootNode = rootNode match {
+      case kdtBranchRootNode: KdtBranchRootNode =>
+        kdtBranchRootNode
+      case _ =>
+        return // nothing to do, exit method
+    }
+
+    val stackNode = mutable.Stack[KdtBranchRootNode](startBranchRootNode)
+    val stackRoots = mutable.Stack[KdtBranchRootNode]()
+
+    while (stackNode.nonEmpty) {
+
+      stackRoots.push(stackNode.pop)
+
+      stackRoots.top.left match {
+        case kdtBranchRootNode: KdtBranchRootNode =>
+          stackNode.push(kdtBranchRootNode)
         case _ =>
       }
 
-    if (kdtBranchRootNode.right != null)
-      kdtBranchRootNode.right match {
-        case kdtBRN: KdtBranchRootNode =>
-          updateBoundsAndTotalPoint(kdtBRN)
+      stackRoots.top.right match {
+        case kdtBranchRootNode: KdtBranchRootNode =>
+          stackNode.push(kdtBranchRootNode)
         case _ =>
       }
+    }
 
-    if (kdtBranchRootNode.left != null)
-      kdtBranchRootNode.rectNodeBounds = new Rectangle(kdtBranchRootNode.left.rectNodeBounds)
+    stackRoots.foreach(currNode => {
 
-    if (kdtBranchRootNode.right != null)
-      if (kdtBranchRootNode.rectNodeBounds == null)
-        kdtBranchRootNode.rectNodeBounds = new Rectangle(kdtBranchRootNode.right.rectNodeBounds)
-      else
-        kdtBranchRootNode.rectNodeBounds.mergeWith(kdtBranchRootNode.right.rectNodeBounds)
+      if (currNode.left != null)
+        currNode.rectNodeBounds = new Rectangle(currNode.left.rectNodeBounds)
+
+      if (currNode.right != null)
+        if (currNode.rectNodeBounds == null)
+          currNode.rectNodeBounds = new Rectangle(currNode.right.rectNodeBounds)
+        else
+          currNode.rectNodeBounds.mergeWith(currNode.right.rectNodeBounds)
+    })
   }
+
+  //    //    if (kdtBranchRootNode.left != null)
+  //    kdtBranchRootNode.left match {
+  //      case kdtBRN: KdtBranchRootNode =>
+  //        updateBoundsAndTotalPoint(kdtBRN)
+  //      case _ =>
+  //    }
+  //
+  //    //    if (kdtBranchRootNode.right != null)
+  //    kdtBranchRootNode.right match {
+  //      case kdtBRN: KdtBranchRootNode =>
+  //        updateBoundsAndTotalPoint(kdtBRN)
+  //      case _ =>
+  //    }
+
+  //  if (kdtBranchRootNode.left != null)
+  //    kdtBranchRootNode.rectNodeBounds = new Rectangle(kdtBranchRootNode.left.rectNodeBounds)
+  //
+  //  if (kdtBranchRootNode.right != null)
+  //    if (kdtBranchRootNode.rectNodeBounds == null)
+  //      kdtBranchRootNode.rectNodeBounds = new Rectangle(kdtBranchRootNode.right.rectNodeBounds)
+  //    else
+  //      kdtBranchRootNode.rectNodeBounds.mergeWith(kdtBranchRootNode.right.rectNodeBounds)
 }

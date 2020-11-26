@@ -13,9 +13,9 @@ import scala.util.Random
 
 object Helper {
 
-  def indexOfBSearch(arrSortedValues: IndexedSeq[Int], lookupKeyValue: Int): Boolean = {
+  def indexOfBSearch(arrSortedValues: IndexedSeq[Int], lookupValue: Int): Boolean = {
 
-    if (lookupKeyValue >= arrSortedValues.head && lookupKeyValue <= arrSortedValues.last) {
+    if (lookupValue >= arrSortedValues.head && lookupValue <= arrSortedValues.last) {
 
       var lowerIdx = 0
       var upperIdx = arrSortedValues.length - 1
@@ -24,9 +24,9 @@ object Helper {
 
         val midIdx = lowerIdx + (upperIdx - lowerIdx) / 2
 
-        if (arrSortedValues(midIdx) == lookupKeyValue)
+        if (arrSortedValues(midIdx) == lookupValue)
           return true
-        else if (arrSortedValues(midIdx) > lookupKeyValue)
+        else if (arrSortedValues(midIdx) > lookupValue)
           upperIdx = midIdx - 1
         else
           lowerIdx = midIdx + 1

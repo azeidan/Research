@@ -11,18 +11,6 @@ object TestKdTree {
 
   def main(args: Array[String]): Unit = {
 
-//    val arr = Array(5, 6, 7, 8, 9, 10)
-//
-//    arr.toStream.map(i => {
-//
-//      println(i)
-//
-//      i % 2
-//    })
-////      .filter(_ == 0)
-//      .take(2)
-//      .foreach(println)
-
     val lstPoints = ListBuffer(new Point(3119.0000000000000000000000, 719),
       new Point(3119.0000000000000000000000, 721),
       new Point(3119.0000000000000000000000, 722),
@@ -53,24 +41,11 @@ object TestKdTree {
     val maxY = lstPoints.maxBy(_.y).y
 
     val kdt = new KdTree(SpatialIndex.buildRectBounds(((minX, minY), (maxX, maxY))), 1)
+
     kdt.insert(lstPoints.iterator)
 
     val pt = kdt.findExact((3119.0000000000000000000000, 734))
 
     println(pt)
-
-    //    val lstPoints = Source.fromFile("/media/ayman/Data/GeoMatch_Files/InputFiles/tbd.txt")
-    //      .getLines().take(8)
-    //      .map(_.split(","))
-    //      .map(arr => new Point(arr(1).toDouble, arr(2).toDouble, arr(0)))
-    //
-    //    val kdt = new KdTree(6)
-    //    kdt.insert(lstPoints)
-    //
-    //    println(kdt)
-    //
-    //    kdt.printInOrder()
-
-    //    println(kdt.findExact((9, 1)))
   }
 }
