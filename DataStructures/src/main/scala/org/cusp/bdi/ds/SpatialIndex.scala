@@ -16,10 +16,12 @@ object SpatialIndex {
 
       this(searchPoint, sortSetSqDist)
 
-      def dim = if (sortSetSqDist.isFull) math.sqrt(sortSetSqDist.last.distance) else computeDimension(this.searchPoint, rectBestNode)
+      def dim = if (sortSetSqDist.isFull) math.sqrt(sortSetSqDist.last.distance)
+      else computeDimension(this.searchPoint, rectBestNode)
 
       this.rectSearchRegion = Rectangle(this.searchPoint, new Geom2D(dim))
-      this.prevMaxSqrDist = if (sortSetSqDist.last == null) -1 else sortSetSqDist.last.distance
+      this.prevMaxSqrDist = if (sortSetSqDist.last == null) -1
+      else sortSetSqDist.last.distance
     }
   }
 
@@ -61,7 +63,8 @@ trait SpatialIndex extends KryoSerializable {
 
   def getTotalPoints: Int
 
-  def insert(iterPoints: Iterator[Point]): Boolean
+  @throws(classOf[IllegalStateException])
+  def insert(rectBounds: Rectangle, iterPoints: Iterator[Point], otherInitializers: Any*): Boolean
 
   def findExact(searchXY: (Double, Double)): Point
 

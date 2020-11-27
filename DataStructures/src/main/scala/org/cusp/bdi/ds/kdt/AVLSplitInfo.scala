@@ -23,8 +23,12 @@ object AVLSplitInfo {
 
       pointCount += 1
 
-      val idxX = ((pt.x - lowerBounds._1) / hgGroupWidth).toInt
-      val idxY = ((pt.y - lowerBounds._2) / hgGroupWidth).toInt
+      val (idxX, idxY) = hgGroupWidth match {
+        case 1 =>
+          ((pt.x - lowerBounds._1).toInt, (pt.y - lowerBounds._2).toInt)
+        case _ =>
+          (((pt.x - lowerBounds._1) / hgGroupWidth).toInt, ((pt.y - lowerBounds._2) / hgGroupWidth).toInt)
+      }
 
       setCoordY += idxY
 
@@ -51,7 +55,8 @@ case class AVLSplitInfo(avlHistogram: TypeAVL, otherIndexCount: Int, pointCount:
     var maxX = Double.MinValue
     var maxY = Double.MinValue
 
-    avlHistogram.allNodes
+    avlHistogram
+      .allNodes
       .foreach(_.data.foreach(row => {
 
         lstPoints += row._2
@@ -69,19 +74,19 @@ case class AVLSplitInfo(avlHistogram: TypeAVL, otherIndexCount: Int, pointCount:
   def canPartition: Boolean =
     avlHistogram.rootNode.treeHeight > 1 || otherIndexCount > 1
 
-  def partition(): (Double, AVLSplitInfo, AVLSplitInfo) = {
+  def partition: (Double, AVLSplitInfo, AVLSplitInfo) = {
 
     def addToAVL(avlTree: TypeAVL, currNode: AVLNode[TypeAVL_Data]): Unit =
       currNode
         .data
         .foreach(row => {
 
-          val avlNodeNew = avlTree.getOrElseInsert(row._1)
+          val avlNode = avlTree.getOrElseInsert(row._1)
 
-          if (avlNodeNew.data == null)
-            avlNodeNew.data = new TypeAVL_Data()
+          if (avlNode.data == null)
+            avlNode.data = new TypeAVL_Data()
 
-          avlNodeNew.data += ((currNode.nodeValue, row._2))
+          avlNode.data += ((currNode.nodeValue, row._2))
         })
 
     // find the split node
@@ -92,13 +97,14 @@ case class AVLSplitInfo(avlHistogram: TypeAVL, otherIndexCount: Int, pointCount:
     var splitNodeValue = currNode.nodeValue
     val avlHistogramPart1 = new TypeAVL()
     val avlHistogramPart2 = new TypeAVL()
-    var otherIndexCountPart1 = 0
-    var otherIndexCountPart2 = 0
+    var avlIndexCountPart1 = 0 // counts the number of indexes subsumed into the new AVL tree. represents the number of indexes redirected to the new AVL
+    var avlIndexCountPart2 = 0
     var collectPart1 = true
 
-    // find split value
+    // inorder traversal
     while (currNode != null || stackNode.nonEmpty) {
 
+      // left-most node
       while (currNode != null) {
 
         stackNode.push(currNode)
@@ -108,39 +114,38 @@ case class AVLSplitInfo(avlHistogram: TypeAVL, otherIndexCount: Int, pointCount:
       currNode = stackNode.pop
 
       if (collectPart1)
-        if (pointCountPart1 == 0 || (pointCountPart1 + currNode.data.length <= pointCountHalf && (currNode != null || stackNode.nonEmpty))) {
+        if (pointCountPart1 == 0 || pointCountPart1 + currNode.data.length <= pointCountHalf /*&& (currNode != null || stackNode.nonEmpty)*/ ) {
 
           splitNodeValue = currNode.nodeValue
 
           pointCountPart1 += currNode.data.length
 
-          otherIndexCountPart1 += 1
-
+          avlIndexCountPart1 += 1
           addToAVL(avlHistogramPart1, currNode)
         }
         else {
 
-          otherIndexCountPart2 += 1
-
+          avlIndexCountPart2 += 1
           addToAVL(avlHistogramPart2, currNode)
 
           collectPart1 = false
         }
       else {
 
-        otherIndexCountPart2 += 1
+        avlIndexCountPart2 += 1
         addToAVL(avlHistogramPart2, currNode)
       }
 
       currNode = currNode.right
     }
 
-    val avlSplitInfoPart1 = new AVLSplitInfo(avlHistogramPart1, otherIndexCountPart1, pointCountPart1)
+    val avlSplitInfoPart1 = new AVLSplitInfo(avlHistogramPart1, avlIndexCountPart1, pointCountPart1)
 
-    val avlSplitInfoPart2 = if (pointCount - pointCountPart1 == 0)
-      null
-    else
-      new AVLSplitInfo(avlHistogramPart2, otherIndexCountPart2, pointCount - pointCountPart1)
+    val avlSplitInfoPart2 =
+      if (pointCount - pointCountPart1 == 0)
+        null
+      else
+        new AVLSplitInfo(avlHistogramPart2, avlIndexCountPart2, pointCount - pointCountPart1)
 
     (splitNodeValue, avlSplitInfoPart1, avlSplitInfoPart2)
   }

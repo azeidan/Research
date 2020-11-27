@@ -19,16 +19,21 @@ object QuadTree extends Serializable {
   val SER_MARKER: Byte = Byte.MaxValue
 }
 
-class QuadTree(_rectBounds: Rectangle) extends SpatialIndex {
+class QuadTree() extends SpatialIndex {
 
   var totalPoints = 0
   var lstPoints: ListBuffer[Point] = ListBuffer[Point]()
 
-  var rectBounds: Rectangle = _rectBounds
+  var rectBounds: Rectangle = _
   var topLeft: QuadTree = _
   var topRight: QuadTree = _
   var bottomLeft: QuadTree = _
   var bottomRight: QuadTree = _
+
+  private def this(rectBounds: Rectangle) = {
+    this()
+    this.rectBounds = rectBounds
+  }
 
   override def getTotalPoints: Int = totalPoints
 
@@ -58,10 +63,13 @@ class QuadTree(_rectBounds: Rectangle) extends SpatialIndex {
     null
   }
 
-  override def insert(iterPoints: Iterator[Point]): Boolean = {
+  @throws(classOf[IllegalStateException])
+  override def insert(rectBounds: Rectangle, iterPoints: Iterator[Point], otherInitializers: Any*) = {
 
-    if (iterPoints.isEmpty)
-      throw new IllegalStateException("Empty point iterator")
+    if (iterPoints.isEmpty) throw new IllegalStateException("Empty point iterator")
+    else if (rectBounds == null) throw new IllegalStateException("Rectangle bounds cannot be null")
+
+    this.rectBounds = rectBounds
 
     iterPoints.foreach(insertPoint)
 
@@ -92,28 +100,28 @@ class QuadTree(_rectBounds: Rectangle) extends SpatialIndex {
             if (point.y >= qTree.rectBounds.center.y) {
 
               if (qTree.topLeft == null)
-                qTree.topLeft = new QuadTree(qTree.rectBounds.topLeftQuadrant /*, qTree*/)
+                qTree.topLeft = new QuadTree(qTree.rectBounds.topLeftQuadrant)
 
               qTree.topLeft
             }
             else {
 
               if (qTree.bottomLeft == null)
-                qTree.bottomLeft = new QuadTree(qTree.rectBounds.bottomLeftQuadrant /*, qTree*/)
+                qTree.bottomLeft = new QuadTree(qTree.rectBounds.bottomLeftQuadrant)
 
               qTree.bottomLeft
             }
           else if (point.y >= qTree.rectBounds.center.y) {
 
             if (qTree.topRight == null)
-              qTree.topRight = new QuadTree(qTree.rectBounds.topRightQuadrant /*, qTree*/)
+              qTree.topRight = new QuadTree(qTree.rectBounds.topRightQuadrant)
 
             qTree.topRight
           }
           else {
 
             if (qTree.bottomRight == null)
-              qTree.bottomRight = new QuadTree(qTree.rectBounds.bottomRightQuadrant /*, qTree*/)
+              qTree.bottomRight = new QuadTree(qTree.rectBounds.bottomRightQuadrant)
 
             qTree.bottomRight
           }
@@ -180,9 +188,6 @@ class QuadTree(_rectBounds: Rectangle) extends SpatialIndex {
   }
 
   override def nearestNeighbor(searchPoint: Point, sortSetSqDist: SortedList[Point]) {
-
-    //    if (searchPoint.userData.toString().equalsIgnoreCase("yellow_3_a_772558"))
-    //      println
 
     val sPtBestQT = findBestQuadrant(searchPoint, sortSetSqDist.maxSize)
 

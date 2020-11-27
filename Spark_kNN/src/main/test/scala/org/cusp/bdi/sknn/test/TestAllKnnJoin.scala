@@ -15,8 +15,8 @@ object TestAllKnnJoin {
     val startTime = System.currentTimeMillis()
     //    var startTime2 = startTime
 
-//        val clArgs = SparkKNN_Local_CLArgs.random_sample()
-    val clArgs = CLArgsParser(args, Arguments.lstArgInfo())
+//    val clArgs = SparkKNN_Local_CLArgs.random_sample()
+        val clArgs = CLArgsParser(args, Arguments.lstArgInfo())
 
     //    val clArgs = SparkKNN_Local_CLArgs.busPoint_busPointShift(Arguments())
     //    val clArgs = SparkKNN_Local_CLArgs.busPoint_taxiPoint(Arguments())
@@ -35,7 +35,7 @@ object TestAllKnnJoin {
     val indexType = clArgs.getParamValueString(Arguments.indexType).toLowerCase() match {
       case "qt" => TypeSpatialIndex.quadTree
       case "kdt" => TypeSpatialIndex.kdTree
-      case _ => throw new IllegalArgumentException("Invalid Spatial Index Type")
+      case _ => throw new IllegalArgumentException("Unsupported Spatial Index Type: " + clArgs.getParamValueString(Arguments.indexType))
     }
 
     val numPartitions = if (clArgs.getParamValueBoolean(Arguments.local)) 17 else 0
@@ -51,7 +51,8 @@ object TestAllKnnJoin {
 
     val sc = new SparkContext(sparkConf)
 
-    def getRDD(fileName: String) = if (numPartitions > 0) sc.textFile(fileName, numPartitions) else sc.textFile(fileName)
+    def getRDD(fileName: String) = if (numPartitions > 0) sc.textFile(fileName, numPartitions)
+    else sc.textFile(fileName)
 
     val rddLeft = getRDD(firstSet)
       .mapPartitions(_.map(InputFileParsers.getLineParser(firstSetObjType)))
@@ -65,8 +66,8 @@ object TestAllKnnJoin {
 
     val sparkKNN = SparkKNN(debugMode, kParam, indexType)
 
-    //    val rddResult = sparkKNN.allKnnJoin(rddLeft, rddRight)
-    val rddResult = sparkKNN.knnJoin(rddLeft, rddRight)
+//    val rddResult = sparkKNN.allKnnJoin(rddLeft, rddRight)
+        val rddResult = sparkKNN.knnJoin(rddLeft, rddRight)
 
     //    println(rddResult.toDebugString)
 

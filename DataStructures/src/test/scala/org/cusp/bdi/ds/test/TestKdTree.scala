@@ -40,9 +40,9 @@ object TestKdTree {
     val minY = lstPoints.minBy(_.y).y
     val maxY = lstPoints.maxBy(_.y).y
 
-    val kdt = new KdTree(SpatialIndex.buildRectBounds(((minX, minY), (maxX, maxY))), 1)
+    val kdt = new KdTree()
 
-    kdt.insert(lstPoints.iterator)
+    kdt.insert(SpatialIndex.buildRectBounds(((minX, minY), (maxX, maxY))), lstPoints.iterator, 1)
 
     val pt = kdt.findExact((3119.0000000000000000000000, 734))
 
