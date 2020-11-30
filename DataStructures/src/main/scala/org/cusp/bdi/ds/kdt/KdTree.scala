@@ -5,13 +5,15 @@ import com.esotericsoftware.kryo.io.{Input, Output}
 import org.cusp.bdi.ds.SpatialIndex
 import org.cusp.bdi.ds.SpatialIndex.{KnnLookupInfo, testAndAddPoint}
 import org.cusp.bdi.ds.geom.{Geom2D, Point, Rectangle}
-import org.cusp.bdi.ds.kdt.KdTree.findSearchRegionLocation
+import org.cusp.bdi.ds.kdt.KdTree.{findSearchRegionLocation, nodeCapacity}
 import org.cusp.bdi.ds.sortset.SortedList
 
-import scala.collection.mutable
+import scala.collection.{AbstractIterator, mutable}
 import scala.collection.mutable.ListBuffer
 
 object KdTree extends Serializable {
+
+  val nodeCapacity = 4
 
   def findSearchRegionLocation(searchRegion: Rectangle, nodeSplitVal: Double, splitX: Boolean): Char = {
 
@@ -65,8 +67,8 @@ class KdTree extends SpatialIndex {
 
     val lowerBounds = (rectBounds.left, rectBounds.bottom)
 
-    def buildNode(nodeAVLSplitInfo: AVLSplitInfo, splitX: Boolean): KdtNode = {
-      if (nodeAVLSplitInfo.canPartition) {
+    def buildNode(nodeAVLSplitInfo: AVLSplitInfo, splitX: Boolean): KdtNode =
+      if (nodeAVLSplitInfo.canPartition(nodeCapacity)) {
 
         val avlSplitInfoParts = nodeAVLSplitInfo.partition
 
@@ -84,7 +86,6 @@ class KdTree extends SpatialIndex {
         val pointInf = nodeAVLSplitInfo.extractPointInfo()
         new KdtLeafNode(pointInf._1, pointInf._2)
       }
-    }
 
     var avlSplitInfo = AVLSplitInfo(iterPoints, hgGroupWidth, lowerBounds)
 
@@ -130,7 +131,7 @@ class KdTree extends SpatialIndex {
     null
   }
 
-  def findBestNode(searchPoint: Geom2D, k: Int): (KdtNode, Boolean) = {
+  def findBestNode(searchPoint: Geom2D, minCount: Int): (KdtNode, Boolean) = {
 
     // find leaf containing point
     var currNode = rootNode
@@ -142,11 +143,11 @@ class KdTree extends SpatialIndex {
 
           if ((if (splitX) searchPoint.x
           else searchPoint.y) <= kdtBRN.splitVal)
-            if (kdtBRN.left != null && kdtBRN.left.totalPoints >= k)
+            if (kdtBRN.left != null && kdtBRN.left.totalPoints >= minCount)
               currNode = kdtBRN.left
             else
               return (currNode, splitX)
-          else if (kdtBRN.right != null && kdtBRN.right.totalPoints >= k)
+          else if (kdtBRN.right != null && kdtBRN.right.totalPoints >= minCount)
             currNode = kdtBRN.right
           else
             return (currNode, splitX)
@@ -287,5 +288,32 @@ class KdTree extends SpatialIndex {
         else
           currNode.rectNodeBounds.mergeWith(currNode.right.rectNodeBounds)
     })
+  }
+
+  override def iterator: Iterator[Iterator[Point]] = new AbstractIterator[Iterator[Point]] {
+
+    private val queue = mutable.Queue[KdtNode](rootNode)
+
+    override def hasNext: Boolean = queue.nonEmpty
+
+    override def next(): Iterator[Point] =
+      if (!hasNext)
+        throw new NoSuchElementException("next on empty Iterator")
+      else {
+
+        var ans: Iterator[Point] = null
+
+        while (ans == null && queue.nonEmpty)
+          ans = queue.dequeue() match {
+            case kdtBranchRootNode: KdtBranchRootNode =>
+              if (kdtBranchRootNode.left != null) queue += kdtBranchRootNode.left
+              if (kdtBranchRootNode.right != null) queue += kdtBranchRootNode.right
+              null
+            case kdtLeafNode: KdtLeafNode =>
+              kdtLeafNode.lstPoints.iterator
+          }
+
+        ans
+      }
   }
 }

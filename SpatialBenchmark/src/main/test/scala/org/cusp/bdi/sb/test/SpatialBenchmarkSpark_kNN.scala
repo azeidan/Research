@@ -22,7 +22,7 @@ object SpatialBenchmarkSpark_kNN extends Serializable {
     //        val clArgs = SB_CLArgs.LS_LionBus
     //        val clArgs = SB_CLArgs.LS_LionTPEP
     //        val clArgs = SB_CLArgs.SKNN_BusPoint_BusPointShift
-//                    val clArgs = Benchmark_Local_CLArgs.SKNN_RandomPoint_RandomPoint
+//                    val clArgs = Benchmark_Local_CLArgs.SKNN_RandomPoin t_RandomPoint
     val clArgs = CLArgsParser(args, Arguments_Benchmark.lstArgInfo())
 
     val sparkConf = new SparkConf().setAppName("Spatial Benchmark")

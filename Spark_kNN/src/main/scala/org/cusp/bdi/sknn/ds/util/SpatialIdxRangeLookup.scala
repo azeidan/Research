@@ -35,7 +35,7 @@ object SpatialIdxRangeLookup extends Serializable {
 
       this()
 
-      rectSearchRegion = Rectangle(searchPoint, new Geom2D(computeDimension(searchPoint, rectBestNode)))
+      rectSearchRegion = Rectangle(searchPoint, new Geom2D(computeDimension(searchPoint, rectBestNode) + errorRange))
       sqrDim = math.pow(rectSearchRegion.halfXY.x, 2)
     }
   }

@@ -71,8 +71,25 @@ case class AVLSplitInfo(avlHistogram: TypeAVL, otherIndexCount: Int, pointCount:
     (lstPoints, buildRectBounds((minX, minY), (maxX, maxY)))
   }
 
-  def canPartition: Boolean =
-    avlHistogram.rootNode.treeHeight > 1 || otherIndexCount > 1
+  def canPartition(nodeCapacity: Int): Boolean = {
+
+    if (avlHistogram.rootNode.treeHeight > 1 || otherIndexCount > 1) {
+
+      var count = 0
+
+      avlHistogram
+        .allNodes
+        .foreach(node => {
+
+          count += node.data.length
+
+          if (count >= nodeCapacity)
+            return true
+        })
+    }
+
+    false
+  }
 
   def partition: (Double, AVLSplitInfo, AVLSplitInfo) = {
 

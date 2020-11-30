@@ -8,8 +8,8 @@ import org.cusp.bdi.ds.geom.{Geom2D, Point, Rectangle}
 import org.cusp.bdi.ds.qt.QuadTree.{SER_MARKER, SER_MARKER_NULL, quadCapacity}
 import org.cusp.bdi.ds.sortset.SortedList
 
-import scala.collection.mutable
 import scala.collection.mutable.ListBuffer
+import scala.collection.{AbstractIterator, mutable}
 
 object QuadTree extends Serializable {
 
@@ -19,7 +19,7 @@ object QuadTree extends Serializable {
   val SER_MARKER: Byte = Byte.MaxValue
 }
 
-class QuadTree() extends SpatialIndex {
+class QuadTree extends SpatialIndex {
 
   var totalPoints = 0
   var lstPoints: ListBuffer[Point] = ListBuffer[Point]()
@@ -38,6 +38,9 @@ class QuadTree() extends SpatialIndex {
   override def getTotalPoints: Int = totalPoints
 
   override def findExact(searchXY: (Double, Double)): Point = {
+
+    //    if(searchXY._1.toInt==15407 && searchXY._2.toInt==3243)
+    //      println
 
     var qTree = this
 
@@ -242,5 +245,27 @@ class QuadTree() extends SpatialIndex {
         return qTree
 
     null
+  }
+
+  override def iterator: Iterator[Iterator[Point]] = new AbstractIterator[Iterator[Point]] {
+
+    private val queue = mutable.Queue[QuadTree](QuadTree.this)
+
+    override def hasNext: Boolean = queue.nonEmpty
+
+    override def next(): Iterator[Point] =
+      if (!hasNext)
+        throw new NoSuchElementException("next on empty Iterator")
+      else {
+
+        val ans = queue.dequeue()
+
+        if (ans.topLeft != null) queue += ans.topLeft
+        if (ans.topRight != null) queue += ans.topRight
+        if (ans.bottomLeft != null) queue += ans.bottomLeft
+        if (ans.bottomRight != null) queue += ans.bottomRight
+
+        ans.lstPoints.iterator
+      }
   }
 }
