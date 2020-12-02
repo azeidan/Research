@@ -1,5 +1,7 @@
 package org.cusp.bdi.sknn.ds.util
 
+import com.esotericsoftware.kryo.io.{Input, Output}
+import com.esotericsoftware.kryo.{Kryo, KryoSerializable}
 import org.cusp.bdi.ds.SpatialIndex.computeDimension
 import org.cusp.bdi.ds._
 import org.cusp.bdi.ds.geom.{Geom2D, Point, Rectangle}
@@ -7,16 +9,35 @@ import org.cusp.bdi.ds.kdt.KdTree.findSearchRegionLocation
 import org.cusp.bdi.ds.kdt.{KdTree, KdtBranchRootNode, KdtLeafNode, KdtNode}
 import org.cusp.bdi.ds.qt.QuadTree
 import org.cusp.bdi.ds.sortset.{Node, SortedList}
-import org.cusp.bdi.sknn.GlobalIndexPointData
 import org.cusp.bdi.util.Helper
 
 import scala.collection.mutable.ListBuffer
 
-trait PointData extends Serializable {
+final class GlobalIndexPointData extends KryoSerializable {
 
-  def numPoints: Int
+  var numPoints: Int = -1
+  var partitionIdx: Int = -1
 
-  def equals(other: Any): Boolean
+  def this(numPoints: Int, partitionIdx: Int) = {
+
+    this()
+    this.numPoints = numPoints
+    this.partitionIdx = partitionIdx
+  }
+
+  override def equals(other: Any): Boolean = false
+
+  override def write(kryo: Kryo, output: Output): Unit = {
+
+    output.writeInt(numPoints)
+    output.writeInt(partitionIdx)
+  }
+
+  override def read(kryo: Kryo, input: Input): Unit = {
+
+    numPoints = input.readInt()
+    partitionIdx = input.readInt()
+  }
 }
 
 object SpatialIdxRangeLookup extends Serializable {
@@ -149,8 +170,7 @@ object SpatialIdxRangeLookup extends Serializable {
   private def updateMatchListAndRegion(point: Point, idxRangeLookupInfo: IdxRangeLookupInfo, k: Int): Unit = {
 
     def getNumPoints(point: Point): Long = point.userData match {
-      case pointData: PointData => pointData.numPoints
-      case _ => throw new ClassCastException("Point.userdata must extend " + classOf[PointData].getName)
+      case globalIndexPointData: GlobalIndexPointData => globalIndexPointData.numPoints
     }
 
     if (idxRangeLookupInfo.rectSearchRegion.contains(point)) {

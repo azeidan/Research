@@ -116,8 +116,7 @@ class KdTree extends SpatialIndex {
       currNode match {
         case kdtBranchRootNode: KdtBranchRootNode =>
 
-          currNode = if ((if (splitX) searchXY._1
-          else searchXY._2) <= kdtBranchRootNode.splitVal)
+          currNode = if ((if (splitX) searchXY._1 else searchXY._2) <= kdtBranchRootNode.splitVal)
             kdtBranchRootNode.left
           else
             kdtBranchRootNode.right
@@ -290,11 +289,11 @@ class KdTree extends SpatialIndex {
     })
   }
 
-  override def iterator: Iterator[Iterator[Point]] = new AbstractIterator[Iterator[Point]] {
+  override def allPoints: Iterator[Iterator[Point]] = new AbstractIterator[Iterator[Point]] {
 
-    private val queue = mutable.Queue[KdtNode](rootNode)
+    private val queueNode = mutable.Queue[KdtNode](rootNode)
 
-    override def hasNext: Boolean = queue.nonEmpty
+    override def hasNext: Boolean = queueNode.nonEmpty
 
     override def next(): Iterator[Point] =
       if (!hasNext)
@@ -303,14 +302,15 @@ class KdTree extends SpatialIndex {
 
         var ans: Iterator[Point] = null
 
-        while (ans == null && queue.nonEmpty)
-          ans = queue.dequeue() match {
+        while (ans == null && queueNode.nonEmpty)
+          ans = this.queueNode.dequeue() match {
             case kdtBranchRootNode: KdtBranchRootNode =>
-              if (kdtBranchRootNode.left != null) queue += kdtBranchRootNode.left
-              if (kdtBranchRootNode.right != null) queue += kdtBranchRootNode.right
+              this.queueNode += (kdtBranchRootNode.left, kdtBranchRootNode.right)
               null
             case kdtLeafNode: KdtLeafNode =>
               kdtLeafNode.lstPoints.iterator
+            case _ =>
+              null
           }
 
         ans

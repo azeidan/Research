@@ -4,7 +4,7 @@ import org.apache.hadoop.fs.{FileSystem, Path}
 import org.apache.hadoop.io.compress.GzipCodec
 import org.apache.spark.serializer.KryoSerializer
 import org.apache.spark.{SparkConf, SparkContext}
-import org.cusp.bdi.ds.TypeSpatialIndex
+import org.cusp.bdi.ds.SupportedSpatialIndexes
 import org.cusp.bdi.ds.geom.Point
 import org.cusp.bdi.sknn.SparkKNN
 import org.cusp.bdi.util.{Arguments, CLArgsParser, InputFileParsers, LocalRunConsts}
@@ -16,8 +16,8 @@ object TestAllKnnJoin {
     val startTime = System.currentTimeMillis()
     //    var startTime2 = startTime
 
-//    val clArgs = SparkKNN_Local_CLArgs.random_sample()
-                val clArgs = CLArgsParser(args, Arguments.lstArgInfo())
+    val clArgs = SparkKNN_Local_CLArgs.random_sample()
+    //                val clArgs = CLArgsParser(args, Arguments.lstArgInfo())
 
     //    val clArgs = SparkKNN_Local_CLArgs.busPoint_busPointShift(Arguments())
     //    val clArgs = SparkKNN_Local_CLArgs.busPoint_taxiPoint(Arguments())
@@ -34,8 +34,8 @@ object TestAllKnnJoin {
     val kParam = clArgs.getParamValueInt(Arguments.k)
 
     val indexType = clArgs.getParamValueString(Arguments.indexType).toLowerCase() match {
-      case "qt" => TypeSpatialIndex.quadTree
-      case "kdt" => TypeSpatialIndex.kdTree
+      case "qt" => SupportedSpatialIndexes.quadTree
+      case "kdt" => SupportedSpatialIndexes.kdTree
       case _ => throw new IllegalArgumentException("Unsupported Spatial Index Type: " + clArgs.getParamValueString(Arguments.indexType))
     }
 
@@ -67,8 +67,8 @@ object TestAllKnnJoin {
 
     val sparkKNN = SparkKNN(debugMode, indexType, kParam)
 
-    //    val rddResult = sparkKNN.allKnnJoin(rddLeft, rddRight)
-    val rddResult = sparkKNN.knnJoin(rddLeft, rddRight)
+    val rddResult = sparkKNN.allKnnJoin(rddLeft, rddRight)
+    //    val rddResult = sparkKNN.knnJoin(rddLeft, rddRight)
 
     //    println(rddResult.toDebugString)
 

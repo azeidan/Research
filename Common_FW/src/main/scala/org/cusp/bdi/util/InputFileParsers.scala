@@ -70,7 +70,7 @@ object InputFileParsers extends Serializable {
 
         val endPoint = coordArr(i)
 
-        lst.append((streetID, (startPoint, endPoint)))
+        lst += ((streetID, (startPoint, endPoint)))
 
         startPoint = endPoint
       })

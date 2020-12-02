@@ -9,19 +9,19 @@ import org.cusp.bdi.util.Helper
 
 import scala.collection.immutable.Iterable
 
-object TypeSpatialIndex extends Enumeration with Serializable {
+object SupportedSpatialIndexes extends Enumeration with Serializable {
 
-  val quadTree: TypeSpatialIndex.Value = Value(0.toByte)
-  val kdTree: TypeSpatialIndex.Value = Value(1.toByte)
+  val quadTree: SupportedSpatialIndexes.Value = Value(0.toByte)
+  val kdTree: SupportedSpatialIndexes.Value = Value(1.toByte)
 }
 
-object SpatialIndex {
+object SpatialIndex extends Serializable {
 
-  def apply(typeSpatialIndex: TypeSpatialIndex.Value): SpatialIndex =
-    typeSpatialIndex match {
-      case TypeSpatialIndex.quadTree => new QuadTree()
-      case TypeSpatialIndex.kdTree => new KdTree()
-      case _ => throw new IllegalArgumentException("Unsupported Spatial Index Type: " + typeSpatialIndex)
+  def apply(spatialIndexType: SupportedSpatialIndexes.Value): SpatialIndex =
+    spatialIndexType match {
+      case SupportedSpatialIndexes.quadTree => new QuadTree()
+      case SupportedSpatialIndexes.kdTree => new KdTree()
+      case _ => throw new IllegalArgumentException("Unsupported Spatial Index Type: " + spatialIndexType)
     }
 
   case class KnnLookupInfo(searchPoint: Point, sortSetSqDist: SortedList[Point]) {
@@ -76,7 +76,7 @@ object SpatialIndex {
   }
 }
 
-trait SpatialIndex extends KryoSerializable with Iterable[Iterator[Point]] {
+trait SpatialIndex extends KryoSerializable {
 
   def getTotalPoints: Int
 
@@ -84,6 +84,8 @@ trait SpatialIndex extends KryoSerializable with Iterable[Iterator[Point]] {
   def insert(rectBounds: Rectangle, iterPoints: Iterator[Point], otherInitializers: Any*): Boolean
 
   def findExact(searchXY: (Double, Double)): Point
+
+  def allPoints: Iterator[Iterator[Point]]
 
   def nearestNeighbor(searchPoint: Point, sortSetSqDist: SortedList[Point])
 }

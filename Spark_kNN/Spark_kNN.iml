@@ -142,7 +142,6 @@
     <orderEntry type="module" module-name="Common_FW" />
     <orderEntry type="module" module-name="Common" />
     <orderEntry type="module" module-name="DataStructures" />
-    <orderEntry type="library" name="Maven: archery_2.11:archery_2.11:0.4.0" level="project" />
     <orderEntry type="library" name="Maven: com.esotericsoftware:kryo:4.0.0" level="project" />
     <orderEntry type="library" name="Maven: com.esotericsoftware:reflectasm:1.11.3" level="project" />
     <orderEntry type="library" name="Maven: org.ow2.asm:asm:5.0.4" level="project" />

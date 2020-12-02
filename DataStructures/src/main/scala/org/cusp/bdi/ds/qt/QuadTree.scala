@@ -247,7 +247,7 @@ class QuadTree extends SpatialIndex {
     null
   }
 
-  override def iterator: Iterator[Iterator[Point]] = new AbstractIterator[Iterator[Point]] {
+  override def allPoints: Iterator[Iterator[Point]] = new AbstractIterator[Iterator[Point]] {
 
     private val queue = mutable.Queue[QuadTree](QuadTree.this)
 

@@ -22,8 +22,8 @@ object SpatialBenchmarkSpark_kNN extends Serializable {
     //        val clArgs = SB_CLArgs.LS_LionBus
     //        val clArgs = SB_CLArgs.LS_LionTPEP
     //        val clArgs = SB_CLArgs.SKNN_BusPoint_BusPointShift
-//                    val clArgs = Benchmark_Local_CLArgs.SKNN_RandomPoin t_RandomPoint
-    val clArgs = CLArgsParser(args, Arguments_Benchmark.lstArgInfo())
+    val clArgs = Benchmark_Local_CLArgs.SKNN_RandomPoint_RandomPoint
+    //    val clArgs = CLArgsParser(args, Arguments_Benchmark.lstArgInfo())
 
     val sparkConf = new SparkConf().setAppName("Spatial Benchmark")
 
@@ -50,7 +50,7 @@ object SpatialBenchmarkSpark_kNN extends Serializable {
       rddTestFW, clArgs.getParamValueString(Arguments_Benchmark.testFWInFileParser))
       .compare()
 
-    lstCompareResults.append("Total Runtime: " + "%,d".format(System.currentTimeMillis() - startTime) + " ms")
+    lstCompareResults += "Total Runtime: %,d MS".format(System.currentTimeMillis() - startTime)
 
     sparkContext.parallelize(lstCompareResults, 1)
       .saveAsTextFile(clArgs.getParamValueString(Arguments_Benchmark.outDir), classOf[GzipCodec])

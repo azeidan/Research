@@ -234,7 +234,7 @@ case class OutputsCompare(classificationCount: Int, rddKeyMatch: RDD[String],
 
       val lst = arrFilter0.to[ListBuffer]
 
-      arrFilter1.foreach(x => lst.append(x))
+      arrFilter1.foreach(lst += _)
 
       lst.distinct.toArray
     }
