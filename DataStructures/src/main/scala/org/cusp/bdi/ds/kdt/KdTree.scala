@@ -7,6 +7,7 @@ import org.cusp.bdi.ds.SpatialIndex.{KnnLookupInfo, testAndAddPoint}
 import org.cusp.bdi.ds.geom.{Geom2D, Point, Rectangle}
 import org.cusp.bdi.ds.kdt.KdTree.{findSearchRegionLocation, nodeCapacity}
 import org.cusp.bdi.ds.sortset.SortedList
+import org.cusp.bdi.util.Helper
 
 import scala.collection.{AbstractIterator, mutable}
 import scala.collection.mutable.ListBuffer
@@ -39,6 +40,12 @@ class KdTree extends SpatialIndex {
 
   def getTotalPoints: Int =
     rootNode.totalPoints
+
+  override def dummyNode: AnyRef =
+    new KdtBranchRootNode()
+
+  override def estimateNodeCount(pointCount: Long): Int =
+    Math.pow(2, Helper.log2(pointCount / nodeCapacity)).toInt - 1
 
   def extractHGGroupWidth(rectBounds: Rectangle, iterPoints: Iterator[Point], otherInitializers: Seq[Any]) = {
 

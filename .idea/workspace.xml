@@ -14,13 +14,13 @@
   </component>
   <component name="AutomaticModuleUnloader">
     <loaded-modules>
-      <module name="SpatialBenchmark" />
-      <module name="Spark_kNN" />
       <module name="DataStructures" />
+      <module name="Spark_kNN" />
+      <module name="Common" />
       <module name="Common_FW" />
       <module name="Research" />
+      <module name="SpatialBenchmark" />
       <module name="FW_Simba" />
-      <module name="Common" />
       <module name="FW_Simba_Source" />
     </loaded-modules>
   </component>
@@ -37,22 +37,29 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ee761a9d-eff2-4086-b83a-8096819a4548" name="Default Changelist" comment="KDT working with Histogram insert">
+      <change afterPath="$PROJECT_DIR$/Spark_kNN/src/main/scala/org/cusp/bdi/sknn/SparkKNN_Objects.scala" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/runConfigurations/TestAllKnnJoin.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/runConfigurations/TestAllKnnJoin.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Common_FW/src/main/scala/org/cusp/bdi/util/InputFileParsers.scala" beforeDir="false" afterPath="$PROJECT_DIR$/Common_FW/src/main/scala/org/cusp/bdi/util/InputFileParsers.scala" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Common/src/main/scala/org/cusp/bdi/util/CLArgsParser.scala" beforeDir="false" afterPath="$PROJECT_DIR$/Common/src/main/scala/org/cusp/bdi/util/CLArgsParser.scala" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Common/src/main/scala/org/cusp/bdi/util/Helper.scala" beforeDir="false" afterPath="$PROJECT_DIR$/Common/src/main/scala/org/cusp/bdi/util/Helper.scala" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Common_FW/src/main/scala/org/cusp/bdi/util/Arguments.scala" beforeDir="false" afterPath="$PROJECT_DIR$/Common_FW/src/main/scala/org/cusp/bdi/util/Arguments.scala" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Common_FW/src/main/scala/org/cusp/bdi/util/LocalRunConsts.scala" beforeDir="false" afterPath="$PROJECT_DIR$/Common_FW/src/main/scala/org/cusp/bdi/util/LocalRunConsts.scala" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DataStructures/DataStructures.iml" beforeDir="false" afterPath="$PROJECT_DIR$/DataStructures/DataStructures.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DataStructures/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/DataStructures/pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DataStructures/src/main/scala/org/cusp/bdi/ds/SpatialIndex.scala" beforeDir="false" afterPath="$PROJECT_DIR$/DataStructures/src/main/scala/org/cusp/bdi/ds/SpatialIndex.scala" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DataStructures/src/main/scala/org/cusp/bdi/ds/kdt/KdTree.scala" beforeDir="false" afterPath="$PROJECT_DIR$/DataStructures/src/main/scala/org/cusp/bdi/ds/kdt/KdTree.scala" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DataStructures/src/main/scala/org/cusp/bdi/ds/qt/QuadTree.scala" beforeDir="false" afterPath="$PROJECT_DIR$/DataStructures/src/main/scala/org/cusp/bdi/ds/qt/QuadTree.scala" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/Spark_kNN.iml" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/Spark_kNN.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/src/main/scala/org/cusp/bdi/sknn/SparkKNN.scala" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/src/main/scala/org/cusp/bdi/sknn/SparkKNN.scala" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/src/main/scala/org/cusp/bdi/sknn/ds/util/SpatialIdxRangeLookup.scala" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/src/main/scala/org/cusp/bdi/sknn/ds/util/SpatialIdxRangeLookup.scala" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/src/main/scala/org/cusp/bdi/sknn/util/GridOperation.scala" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/src/main/scala/org/cusp/bdi/sknn/util/GridOperation.scala" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DataStructures/src/test/scala/org/cusp/bdi/ds/test/TestKdTree.scala" beforeDir="false" afterPath="$PROJECT_DIR$/DataStructures/src/test/scala/org/cusp/bdi/ds/test/TestKdTree.scala" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FW_Simba/FW_Simba.iml" beforeDir="false" afterPath="$PROJECT_DIR$/FW_Simba/FW_Simba.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FW_Simba/src/main/scala/org/cusp/bdi/fw/simba/SIM_Example.scala" beforeDir="false" afterPath="$PROJECT_DIR$/FW_Simba/src/test/scala/org/cusp/bdi/fw/simba/SIM_Example.scala" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FW_Simba/src/main/scala/org/cusp/bdi/fw/simba/Simba_Local_CLArgs.scala" beforeDir="false" afterPath="$PROJECT_DIR$/FW_Simba/src/test/scala/org/cusp/bdi/fw/simba/Simba_Local_CLArgs.scala" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Spark_kNN/src/main/scala/org/cusp/bdi/sknn/SparkKNN.scala" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/src/main/scala/org/cusp/bdi/sknn/SparkKnn.scala" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Spark_kNN/src/main/scala/org/cusp/bdi/sknn/ds/util/KdTree_kNN.scala" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Spark_kNN/src/main/scala/org/cusp/bdi/sknn/ds/util/QuadTree_kNN.scala" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Spark_kNN/src/main/scala/org/cusp/bdi/sknn/ds/util/SpatialIdxRangeLookup.scala" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/src/main/scala/org/cusp/bdi/sknn/ds/util/SpatialIdxOperations.scala" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Spark_kNN/src/main/test/scala/TestUnion.scala" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/src/main/test/scala/TestUnion.scala" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Spark_kNN/src/main/test/scala/org/cusp/bdi/sknn/test/SparkKNN_Local_CLArgs.scala" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/src/main/test/scala/org/cusp/bdi/sknn/test/SparkKNN_Local_CLArgs.scala" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Spark_kNN/src/main/test/scala/org/cusp/bdi/sknn/test/TestAllKnnJoin.scala" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/src/main/test/scala/org/cusp/bdi/sknn/test/TestAllKnnJoin.scala" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SpatialBenchmark/src/main/scala/org/cusp/bdi/sb/test/OutputsCompare.scala" beforeDir="false" afterPath="$PROJECT_DIR$/SpatialBenchmark/src/main/scala/org/cusp/bdi/sb/test/OutputsCompare.scala" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SpatialBenchmark/src/main/test/scala/org/cusp/bdi/sb/test/SpatialBenchmarkSpark_kNN.scala" beforeDir="false" afterPath="$PROJECT_DIR$/SpatialBenchmark/src/main/test/scala/org/cusp/bdi/sb/test/SpatialBenchmarkSpark_kNN.scala" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SpatialBenchmark/src/main/test/scala/org/cusp/bdi/sb/test/Arguments_Benchmark.scala" beforeDir="false" afterPath="$PROJECT_DIR$/SpatialBenchmark/src/main/test/scala/org/cusp/bdi/sb/test/Arguments_Benchmark.scala" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SpatialBenchmark/src/main/test/scala/org/cusp/bdi/sb/test/SpatialBenchmarkSpark_kNN.scala" beforeDir="false" afterPath="$PROJECT_DIR$/SpatialBenchmark/src/main/test/scala/org/cusp/bdi/sb/test/SpatialBenchmarkSparkKnn.scala" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -113,7 +120,7 @@
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="TODO_SCOPE" value="All Places" />
     <property name="last_directory_selection" value="$PROJECT_DIR$/DataStructures/src/main/scala/org/cusp/bdi/ds/kdt" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/Spark_kNN/src/main/scala/org/cusp/bdi/sknn" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/FW_Simba/src/test" />
     <property name="project.structure.last.edited" value="Modules" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.34280476" />
@@ -123,26 +130,12 @@
     <property name="settings.editor.selected.configurable" value="editor.preferences.tabs" />
   </component>
   <component name="RecentsManager">
-    <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
-      <recent name="org.cusp.bdi.ds.rt" />
-      <recent name="org.cusp.bdi.ds.bt" />
-      <recent name="org.cusp.bdi.ds.kdt" />
-      <recent name="org.cusp.bdi.ds.util" />
-      <recent name="org.cusp.bdi.ds.qt" />
-    </key>
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/FW_Simba/src/test" />
       <recent name="$PROJECT_DIR$/Spark_kNN/src/main/scala/org/cusp/bdi/sknn" />
       <recent name="$PROJECT_DIR$/Spark_kNN/src/OLD" />
       <recent name="$PROJECT_DIR$/Archery-master/src" />
       <recent name="$PROJECT_DIR$/FW_Simba/src/main/scala" />
-      <recent name="$PROJECT_DIR$/DataStructures/OLD" />
-    </key>
-    <key name="CopyClassDialog.RECENTS_KEY">
-      <recent name="org.cusp.bdi.ds" />
-      <recent name="org.cusp.bdi.sknn.test" />
-      <recent name="com.insightfullogic.quad_trees" />
-      <recent name="org.cusp.bdi.fw.simba" />
-      <recent name="org.cusp.bdi.sknn.util" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/Spark_kNN/src/OLD" />
@@ -151,8 +144,22 @@
       <recent name="$PROJECT_DIR$/FW_LocationSpark/src/main" />
       <recent name="$PROJECT_DIR$/DataSetTools/src/main/scala/org/cusp/bdi/tools/spark" />
     </key>
+    <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
+      <recent name="org.cusp.bdi.ds.rt" />
+      <recent name="org.cusp.bdi.ds.bt" />
+      <recent name="org.cusp.bdi.ds.kdt" />
+      <recent name="org.cusp.bdi.ds.util" />
+      <recent name="org.cusp.bdi.ds.qt" />
+    </key>
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="org.cusp.bdi.ds" />
+      <recent name="org.cusp.bdi.sknn.test" />
+      <recent name="com.insightfullogic.quad_trees" />
+      <recent name="org.cusp.bdi.fw.simba" />
+      <recent name="org.cusp.bdi.sknn.util" />
+    </key>
   </component>
-  <component name="RunManager" selected="Application.SpatialBenchmarkSpark_kNN">
+  <component name="RunManager" selected="Application.TestAllKnnJoin">
     <configuration name="SIM_Example" type="Application" factoryName="Application">
       <option name="INCLUDE_PROVIDED_SCOPE" value="true" />
       <option name="MAIN_CLASS_NAME" value="org.cusp.bdi.fw.simba.SIM_Example" />
@@ -169,7 +176,7 @@
     </configuration>
     <configuration name="SpatialBenchmarkSpark_kNN" type="Application" factoryName="Application">
       <output_file path="/media/ayman/Data/GeoMatch_Files/OutputFiles/IntelliJ_Logs/SpatialBenchmark" is_save="true" />
-      <option name="MAIN_CLASS_NAME" value="org.cusp.bdi.sb.test.SpatialBenchmarkSpark_kNN" />
+      <option name="MAIN_CLASS_NAME" value="org.cusp.bdi.sb.test.SpatialBenchmarkSparkKnn" />
       <module name="SpatialBenchmark" />
       <extension name="coverage">
         <pattern>
@@ -216,6 +223,13 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="Test_CLArgsParser" type="Application" factoryName="Application" temporary="true">
+      <option name="MAIN_CLASS_NAME" value="org.cusp.bdi.util.Test_CLArgsParser" />
+      <module name="Common" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="Scala REPL" type="ScalaScriptConsoleRunConfiguration" factoryName="Scala Console" temporary="true" show_console_on_std_err="false" show_console_on_std_out="false">
       <module name="Common" />
       <option name="allowRunningInParallel" value="false" />
@@ -235,10 +249,12 @@
       <item itemvalue="Application.TestAllKnnJoin" />
       <item itemvalue="Application.TestAVL" />
       <item itemvalue="Application.TestKdTree" />
+      <item itemvalue="Application.Test_CLArgsParser" />
       <item itemvalue="Scala REPL.Scala REPL" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Application.Test_CLArgsParser" />
         <item itemvalue="Application.TestAVL" />
         <item itemvalue="Application.TestKdTree" />
         <item itemvalue="Application.TestKdTree" />
@@ -268,13 +284,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1594702468860</updated>
-    </task>
-    <task id="LOCAL-00003" summary="Added DataSetTools module">
-      <created>1595190289342</created>
-      <option name="number" value="00003" />
-      <option name="presentableId" value="LOCAL-00003" />
-      <option name="project" value="LOCAL" />
-      <updated>1595190289342</updated>
     </task>
     <task id="LOCAL-00004" summary="Runtime @ 138.35">
       <created>1595230160119</created>
@@ -612,7 +621,14 @@
       <option name="project" value="LOCAL" />
       <updated>1606766739131</updated>
     </task>
-    <option name="localTasksCounter" value="52" />
+    <task id="LOCAL-00052" summary="mid changes commit: added allKNN join. Not yet tested">
+      <created>1606898335647</created>
+      <option name="number" value="00052" />
+      <option name="presentableId" value="LOCAL-00052" />
+      <option name="project" value="LOCAL" />
+      <updated>1606898335649</updated>
+    </task>
+    <option name="localTasksCounter" value="53" />
     <servers />
   </component>
   <component name="UnloadedModulesList">
@@ -711,8 +727,6 @@
     <ignored-roots>
       <path value="$PROJECT_DIR$" />
     </ignored-roots>
-    <MESSAGE value="updated KryoSerializer class" />
-    <MESSAGE value="expandBy = math.sqrt(8)" />
     <MESSAGE value="Reduced rddRight reads to 3 and used repartitionAndSortWithinPartitions twice instead of once" />
     <MESSAGE value="Created Module Datastructures" />
     <MESSAGE value="forward compute leftRDD stats in case allKNNJoin" />
@@ -736,20 +750,17 @@
     <MESSAGE value="iterative AVL insert and KdTree.updateBoundsAndTotalPoint" />
     <MESSAGE value="moved rectangle field from KdTree to insert()" />
     <MESSAGE value="Fixed accuracy issue by adding expandError to initial search region" />
-    <option name="LAST_COMMIT_MESSAGE" value="Fixed accuracy issue by adding expandError to initial search region" />
+    <MESSAGE value="mid changes commit: added allKNN join. Not yet tested" />
+    <MESSAGE value="Temp commit. Before OOM exception" />
+    <option name="LAST_COMMIT_MESSAGE" value="Temp commit. Before OOM exception" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="scala-line">
-          <url>file://$PROJECT_DIR$/Spark_kNN/src/main/scala/org/cusp/bdi/sknn/SparkKNN.scala</url>
-          <line>119</line>
-          <option name="timeStamp" value="882" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="scala-line">
-          <url>file://$PROJECT_DIR$/Spark_kNN/src/main/scala/org/cusp/bdi/sknn/SparkKNN.scala</url>
-          <line>136</line>
-          <option name="timeStamp" value="883" />
+          <url>file://$PROJECT_DIR$/Spark_kNN/src/main/scala/org/cusp/bdi/sknn/SparkKnn.scala</url>
+          <line>68</line>
+          <option name="timeStamp" value="29" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

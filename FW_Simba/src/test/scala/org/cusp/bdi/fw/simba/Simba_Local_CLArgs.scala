@@ -8,13 +8,18 @@ object Arguments_Simba extends Serializable {
 
   def lstArgInfo(): List[(String, String, Any, String)] = Arguments.lstArgInfo() ++ List(sortByEuclDist)
 
-  def apply(debug: Boolean, firstSet: String, firstSetObj: String, secondSet: String, secondSetObj: String, k: Int, sortByEuclDist: Boolean): Array[String] =
-    Arguments(debug,
+  def apply(firstSet: String, firstSetObj: String, secondSet: String, secondSetObj: String, k: Int, sortByEuclDist: Boolean): Array[String] =
+    Arguments(true,
+      "2G",
+      "4G",
+      4,
+      5,
       firstSet,
       firstSetObj,
       secondSet,
       secondSetObj,
       k,
+      "",
       "",
       (Arguments_Simba.sortByEuclDist._1, sortByEuclDist.toString))
 }
@@ -22,7 +27,7 @@ object Arguments_Simba extends Serializable {
 object Simba_Local_CLArgs {
 
   def apply(firstSet: String, firstSetObj: String, secondSet: String, secondSetObj: String, k: Int, sortByEuclDist: Boolean): CLArgsParser =
-    CLArgsParser(Arguments_Simba(debug = true, firstSet, firstSetObj, secondSet, secondSetObj, k, sortByEuclDist = sortByEuclDist), Arguments_Simba.lstArgInfo())
+    CLArgsParser(Arguments_Simba(firstSet, firstSetObj, secondSet, secondSetObj, k, sortByEuclDist = sortByEuclDist), Arguments_Simba.lstArgInfo())
 
   def random_sample(): CLArgsParser =
     apply(LocalRunConsts.pathRandSample_A_NAD83,

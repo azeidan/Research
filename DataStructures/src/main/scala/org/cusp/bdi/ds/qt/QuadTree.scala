@@ -5,15 +5,16 @@ import com.esotericsoftware.kryo.io.{Input, Output}
 import org.cusp.bdi.ds.SpatialIndex
 import org.cusp.bdi.ds.SpatialIndex.{KnnLookupInfo, testAndAddPoint}
 import org.cusp.bdi.ds.geom.{Geom2D, Point, Rectangle}
-import org.cusp.bdi.ds.qt.QuadTree.{SER_MARKER, SER_MARKER_NULL, quadCapacity}
+import org.cusp.bdi.ds.qt.QuadTree.{SER_MARKER, SER_MARKER_NULL, nodeCapacity}
 import org.cusp.bdi.ds.sortset.SortedList
+import org.cusp.bdi.util.Helper
 
 import scala.collection.mutable.ListBuffer
 import scala.collection.{AbstractIterator, mutable}
 
 object QuadTree extends Serializable {
 
-  val quadCapacity = 4
+  val nodeCapacity = 4
 
   val SER_MARKER_NULL: Byte = Byte.MinValue
   val SER_MARKER: Byte = Byte.MaxValue
@@ -34,6 +35,12 @@ class QuadTree extends SpatialIndex {
     this()
     this.rectBounds = rectBounds
   }
+
+  override def dummyNode: AnyRef =
+    new QuadTree()
+
+  override def estimateNodeCount(pointCount: Long): Int =
+    Math.pow(2, Helper.log2(pointCount / nodeCapacity)).toInt - 1
 
   override def getTotalPoints: Int = totalPoints
 
@@ -91,7 +98,7 @@ class QuadTree extends SpatialIndex {
 
         qTree.totalPoints += 1
 
-        if (qTree.lstPoints.length < quadCapacity) {
+        if (qTree.lstPoints.length < nodeCapacity) {
 
           qTree.lstPoints += point
           return true

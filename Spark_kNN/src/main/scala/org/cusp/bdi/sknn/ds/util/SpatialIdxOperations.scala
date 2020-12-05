@@ -13,6 +13,19 @@ import org.cusp.bdi.util.Helper
 
 import scala.collection.mutable.ListBuffer
 
+object SupportedSpatialIndexes extends Enumeration with Serializable {
+
+  val quadTree: SupportedSpatialIndexes.Value = Value("qt")
+  val kdTree: SupportedSpatialIndexes.Value = Value("kdt")
+
+  def apply(spatialIndexType: SupportedSpatialIndexes.Value): SpatialIndex =
+    spatialIndexType match {
+      case SupportedSpatialIndexes.quadTree => new QuadTree()
+      case SupportedSpatialIndexes.kdTree => new KdTree()
+      case _ => throw new IllegalArgumentException("Unsupported Spatial Index Type: " + spatialIndexType)
+    }
+}
+
 final class GlobalIndexPointData extends KryoSerializable {
 
   var numPoints: Int = -1
@@ -40,7 +53,7 @@ final class GlobalIndexPointData extends KryoSerializable {
   }
 }
 
-object SpatialIdxRangeLookup extends Serializable {
+object SpatialIdxOperations extends Serializable {
 
   val errorRange: Float = math.sqrt(8).toFloat
 

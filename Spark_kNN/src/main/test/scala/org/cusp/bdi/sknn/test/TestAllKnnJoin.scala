@@ -4,10 +4,10 @@ import org.apache.hadoop.fs.{FileSystem, Path}
 import org.apache.hadoop.io.compress.GzipCodec
 import org.apache.spark.serializer.KryoSerializer
 import org.apache.spark.{SparkConf, SparkContext}
-import org.cusp.bdi.ds.SupportedSpatialIndexes
 import org.cusp.bdi.ds.geom.Point
-import org.cusp.bdi.sknn.SparkKNN
-import org.cusp.bdi.util.{Arguments, CLArgsParser, InputFileParsers, LocalRunConsts}
+import org.cusp.bdi.sknn.ds.util.SupportedSpatialIndexes
+import org.cusp.bdi.sknn.{SparkKnn, SupportedKnnOperations}
+import org.cusp.bdi.util.{Arguments, CLArgsParser, Helper, InputFileParsers, LocalRunConsts}
 
 object TestAllKnnJoin {
 
@@ -17,7 +17,7 @@ object TestAllKnnJoin {
     //    var startTime2 = startTime
 
     val clArgs = SparkKNN_Local_CLArgs.random_sample()
-    //                val clArgs = CLArgsParser(args, Arguments.lstArgInfo())
+//        val clArgs = CLArgsParser(args, Arguments.lstArgInfo())
 
     //    val clArgs = SparkKNN_Local_CLArgs.busPoint_busPointShift(Arguments())
     //    val clArgs = SparkKNN_Local_CLArgs.busPoint_taxiPoint(Arguments())
@@ -33,42 +33,52 @@ object TestAllKnnJoin {
 
     val kParam = clArgs.getParamValueInt(Arguments.k)
 
-    val indexType = clArgs.getParamValueString(Arguments.indexType).toLowerCase() match {
-      case "qt" => SupportedSpatialIndexes.quadTree
-      case "kdt" => SupportedSpatialIndexes.kdTree
-      case _ => throw new IllegalArgumentException("Unsupported Spatial Index Type: " + clArgs.getParamValueString(Arguments.indexType))
+    val indexType = clArgs.getParamValueString(Arguments.indexType) match {
+      case s if s.equalsIgnoreCase(SupportedSpatialIndexes.quadTree.toString) => SupportedSpatialIndexes.quadTree
+      case s if s.equalsIgnoreCase(SupportedSpatialIndexes.kdTree.toString) => SupportedSpatialIndexes.kdTree
+      case _ => throw new IllegalArgumentException("Unsupported spatial index type: %s".format(clArgs.getParamValueString(Arguments.indexType)))
     }
 
-    val numPartitions = if (clArgs.getParamValueBoolean(Arguments.local)) 17 else 0
+    //    val numPartitions = if (clArgs.getParamValueBoolean(Arguments.local)) 17 else 0
 
     val sparkConf = new SparkConf()
       .setAppName(this.getClass.getName)
       .set("spark.serializer", classOf[KryoSerializer].getName)
-      .registerKryoClasses(SparkKNN.getSparkKNNClasses)
+      .registerKryoClasses(SparkKnn.getSparkKNNClasses)
 
     if (localMode)
       sparkConf.setMaster("local[*]")
         .set("spark.local.dir", LocalRunConsts.sparkWorkDir)
+        .set("spark.driver.memory", clArgs.getParamValueString(Arguments.driverMemory))
+        .set("spark.executor.memory", clArgs.getParamValueString(Arguments.executorMemory))
+        .set("spark.executor.instances", clArgs.getParamValueString(Arguments.numExecutors))
+        .set("spark.executor.cores", clArgs.getParamValueString(Arguments.executorCores))
+
+    if (debugMode)
+      Helper.loggerSLf4J(debugMode, SparkKnn, ">>SparkConf: \n\t\t>>%s".format(sparkConf.getAll.mkString("\n\t\t>>")))
 
     val sc = new SparkContext(sparkConf)
 
-    def getRDD(fileName: String) = if (numPartitions > 0) sc.textFile(fileName, numPartitions)
-    else sc.textFile(fileName)
+    //    def getRDD(fileName: String) = if (numPartitions > 0) sc.textFile(fileName, numPartitions)
+    //    else sc.textFile(fileName)
 
-    val rddLeft = getRDD(firstSet)
+    val rddLeft = sc.textFile(firstSet)
       .mapPartitions(_.map(InputFileParsers.getLineParser(firstSetObjType)))
       .filter(_ != null)
       .mapPartitions(_.map(row => new Point(row._2._1.toDouble, row._2._2.toDouble, row._1)))
 
-    val rddRight = getRDD(secondSet)
+    val rddRight = sc.textFile(secondSet)
       .mapPartitions(_.map(InputFileParsers.getLineParser(secondSetObjType)))
       .filter(_ != null)
       .mapPartitions(_.map(row => new Point(row._2._1.toDouble, row._2._2.toDouble, row._1)))
 
-    val sparkKNN = SparkKNN(debugMode, indexType, kParam)
+    val sparkKNN = SparkKnn(debugMode, indexType, kParam)
 
-    val rddResult = sparkKNN.allKnnJoin(rddLeft, rddRight)
-    //    val rddResult = sparkKNN.knnJoin(rddLeft, rddRight)
+    val rddResult = clArgs.getParamValueString(Arguments.knnJoinType) match {
+      case s if s.equalsIgnoreCase(SupportedKnnOperations.knn.toString) => sparkKNN.knnJoin(rddLeft, rddRight)
+      case s if s.equalsIgnoreCase(SupportedKnnOperations.allKnn.toString) => sparkKNN.allKnnJoin(rddLeft, rddRight)
+      case _ => throw new IllegalArgumentException("Unsupported kNN join type: %s".format(clArgs.getParamValueString(Arguments.knnJoinType)))
+    }
 
     //    println(rddResult.toDebugString)
 

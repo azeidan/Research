@@ -13,6 +13,9 @@ import scala.util.Random
 
 object Helper {
 
+  def log2(n: Long): Int =
+    (Math.log(n) / Math.log(2)).toInt
+
   def indexOfBSearch(arrSortedValues: IndexedSeq[Int], lookupValue: Int): Boolean = {
 
     if (lookupValue >= arrSortedValues.head && lookupValue <= arrSortedValues.last) {
@@ -204,63 +207,34 @@ object Helper {
     randOutDir.toString()
   }
 
-  //  def delDirHDFS(sparkContext: SparkContext, dirPath: String) {
-  //
-  //    try {
-  //      val hdfs = FileSystem.get(sparkContext.hadoopConfiguration)
-  //      val path = new Path(dirPath)
-  //      if (hdfs.exists(path))
-  //        hdfs.delete(path, true)
-  //    }
-  //    catch {
-  //      case ex: Exception => ex.printStackTrace()
-  //    }
-  //  }
-  //
-  //  def delDirHDFS(dirPath: String) {
-  //
-  //    val directory = new Directory(new File(dirPath))
-  //    directory.deleteRecursively()
-  //  }
-  //
-  //  def ensureClosedRingCoordinates[T <: AnyVal](arrCoord: Array[(T, T)]) = {
-  //
-  //    var retArr = arrCoord
-  //
-  //    while (retArr.length < 4 || retArr.head._1 != retArr.last._1 || retArr.head._2 != retArr.last._2)
-  //      retArr = retArr :+ arrCoord.head
-  //
-  //    retArr
-  //  }
-  //
-  //  def euclideanDist(xy1: (Double, Double), xy2: (Double, Double)) =
-  //    math.sqrt(math.pow(xy1._1 - xy2._1, 2) + math.pow(xy1._2 - xy2._2, 2))
-  //
-  //
-  //  def manhattanDist(x1: Double, y1: Double, x2: Double, y2: Double) =
-  //    math.abs(x1 - x2) + math.abs(y1 - y2)
-
   def squaredEuclideanDist(x1: Double, y1: Double, x2: Double, y2: Double): Double =
     math.pow(x1 - x2, 2) + math.pow(y1 - y2, 2)
 
   def toByte(str: String): Long = {
+
     var idx = 0
+
     while (idx < str.length() && Character.isDigit(str.charAt(idx))) idx += 1
 
-    val unit = str.charAt(idx).toUpper
-    var byteVal = str.substring(0, idx).toLong
+    if (idx == str.length)
+      str.toInt
+    else {
+      val unit = str.charAt(idx).toUpper
+      var byteVal = str.substring(0, idx).toLong
 
-    if (!unit.equals('B')) {
-
-      byteVal *= 1000
-      if (!unit.equals('K')) {
+      if (!unit.equals('B')) {
 
         byteVal *= 1000
-        if (!unit.equals('M'))
-          byteVal *= 1000
-      }
-    }
+        if (!unit.equals('K')) {
 
-    byteVal
+          byteVal *= 1000
+          if (!unit.equals('M'))
+            byteVal *= 1000
+        }
+      }
+
+      byteVal
+    }
   }
+
 }

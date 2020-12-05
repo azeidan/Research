@@ -6,7 +6,7 @@ import org.apache.spark.serializer.KryoSerializer
 import org.apache.spark.{SparkConf, SparkContext}
 import org.cusp.bdi.util.{CLArgsParser, LocalRunConsts}
 
-object SpatialBenchmarkSpark_kNN extends Serializable {
+object SpatialBenchmarkSparkKnn extends Serializable {
 
   //    private val LOGGER = LogFactory.getLog(this.getClass())
 
@@ -22,8 +22,8 @@ object SpatialBenchmarkSpark_kNN extends Serializable {
     //        val clArgs = SB_CLArgs.LS_LionBus
     //        val clArgs = SB_CLArgs.LS_LionTPEP
     //        val clArgs = SB_CLArgs.SKNN_BusPoint_BusPointShift
-    val clArgs = Benchmark_Local_CLArgs.SKNN_RandomPoint_RandomPoint
-    //    val clArgs = CLArgsParser(args, Arguments_Benchmark.lstArgInfo())
+//    val clArgs = Benchmark_Local_CLArgs.SKNN_RandomPoint_RandomPoint
+        val clArgs = CLArgsParser(args, Arguments_Benchmark.lstArgInfo())
 
     val sparkConf = new SparkConf().setAppName("Spatial Benchmark")
 

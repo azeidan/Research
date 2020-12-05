@@ -18,7 +18,7 @@ case class CLArgsParser(args: Array[String], lstArgInfo: List[(String, String, A
 
   //  private val SPACER = "       "
   private val mapProgramArg = mutable.HashMap[String, Any]()
-  private val mapCLArgs = Map[String, String]()
+  private val mapCLArgs = mutable.Map[String, String]()
 
   def updateParamValue(paramInfo: (String, String, Any, String), newVal: Any): CLArgsParser = {
 
@@ -47,106 +47,76 @@ case class CLArgsParser(args: Array[String], lstArgInfo: List[(String, String, A
 
   def buildArgMap() {
 
-    var missingArg = args == null || args.isEmpty || args.length != lstArgInfo.length * 2
+    var missingArg = args == null || args.isEmpty
 
-    try {
-      if (missingArg)
-        throw new IllegalArgumentException(buildUsageString(null))
-      else {
+    if (!missingArg) {
 
-        val mapCLArgs = args.grouped(2).map(x => (x(0).trim.toLowerCase, x(1).trim)).toMap
+      mapCLArgs ++= args.grouped(2).map(x => (x.head.trim.toLowerCase, x.last.trim))
 
-        //        mapCLArgs = lstArgs.grouped(2).map(arr => arr.head.toLowerCase() -> arr(1)).toMap
+      lstArgInfo.foreach(argInfo => {
 
-        lstArgInfo.foreach(argInfo => {
+        val (argName, argType, argDefault) = (argInfo._1.trim.toLowerCase, argInfo._2.trim.toLowerCase, argInfo._3)
 
-          val (argName, argType, argDefault) = (argInfo._1.trim.toLowerCase, argInfo._2.trim.toLowerCase, argInfo._3)
+        val paramVal = mapCLArgs.get(argName)
 
-          val paramVal = mapCLArgs.get(argName)
-
+        try {
           if (paramVal.isEmpty) {
 
             if (argDefault == null)
-              throw new IllegalArgumentException(buildUsageString(null))
+              throw new IllegalArgumentException()
 
             mapProgramArg += argName -> argDefault
           }
           else
             argType match {
               case "char" =>
-                val c = paramVal.get
-
-                if (c.length() == 1)
-                  mapProgramArg += argName -> c
-                else {
-                  mapProgramArg += argName -> (paramVal.get + "<-Err")
-                  missingArg = true
-                }
+                mapProgramArg += argName -> paramVal.get.asInstanceOf[Char]
               case "int" =>
-                try {
-                  mapProgramArg += argName -> paramVal.get.toInt
-                }
-                catch {
-                  case _: Exception =>
-                    mapProgramArg += argName -> (paramVal.get + "<-Err")
-                    missingArg = true
-                }
+                mapProgramArg += argName -> paramVal.get.toInt
               case "double" =>
-                try {
-                  mapProgramArg += argName -> paramVal.get.toDouble
-                }
-                catch {
-                  case _: Exception =>
-                    mapProgramArg += argName -> (paramVal.get + "<-Err")
-                    missingArg = true
-                }
+                mapProgramArg += argName -> paramVal.get.toDouble
               case "boolean" =>
-                try {
-                  mapProgramArg += argName -> Helper.toBoolean(paramVal.get)
-                }
-                catch {
-                  case _: Exception =>
-                    mapProgramArg += argName -> (paramVal.get + "<-Err")
-                    missingArg = true
-                }
+                mapProgramArg += argName -> Helper.toBoolean(paramVal.get)
               case _: String =>
                 mapProgramArg += argName -> paramVal.get
               case _ =>
                 missingArg = true
             }
-        })
-      }
+        }
+        catch {
+          case _: Exception =>
 
-      if (mapProgramArg.isEmpty || missingArg)
-        throw new IllegalArgumentException(buildUsageString(mapProgramArg))
+            mapProgramArg += argName -> (argName + "<-Err")
+            missingArg = true
+        }
+      })
     }
-    catch {
-      case ex: Exception =>
 
-        //        ex.printStackTrace()
+    if (mapProgramArg.isEmpty || missingArg)
+      throw new IllegalArgumentException(buildUsageString(mapProgramArg))
 
-        throw new Exception("%s %d out of the expected %d%n%s%n%n%s".format("Number of args received", args.length, lstArgInfo.length * 2, args.mkString(" "), ex.toString))
-    }
+    //    throw new Exception("%s %d out of the expected %d%n%s%n%n%s".format("Number of args received", args.length, lstArgInfo.length * 2, args.mkString(" "), ex.toString))
   }
 
   def buildUsageString(mapProgramArg: mutable.HashMap[String, Any]): String =
-    "%s%nAllowed Arguments: %n%s%s".format("Missing parameters or incorrect value types.", this.toString, if (mapProgramArg == null) "" else mapProgramArg.mkString("\t\n"))
+    "Missing parameters or incorrect value types.%nArgument Info: %n%s".format(this.toString)
 
   override def toString: String =
     lstArgInfo.map(t => {
 
-      val (key, valType, valDefault, valDesc) = (t._1, t._2.toLowerCase(), t._3, t._4)
+      val (key, valType, valDefault, valDesc) = (t._1, t._2, t._3, t._4)
 
       var valueState = ""
-      if (mapCLArgs == null || !mapCLArgs.contains("-" + key.toLowerCase()))
+
+      if (mapCLArgs == null || !mapCLArgs.contains(key.toLowerCase()))
         if (valDefault == null)
           valueState = "NOT passed as argument"
         else
           valueState = "defaulted to: " + t._3
       else
-        valueState = "passed as arguments: " + mapProgramArg(key.toLowerCase())
+        valueState = "extracted from args: " + mapProgramArg(key.toLowerCase())
 
-      "\t-%s, Type: %s, Required: %s, Value %s, Desc: %s%n".format(key, valType, if (valDefault == null) "Yes" else "No", valueState, valDesc)
+      "\t%s, Type: %s, Required: %s, Value %s, Desc: %s%n".format(key, valType, if (valDefault == null) "Yes" else "No", valueState, valDesc)
     })
       .mkString("")
 }
@@ -155,23 +125,29 @@ object Test_CLArgsParser {
 
   def main(args: Array[String]): Unit = {
 
-    val lstReqParamInfo = List[(String, String, Any, String)](("local", "Boolean", false, "(T=local, F=cluster)"),
-      ("debug", "Boolean", false, "(T=show_debug, F=no_debug)"),
-      ("outDir", "String", null, "File location to write benchmark results"),
-      ("firstSet", "String", null, "First data set input file path (LION Streets)"),
-      ("firstSetObj", "String", null, "The object type indicator (e.g. LION_LineString, TPEP_Point ...)"),
-      ("secondSet", "String", null, "Second data set input file path (Bus, TPEP, Yellow)"),
-      ("secondSetObj", "String", null, "The object type indicator (e.g. LION_LineString, TPEP_Point ...)"),
-      ("queryType", "String", null, "The query type (e.g. distance, kNN, range)"),
-      ("hilbertN", "Int", 256, "The size of the hilbert curve (i.e. n)"),
-      ("errorRange", "Double", 150, "Value by which to expand each MBR prior to adding it to the RTree"),
-      ("matchCount", "Int", 3, "Number of matched geometries to keept (i.e. # points per streeet)"),
-      ("matchDist", "Double", 150, "Maximum distance after which the match is discarded"),
-      ("searchGridMinX", "Int", -1, "Search grid's minimum X"),
-      ("searchGridMinY", "Int", -1, "Search grid's minimum Y"),
-      ("searchGridMaxX", "Int", -1, "Search grid's maximum X"),
-      ("searchGridMaxY", "Int", -1, "Search grid's maximum Y"))
+    def buildTuple[T](name: String, dataType: String, defaultValue: T, description: String): (String, String, T, String) =
+      (name, dataType, defaultValue, description)
 
-    println(CLArgsParser(args, lstReqParamInfo))
+    val local: (String, String, Boolean, String) = buildTuple("-local", "Boolean", false, "(T=local, F=cluster)")
+    val debug: (String, String, Boolean, String) = buildTuple("-debug", "Boolean", false, "(T=show_debug, F=no_debug)")
+    val driverMemory: (String, String, String, String) = buildTuple("-driverMemory", "String", "", "value set during local mode for spark.driver.memory")
+    val executorMemory: (String, String, String, String) = buildTuple("-executorMemory", "String", "", "value set during local mode for spark.executor.memory")
+    val numExecutors: (String, String, Int, String) = buildTuple("-numExecutors", "Int", 0, "value set during local mode for spark.num.executors")
+    val executorCores: (String, String, Int, String) = buildTuple("-executorCores", "Int", 0, "value set during local mode for spark.executor.cores")
+    val outDir: (String, String, Null, String) = buildTuple("-outDir", "String", null, "File location to write benchmark results")
+    val firstSet: (String, String, Null, String) = buildTuple("-firstSet", "String", null, "First data set input file path (LION Streets)")
+    val firstSetObjType: (String, String, Null, String) = buildTuple("-firstSetObjType", "String", null, "The object type indicator (e.g. LION_LineString, TPEP_Point ...)")
+    val secondSet: (String, String, Null, String) = buildTuple("-secondSet", "String", null, "Second data set input file path (Bus, TPEP, Yellow)")
+    val secondSetObjType: (String, String, Null, String) = buildTuple("-secondSetObjType", "String", null, "The object type indicator (e.g. LION_LineString, TPEP_Point ...)")
+    val k: (String, String, Int, String) = buildTuple("-k", "Int", 3, "Value of k")
+    val indexType: (String, String, Null, String) = buildTuple("-indexType", "String", null, "qt for QuadTree, kdt for K-d Tree")
+    val knnJoinType: (String, String, Null, String) = buildTuple("-knnJoinType", "String", null, "knn for Left knn Right, allKNN for both datasets")
+
+    def lstArgInfo() = List(local, debug, driverMemory, executorMemory, numExecutors, executorCores, outDir, firstSet, firstSetObjType, secondSet, secondSetObjType, k, knnJoinType, indexType)
+
+    val arrArgs = "-local F -debug T -firstSet1 /media/cusp/Data/GeoMatch_Files/InputFiles/RandomSamples_OLD/Taxi_1_A.csv -firstSetObjType Three_Part_Line -secondSet /media/cusp/Data/GeoMatch_Files/InputFiles/RandomSamples_OLD/Taxi_1_B.csv -secondSetObjType Three_Part_Line -k 10 -indexType qt -knnJoinType knn -outDir /media/cusp/Data/GeoMatch_Files/OutputFiles/sKNN/Taxi_1_Grp1_qt_knn"
+      .split(" ")
+
+    println(CLArgsParser(arrArgs, lstArgInfo))
   }
 }

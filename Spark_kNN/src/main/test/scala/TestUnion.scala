@@ -1,6 +1,6 @@
 import org.apache.spark.serializer.KryoSerializer
 import org.apache.spark.{SparkConf, SparkContext}
-import org.cusp.bdi.sknn.SparkKNN
+import org.cusp.bdi.sknn.SparkKnn
 import org.cusp.bdi.util.LocalRunConsts
 
 object TestUnion {
@@ -10,7 +10,7 @@ object TestUnion {
     val sparkConf = new SparkConf()
       .setAppName(this.getClass.getName)
       .set("spark.serializer", classOf[KryoSerializer].getName)
-      .registerKryoClasses(SparkKNN.getSparkKNNClasses)
+      .registerKryoClasses(SparkKnn.getSparkKNNClasses)
       .set("spark.local.dir", LocalRunConsts.sparkWorkDir)
       .setMaster("local[*]")
 

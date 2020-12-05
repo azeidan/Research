@@ -35,8 +35,13 @@ object SIM_Example extends Serializable {
       .config("spark.local.dir", LocalRunConsts.sparkWorkDir)
 
     if (clArgs.getParamValueBoolean(Arguments.local)) {
-      simbaBuilder.config("spark.local.dir", LocalRunConsts.sparkWorkDir)
+
       simbaBuilder.master("local[*]")
+      simbaBuilder.config("spark.local.dir", LocalRunConsts.sparkWorkDir)
+      simbaBuilder.config("spark.driver.memory", clArgs.getParamValueString(Arguments.driverMemory))
+      simbaBuilder.config("spark.executor.memory", clArgs.getParamValueString(Arguments.executorMemory))
+      simbaBuilder.config("spark.executor.instances", clArgs.getParamValueString(Arguments.numExecutors))
+      simbaBuilder.config("spark.executor.cores", clArgs.getParamValueString(Arguments.executorCores))
     }
 
     val simbaSession = simbaBuilder.getOrCreate()

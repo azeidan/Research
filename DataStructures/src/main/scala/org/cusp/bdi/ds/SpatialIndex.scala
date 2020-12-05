@@ -2,27 +2,10 @@ package org.cusp.bdi.ds
 
 import com.esotericsoftware.kryo.KryoSerializable
 import org.cusp.bdi.ds.geom.{Geom2D, Point, Rectangle}
-import org.cusp.bdi.ds.kdt.KdTree
-import org.cusp.bdi.ds.qt.QuadTree
 import org.cusp.bdi.ds.sortset.SortedList
 import org.cusp.bdi.util.Helper
 
-import scala.collection.immutable.Iterable
-
-object SupportedSpatialIndexes extends Enumeration with Serializable {
-
-  val quadTree: SupportedSpatialIndexes.Value = Value(0.toByte)
-  val kdTree: SupportedSpatialIndexes.Value = Value(1.toByte)
-}
-
 object SpatialIndex extends Serializable {
-
-  def apply(spatialIndexType: SupportedSpatialIndexes.Value): SpatialIndex =
-    spatialIndexType match {
-      case SupportedSpatialIndexes.quadTree => new QuadTree()
-      case SupportedSpatialIndexes.kdTree => new KdTree()
-      case _ => throw new IllegalArgumentException("Unsupported Spatial Index Type: " + spatialIndexType)
-    }
 
   case class KnnLookupInfo(searchPoint: Point, sortSetSqDist: SortedList[Point]) {
 
@@ -56,8 +39,10 @@ object SpatialIndex extends Serializable {
     val right = rectMBR.right
     val top = rectMBR.top
 
-    math.sqrt(Helper.squaredEuclideanDist(searchPoint.x, searchPoint.y, left, bottom).max(Helper.squaredEuclideanDist(searchPoint.x, searchPoint.y, right, bottom))
-      .max(Helper.squaredEuclideanDist(searchPoint.x, searchPoint.y, right, top).max(Helper.squaredEuclideanDist(searchPoint.x, searchPoint.y, left, top))))
+    math.sqrt(
+      math.max(
+        math.max(Helper.squaredEuclideanDist(searchPoint.x, searchPoint.y, left, bottom), Helper.squaredEuclideanDist(searchPoint.x, searchPoint.y, right, bottom)),
+        math.max(Helper.squaredEuclideanDist(searchPoint.x, searchPoint.y, right, top), Helper.squaredEuclideanDist(searchPoint.x, searchPoint.y, left, top))))
   }
 
   def testAndAddPoint(point: Point, knnLookupInfo: KnnLookupInfo) {
@@ -77,6 +62,10 @@ object SpatialIndex extends Serializable {
 }
 
 trait SpatialIndex extends KryoSerializable {
+
+  def dummyNode: AnyRef
+
+  def estimateNodeCount(pointCount: Long): Int
 
   def getTotalPoints: Int
 

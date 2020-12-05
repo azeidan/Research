@@ -18,6 +18,7 @@ object Arguments_Benchmark extends Serializable {
 
   def apply(debug: Boolean, keyMatchInFile: String, keyMatchInFileParser: String, testFWInFile: String, testFWInFileParser: String, classificationCount: Int): Array[String] =
     Array(Arguments_Benchmark.local._1, " T",
+
       Arguments_Benchmark.debug._1, Helper.toString(debug),
       Arguments_Benchmark.outDir._1, Helper.randOutputDir(LocalRunConsts.pathOutput),
       Arguments_Benchmark.classificationCount._1, classificationCount.toString,
