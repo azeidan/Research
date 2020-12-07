@@ -13,8 +13,19 @@ import scala.util.Random
 
 object Helper {
 
-  def log2(n: Long): Int =
-    (Math.log(n) / Math.log(2)).toInt
+  def max(x: Int, y: Int): Int = if (x > y) x else y
+
+  def max(x: Long, y: Long): Long = if (x > y) x else y
+
+  def max(x: Double, y: Double): Double = if (x > y) x else y
+
+  def min(x: Int, y: Int): Int = if (x < y) x else y
+
+  def min(x: Double, y: Double): Double = if (x < y) x else y
+
+  def min(x: Long, y: Long): Long = if (x < y) x else y
+
+  def log2(n: Long): Int = (Math.log(n) / Math.log(2)).toInt
 
   def indexOfBSearch(arrSortedValues: IndexedSeq[Int], lookupValue: Int): Boolean = {
 
@@ -55,11 +66,8 @@ object Helper {
     if (str == null)
       true
     else
-      str.count(x => x == null || x.toString.length == 0) == str.length
+      str.count(x => x == null || x.toString.isEmpty) == str.length
 
-  /**
-   * Returns true is the parameter represents a "True" value as defined in LST_BOOL_VALS, false otherwise
-   */
   def isBooleanStr(objBool: Object): Boolean =
     toBoolean(objBool.toString)
 

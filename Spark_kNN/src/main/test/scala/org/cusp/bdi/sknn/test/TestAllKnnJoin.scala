@@ -16,8 +16,8 @@ object TestAllKnnJoin {
     val startTime = System.currentTimeMillis()
     //    var startTime2 = startTime
 
-    val clArgs = SparkKNN_Local_CLArgs.random_sample()
-//        val clArgs = CLArgsParser(args, Arguments.lstArgInfo())
+//    val clArgs = SparkKNN_Local_CLArgs.random_sample()
+            val clArgs = CLArgsParser(args, Arguments.lstArgInfo())
 
     //    val clArgs = SparkKNN_Local_CLArgs.busPoint_busPointShift(Arguments())
     //    val clArgs = SparkKNN_Local_CLArgs.busPoint_taxiPoint(Arguments())
@@ -62,21 +62,23 @@ object TestAllKnnJoin {
     //    def getRDD(fileName: String) = if (numPartitions > 0) sc.textFile(fileName, numPartitions)
     //    else sc.textFile(fileName)
 
-    val rddLeft = sc.textFile(firstSet)
+    val minParts = if (localMode) clArgs.getParamValueInt(Arguments.numExecutors) * clArgs.getParamValueInt(Arguments.executorCores) else -1
+
+    val rddLeft = (/*if (minParts > 0) sc.textFile(firstSet, minParts) else*/ sc.textFile(firstSet))
       .mapPartitions(_.map(InputFileParsers.getLineParser(firstSetObjType)))
       .filter(_ != null)
       .mapPartitions(_.map(row => new Point(row._2._1.toDouble, row._2._2.toDouble, row._1)))
 
-    val rddRight = sc.textFile(secondSet)
+    val rddRight = (/*if (minParts > 0) sc.textFile(secondSet, minParts) else */sc.textFile(secondSet))
       .mapPartitions(_.map(InputFileParsers.getLineParser(secondSetObjType)))
       .filter(_ != null)
       .mapPartitions(_.map(row => new Point(row._2._1.toDouble, row._2._2.toDouble, row._1)))
 
-    val sparkKNN = SparkKnn(debugMode, indexType, kParam)
+    val sparkKNN = SparkKnn(debugMode, indexType, rddLeft, rddRight, kParam)
 
     val rddResult = clArgs.getParamValueString(Arguments.knnJoinType) match {
-      case s if s.equalsIgnoreCase(SupportedKnnOperations.knn.toString) => sparkKNN.knnJoin(rddLeft, rddRight)
-      case s if s.equalsIgnoreCase(SupportedKnnOperations.allKnn.toString) => sparkKNN.allKnnJoin(rddLeft, rddRight)
+      case s if s.equalsIgnoreCase(SupportedKnnOperations.knn.toString) => sparkKNN.knnJoin()
+      case s if s.equalsIgnoreCase(SupportedKnnOperations.allKnn.toString) => sparkKNN.allKnnJoin()
       case _ => throw new IllegalArgumentException("Unsupported kNN join type: %s".format(clArgs.getParamValueString(Arguments.knnJoinType)))
     }
 

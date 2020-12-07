@@ -17,23 +17,23 @@ object SupportedKnnOperations extends Enumeration with Serializable {
 
 final class RangeInfo {
 
-  val lstMBRCoord: ListBuffer[((Double, Double), Int)] = ListBuffer[((Double, Double), Int)]()
-  var totalWeight = 0
+  val lstMBRCoord: ListBuffer[((Double, Double), Long)] = ListBuffer[((Double, Double), Long)]()
+  var totalWeight = 0L
   var left: Double = _
   var bottom: Double = _
   var right: Double = _
   var top: Double = _
 
-  def this(startCoord: (Double, Double), count: Int) = {
+  def this(start: ((Double, Double), Long)) = {
 
     this()
 
-    this.lstMBRCoord += ((startCoord, count))
-    this.totalWeight = count
-    this.left = startCoord._1
-    this.bottom = startCoord._2
-    this.right = startCoord._1
-    this.top = startCoord._2
+    this.lstMBRCoord += start
+    this.totalWeight = start._2
+    this.left = start._1._1
+    this.bottom = start._1._2
+    this.right = start._1._1
+    this.top = start._1._2
   }
 
   def mbr: (Double, Double, Double, Double) =

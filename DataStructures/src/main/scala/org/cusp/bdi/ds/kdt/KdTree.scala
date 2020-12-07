@@ -61,7 +61,7 @@ class KdTree extends SpatialIndex {
 
         i
       case _ =>
-        throw new IllegalStateException("Histogram bar width must be >= 1")
+        throw new IllegalStateException("%s%d".format("Histogram bar width must be >= 1: Got: ", otherInitializers.headOption.getOrElse("")))
     }
   }
 
@@ -70,7 +70,7 @@ class KdTree extends SpatialIndex {
 
     val hgGroupWidth = extractHGGroupWidth(rectBounds, iterPoints, otherInitializers)
 
-    val queueNode = mutable.Queue[(KdtBranchRootNode, Boolean, AVLSplitInfo, AVLSplitInfo)]()
+    val queueNodeInfo = mutable.Queue[(KdtBranchRootNode, Boolean, AVLSplitInfo, AVLSplitInfo)]()
 
     val lowerBounds = (rectBounds.left, rectBounds.bottom)
 
@@ -84,7 +84,7 @@ class KdTree extends SpatialIndex {
 
         val kdtBranchRootNode = new KdtBranchRootNode(splitVal, nodeAVLSplitInfo.pointCount)
 
-        queueNode += ((kdtBranchRootNode, splitX, avlSplitInfoParts._2, avlSplitInfoParts._3))
+        queueNodeInfo += ((kdtBranchRootNode, splitX, avlSplitInfoParts._2, avlSplitInfoParts._3))
 
         kdtBranchRootNode
       }
@@ -99,9 +99,9 @@ class KdTree extends SpatialIndex {
     rootNode = buildNode(avlSplitInfo, splitX = true)
     avlSplitInfo = null
 
-    while (queueNode.nonEmpty) {
+    while (queueNodeInfo.nonEmpty) {
 
-      val (currNode, splitX, avlSplitInfoLeft, avlSplitInfoRight) = queueNode.dequeue()
+      val (currNode, splitX, avlSplitInfoLeft, avlSplitInfoRight) = queueNodeInfo.dequeue
 
       if (avlSplitInfoLeft != null)
         currNode.left = buildNode(avlSplitInfoLeft, !splitX)
@@ -254,47 +254,48 @@ class KdTree extends SpatialIndex {
     }
   }
 
-  private def updateBoundsAndTotalPoint() {
-
-    val startBranchRootNode = rootNode match {
+  private def updateBoundsAndTotalPoint() =
+    rootNode match {
       case kdtBranchRootNode: KdtBranchRootNode =>
-        kdtBranchRootNode
+
+        val stackNode = mutable.Stack[KdtBranchRootNode](kdtBranchRootNode)
+        //        val stackRoots = mutable.Stack[KdtBranchRootNode]()
+
+        while (stackNode.nonEmpty) {
+
+          //          stackRoots.push(stackNode.pop)
+          val currNode = stackNode.top
+
+          currNode.left match {
+            case kdtBranchRootNode: KdtBranchRootNode =>
+              if (currNode.left.rectNodeBounds == null)
+                stackNode.push(kdtBranchRootNode)
+            case _ =>
+          }
+
+          currNode.right match {
+            case kdtBranchRootNode: KdtBranchRootNode =>
+              if (currNode.right.rectNodeBounds == null)
+                stackNode.push(kdtBranchRootNode)
+            case _ =>
+          }
+
+          if (currNode == stackNode.top) {
+
+            stackNode.pop
+
+            if (currNode.left != null)
+              currNode.rectNodeBounds = new Rectangle(currNode.left.rectNodeBounds)
+
+            if (currNode.right != null)
+              if (currNode.rectNodeBounds == null)
+                currNode.rectNodeBounds = new Rectangle(currNode.right.rectNodeBounds)
+              else
+                currNode.rectNodeBounds.mergeWith(currNode.right.rectNodeBounds)
+          }
+        }
       case _ =>
-        return // nothing to do, exit method
     }
-
-    val stackNode = mutable.Stack[KdtBranchRootNode](startBranchRootNode)
-    val stackRoots = mutable.Stack[KdtBranchRootNode]()
-
-    while (stackNode.nonEmpty) {
-
-      stackRoots.push(stackNode.pop)
-
-      stackRoots.top.left match {
-        case kdtBranchRootNode: KdtBranchRootNode =>
-          stackNode.push(kdtBranchRootNode)
-        case _ =>
-      }
-
-      stackRoots.top.right match {
-        case kdtBranchRootNode: KdtBranchRootNode =>
-          stackNode.push(kdtBranchRootNode)
-        case _ =>
-      }
-    }
-
-    stackRoots.foreach(currNode => {
-
-      if (currNode.left != null)
-        currNode.rectNodeBounds = new Rectangle(currNode.left.rectNodeBounds)
-
-      if (currNode.right != null)
-        if (currNode.rectNodeBounds == null)
-          currNode.rectNodeBounds = new Rectangle(currNode.right.rectNodeBounds)
-        else
-          currNode.rectNodeBounds.mergeWith(currNode.right.rectNodeBounds)
-    })
-  }
 
   override def allPoints: Iterator[Iterator[Point]] = new AbstractIterator[Iterator[Point]] {
 

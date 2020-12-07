@@ -54,6 +54,8 @@ class AVLTree[T] extends Serializable {
             if (currNode.left == null) {
 
               currNode.left = newNode
+              currNode.treeHeight = 1 + max(nodeHeight(currNode.left), nodeHeight(currNode.right))
+              stackNodes.pop
               currNode = null
             }
             else
@@ -66,6 +68,8 @@ class AVLTree[T] extends Serializable {
             if (currNode.right == null) {
 
               currNode.right = newNode
+              currNode.treeHeight = 1 + max(nodeHeight(currNode.left), nodeHeight(currNode.right))
+              stackNodes.pop
               currNode = null
             }
             else
@@ -84,23 +88,14 @@ class AVLTree[T] extends Serializable {
         if (hDiff.abs > 1)
           hDiff.signum match {
             case -1 =>
-              if (newValue < currNode.right.nodeValue) {
-
+              if (newValue < currNode.right.nodeValue)
                 currNode.right = rotateRight(currNode.right)
 
-                updateParentLink(stackNodes, currNode, rotateLeft(currNode))
-              }
-              else
-                updateParentLink(stackNodes, currNode, rotateLeft(currNode))
+              updateParentLink(stackNodes, currNode, rotateLeft(currNode))
             case _ =>
-              if (newValue < currNode.left.nodeValue)
-                updateParentLink(stackNodes, currNode, rotateRight(currNode))
-              else {
-
+              if (newValue > currNode.left.nodeValue)
                 currNode.left = rotateLeft(currNode.left)
-
-                updateParentLink(stackNodes, currNode, rotateRight(currNode))
-              }
+              updateParentLink(stackNodes, currNode, rotateRight(currNode))
           }
       }
     }
@@ -267,10 +262,10 @@ class AVLTree[T] extends Serializable {
   }
 
   private def nodeHeight(node: AVLNode[_]): Int =
-    if (node == null)
-      0
-    else
-      node.treeHeight
+    node match {
+      case null => 0
+      case _ => node.treeHeight
+    }
 
   private def max(x: Int, y: Int): Int =
     if (x > y) x else y

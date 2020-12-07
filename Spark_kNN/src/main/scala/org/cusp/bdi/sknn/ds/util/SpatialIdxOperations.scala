@@ -28,10 +28,10 @@ object SupportedSpatialIndexes extends Enumeration with Serializable {
 
 final class GlobalIndexPointData extends KryoSerializable {
 
-  var numPoints: Int = -1
+  var numPoints: Long = -1
   var partitionIdx: Int = -1
 
-  def this(numPoints: Int, partitionIdx: Int) = {
+  def this(numPoints: Long, partitionIdx: Int) = {
 
     this()
     this.numPoints = numPoints
@@ -42,13 +42,13 @@ final class GlobalIndexPointData extends KryoSerializable {
 
   override def write(kryo: Kryo, output: Output): Unit = {
 
-    output.writeInt(numPoints)
+    output.writeLong(numPoints)
     output.writeInt(partitionIdx)
   }
 
   override def read(kryo: Kryo, input: Input): Unit = {
 
-    numPoints = input.readInt()
+    numPoints = input.readLong()
     partitionIdx = input.readInt()
   }
 }
@@ -74,7 +74,7 @@ object SpatialIdxOperations extends Serializable {
     }
   }
 
-  def getLstPartition(spatialIndex: SpatialIndex, searchXY: (Double, Double), k: Int): ListBuffer[Int] =
+  def extractLstPartition(spatialIndex: SpatialIndex, searchXY: (Double, Double), k: Int): ListBuffer[Int] =
     (spatialIndex match {
       case quadTree: QuadTree => lookup(quadTree, searchXY, k)
       case kdTree: KdTree => lookup(kdTree, searchXY, k)

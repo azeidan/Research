@@ -23,21 +23,23 @@ object AVLSplitInfo {
 
       pointCount += 1
 
-      val (idxX, idxY) = hgGroupWidth match {
-        case 1 =>
-          ((pt.x - lowerBounds._1).toInt, (pt.y - lowerBounds._2).toInt)
-        case _ =>
-          (((pt.x - lowerBounds._1) / hgGroupWidth).toInt, ((pt.y - lowerBounds._2) / hgGroupWidth).toInt)
+      var idxX = pt.x - lowerBounds._1
+      var idxY = pt.y - lowerBounds._2
+
+      if (hgGroupWidth > 1) {
+
+        idxX = idxX / hgGroupWidth
+        idxY = idxY / hgGroupWidth
       }
 
-      setCoordY += idxY
+      setCoordY += idxY.toInt
 
-      val avlNode = avlHistogram.getOrElseInsert(idxX)
+      val avlNode = avlHistogram.getOrElseInsert(idxX.toInt)
 
       if (avlNode.data == null)
         avlNode.data = new TypeAVL_Data()
 
-      avlNode.data += ((idxY, pt))
+      avlNode.data += ((idxY.toInt, pt))
     })
 
     new AVLSplitInfo(avlHistogram, setCoordY.size, pointCount)
