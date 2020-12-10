@@ -15,6 +15,7 @@ import org.cusp.bdi.sknn.ds.util.{GlobalIndexPointData, SpatialIdxOperations, Su
 import org.cusp.bdi.sknn.util._
 import org.cusp.bdi.util.Helper
 
+import scala.collection.mutable
 import scala.collection.mutable.ListBuffer
 import scala.util.Random
 
@@ -52,9 +53,9 @@ case class SparkKnn(debugMode: Boolean, spatialIndexType: SupportedSpatialIndexe
 
   def knnJoin(): RDD[(Point, Iterable[(Double, Point)])] = {
 
-    val (partObjCapacityRight, mbrRight) = computeCapacity(rddRight)
+    val (partObjCapacityRight, objCountRight, mbrRight) = computeCapacity(rddRight)
 
-    val gridOpRight = new GridOperation(mbrRight, partObjCapacityRight, k)
+    val gridOpRight = new GridOperation(mbrRight, objCountRight, k)
 
     knnJoinExecute(rddLeft, null, null,
       rddRight,
@@ -65,15 +66,15 @@ case class SparkKnn(debugMode: Boolean, spatialIndexType: SupportedSpatialIndexe
 
   def allKnnJoin(): RDD[(Point, Iterable[(Double, Point)])] = {
 
-    val (partObjCapacityRight, mbrRight) = computeCapacity(rddRight)
-    val (partObjCapacityLeft, mbrLeft) = computeCapacity(rddLeft)
+    val (partObjCapacityRight, objCountRight, mbrRight) = computeCapacity(rddRight)
+    val (partObjCapacityLeft, objCountLeft, mbrLeft) = computeCapacity(rddLeft)
 
     val partObjCapacity = Helper.min(partObjCapacityRight, partObjCapacityLeft) / 2
 
     Helper.loggerSLf4J(debugMode, SparkKnn, ">>All kNN adjusted partObjCapacity=%,d".format(partObjCapacity))
 
     val globalIndexRight = SupportedSpatialIndexes(spatialIndexType)
-    val (gridOpRight, gridOpLeft) = (new GridOperation(mbrRight, partObjCapacity, k), new GridOperation(mbrLeft, partObjCapacity, k))
+    val (gridOpRight, gridOpLeft) = (new GridOperation(mbrRight, objCountRight, k), new GridOperation(mbrLeft, objCountLeft, k))
 
     knnJoinExecute(rddLeft, null, null,
       rddRight,
@@ -93,15 +94,16 @@ case class SparkKnn(debugMode: Boolean, spatialIndexType: SupportedSpatialIndexe
 
     var startTime = System.currentTimeMillis
     var bvBroadcastWrapperRight: Broadcast[BroadcastWrapper] = null
-    val lstRangeInfo = ListBuffer[RangeInfo]()
-    var rangeInfo: RangeInfo = null
+    //    val lstRangeInfo = ListBuffer[RangeInfo]()
+    val stackRangeInfo = mutable.Stack[RangeInfo]()
+    //    var rangeInfo: RangeInfo = null
 
     // build range info
     rddActiveRight
       .mapPartitions(iter => iter.map(point => {
 
-        //        if(point.userData.toString.equalsIgnoreCase("taxi_2_b_255747"))
-        //          println(gridOpRight.computeSquareXY(point.x, point.y))
+        //        if (point.userData.toString.equalsIgnoreCase("Bread_1_A_165989"))
+        //          println(">>" + gridOpRight.computeSquareXY(point.x, point.y))
 
         (gridOpRight.computeSquareXY(point.x, point.y), 1L)
       })) // grid assignment
@@ -110,44 +112,46 @@ case class SparkKnn(debugMode: Boolean, spatialIndexType: SupportedSpatialIndexe
       .toLocalIterator
       .foreach(row => // group cells on partitions
 
-        if (rangeInfo == null || rangeInfo.totalWeight + row._2 > partObjCapacity) {
-
-          rangeInfo = new RangeInfo(row)
-          lstRangeInfo += rangeInfo
-        }
+        if (stackRangeInfo.isEmpty || stackRangeInfo.top.totalWeight + row._2 > partObjCapacity)
+          stackRangeInfo.push(new RangeInfo(row))
         else {
 
-          rangeInfo.lstMBRCoord += row
-          rangeInfo.totalWeight += row._2
-          rangeInfo.right = row._1._1
+          stackRangeInfo.top.lstMBRCoord += row
+          stackRangeInfo.top.totalWeight += row._2
+          stackRangeInfo.top.right = row._1._1
 
-          if (row._1._2 < rangeInfo.bottom)
-            rangeInfo.bottom = row._1._2
-          else if (row._1._2 > rangeInfo.top)
-            rangeInfo.top = row._1._2
+          //          if (row._1._2 > 12500)
+          //            println(row)
+
+          if (row._1._2 < stackRangeInfo.top.bottom)
+            stackRangeInfo.top.bottom = row._1._2
+          else if (row._1._2 > stackRangeInfo.top.top)
+            stackRangeInfo.top.top = row._1._2
         })
 
-    Helper.loggerSLf4J(debugMode, SparkKnn, ">>rangeInfo time in %,d MS".format(System.currentTimeMillis - startTime))
+    Helper.loggerSLf4J(debugMode, SparkKnn, ">>rangeInfo time in %,d MS. Actual number of partitions: %,d".format(System.currentTimeMillis - startTime, stackRangeInfo.length))
 
     startTime = System.currentTimeMillis
 
     // create global index
-    var actualPartitionCount = -1
-    globalIndexRight.insert(rectGlobalIdxRight, lstRangeInfo.map(rangeInfo => {
+    var partCounter = -1
+    globalIndexRight.insert(rectGlobalIdxRight, stackRangeInfo.map(rangeInfo => {
 
-      actualPartitionCount += 1
+      partCounter += 1
+
+      Helper.loggerSLf4J(debugMode, SparkKnn, ">>%s\t%,d".format(rangeInfo.toString, partCounter))
 
       rangeInfo
         .lstMBRCoord
-        .map(row => new Point(row._1._1, row._1._2, new GlobalIndexPointData(row._2, actualPartitionCount)))
+        .map(row => new Point(row._1._1, row._1._2, new GlobalIndexPointData(row._2, partCounter)))
     })
       .flatMap(_.seq)
       .view
       .iterator, 1)
 
-    bvBroadcastWrapperRight = rddActiveRight.context.broadcast(BroadcastWrapper(globalIndexRight, gridOpRight, lstRangeInfo.map(_.mbr).toArray))
+    bvBroadcastWrapperRight = rddActiveRight.context.broadcast(BroadcastWrapper(globalIndexRight, gridOpRight, stackRangeInfo.map(_.mbr).toArray))
 
-    Helper.loggerSLf4J(debugMode, SparkKnn, ">>GlobalIndex insert time in %,d MS. Index: %s\tBroadcast Total Size: %,d".format(System.currentTimeMillis - startTime, bvBroadcastWrapperRight.value.spatialIdx, SizeEstimator.estimate(bvBroadcastWrapperRight.value)))
+    Helper.loggerSLf4J(debugMode, SparkKnn, ">>GlobalIndex insert time in %,d MS. Grid size: (%,d X %,d)\tIndex: %s\tBroadcast Total Size: %,d".format(System.currentTimeMillis - startTime, bvBroadcastWrapperRight.value.gridOp.squareDim, bvBroadcastWrapperRight.value.gridOp.squareDim, bvBroadcastWrapperRight.value.spatialIdx, SizeEstimator.estimate(bvBroadcastWrapperRight.value)))
 
     //    val startTime = System.currentTimeMillis
 
@@ -169,10 +173,10 @@ case class SparkKnn(debugMode: Boolean, spatialIndexType: SupportedSpatialIndexe
         val startTime = System.currentTimeMillis
         val mbr = bvBroadcastWrapperRight.value.arrPartitionMBRs(pIdx)
 
-        val minX = mbr._1 * bvBroadcastWrapperRight.value.gridOp.squareDim
-        val minY = mbr._2 * bvBroadcastWrapperRight.value.gridOp.squareDim
-        val maxX = mbr._3 * bvBroadcastWrapperRight.value.gridOp.squareDim + bvBroadcastWrapperRight.value.gridOp.squareDim
-        val maxY = mbr._4 * bvBroadcastWrapperRight.value.gridOp.squareDim + bvBroadcastWrapperRight.value.gridOp.squareDim
+        val minX = mbr._1 * bvBroadcastWrapperRight.value.gridOp.squareDim + bvBroadcastWrapperRight.value.gridOp.datasetMBR._1 - 1e-4
+        val minY = mbr._2 * bvBroadcastWrapperRight.value.gridOp.squareDim + bvBroadcastWrapperRight.value.gridOp.datasetMBR._2 - 1e-4
+        val maxX = mbr._3 * bvBroadcastWrapperRight.value.gridOp.squareDim + bvBroadcastWrapperRight.value.gridOp.datasetMBR._1 + bvBroadcastWrapperRight.value.gridOp.squareDim
+        val maxY = mbr._4 * bvBroadcastWrapperRight.value.gridOp.squareDim + bvBroadcastWrapperRight.value.gridOp.datasetMBR._2 + bvBroadcastWrapperRight.value.gridOp.squareDim
 
         val rectBounds = buildRectBounds((minX, minY), (maxX, maxY))
 
@@ -180,13 +184,13 @@ case class SparkKnn(debugMode: Boolean, spatialIndexType: SupportedSpatialIndexe
 
         spatialIndex.insert(rectBounds, iter.map(row => {
 
-          //          if (row._2.userData.toString.equalsIgnoreCase("Taxi_2_A_163401"))
+          //          if (row._2.userData.toString.equalsIgnoreCase("Yellow_2_A_507601"))
           //            println(">>" + pIdx)
 
           row._2
-        }), bvBroadcastWrapperRight.value.gridOp.squareDim)
+        }), Helper.max(bvBroadcastWrapperRight.value.gridOp.squareDim, bvBroadcastWrapperRight.value.gridOp.squareDim))
 
-        Helper.loggerSLf4J(debugMode, SparkKnn, ">>SpatialIndex on partition %d time in %,d MS. Index: %s. Total Size: %,d".format(pIdx, System.currentTimeMillis - startTime, spatialIndex, SizeEstimator.estimate(spatialIndex)))
+        //        Helper.loggerSLf4J(debugMode, SparkKnn, ">>SpatialIndex on partition %,d time in %,d MS. Index: %s. Total Size: %,d".format(pIdx, System.currentTimeMillis - startTime, spatialIndex, SizeEstimator.estimate(spatialIndex)))
 
         Iterator((pIdx, spatialIndex.asInstanceOf[Any]))
       }
@@ -203,7 +207,8 @@ case class SparkKnn(debugMode: Boolean, spatialIndexType: SupportedSpatialIndexe
         .max
     else {
 
-      val shiftBy = gridOpLeft.squareDim - 1
+      val shiftByX = gridOpLeft.datasetMBR._1 + gridOpLeft.squareDim - 1
+      val shiftByY = gridOpLeft.datasetMBR._2 + gridOpLeft.squareDim - 1
 
       globalIndexLeft
         .allPoints
@@ -212,33 +217,40 @@ case class SparkKnn(debugMode: Boolean, spatialIndexType: SupportedSpatialIndexe
           //          if (point.x.toInt == 2407 && point.y.toInt == 405)
           //            println
 
-          val lookupXY = bvBroadcastWrapperRight.value.gridOp.computeSquareXY(point.x * gridOpLeft.squareDim + shiftBy, point.y * gridOpLeft.squareDim + shiftBy)
+          val lookupXY = bvBroadcastWrapperRight.value.gridOp.computeSquareXY(point.x * gridOpLeft.squareDim + shiftByX, point.y * gridOpLeft.squareDim + shiftByY)
 
           SpatialIdxOperations.extractLstPartition(globalIndexRight, lookupXY, k).length
         }).max).max
     }
 
-    Helper.loggerSLf4J(debugMode, SparkKnn, ">>LeftDS numRounds time in %,d MS, numRounds: %d".format(System.currentTimeMillis - startTime, numRounds))
+    Helper.loggerSLf4J(debugMode, SparkKnn, ">>LeftDS numRounds time in %,d MS, numRounds: %, d".format(System.currentTimeMillis - startTime, numRounds))
 
     var rddPoint = rddActiveLeft
       .mapPartitions(iter => iter.map(point => {
 
         var lstPartitionId = SpatialIdxOperations.extractLstPartition(bvBroadcastWrapperRight.value.spatialIdx, bvBroadcastWrapperRight.value.gridOp.computeSquareXY(point.x, point.y), k)
 
-        //        if (point.userData.toString.equalsIgnoreCase("taxi_2_b_255747"))
+        //        if (lstPartitionId.length > 6)
+        //          SpatialIdxOperations.extractLstPartition(bvBroadcastWrapperRight.value.spatialIdx, bvBroadcastWrapperRight.value.gridOp.computeSquareXY(point.x, point.y), k)
+
+        //        if (point.userData.toString.equalsIgnoreCase("Yellow_1_A_791920"))
         //          println(SpatialIdxOperations.extractLstPartition(bvBroadcastWrapperRight.value.spatialIdx, bvBroadcastWrapperRight.value.gridOp.computeSquareXY(point.x, point.y), k))
+
+        //                if (point.userData.toString.equalsIgnoreCase("bread_1_b_993412"))
+        //                  println(SpatialIdxOperations.extractLstPartition(bvBroadcastWrapperRight.value.spatialIdx, bvBroadcastWrapperRight.value.gridOp.computeSquareXY(point.x, point.y), k))
 
         while (lstPartitionId.length < numRounds)
           lstPartitionId += -1
 
         lstPartitionId = Random.shuffle(lstPartitionId)
 
+        //println("<<\t" + lstPartitionId.mkString("\t"))
         val rDataPoint: Any = new RowData(point, SortedList[Point](k), lstPartitionId.tail)
 
         (lstPartitionId.head, rDataPoint)
       }))
 
-    (0 until numRounds).foreach(_ => {
+    (0 until numRounds).foreach(roundNum => {
       rddPoint = rddSpIdx
         .union(new ShuffledRDD(rddPoint, rddSpIdx.partitioner.get))
         .mapPartitionsWithIndex((pIdx, iter) => {
@@ -248,23 +260,38 @@ case class SparkKnn(debugMode: Boolean, spatialIndexType: SupportedSpatialIndexe
             case spIdx: SpatialIndex => spIdx
           }
 
-          iter.map(row => row._2 match {
-            case rowData: RowData =>
+          //          var startTime = -1L
+          //          var counterRow = 0L
+          //          var counterKnn = 0L
 
-              if (row._1 != -1) {
+          iter.map(row => {
 
-                //                if (rowData.point.userData.toString.equalsIgnoreCase("taxi_2_b_255747"))
-                //                  println(pIdx)
+            //            counterRow += 1
 
-                spatialIndex.nearestNeighbor(rowData.point, rowData.sortedList)
-              }
+            if (startTime == -1)
+              startTime = System.currentTimeMillis()
 
-              val nextPartIdx = rowData.lstPartitionId.headOption.getOrElse(-1)
+            row._2 match {
+              case rowData: RowData =>
 
-              if (rowData.lstPartitionId.nonEmpty)
-                rowData.lstPartitionId = rowData.lstPartitionId.tail
+                if (row._1 != -1) {
 
-              (nextPartIdx, rowData)
+                  //                if (rowData.point.userData.toString.equalsIgnoreCase("taxi_2_b_255747"))
+                  //                  println(pIdx)
+                  //                  counterKnn += 1
+                  spatialIndex.nearestNeighbor(rowData.point, rowData.sortedList)
+                }
+
+                val nextPartIdx = rowData.lstPartitionId.headOption.getOrElse(-1)
+
+                if (rowData.lstPartitionId.nonEmpty)
+                  rowData.lstPartitionId = rowData.lstPartitionId.tail
+
+                //                if (!iter.hasNext)
+                //                  Helper.loggerSLf4J(debugMode, SparkKnn, ">>kNN done pIdx: %,d round: %,d points: %,d lookups: %,d in %,d MS".format(pIdx, roundNum, counterRow, counterKnn, System.currentTimeMillis() - startTime))
+
+                (nextPartIdx, rowData)
+            }
           })
         })
 
@@ -276,7 +303,7 @@ case class SparkKnn(debugMode: Boolean, spatialIndexType: SupportedSpatialIndexe
     })
   }
 
-  private def computeCapacity(rddPoint: RDD[Point] /*, otherSetRowCount: Long*/): (Long, (Double, Double, Double, Double)) = {
+  private def computeCapacity(rddPoint: RDD[Point] /*, otherSetRowCount: Long*/): (Long, Long, (Double, Double, Double, Double)) = {
 
     var startTime = System.currentTimeMillis
 
@@ -286,10 +313,10 @@ case class SparkKnn(debugMode: Boolean, spatialIndexType: SupportedSpatialIndexe
         .reduce((param1, param2) =>
           (Helper.max(param1._1, param2._1), param1._2 + param2._2, Helper.min(param1._3, param2._3), Helper.min(param1._4, param2._4), Helper.max(param1._5, param2._5), Helper.max(param1._6, param2._6)))
 
-    //    val rowCountAdjusted = if (isAllKnn) rowCount * 2 else rowCount
+    //    val rowCountAdjusted = if (isAllKnn) rowCount * 2 else rowCountspatialIndexCost
 
     Helper.loggerSLf4J(debugMode, SparkKnn, ">>Right DS info time in %,d MS".format(System.currentTimeMillis - startTime))
-    Helper.loggerSLf4J(debugMode, SparkKnn, ">>maxRowSize:%d\trowCount:%d\tmbrLeft:%.8f\tmbrBottom:%.8f\tmbrRight:%.8f\tmbrTop:%.8f".format(maxRowSize, rowCount, mbrLeft, mbrBottom, mbrRight, mbrTop))
+    Helper.loggerSLf4J(debugMode, SparkKnn, ">>maxRowSize:%,d\trowCount:%,d\tmbrLeft:%.8f\tmbrBottom:%.8f\tmbrRight:%.8f\tmbrTop:%.8f".format(maxRowSize, rowCount, mbrLeft, mbrBottom, mbrRight, mbrTop))
 
     startTime = System.currentTimeMillis
 
@@ -313,7 +340,7 @@ case class SparkKnn(debugMode: Boolean, spatialIndexType: SupportedSpatialIndexe
     val rowDataCost = SizeEstimator.estimate(rowDataDummy) + (pointCost * k)
     val spatialIndexCost = SizeEstimator.estimate(spatialIndexDummy) +
       SizeEstimator.estimate(rectDummy) +
-      spatialIndexDummy.estimateNodeCount(rowCount) * SizeEstimator.estimate(spatialIndexDummy.dummyNode)
+      (spatialIndexDummy.estimateNodeCount(rowCount) * SizeEstimator.estimate(spatialIndexDummy.dummyNode))
 
     val execObjCapacity = (execAvailableMemory - execOverheadMemory - spatialIndexCost - rowDataCost) / pointCost
     var coreObjCapacity = execObjCapacity / coresPerExecutor
@@ -334,6 +361,6 @@ case class SparkKnn(debugMode: Boolean, spatialIndexType: SupportedSpatialIndexe
     Helper.loggerSLf4J(debugMode, SparkKnn, ">>coresPerExecutor=%,d, execAvailableMemory=%,d, execOverheadMemory=%,d, execObjCapacity=%,d, coreObjCapacity=%,d, numParts=%,d, pointCost=%,d, rowDataCost=%,d, spatialIndexCost=%,d"
       .format(coresPerExecutor, execAvailableMemory, execOverheadMemory, execObjCapacity, coreObjCapacity, numParts, pointCost, rowDataCost, spatialIndexCost))
 
-    (coreObjCapacity, (mbrLeft, mbrBottom, mbrRight, mbrTop))
+    (coreObjCapacity, rowCount, (mbrLeft, mbrBottom, mbrRight, mbrTop))
   }
 }

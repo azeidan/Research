@@ -12,7 +12,7 @@ object SparkKNN_Local_CLArgs {
 
   def random_sample(): CLArgsParser =
     apply("2G",
-      "1G",
+      "4G",
       4,
       5,
       LocalRunConsts.pathRandSample_A_NAD83,
@@ -20,7 +20,8 @@ object SparkKNN_Local_CLArgs {
       LocalRunConsts.pathRandSample_B_NAD83,
       InputFileParsers.CODE_THREE_PART_LINE,
       10,
+      //      SupportedKnnOperations.knn,
       SupportedKnnOperations.allKnn,
-      //      SupportedSpatialIndexes.quadTree)
-      SupportedSpatialIndexes.kdTree)
+                  SupportedSpatialIndexes.quadTree)
+//      SupportedSpatialIndexes.kdTree)
 }

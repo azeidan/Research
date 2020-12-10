@@ -57,7 +57,7 @@ object SpatialIdxOperations extends Serializable {
 
   val errorRange: Float = math.sqrt(8).toFloat
 
-  class IdxRangeLookupInfo {
+  final class IdxRangeLookupInfo {
 
     var rectSearchRegion: Rectangle = _
     val sortList: SortedList[Point] = new SortedList[Point]()
@@ -181,6 +181,9 @@ object SpatialIdxOperations extends Serializable {
   //    IdxRangeLookupInfo(Rectangle(searchPoint, new Geom2D(computeDimension(searchPoint, rectMBR))))
 
   private def updateMatchListAndRegion(point: Point, idxRangeLookupInfo: IdxRangeLookupInfo, k: Int): Unit = {
+
+    //    if (point.x.toString().startsWith("143") && point.y.toString().startsWith("874"))
+    //      print("")
 
     def getNumPoints(point: Point): Long = point.userData match {
       case globalIndexPointData: GlobalIndexPointData => globalIndexPointData.numPoints

@@ -25,7 +25,7 @@ object Helper {
 
   def min(x: Long, y: Long): Long = if (x < y) x else y
 
-  def log2(n: Long): Int = (Math.log(n) / Math.log(2)).toInt
+  def log2(n: Long): Int = (math.log(n) / math.log(2)).toInt
 
   def indexOfBSearch(arrSortedValues: IndexedSeq[Int], lookupValue: Int): Boolean = {
 

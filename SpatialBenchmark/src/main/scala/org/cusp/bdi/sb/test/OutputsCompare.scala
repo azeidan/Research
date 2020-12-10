@@ -103,11 +103,13 @@ case class OutputsCompare(classificationCount: Int, rddKeyMatch: RDD[String],
           if (row._2._1 == null && row._2._2 != null) {
 
             incrementInMap(OutputsCompare.recordsInFWOnly, row)
+            incrementInMap(OutputsCompare.recordsFWMismatch, row)
             done = true
           }
           else if (row._2._1 != null && row._2._2 == null) {
 
             incrementInMap(OutputsCompare.recordsInKMOnly, row)
+            incrementInMap(OutputsCompare.recordsFWMismatch, row)
             done = true
           }
 

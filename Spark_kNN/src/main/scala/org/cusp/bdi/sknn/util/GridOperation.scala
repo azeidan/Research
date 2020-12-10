@@ -1,30 +1,38 @@
 package org.cusp.bdi.sknn.util
 
-final class GridOperation extends Serializable {
+import org.cusp.bdi.util.Helper
+
+case class GridOperation(datasetMBR: (Double, Double, Double, Double)) extends Serializable {
+
+  //  var squareDimX: Int = -1
+  //  var squareDimY: Int = -1
+
+  //  var shiftByX = -1
+  //  var shiftByY = -1
 
   var squareDim: Int = -1
 
-  def this(datasetMBR: (Double, Double, Double, Double), /*objectCount: Long, */ objPartCount: Long, k: Int) = {
+  def this(datasetMBR: (Double, Double, Double, Double), objCount: Long, k: Int) = {
 
-    this()
+    this(datasetMBR)
 
-    squareDim = (math.max(datasetMBR._3 - datasetMBR._1, datasetMBR._4 - datasetMBR._2) / (objPartCount / k)).toInt
+    val mbrMaxDim = Helper.max(datasetMBR._3 - datasetMBR._1, datasetMBR._4 - datasetMBR._2)
+    val objPerUnit = math.ceil(objCount / mbrMaxDim) + math.log10(k)
+    val squareCount = (objCount / objPerUnit).ceil
 
-    //    var tmp = objectCount / k
-    //    val pointPerSquare = if (tmp >= Int.MaxValue) Int.MaxValue else tmp.toInt + 1 // ceil(...
-    //
-    //    tmp = (math.max(datasetMBR._3 - datasetMBR._1, datasetMBR._4 - datasetMBR._2) / pointPerSquare).toInt
-    //    squareDim = if (tmp >= Int.MaxValue) Int.MaxValue else tmp.toInt + 1 // ceil(...
+    squareDim = (mbrMaxDim / squareCount).ceil.toInt
   }
 
   def computeSquareXY(xy: (Double, Double)): (Double, Double) =
     computeSquareXY(xy._1, xy._2)
 
   def computeSquareXY(x: Double, y: Double): (Double, Double) =
-    ((x / squareDim).floor, (y / squareDim).floor)
+    (((x - datasetMBR._1) / squareDim).floor, ((y - datasetMBR._2) / squareDim).floor)
+
+  //    (((x - datasetMBR._1) / squareDimX).floor, ((y - datasetMBR._2) / squareDimY).floor)
 
   //  def reverseEstimateXY(x: Double, y: Double): (Double, Double) =
-  //    (x * squareDim + squareDim, y * squareDim + squareDim)
+  //    (x * squareDimX + shiftByX, y * squareDimY + shiftByY)
 
   //  override def write(kryo: Kryo, output: Output): Unit = {
   //
@@ -37,4 +45,5 @@ final class GridOperation extends Serializable {
   //    pointPerSquare = input.readInt()
   //    squareDim = input.readInt()
   //  }
+
 }

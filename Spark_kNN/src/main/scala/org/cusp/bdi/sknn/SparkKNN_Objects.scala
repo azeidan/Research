@@ -24,23 +24,23 @@ final class RangeInfo {
   var right: Double = _
   var top: Double = _
 
-  def this(start: ((Double, Double), Long)) = {
+  def this(seed: ((Double, Double), Long)) = {
 
     this()
 
-    this.lstMBRCoord += start
-    this.totalWeight = start._2
-    this.left = start._1._1
-    this.bottom = start._1._2
-    this.right = start._1._1
-    this.top = start._1._2
+    this.lstMBRCoord += seed
+    this.totalWeight = seed._2
+    this.left = seed._1._1
+    this.bottom = seed._1._2
+    this.right = seed._1._1
+    this.top = seed._1._2
   }
 
   def mbr: (Double, Double, Double, Double) =
     (left, bottom, right, top)
 
   override def toString: String =
-    "%f\t%f\t%f\t%f\t%d".format(left, bottom, right, top, totalWeight)
+    "%f\t%f\t%f\t%f\t%,d".format(left, bottom, right, top, totalWeight)
 }
 
 final class RowData extends KryoSerializable {

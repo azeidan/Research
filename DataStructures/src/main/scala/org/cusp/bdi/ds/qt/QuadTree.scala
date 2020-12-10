@@ -40,7 +40,7 @@ class QuadTree extends SpatialIndex {
     new QuadTree()
 
   override def estimateNodeCount(pointCount: Long): Int =
-    Math.pow(2, Helper.log2(pointCount / nodeCapacity)).toInt - 1
+    math.ceil(pointCount / nodeCapacity).toInt
 
   override def getTotalPoints: Int = totalPoints
 
@@ -90,6 +90,9 @@ class QuadTree extends SpatialIndex {
     quadTree != null && quadTree.rectBounds.contains(searchXY._1, searchXY._2)
 
   private def insertPoint(point: Point): Boolean = {
+
+//    if (point.userData.toString.equalsIgnoreCase("Yellow_2_A_507601"))
+//      println()
 
     var qTree = this
 

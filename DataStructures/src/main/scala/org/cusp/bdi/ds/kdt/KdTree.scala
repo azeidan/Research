@@ -44,23 +44,31 @@ class KdTree extends SpatialIndex {
   override def dummyNode: AnyRef =
     new KdtBranchRootNode()
 
-  override def estimateNodeCount(pointCount: Long): Int =
-    Math.pow(2, Helper.log2(pointCount / nodeCapacity)).toInt - 1
+  override def estimateNodeCount(pointCount: Long): Int = {
 
-  def extractHGGroupWidth(rectBounds: Rectangle, iterPoints: Iterator[Point], otherInitializers: Seq[Any]) = {
+    val height = Helper.log2(pointCount / nodeCapacity).toInt
+
+    (1 until height).map(h => Math.pow(2, h - 1).toInt).sum
+  }
+
+  def extractHGGroupWidth(rectBounds: Rectangle, iterPoints: Iterator[Point], otherInitializers: Seq[Any]): Int = {
 
     if (rootNode != null) throw new IllegalStateException("KD Tree already built")
     if (rectBounds == null) throw new IllegalStateException("Rectangle bounds cannot be null")
     if (iterPoints.isEmpty) throw new IllegalStateException("Empty point iterator")
     if (otherInitializers.length != 1) throw new IllegalStateException("%s%d".format("KdTree only accepts one additional initializer for Histogram operations. Got ", otherInitializers.length))
 
-    otherInitializers.head match {
-      case i: Int =>
+    try {
 
-        if (i < 1) throw new IllegalStateException("%s%d".format("Histogram bar width must be >= 1: Got: ", i))
+      val i = otherInitializers.head.toString.toInt
 
-        i
-      case _ =>
+      if (i < 1)
+        throw new Exception()
+
+      i
+    }
+    catch {
+      case _: Exception =>
         throw new IllegalStateException("%s%d".format("Histogram bar width must be >= 1: Got: ", otherInitializers.headOption.getOrElse("")))
     }
   }
