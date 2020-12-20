@@ -1,35 +1,60 @@
 package org.cusp.bdi.sb.test
 
-import org.cusp.bdi.util.Helper
+import org.cusp.bdi.sb.test.BenchmarkInputFileParser.sortSimilarByKey
+
+object BenchmarkInputFileParser {
+
+  def sortSimilarByKey(arrMatches: Array[(String, String)]): Array[(String, String)] = {
+
+    var arr = arrMatches
+
+    var i = 0
+    while (i < arr.length - 1) {
+
+      val sortFrom = i
+
+      while (i < arr.length - 1 && arr(sortFrom)._1.equals(arr(i + 1)._1))
+        i += 1
+
+      if (sortFrom != i) {
+
+        val arrPart1 = if (sortFrom == 0) Array[(String, String)]() else arr.slice(0, sortFrom)
+        val arrPart2 = arr.slice(sortFrom, i + 1).sortBy(_._2)
+        val arrPart3 = if (i == arr.length - 1) Array[(String, String)]() else arr.slice(i + 1, arr.length)
+
+        arr = arrPart1 ++ arrPart2 ++ arrPart3
+      }
+
+      i += 1
+    }
+
+    arr
+  }
+}
 
 trait BenchmarkInputFileParser extends Serializable {
 
-  def parseLine(line: String): (String, Array[String])
+  def parseLine(line: String): (String, Array[(String, String)])
 
-  // "matchNthComma" is the number of the comma separating the record from the street matches
-  // e.g. matchNthComma=11, then the 11th comma is the one separating the point from the street matches
-  protected def commonParseLine: (String, Int, Int) => (String, Array[String]) = (line: String, latLonNthComma: Int, matchNthComma: Int) => {
+  // assumes line is in the following format:
+  // <key> <delimitChar> <delimitCharMajor> <delimitChar> <match2> <delimitCharMajor> <match3> <delimitCharMajor> ...
+  //
+  // key is assumed in the following format
+  // <label> <delimitCharMinor> <val1> <delimitCharMinor> <val2>
+  //
+  // each match is assumed in the following format
+  // <value> <delimitCharMinor> <key>
+  protected def commonParseLine(line: String, delimitCharMajor: Char, delimitCharMinor: Char): (String, Array[(String, String)]) = {
 
-    var arrStreetMatches: Array[String] = null
+    val arr = line.toLowerCase.split(delimitCharMajor)
 
-    val idxStreet = Helper.indexOf(line, ",", matchNthComma)
-    val recordLine = StringBuilder.newBuilder.append(line)
-
-    if (idxStreet != -1) {
-
-      arrStreetMatches = line.substring(idxStreet + 1).split(',')
-      recordLine.delete(idxStreet, recordLine.length)
-    }
-
-    val idxCoord = Helper.indexOf(recordLine, ",", latLonNthComma)
-
-    if (idxCoord != -1) {
-
-      // remove lon/lat from line
-      recordLine.delete(idxCoord, Helper.indexOf(recordLine, ",", 2, idxCoord + 1))
-
-    }
-
-    (recordLine.toString(), arrStreetMatches)
+    val arrMatches =
+      sortSimilarByKey(arr
+        .tail
+        .map(_.split(delimitCharMinor))
+        .map(arrDistKey => (arrDistKey(0), arrDistKey(1)))
+      )
+    // sort similar values by key
+    (arr(0), arrMatches)
   }
 }

@@ -3,6 +3,7 @@ package org.cusp.bdi.ds.kdt
 import com.esotericsoftware.kryo.{Kryo, KryoSerializable}
 import com.esotericsoftware.kryo.io.{Input, Output}
 import org.cusp.bdi.ds.geom.{Point, Rectangle}
+import org.cusp.bdi.ds.kdt.KdtNode.SPLIT_VAL_NONE
 
 import scala.collection.mutable.ListBuffer
 
@@ -24,10 +25,14 @@ abstract class KdtNode extends KryoSerializable {
     }
 }
 
+object KdtNode {
+  val SPLIT_VAL_NONE = Double.NegativeInfinity
+}
+
 final class KdtBranchRootNode extends KdtNode {
 
   private var _totalPoints: Int = 0
-  var splitVal: Double = 0
+  var splitVal: Double = SPLIT_VAL_NONE
   var left: KdtNode = _
   var right: KdtNode = _
 
@@ -64,11 +69,11 @@ final class KdtLeafNode extends KdtNode {
 
   override def totalPoints: Int = lstPoints.length
 
-  def this(lstPoints: ListBuffer[Point], rectNodeBounds: Rectangle) = {
+  def this(nodeInfo: (ListBuffer[Point], Rectangle)) = {
 
     this()
-    this.lstPoints = lstPoints
-    this.rectNodeBounds = rectNodeBounds
+    this.lstPoints = nodeInfo._1
+    this.rectNodeBounds = nodeInfo._2
   }
 
   override def write(kryo: Kryo, output: Output): Unit = {

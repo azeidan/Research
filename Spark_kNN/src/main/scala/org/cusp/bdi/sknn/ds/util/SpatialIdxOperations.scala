@@ -2,15 +2,15 @@ package org.cusp.bdi.sknn.ds.util
 
 import com.esotericsoftware.kryo.io.{Input, Output}
 import com.esotericsoftware.kryo.{Kryo, KryoSerializable}
-import org.cusp.bdi.ds.SpatialIndex.computeDimension
+import org.cusp.bdi.ds.SpatialIndex.computeSquaredDist
 import org.cusp.bdi.ds._
 import org.cusp.bdi.ds.geom.{Geom2D, Point, Rectangle}
-import org.cusp.bdi.ds.kdt.KdTree.findSearchRegionLocation
 import org.cusp.bdi.ds.kdt.{KdTree, KdtBranchRootNode, KdtLeafNode, KdtNode}
 import org.cusp.bdi.ds.qt.QuadTree
-import org.cusp.bdi.ds.sortset.{Node, SortedList}
+import org.cusp.bdi.ds.sortset.{Node, SortedLinkedList}
 import org.cusp.bdi.util.Helper
 
+import scala.collection.mutable
 import scala.collection.mutable.ListBuffer
 
 object SupportedSpatialIndexes extends Enumeration with Serializable {
@@ -55,22 +55,29 @@ final class GlobalIndexPointData extends KryoSerializable {
 
 object SpatialIdxOperations extends Serializable {
 
-  val errorRange: Float = math.sqrt(8).toFloat
+  //  val errorRange: Float = 8 //2 * math.sqrt(2).toFloat
+
+  //  val sqrt2 = math.sqrt(2).toFloat
 
   final class IdxRangeLookupInfo {
 
     var rectSearchRegion: Rectangle = _
-    val sortList: SortedList[Point] = new SortedList[Point]()
+    val sortList: SortedLinkedList[Point] = new SortedLinkedList[Point]()
     var limitNode: Node[Point] = _
-    var sqrDim: Double = 0
+    var dimSquared: Double = 0
     var weight: Long = 0L
 
     def this(searchPoint: Geom2D, rectBestNode: Rectangle) = {
 
       this()
 
-      rectSearchRegion = Rectangle(searchPoint, new Geom2D(computeDimension(searchPoint, rectBestNode) + errorRange))
-      sqrDim = math.pow(rectSearchRegion.halfXY.x, 2)
+      //      rectSearchRegion = Rectangle(searchPoint, new Geom2D(math.sqrt(2 * math.pow(rectBestNode.maxDistanceFrom(searchPoint), 2) + 4) /*errorRange*/))
+      // 2 d^2
+      dimSquared = computeSquaredDist(rectBestNode.maxManhattanDist(searchPoint))
+
+      rectSearchRegion = Rectangle(searchPoint, new Geom2D(math.sqrt(dimSquared)) /*errorRange*/)
+
+      //      sqrDim = /*2 * */math.pow(rectSearchRegion.halfXY.x, 2)
     }
   }
 
@@ -82,10 +89,10 @@ object SpatialIdxOperations extends Serializable {
       .map(_.data.userData match {
         case globalIndexPointData: GlobalIndexPointData => globalIndexPointData.partitionIdx
       })
-      .toSet
       .to[ListBuffer]
+      .distinct
 
-  private def lookup(quadTree: QuadTree, searchXY: (Double, Double), k: Int): SortedList[Point] = {
+  private def lookup(quadTree: QuadTree, searchXY: (Double, Double), k: Int): SortedLinkedList[Point] = {
 
     //    if (searchPointXY._1.toString().startsWith("26167") && searchPointXY._2.toString().startsWith("4966"))
     //      println
@@ -125,10 +132,10 @@ object SpatialIdxOperations extends Serializable {
     idxRangeLookupInfo.sortList
   }
 
-  private def lookup(kdTree: KdTree, searchXY: (Double, Double), k: Int): SortedList[Point] = {
+  private def lookup(kdTree: KdTree, searchXY: (Double, Double), k: Int): SortedLinkedList[Point] = {
 
-    //    if (searchPointXY._1.toString().startsWith("26167") && searchPointXY._2.toString().startsWith("4966"))
-    //      println
+    //        if (searchXY._1.toString().startsWith("248") && searchXY._2.toString().startsWith("58"))
+    //          println
 
     val searchPoint = new Geom2D(searchXY._1, searchXY._2)
 
@@ -138,32 +145,45 @@ object SpatialIdxOperations extends Serializable {
 
     def process(kdtNode: KdtNode, skipKdtNode: KdtNode) {
 
-      val lstKdtNode = ListBuffer((kdtNode, splitX))
+      val queueKdtNode = mutable.Queue((kdtNode, splitX))
 
-      lstKdtNode.foreach(row =>
+      while (queueKdtNode.nonEmpty) {
+
+        val row = queueKdtNode.dequeue()
+
         if (row._1 != skipKdtNode)
           row._1 match {
             case kdtBRN: KdtBranchRootNode =>
 
-              findSearchRegionLocation(idxRangeLookupInfo.rectSearchRegion, kdtBRN.splitVal, row._2) match {
-                case 'L' =>
-                  if (kdtBRN.left != null && idxRangeLookupInfo.rectSearchRegion.intersects(kdtBRN.left.rectNodeBounds))
-                    lstKdtNode += ((kdtBRN.left, !row._2))
-                case 'R' =>
-                  if (kdtBRN.right != null && idxRangeLookupInfo.rectSearchRegion.intersects(kdtBRN.right.rectNodeBounds))
-                    lstKdtNode += ((kdtBRN.right, !row._2))
-                case _ =>
-                  if (kdtBRN.left != null && idxRangeLookupInfo.rectSearchRegion.intersects(kdtBRN.left.rectNodeBounds))
-                    lstKdtNode += ((kdtBRN.left, !row._2))
-                  if (kdtBRN.right != null && idxRangeLookupInfo.rectSearchRegion.intersects(kdtBRN.right.rectNodeBounds))
-                    lstKdtNode += ((kdtBRN.right, !row._2))
-              }
+              if (kdtBRN.left != null && idxRangeLookupInfo.rectSearchRegion.intersects(kdtBRN.left.rectNodeBounds))
+                queueKdtNode += ((kdtBRN.left, !row._2))
+              if (kdtBRN.right != null && idxRangeLookupInfo.rectSearchRegion.intersects(kdtBRN.right.rectNodeBounds))
+                queueKdtNode += ((kdtBRN.right, !row._2))
+
+            //              findSearchRegionLocation(idxRangeLookupInfo.rectSearchRegion, kdtBRN.splitVal, row._2) match {
+            //                case 'L' =>
+            //                  if (kdtBRN.left != null && idxRangeLookupInfo.rectSearchRegion.intersects(kdtBRN.left.rectNodeBounds))
+            //                    queueKdtNode += ((kdtBRN.left, !row._2))
+            //                case 'R' =>
+            //                  if (kdtBRN.right != null && idxRangeLookupInfo.rectSearchRegion.intersects(kdtBRN.right.rectNodeBounds))
+            //                    queueKdtNode += ((kdtBRN.right, !row._2))
+            //                case _ =>
+            //                  if (kdtBRN.left != null && idxRangeLookupInfo.rectSearchRegion.intersects(kdtBRN.left.rectNodeBounds))
+            //                    queueKdtNode += ((kdtBRN.left, !row._2))
+            //                  if (kdtBRN.right != null && idxRangeLookupInfo.rectSearchRegion.intersects(kdtBRN.right.rectNodeBounds))
+            //                    queueKdtNode += ((kdtBRN.right, !row._2))
+            //              }
 
             case kdtLeafNode: KdtLeafNode =>
               if (idxRangeLookupInfo.rectSearchRegion.intersects(kdtLeafNode.rectNodeBounds))
-                kdtLeafNode.lstPoints.foreach(updateMatchListAndRegion(_, idxRangeLookupInfo, k))
+                kdtLeafNode.lstPoints.foreach(pt => {
+
+                  //                  if ((pt.x.toString.startsWith("148") && pt.y.toString.startsWith("27")) /*|| (pt.x.toString.startsWith("193") && pt.y.toString.startsWith("88"))*/ )
+                  //                    print("")
+                  updateMatchListAndRegion(pt, idxRangeLookupInfo, k)
+                })
           }
-      )
+      }
     }
 
     process(sPtBestNode, null)
@@ -173,7 +193,7 @@ object SpatialIdxOperations extends Serializable {
       splitX = true
       process(kdTree.rootNode, sPtBestNode)
     }
-
+    //println(idxRangeLookupInfo.rectSearchRegion.center.xy.toString() + idxRangeLookupInfo.rectSearchRegion.contains(new Geom2D(147,43)))
     idxRangeLookupInfo.sortList
   }
 
@@ -197,13 +217,13 @@ object SpatialIdxOperations extends Serializable {
       val sqDistQTPoint = Helper.squaredEuclideanDist(idxRangeLookupInfo.rectSearchRegion.center.x, idxRangeLookupInfo.rectSearchRegion.center.y, point.x, point.y)
 
       // add point if it's within the search radius
-      if (idxRangeLookupInfo.limitNode == null || sqDistQTPoint < idxRangeLookupInfo.sqrDim) {
+      if (idxRangeLookupInfo.limitNode == null || sqDistQTPoint <= idxRangeLookupInfo.dimSquared) {
 
         idxRangeLookupInfo.sortList.add(sqDistQTPoint, point)
 
         idxRangeLookupInfo.weight += getNumPoints(point)
 
-        // see if region can shrink if at least the last node can be dropped
+        // see if region can shrink and if at least the last node can be dropped
         if ((idxRangeLookupInfo.limitNode == null || idxRangeLookupInfo.sortList.last.data != point) &&
           (idxRangeLookupInfo.weight - getNumPoints(idxRangeLookupInfo.sortList.last.data)) >= k) {
 
@@ -220,12 +240,16 @@ object SpatialIdxOperations extends Serializable {
 
             idxRangeLookupInfo.limitNode = elem
 
-            idxRangeLookupInfo.rectSearchRegion.halfXY.x = math.sqrt(idxRangeLookupInfo.limitNode.distance) + errorRange
+            //            idxRangeLookupInfo.rectSearchRegion.halfXY.x = 2 + math.sqrt(idxRangeLookupInfo.limitNode.distance / 2)
+            //            val maxManhattanDist = Helper.max(math.abs(idxRangeLookupInfo.rectSearchRegion.center.x - idxRangeLookupInfo.limitNode.data.x), math.abs(idxRangeLookupInfo.rectSearchRegion.center.y - idxRangeLookupInfo.limitNode.data.y))
+            //            idxRangeLookupInfo.sqrDim = /*2 * */ math.pow(maxManhattanDist, 2) + 4 // +4 for the diagonal of an additional 2 squares (aka 2*sqrt(2)) to account for the floor operation of the grid assignment
+
+            idxRangeLookupInfo.dimSquared = computeSquaredDist(Helper.manhattanDist(idxRangeLookupInfo.rectSearchRegion.center.x, idxRangeLookupInfo.rectSearchRegion.center.y, idxRangeLookupInfo.limitNode.data.x, idxRangeLookupInfo.limitNode.data.y))
+
+            idxRangeLookupInfo.rectSearchRegion.halfXY.x = math.sqrt(idxRangeLookupInfo.dimSquared)
             idxRangeLookupInfo.rectSearchRegion.halfXY.y = idxRangeLookupInfo.rectSearchRegion.halfXY.x
 
-            idxRangeLookupInfo.sqrDim = math.pow(idxRangeLookupInfo.rectSearchRegion.halfXY.x, 2)
-
-            while (elem.next != null && elem.next.distance < idxRangeLookupInfo.sqrDim) {
+            while (elem.next != null && elem.next.distance <= idxRangeLookupInfo.dimSquared) {
 
               elem = elem.next
               newWeight += getNumPoints(elem.data)

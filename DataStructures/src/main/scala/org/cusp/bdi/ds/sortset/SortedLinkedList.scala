@@ -11,11 +11,14 @@ case class Node[T](distance: Double, data: T) /*(implicit ev$1: T => Comparable[
     "%f, %s".format(distance, data)
 }
 
-case class SortedList[T](maxSize: Int) /*(implicit ev$1: T => Comparable[_ >: T])*/ extends Serializable with Iterable[Node[T]] {
+case class SortedLinkedList[T](maxSize: Int) /*(implicit ev$1: T => Comparable[_ >: T])*/ extends Serializable with Iterable[Node[T]] {
 
   private var headNode: Node[T] = _
   private var lastNode: Node[T] = _
   private var nodeCount = 0
+
+  if (maxSize < 1)
+    throw new IllegalArgumentException("Invalid maxSize parameter. Values > 0 only")
 
   def this() =
     this(Int.MaxValue)
@@ -33,49 +36,68 @@ case class SortedList[T](maxSize: Int) /*(implicit ev$1: T => Comparable[_ >: T]
 
       var prevNode: Node[T] = null
       var currNode = headNode
+      var prevNodeIndex = -1
 
       // distance sort
       while (currNode != null && distance > currNode.distance) {
+
+        prevNodeIndex += 1
 
         prevNode = currNode
         currNode = currNode.next
       }
 
-      if (currNode == null || !currNode.data.equals(data)) {
+      //      if (currNode == null || !currNode.data.equals(data)) {
 
-        nodeCount += 1
+      nodeCount += 1
 
-        if (prevNode == null) { // insert first
+      if (prevNode == null) { // insert first
 
-          headNode = Node(distance, data)
-          headNode.next = currNode
+        headNode = Node(distance, data)
+        headNode.next = currNode
 
-          if (lastNode == null)
-            lastNode = headNode
+        if (lastNode == null)
+          lastNode = headNode
+      }
+      else { // insert after
+
+        // line, xy
+        prevNode.next = Node(distance, data)
+        prevNode.next.next = currNode
+
+        if (lastNode == prevNode)
+          lastNode = prevNode.next
+      }
+
+      if (nodeCount > maxSize) {
+
+        if (prevNode == null) {
+
+          prevNode = headNode
+          prevNodeIndex = 0
         }
-        else { // insert after
 
-          // line, xy
-          prevNode.next = Node(distance, data)
-          prevNode.next.next = currNode
+        // jump to maxSize node
+        while (prevNodeIndex < maxSize - 1) {
 
-          if (lastNode == prevNode)
-            lastNode = prevNode.next
+          prevNode = prevNode.next
+          prevNodeIndex += 1
         }
 
-        if (nodeCount > maxSize) {
+        var tmp = prevNode
 
-          var tmp = if (prevNode == null) headNode else prevNode
+        while (tmp.next != null && tmp.next.distance == prevNode.distance) {
 
-          while (tmp.next != lastNode)
-            tmp = tmp.next
-
-          lastNode = tmp
-          lastNode.next = null
-          nodeCount -= 1
+          tmp = tmp.next
+          prevNodeIndex += 1
         }
+
+        lastNode = tmp
+        lastNode.next = null
+        nodeCount = prevNodeIndex + 1
       }
     }
+    //    }
   }
 
   def isFull: Boolean = nodeCount == maxSize
@@ -106,11 +128,13 @@ case class SortedList[T](maxSize: Int) /*(implicit ev$1: T => Comparable[_ >: T]
 
   override def last: Node[T] = lastNode
 
+  def length: Int = nodeCount
+
   override def size: Int = nodeCount
 
   override def iterator: Iterator[Node[T]] = new AbstractIterator[Node[T]] {
 
-    var cursor: Node[T] = if (SortedList.this.isEmpty()) null else headNode
+    var cursor: Node[T] = if (SortedLinkedList.this.isEmpty()) null else headNode
 
     override def hasNext: Boolean = cursor != null
 

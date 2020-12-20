@@ -4,7 +4,7 @@ import com.esotericsoftware.kryo.io.{Input, Output}
 import com.esotericsoftware.kryo.{Kryo, KryoSerializable}
 import org.cusp.bdi.ds._
 import org.cusp.bdi.ds.geom.Point
-import org.cusp.bdi.ds.sortset.SortedList
+import org.cusp.bdi.ds.sortset.SortedLinkedList
 import org.cusp.bdi.sknn.util._
 
 import scala.collection.mutable.ListBuffer
@@ -46,10 +46,10 @@ final class RangeInfo {
 final class RowData extends KryoSerializable {
 
   var point: Point = _
-  var sortedList: SortedList[Point] = _
+  var sortedList: SortedLinkedList[Point] = _
   var lstPartitionId: ListBuffer[Int] = _
 
-  def this(point: Point, sortedList: SortedList[Point], lstPartitionId: ListBuffer[Int]) = {
+  def this(point: Point, sortedList: SortedLinkedList[Point], lstPartitionId: ListBuffer[Int]) = {
 
     this()
 
@@ -71,7 +71,7 @@ final class RowData extends KryoSerializable {
       case pt: Point => pt
     }
 
-    sortedList = kryo.readClassAndObject(input).asInstanceOf[SortedList[Point]]
+    sortedList = kryo.readClassAndObject(input).asInstanceOf[SortedLinkedList[Point]]
     lstPartitionId = kryo.readClassAndObject(input).asInstanceOf[ListBuffer[Int]]
   }
 }

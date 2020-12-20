@@ -20,8 +20,8 @@ object SparkKNN_Local_CLArgs {
       LocalRunConsts.pathRandSample_B_NAD83,
       InputFileParsers.CODE_THREE_PART_LINE,
       10,
-      //      SupportedKnnOperations.knn,
-      SupportedKnnOperations.allKnn,
-                  SupportedSpatialIndexes.quadTree)
-//      SupportedSpatialIndexes.kdTree)
+            SupportedKnnOperations.knn,
+//      SupportedKnnOperations.allKnn,
+//                   SupportedSpatialIndexes.quadTree)
+      SupportedSpatialIndexes.kdTree)
 }

@@ -131,33 +131,6 @@ object Helper {
     }
   }
 
-  //  def getMBREnds(arrCoords: Array[(Int, Int)], expandBy: Int) = {
-  //
-  //    val xCoords = arrCoords.map(_._1)
-  //    val yCoords = arrCoords.map(_._2)
-  //
-  //    var minX = xCoords.min - expandBy
-  //    var minY = yCoords.min - expandBy
-  //    var maxX = xCoords.max + expandBy
-  //    var maxY = yCoords.max + expandBy
-  //
-  //    Array((minX, minY), (maxX, maxY))
-  //  }
-  //
-  //  def getMBREnds(arrCoords: Array[(Float, Float)], expandBy: Float) = {
-  //
-  //    val xCoords = arrCoords.map(_._1)
-  //    val yCoords = arrCoords.map(_._2)
-  //
-  //    var minX = xCoords.min - expandBy
-  //    var minY = yCoords.min - expandBy
-  //    var maxX = xCoords.max + expandBy
-  //    var maxY = yCoords.max + expandBy
-  //
-  //    // Closed ring MBR (1st and last points repeated)
-  //    Array((minX, minY), (maxX, maxY))
-  //  }
-
   def getMBREnds(arrCoords: Array[(Double, Double)], expandBy: Double): Array[(Double, Double)] = {
 
     val xCoords = arrCoords.map(_._1)
@@ -166,30 +139,6 @@ object Helper {
     // Closed ring MBR (1st and last points repeated)
     Array((xCoords.min - expandBy, yCoords.min - expandBy), (xCoords.max + expandBy, yCoords.max + expandBy))
   }
-
-  //  def getMBR_ClosedRing(arrCoords: Array[(Double, Double)], expandBy: Double) = {
-  //
-  //    val xCoords = arrCoords.map(_._1)
-  //    val yCoords = arrCoords.map(_._2)
-  //
-  //    var minX = xCoords.min - expandBy
-  //    var maxX = xCoords.max + expandBy
-  //    var minY = yCoords.min - expandBy
-  //    var maxY = yCoords.max + expandBy
-  //
-  //    // Closed ring MBR (1st and last points repeated)
-  //    Array((minX, minY), (maxX, minY), (maxX, maxY), (minX, maxY), (minX, minY))
-  //  }
-  //
-  //  def compareToPrecision(x: Double, y: Double) = {
-  //
-  //    val diff = x - y
-  //
-  //    if (math.abs(diff) < 0.000001)
-  //      0
-  //    else
-  //      diff
-  //  }
 
   /**
    * Sends message(s) to the log belonging to the class when debug is turned on
@@ -215,8 +164,14 @@ object Helper {
     randOutDir.toString()
   }
 
+  def manhattanDist(x1: Double, y1: Double, x2: Double, y2: Double): Int =
+    Helper.max(math.abs(x1 - x2), math.abs(y1 - y2)).ceil.toInt
+
   def squaredEuclideanDist(x1: Double, y1: Double, x2: Double, y2: Double): Double =
     math.pow(x1 - x2, 2) + math.pow(y1 - y2, 2)
+
+  def euclideanDist(x1: Double, y1: Double, x2: Double, y2: Double): Double =
+    math.sqrt(squaredEuclideanDist(x1, y1, x2, y2))
 
   def toByte(str: String): Long = {
 

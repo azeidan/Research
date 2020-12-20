@@ -6,8 +6,7 @@ import org.cusp.bdi.ds.SpatialIndex
 import org.cusp.bdi.ds.SpatialIndex.{KnnLookupInfo, testAndAddPoint}
 import org.cusp.bdi.ds.geom.{Geom2D, Point, Rectangle}
 import org.cusp.bdi.ds.qt.QuadTree.{SER_MARKER, SER_MARKER_NULL, nodeCapacity}
-import org.cusp.bdi.ds.sortset.SortedList
-import org.cusp.bdi.util.Helper
+import org.cusp.bdi.ds.sortset.SortedLinkedList
 
 import scala.collection.mutable.ListBuffer
 import scala.collection.{AbstractIterator, mutable}
@@ -56,16 +55,12 @@ class QuadTree extends SpatialIndex {
       val lst = qTree.lstPoints.filter(qtPoint => searchXY._1.equals(qtPoint.x) && searchXY._2.equals(qtPoint.y)).take(1)
 
       if (lst.isEmpty)
-        if (contains(qTree.topLeft, searchXY))
-          qTree = qTree.topLeft
-        else if (contains(qTree.topRight, searchXY))
-          qTree = qTree.topRight
-        else if (contains(qTree.bottomLeft, searchXY))
-          qTree = qTree.bottomLeft
-        else if (contains(qTree.bottomRight, searchXY))
-          qTree = qTree.bottomRight
-        else
-          qTree = null
+        qTree =
+          if (contains(qTree.topLeft, searchXY)) qTree.topLeft
+          else if (contains(qTree.topRight, searchXY)) qTree.topRight
+          else if (contains(qTree.bottomLeft, searchXY)) qTree.bottomLeft
+          else if (contains(qTree.bottomRight, searchXY)) qTree.bottomRight
+          else null
       else
         return lst.head
     }
@@ -74,7 +69,7 @@ class QuadTree extends SpatialIndex {
   }
 
   @throws(classOf[IllegalStateException])
-  override def insert(rectBounds: Rectangle, iterPoints: Iterator[Point], otherInitializers: Any*) = {
+  override def insert(rectBounds: Rectangle, iterPoints: Iterator[Point], otherInitializers: Any*): Boolean = {
 
     if (iterPoints.isEmpty) throw new IllegalStateException("Empty point iterator")
     else if (rectBounds == null) throw new IllegalStateException("Rectangle bounds cannot be null")
@@ -87,12 +82,12 @@ class QuadTree extends SpatialIndex {
   }
 
   private def contains(quadTree: QuadTree, searchXY: (Double, Double)) =
-    quadTree != null && quadTree.rectBounds.contains(searchXY._1, searchXY._2)
+    quadTree != null && quadTree.rectBounds.contains(searchXY)
 
   private def insertPoint(point: Point): Boolean = {
 
-//    if (point.userData.toString.equalsIgnoreCase("Yellow_2_A_507601"))
-//      println()
+    //    if (point.userData.toString.equalsIgnoreCase("Yellow_2_A_507601"))
+    //      println()
 
     var qTree = this
 
@@ -200,32 +195,34 @@ class QuadTree extends SpatialIndex {
     }
   }
 
-  override def nearestNeighbor(searchPoint: Point, sortSetSqDist: SortedList[Point]) {
+  override def nearestNeighbor(searchPoint: Point, sortSetSqDist: SortedLinkedList[Point]) {
 
-    val sPtBestQT = findBestQuadrant(searchPoint, sortSetSqDist.maxSize)
+    val sPtBestQT = if (sortSetSqDist.isFull) this else findBestQuadrant(searchPoint, sortSetSqDist.maxSize)
 
     val knnLookupInfo = new KnnLookupInfo(searchPoint, sortSetSqDist, sPtBestQT.rectBounds)
 
     def process(rootQT: QuadTree, skipQT: QuadTree) {
 
-      val lstQT = ListBuffer(rootQT)
+      val queueQT = mutable.Queue(rootQT)
 
-      lstQT.foreach(qTree =>
-        if (qTree != skipQT)
-          if (knnLookupInfo.rectSearchRegion.intersects(qTree.rectBounds)) {
+      while (queueQT.nonEmpty) {
 
-            qTree.lstPoints.foreach(testAndAddPoint(_, knnLookupInfo))
+        val qTree = queueQT.dequeue()
 
-            if (qTree.topLeft != null)
-              lstQT += qTree.topLeft
-            if (qTree.topRight != null)
-              lstQT += qTree.topRight
-            if (qTree.bottomLeft != null)
-              lstQT += qTree.bottomLeft
-            if (qTree.bottomRight != null)
-              lstQT += qTree.bottomRight
-          }
-      )
+        if (qTree != skipQT && knnLookupInfo.rectSearchRegion.intersects(qTree.rectBounds)) {
+
+          qTree.lstPoints.foreach(testAndAddPoint(_, knnLookupInfo))
+
+          if (qTree.topLeft != null)
+            queueQT += qTree.topLeft
+          if (qTree.topRight != null)
+            queueQT += qTree.topRight
+          if (qTree.bottomLeft != null)
+            queueQT += qTree.bottomLeft
+          if (qTree.bottomRight != null)
+            queueQT += qTree.bottomRight
+        }
+      }
     }
 
     process(sPtBestQT, null)

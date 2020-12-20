@@ -12,7 +12,7 @@ class AVLTree[T] extends Serializable {
     var currNode = rootNode
 
     while (currNode != null)
-      valueLookup.compare(currNode.nodeValue).signum match {
+      valueLookup.compare(currNode.nodeVal).signum match {
         case -1 =>
           currNode = currNode.left
         case 0 =>
@@ -28,7 +28,7 @@ class AVLTree[T] extends Serializable {
 
     def updateParentLink(stackNodes: mutable.Stack[AVLNode[T]], currNode: AVLNode[T], newSubtreeRoot: AVLNode[T]): Unit =
       if (stackNodes.nonEmpty)
-        currNode.nodeValue.compare(stackNodes.top.nodeValue).signum match {
+        currNode.nodeVal.compare(stackNodes.top.nodeVal).signum match {
           case -1 =>
             stackNodes.top.left = newSubtreeRoot
           case _ =>
@@ -49,7 +49,7 @@ class AVLTree[T] extends Serializable {
 
         stackNodes.push(currNode)
 
-        newValue.compare(currNode.nodeValue).signum match {
+        newValue.compare(currNode.nodeVal).signum match {
           case -1 =>
             if (currNode.left == null) {
 
@@ -88,12 +88,12 @@ class AVLTree[T] extends Serializable {
         if (hDiff.abs > 1)
           hDiff.signum match {
             case -1 =>
-              if (newValue < currNode.right.nodeValue)
+              if (newValue < currNode.right.nodeVal)
                 currNode.right = rotateRight(currNode.right)
 
               updateParentLink(stackNodes, currNode, rotateLeft(currNode))
             case _ =>
-              if (newValue > currNode.left.nodeValue)
+              if (newValue > currNode.left.nodeVal)
                 currNode.left = rotateLeft(currNode.left)
               updateParentLink(stackNodes, currNode, rotateRight(currNode))
           }
@@ -192,7 +192,7 @@ class AVLTree[T] extends Serializable {
 
     if (node != null) {
 
-      println(indent + (if (isLeft) "|__" else "|__") + node.nodeValue)
+      println(indent + (if (isLeft) "|__" else "|__") + node.nodeVal)
       printIndented(node.left, indent + (if (isLeft) "|  " else "   "), isLeft = true)
       printIndented(node.right, indent + (if (isLeft) "|  " else "   "), isLeft = false)
     }

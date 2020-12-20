@@ -2,9 +2,9 @@ package org.cusp.bdi.fw.simba
 
 import org.apache.hadoop.fs.{FileSystem, Path}
 import org.apache.hadoop.io.compress.GzipCodec
-import org.apache.spark.sql.{Dataset, Row}
-import org.apache.spark.sql.simba.{DataFrame, SimbaSession}
-import org.cusp.bdi.util.{Arguments, CLArgsParser, InputFileParsers, LocalRunConsts}
+import org.apache.spark.sql.Row
+import org.apache.spark.sql.simba.SimbaSession
+import org.cusp.bdi.util.{Arguments, InputFileParsers, LocalRunConsts}
 
 import scala.collection.mutable
 
@@ -46,36 +46,45 @@ object SIM_Example extends Serializable {
 
     val simbaSession = simbaBuilder.getOrCreate()
 
-    // delete output dir if exists
     val hdfs = FileSystem.get(simbaSession.sparkContext.hadoopConfiguration)
-    val path = new Path(clArgs.getParamValueString(Arguments.outDir))
+    val outDir = new Path(clArgs.getParamValueString(Arguments.outDir))
+    val kParam = clArgs.getParamValueInt(Arguments.k)
 
-    if (hdfs.exists(path))
-      hdfs.delete(path, true)
-
-    val DS1 = getDS(simbaSession, clArgs.getParamValueString(Arguments.firstSet), clArgs.getParamValueString(Arguments.firstSetObjType))
-
-    val DS2 = getDS(simbaSession, clArgs.getParamValueString(Arguments.secondSet), clArgs.getParamValueString(Arguments.secondSetObjType))
+    // delete output dir if exists
+    if (hdfs.exists(outDir))
+      hdfs.delete(outDir, true)
 
     import simbaSession.implicits._
     import simbaSession.simbaImplicits._
 
+    val DS1 = simbaSession.read.textFile(clArgs.getParamValueString(Arguments.firstSet))
+      .map(InputFileParsers.getLineParser(clArgs.getParamValueString(Arguments.firstSetObjType)))
+      .filter(_ != null)
+      .map(row => PointData(row._2._1.toDouble, row._2._2.toDouble, row._1))
+//      .limit(100)
+    val DS2 = simbaSession.read.textFile(clArgs.getParamValueString(Arguments.secondSet))
+      .map(InputFileParsers.getLineParser(clArgs.getParamValueString(Arguments.secondSetObjType)))
+      .filter(_ != null)
+      .map(row => PointData(row._2._1.toDouble, row._2._2.toDouble, row._1))
+//      .limit(100)
+
     if (clArgs.getParamValueBoolean(Arguments_Simba.sortByEuclDist))
-      DS1.knnJoin(DS2, Array("x", "y"), Array("x", "y"), 10)
+      DS1.knnJoin(DS2, Array("x", "y"), Array("x", "y"), kParam)
         .rdd
         .mapPartitions(_.map(processRow))
         .reduceByKey(_ ++ _)
         //        .union(
-        //          DS2.knnJoin(DS1, Array("x", "y"), Array("x", "y"), 10)
+        //          DS2.knnJoin(DS1, Array("x", "y"), Array("x", "y"), kParam)
         //            .rdd
         //            .mapPartitions(_.map(processRow))
         //            .reduceByKey(_ ++ _)
         //        )
-        .mapPartitions(_.map(rowToString))
+        .mapPartitions(_.map(row =>
+          "%s;%s".format(row._1, row._2.map(distData => ("%.8f,%s".format(distData._1, distData._2))).mkString(";"))))
         .saveAsTextFile(clArgs.getParamValueString(Arguments.outDir), classOf[GzipCodec])
     else
-      DS1.knnJoin(DS2, Array("x", "y"), Array("x", "y"), 10).rdd
-        //        .union(DS2.knnJoin(DS1, Array("x", "y"), Array("x", "y"), 10).rdd)
+      DS1.knnJoin(DS2, Array("x", "y"), Array("x", "y"), kParam).rdd
+        //        .union(DS2.knnJoin(DS1, Array("x", "y"), Array("x", "y"), kParam).rdd)
         .mapPartitions(_.map(row => "%s,%.8f,%.8f".format(row.get(2).toString, row(0).toString.toDouble, row(1).toString.toDouble)))
         .saveAsTextFile(clArgs.getParamValueString(Arguments.outDir), classOf[GzipCodec])
 
@@ -95,20 +104,22 @@ object SIM_Example extends Serializable {
     }
   }
 
-  private final def getDS(simbaSession: SimbaSession, fileName: String, objType: String) = {
-
-    //        import simbaSession.implicits._
-    //        import simbaSession.simbaImplicits._
-
-    import simbaSession.implicits._
-
-    simbaSession.read.textFile(fileName)
-      .map(InputFileParsers.getLineParser(objType))
-      .filter(_ != null)
-      .map(row => PointData(row._2._1.toDouble, row._2._2.toDouble, row._1))
-  }
+  //
+  //  private final def getDS(simbaSession: SimbaSession, fileName: String, objType: String) = {
+  //
+  //    //        import simbaSession.implicits._
+  //    //        import simbaSession.simbaImplicits._
+  //
+  //    import simbaSession.implicits._
+  //
+  //    simbaSession.read.textFile(fileName)
+  //      .map(InputFileParsers.getLineParser(objType))
+  //      .filter(_ != null)
+  //      .map(row => PointData(row._2._1.toDouble, row._2._2.toDouble, row._1))
+  //  }
 
   def rowToString(row: (String, mutable.SortedSet[(Double, String)])): String = {
+
     val sb = StringBuilder.newBuilder
       .append(row._1)
 

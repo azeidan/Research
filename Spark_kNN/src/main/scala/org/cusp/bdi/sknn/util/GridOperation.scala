@@ -17,10 +17,11 @@ case class GridOperation(datasetMBR: (Double, Double, Double, Double)) extends S
     this(datasetMBR)
 
     val mbrMaxDim = Helper.max(datasetMBR._3 - datasetMBR._1, datasetMBR._4 - datasetMBR._2)
-    val objPerUnit = math.ceil(objCount / mbrMaxDim) + math.log10(k)
-    val squareCount = (objCount / objPerUnit).ceil
+    //    val objPerSquare = Helper.log2(objCount) + Helper.log2(k)
+    //    val squareCount = math.ceil(math.sqrt(objCount/log2(??))) // + Helper.log2(k)
+    val squareCount = math.ceil(math.sqrt(objCount /*/ Helper.log2(k)*/))
 
-    squareDim = (mbrMaxDim / squareCount).ceil.toInt
+    squareDim = math.ceil(mbrMaxDim / squareCount).toInt
   }
 
   def computeSquareXY(xy: (Double, Double)): (Double, Double) =

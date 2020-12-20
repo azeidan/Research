@@ -1,9 +1,14 @@
 package org.cusp.bdi.ds.geom
 
+import org.cusp.bdi.util.Helper
+
 case class Rectangle(center: Geom2D, halfXY: Geom2D) extends Serializable {
 
   def this() =
     this(new Geom2D(), new Geom2D())
+
+  def this(other: Rectangle) =
+    this(new Geom2D(other.center), new Geom2D(other.halfXY))
 
   def halveBy(splitAlongX: Boolean): (Rectangle, Rectangle) = {
 
@@ -13,24 +18,15 @@ case class Rectangle(center: Geom2D, halfXY: Geom2D) extends Serializable {
       Rectangle(new Geom2D(this.right - newHalfX, this.top - newHalfY), new Geom2D(newHalfX, newHalfY)))
   }
 
-  def this(other: Rectangle) =
-    this(new Geom2D(other.center), new Geom2D(other.halfXY))
-
   def contains(other: Rectangle): Boolean =
     !(this.left > other.left || this.right < other.right ||
       this.bottom > other.bottom || this.top < other.top)
 
   def contains(point: Geom2D): Boolean =
-    contains(point.x, point.y)
+    !(point.x < left || point.x > right || point.y < bottom || point.y > top)
 
-  def containsX(x: Double): Boolean =
-    !(x < left || x > right)
-
-  def containsY(y: Double): Boolean =
-    !(y < bottom || y > top)
-
-  def contains(x: Double, y: Double): Boolean =
-    !(x < left || x > right || y < bottom || y > top)
+  def contains(xy: (Double, Double)): Boolean =
+    !(xy._1 < left || xy._1 > right || xy._2 < bottom || xy._2 > top)
 
   def mergeWith(other: Rectangle): Unit =
     if (other != null) {
@@ -47,21 +43,24 @@ case class Rectangle(center: Geom2D, halfXY: Geom2D) extends Serializable {
       this.center.y = minY + this.halfXY.y
     }
 
-  def top: Double = {
+  def top: Double =
     center.y + halfXY.y
-  }
 
-  def bottom: Double = {
+  def bottom: Double =
     center.y - halfXY.y
-  }
 
-  def right: Double = {
+  def right: Double =
     center.x + halfXY.x
-  }
 
-  def left: Double = {
+  def left: Double =
     center.x - halfXY.x
-  }
+
+  def maxManhattanDist(searchPoint: Geom2D): Int =
+    Helper.max(
+      Helper.max(math.abs(searchPoint.x - left), math.abs(searchPoint.x - right)),
+      Helper.max(math.abs(searchPoint.y - bottom), math.abs(searchPoint.y - top)))
+      .ceil
+      .toInt
 
   def contains(mbr: (Double, Double, Double, Double)): Boolean =
     left <= mbr._1 && bottom <= mbr._2 && right >= mbr._3 && top >= mbr._4
