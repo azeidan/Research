@@ -16,8 +16,8 @@ object TestAllKnnJoin {
     val startTime = System.currentTimeMillis()
     //    var startTime2 = startTime
 
-//    val clArgs = SparkKNN_Local_CLArgs.random_sample()
-            val clArgs = CLArgsParser(args, Arguments.lstArgInfo())
+    val clArgs = SparkKNN_Local_CLArgs.random_sample()
+//            val clArgs = CLArgsParser(args, Arguments.lstArgInfo())
 
     //    val clArgs = SparkKNN_Local_CLArgs.busPoint_busPointShift(Arguments())
     //    val clArgs = SparkKNN_Local_CLArgs.busPoint_taxiPoint(Arguments())

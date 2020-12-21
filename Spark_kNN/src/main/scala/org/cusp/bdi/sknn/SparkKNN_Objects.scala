@@ -17,30 +17,28 @@ object SupportedKnnOperations extends Enumeration with Serializable {
 
 final class RangeInfo {
 
-  val lstMBRCoord: ListBuffer[((Double, Double), Long)] = ListBuffer[((Double, Double), Long)]()
+
+  //  val lstMBRCoord: ListBuffer[(Double, Long)] = ListBuffer[(Double, Long)]()
   var totalWeight = 0L
   var left: Double = _
-  var bottom: Double = _
+  //  var bottom: Float = _
   var right: Double = _
-  var top: Double = _
+  //  var top: Float = _
 
-  def this(seed: ((Double, Double), Long)) = {
+  def this(seed: (Float, Long)) = {
 
     this()
 
-    this.lstMBRCoord += seed
+    //    this.lstMBRCoord += seed
     this.totalWeight = seed._2
-    this.left = seed._1._1
-    this.bottom = seed._1._2
-    this.right = seed._1._1
-    this.top = seed._1._2
+    this.left = seed._1
+    //    this.bottom = seed._1._2
+    this.right = seed._1
+    //    this.top = seed._1._2
   }
 
-  def mbr: (Double, Double, Double, Double) =
-    (left, bottom, right, top)
-
   override def toString: String =
-    "%f\t%f\t%f\t%f\t%,d".format(left, bottom, right, top, totalWeight)
+    "%f\t%f\t%,d".format(left, right, totalWeight)
 }
 
 final class RowData extends KryoSerializable {
@@ -76,4 +74,4 @@ final class RowData extends KryoSerializable {
   }
 }
 
-case class BroadcastWrapper(spatialIdx: SpatialIndex, gridOp: GridOperation, arrPartitionMBRs: Array[(Double, Double, Double, Double)]) extends Serializable {}
+case class BroadcastWrapper(spatialIdx: SpatialIndex, gridOp: GridOperation, arrPartitionMBRs: Array[(Float, Float, Float, Float)]) extends Serializable {}
