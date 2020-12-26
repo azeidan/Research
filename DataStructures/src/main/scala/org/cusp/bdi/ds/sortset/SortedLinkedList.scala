@@ -100,7 +100,7 @@ case class SortedLinkedList[T](maxSize: Int) /*(implicit ev$1: T => Comparable[_
     //    }
   }
 
-  def isFull: Boolean = nodeCount == maxSize
+  def isFull: Boolean = nodeCount >= maxSize
 
   def stopAt(node: Node[T]): Unit = {
 

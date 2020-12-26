@@ -36,14 +36,16 @@ trait BenchmarkInputFileParser extends Serializable {
 
   def parseLine(line: String): (String, Array[(String, String)])
 
-  // assumes line is in the following format:
-  // <key> <delimitChar> <delimitCharMajor> <delimitChar> <match2> <delimitCharMajor> <match3> <delimitCharMajor> ...
-  //
-  // key is assumed in the following format
-  // <label> <delimitCharMinor> <val1> <delimitCharMinor> <val2>
-  //
-  // each match is assumed in the following format
-  // <value> <delimitCharMinor> <key>
+  /**
+  * assumes line is in the following format:
+ *  <key> <delimitChar> <delimitCharMajor> <delimitChar> <match2> <delimitCharMajor> <match3> <delimitCharMajor> ...
+*
+  * key is assumed in the following format
+ *  <label> <delimitCharMinor> <val1> <delimitCharMinor> <val2>
+*
+ *  each match is assumed in the following format
+*   <value> <delimitCharMinor> <key>
+*/
   protected def commonParseLine(line: String, delimitCharMajor: Char, delimitCharMinor: Char): (String, Array[(String, String)]) = {
 
     val arr = line.toLowerCase.split(delimitCharMajor)

@@ -61,12 +61,12 @@ object SIM_Example extends Serializable {
       .map(InputFileParsers.getLineParser(clArgs.getParamValueString(Arguments.firstSetObjType)))
       .filter(_ != null)
       .map(row => PointData(row._2._1.toDouble, row._2._2.toDouble, row._1))
-//      .limit(100)
+    //      .limit(100)
     val DS2 = simbaSession.read.textFile(clArgs.getParamValueString(Arguments.secondSet))
       .map(InputFileParsers.getLineParser(clArgs.getParamValueString(Arguments.secondSetObjType)))
       .filter(_ != null)
       .map(row => PointData(row._2._1.toDouble, row._2._2.toDouble, row._1))
-//      .limit(100)
+    //      .limit(100)
 
     if (clArgs.getParamValueBoolean(Arguments_Simba.sortByEuclDist))
       DS1.knnJoin(DS2, Array("x", "y"), Array("x", "y"), kParam)
@@ -96,7 +96,9 @@ object SIM_Example extends Serializable {
         clArgs.getParamValueString(Arguments.firstSet).substring(clArgs.getParamValueString(Arguments.firstSet).lastIndexOf("/") + 1),
         clArgs.getParamValueString(Arguments.secondSet).substring(clArgs.getParamValueString(Arguments.secondSet).lastIndexOf("/") + 1),
         clArgs.getParamValueString(Arguments.outDir).substring(clArgs.getParamValueString(Arguments.outDir).lastIndexOf("/") + 1),
-        (System.currentTimeMillis() - startTime) / 1000.0)
+        (System.currentTimeMillis() - startTime) / 1000.0
+        , null
+        , null)
 
       printf("Total Time: %,.4f Sec%n", (System.currentTimeMillis() - startTime) / 1000.0)
       println("Output: %s".format(clArgs.getParamValueString(Arguments.outDir)))

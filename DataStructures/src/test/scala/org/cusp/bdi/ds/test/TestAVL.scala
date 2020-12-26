@@ -10,7 +10,7 @@ object TestAVL {
 
     val avl = new AVLTree[Int]()
 
-    iter.foreach(avl.getOrElseInsert)
+    iter.foreach(avl.findOrElseInsert)
 
     avl.printIndented()
   }

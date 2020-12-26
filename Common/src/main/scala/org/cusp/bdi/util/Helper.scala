@@ -13,6 +13,8 @@ import scala.util.Random
 
 object Helper {
 
+  val FLOAT_ERROR_RANGE = 1e-6
+
   def max(x: Int, y: Int): Int = if (x > y) x else y
 
   def max(x: Long, y: Long): Long = if (x > y) x else y
@@ -25,7 +27,7 @@ object Helper {
 
   def min(x: Long, y: Long): Long = if (x < y) x else y
 
-  def log2(n: Long): Int = (math.log(n) / math.log(2)).toInt
+  def log2(n: Long): Double = math.log(n) / math.log(2)
 
   def indexOfBSearch(arrSortedValues: IndexedSeq[Int], lookupValue: Int): Boolean = {
 
@@ -131,21 +133,26 @@ object Helper {
     }
   }
 
-  def getMBREnds(arrCoords: Array[(Double, Double)], expandBy: Double): Array[(Double, Double)] = {
+  def getMBREnds(arrCoord: Array[(Double, Double)], expandBy: Double): Array[(Double, Double)] = {
 
-    val xCoords = arrCoords.map(_._1)
-    val yCoords = arrCoords.map(_._2)
+    val xCoord = arrCoord.map(_._1)
+    val yCoord = arrCoord.map(_._2)
 
     // Closed ring MBR (1st and last points repeated)
-    Array((xCoords.min - expandBy, yCoords.min - expandBy), (xCoords.max + expandBy, yCoords.max + expandBy))
+    Array((xCoord.min - expandBy, yCoord.min - expandBy), (xCoord.max + expandBy, yCoord.max + expandBy))
   }
 
   /**
    * Sends message(s) to the log belonging to the class when debug is turned on
    */
-  def loggerSLf4J(debugOn: Boolean, clazz: => Any, message: => Object) {
-    if (debugOn)
+  def loggerSLf4J(debugOn: Boolean, clazz: => Any, message: => Object, lstDebugInfo: => ListBuffer[String]) {
+    if (debugOn) {
+
       Logger.getLogger(clazz.getClass.getName).info(message.toString)
+
+      if (lstDebugInfo != null)
+        lstDebugInfo += message.toString
+    }
   }
 
   /**
@@ -164,14 +171,13 @@ object Helper {
     randOutDir.toString()
   }
 
-  def manhattanDist(x1: Double, y1: Double, x2: Double, y2: Double): Int =
-    Helper.max(math.abs(x1 - x2), math.abs(y1 - y2)).ceil.toInt
+  def squaredEuclideanDist(x1: Double, y1: Double, x2: Double, y2: Double): Double = {
 
-  def squaredEuclideanDist(x1: Double, y1: Double, x2: Double, y2: Double): Double =
-    math.pow(x1 - x2, 2) + math.pow(y1 - y2, 2)
+    val x = x1 - x2
+    val y = y1 - y2
 
-  def euclideanDist(x1: Double, y1: Double, x2: Double, y2: Double): Double =
-    math.sqrt(squaredEuclideanDist(x1, y1, x2, y2))
+    (x * x) + (y * y)
+  }
 
   def toByte(str: String): Long = {
 

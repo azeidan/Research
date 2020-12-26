@@ -55,12 +55,12 @@ case class Rectangle(center: Geom2D, halfXY: Geom2D) extends Serializable {
   def left: Double =
     center.x - halfXY.x
 
-  def maxManhattanDist(searchPoint: Geom2D): Int =
-    Helper.max(
-      Helper.max(math.abs(searchPoint.x - left), math.abs(searchPoint.x - right)),
-      Helper.max(math.abs(searchPoint.y - bottom), math.abs(searchPoint.y - top)))
-      .ceil
-      .toInt
+  //  def maxUnitDistance(searchPoint: Geom2D): Int =
+  //    Helper.max(
+  //      Helper.max(math.abs(searchPoint.x - left), math.abs(searchPoint.x - right)),
+  //      Helper.max(math.abs(searchPoint.y - bottom), math.abs(searchPoint.y - top)))
+  //      .ceil
+  //      .toInt
 
   def contains(mbr: (Double, Double, Double, Double)): Boolean =
     left <= mbr._1 && bottom <= mbr._2 && right >= mbr._3 && top >= mbr._4

@@ -2,10 +2,8 @@ package org.cusp.bdi.sknn
 
 import com.esotericsoftware.kryo.io.{Input, Output}
 import com.esotericsoftware.kryo.{Kryo, KryoSerializable}
-import org.cusp.bdi.ds._
 import org.cusp.bdi.ds.geom.Point
 import org.cusp.bdi.ds.sortset.SortedLinkedList
-import org.cusp.bdi.sknn.util._
 
 import scala.collection.mutable.ListBuffer
 
@@ -76,4 +74,4 @@ final class RowData extends KryoSerializable {
   }
 }
 
-case class BroadcastWrapper(spatialIdx: SpatialIndex, gridOp: GridOperation, arrPartitionMBRs: Array[(Double, Double, Double, Double)]) extends Serializable {}
+//case class BroadcastWrapper(spatialIdx: SpatialIndex, arrPartitionMBRs: Array[(Double, Double, Double, Double)]) extends Serializable {}

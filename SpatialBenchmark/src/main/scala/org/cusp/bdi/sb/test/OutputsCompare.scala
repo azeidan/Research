@@ -68,7 +68,7 @@ final class OutputsCompare(debugMode: Boolean, classificationCount: Int,
         def incrementInMap(classificationKey: OutputsCompare.Value, rowKey: String, arrKM: Array[(String, String)], arrFW: Array[(String, String)]): Unit = {
 
           if (!Array(recordsCount, recordsBothNoMatch, recordsCorrectMatch, recordsCorrectMatchDistanceOnly).contains(classificationKey))
-            Helper.loggerSLf4J(debugMode, OutputsCompare, ">>\t%s: %s\n\t\t\t>>KM:%s\n\t\t\t>>FW:%s".format(classificationKey, rowKey, arrKM.mkString(","), arrFW.mkString(",")))
+            Helper.loggerSLf4J(debugMode, OutputsCompare, ">>\t%s: %s\n\t\t\t>>KM:%s\n\t\t\t>>FW:%s".format(classificationKey, rowKey, arrKM.mkString(","), arrFW.mkString(",")), null)
 
           mapClassify.update(classificationKey, mapClassify(classificationKey) + 1)
         }
@@ -119,8 +119,7 @@ final class OutputsCompare(debugMode: Boolean, classificationCount: Int,
                   false
               )
               .take(classificationCount)
-              .filter(_ == true)
-              .length
+              .count(_ == true)
 
             if (matchCount == lastCompareIndex + 1)
               incrementInMap(recordsCorrectMatch, rowKey, lstKM, lstFW)

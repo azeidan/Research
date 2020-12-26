@@ -36,7 +36,7 @@ object TestSortedLInkedList {
     sortedLInkedList.add(2.42825397, "bus_3_a_278855")
     sortedLInkedList.add(2.66289873, "bus_3_a_732026")
 
-//    (0 until 15).foreach(i => sortedLInkedList.add(Random.nextInt(3), i.toString))
+    //    (0 until 15).foreach(i => sortedLInkedList.add(Random.nextInt(3), i.toString))
 
     sortedLInkedList.foreach(println)
 

@@ -22,8 +22,8 @@ object SpatialBenchmarkSparkKnn extends Serializable {
     //        val clArgs = SB_CLArgs.LS_LionBus
     //        val clArgs = SB_CLArgs.LS_LionTPEP
     //        val clArgs = SB_CLArgs.SKNN_BusPoint_BusPointShift
-//    val clArgs = Benchmark_Local_CLArgs.SKNN_RandomPoint_RandomPoint
-            val clArgs = CLArgsParser(args, Arguments_Benchmark.lstArgInfo())
+    val clArgs = Benchmark_Local_CLArgs.SKNN_RandomPoint_RandomPoint
+    //            val clArgs = CLArgsParser(args, Arguments_Benchmark.lstArgInfo())
 
     val sparkConf = new SparkConf().setAppName("Spatial Benchmark")
 
@@ -61,7 +61,9 @@ object SpatialBenchmarkSparkKnn extends Serializable {
         clArgs.getParamValueString(Arguments_Benchmark.keyMatchInFile).substring(clArgs.getParamValueString(Arguments_Benchmark.keyMatchInFile).lastIndexOf("/") + 1),
         clArgs.getParamValueString(Arguments_Benchmark.testFWInFile).substring(clArgs.getParamValueString(Arguments_Benchmark.testFWInFile).lastIndexOf("/") + 1),
         lstCompareResults.mkString("\n"),
-        (System.currentTimeMillis() - startTime) / 1000.0)
+        (System.currentTimeMillis() - startTime) / 1000.0,
+        null,
+        null)
 
       println("Output idr: " + clArgs.getParamValueString(Arguments_Benchmark.outDir))
       lstCompareResults.foreach(println)

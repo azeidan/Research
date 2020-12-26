@@ -16,8 +16,8 @@ object TestAllKnnJoin {
     val startTime = System.currentTimeMillis()
     //    var startTime2 = startTime
 
-//    val clArgs = SparkKNN_Local_CLArgs.random_sample()
-            val clArgs = CLArgsParser(args, Arguments.lstArgInfo())
+    val clArgs = SparkKNN_Local_CLArgs.random_sample()
+    //            val clArgs = CLArgsParser(args, Arguments.lstArgInfo())
 
     //    val clArgs = SparkKNN_Local_CLArgs.busPoint_busPointShift(Arguments())
     //    val clArgs = SparkKNN_Local_CLArgs.busPoint_taxiPoint(Arguments())
@@ -55,21 +55,16 @@ object TestAllKnnJoin {
         .set("spark.executor.cores", clArgs.getParamValueString(Arguments.executorCores))
 
     if (debugMode)
-      Helper.loggerSLf4J(debugMode, SparkKnn, ">>SparkConf: \n\t\t>>%s".format(sparkConf.getAll.mkString("\n\t\t>>")))
+      Helper.loggerSLf4J(debugMode, SparkKnn, ">>SparkConf: \n\t\t>>%s".format(sparkConf.getAll.mkString("\n\t\t>>")), null)
 
     val sc = new SparkContext(sparkConf)
 
-    //    def getRDD(fileName: String) = if (numPartitions > 0) sc.textFile(fileName, numPartitions)
-    //    else sc.textFile(fileName)
-
-    val minParts = if (localMode) clArgs.getParamValueInt(Arguments.numExecutors) * clArgs.getParamValueInt(Arguments.executorCores) else -1
-
-    val rddLeft = (/*if (minParts > 0) sc.textFile(firstSet, minParts) else*/ sc.textFile(firstSet))
+    val rddLeft = sc.textFile(firstSet)
       .mapPartitions(_.map(InputFileParsers.getLineParser(firstSetObjType)))
       .filter(_ != null)
       .mapPartitions(_.map(row => new Point(row._2._1.toDouble, row._2._2.toDouble, row._1)))
 
-    val rddRight = (/*if (minParts > 0) sc.textFile(secondSet, minParts) else */sc.textFile(secondSet))
+    val rddRight = sc.textFile(secondSet)
       .mapPartitions(_.map(InputFileParsers.getLineParser(secondSetObjType)))
       .filter(_ != null)
       .mapPartitions(_.map(row => new Point(row._2._1.toDouble, row._2._2.toDouble, row._1)))
@@ -100,7 +95,9 @@ object TestAllKnnJoin {
         clArgs.getParamValueString(Arguments.firstSet).substring(clArgs.getParamValueString(Arguments.firstSet).lastIndexOf("/") + 1),
         clArgs.getParamValueString(Arguments.secondSet).substring(clArgs.getParamValueString(Arguments.secondSet).lastIndexOf("/") + 1),
         clArgs.getParamValueString(Arguments.outDir).substring(clArgs.getParamValueString(Arguments.outDir).lastIndexOf("/") + 1),
-        (System.currentTimeMillis() - startTime) / 1000.0)
+        (System.currentTimeMillis() - startTime) / 1000.0,
+        LocalRunConsts.localRunDebugLogFile,
+        sparkKNN.lstDebugInfo)
 
       printf("Total Time: %,.4f Sec%n", (System.currentTimeMillis() - startTime) / 1000.0)
       println("Output: %s".format(clArgs.getParamValueString(Arguments.outDir)))

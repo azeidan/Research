@@ -24,7 +24,7 @@ class AVLTree[T] extends Serializable {
     null
   }
 
-  def getOrElseInsert(newValue: Int): AVLNode[T] = {
+  def findOrElseInsert(newValue: Int): AVLNode[T] = {
 
     def updateParentLink(stackNodes: mutable.Stack[AVLNode[T]], currNode: AVLNode[T], newSubtreeRoot: AVLNode[T]): Unit =
       if (stackNodes.nonEmpty)

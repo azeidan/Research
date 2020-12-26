@@ -2,7 +2,7 @@ package org.cusp.bdi.sknn.ds.util
 
 import com.esotericsoftware.kryo.io.{Input, Output}
 import com.esotericsoftware.kryo.{Kryo, KryoSerializable}
-import org.cusp.bdi.ds.SpatialIndex.computeSquaredDist
+import org.cusp.bdi.ds.SpatialIndex.maxSquaredEucDist
 import org.cusp.bdi.ds._
 import org.cusp.bdi.ds.geom.{Geom2D, Point, Rectangle}
 import org.cusp.bdi.ds.kdt.{KdTree, KdtBranchRootNode, KdtLeafNode, KdtNode}
@@ -55,10 +55,6 @@ final class GlobalIndexPointData extends KryoSerializable {
 
 object SpatialIdxOperations extends Serializable {
 
-  //  val errorRange: Float = 8 //2 * math.sqrt(2).toFloat
-
-  //  val sqrt2 = math.sqrt(2).toFloat
-
   final class IdxRangeLookupInfo {
 
     var rectSearchRegion: Rectangle = _
@@ -71,13 +67,9 @@ object SpatialIdxOperations extends Serializable {
 
       this()
 
-      //      rectSearchRegion = Rectangle(searchPoint, new Geom2D(math.sqrt(2 * math.pow(rectBestNode.maxDistanceFrom(searchPoint), 2) + 4) /*errorRange*/))
-      // 2 d^2
-      dimSquared = computeSquaredDist(rectBestNode.maxManhattanDist(searchPoint))
+      rectSearchRegion = Rectangle(searchPoint, new Geom2D(math.sqrt(maxSquaredEucDist(searchPoint, rectBestNode)) + 1))
 
-      rectSearchRegion = Rectangle(searchPoint, new Geom2D(math.sqrt(dimSquared)) /*errorRange*/)
-
-      //      sqrDim = /*2 * */math.pow(rectSearchRegion.halfXY.x, 2)
+      dimSquared = 2 * rectSearchRegion.halfXY.x * rectSearchRegion.halfXY.x
     }
   }
 
@@ -134,8 +126,8 @@ object SpatialIdxOperations extends Serializable {
 
   private def lookup(kdTree: KdTree, searchXY: (Double, Double), k: Int): SortedLinkedList[Point] = {
 
-    //        if (searchXY._1.toString().startsWith("248") && searchXY._2.toString().startsWith("58"))
-    //          println
+    //            if (searchXY._1.toString().startsWith("248") && searchXY._2.toString().startsWith("58"))
+    //              println
 
     val searchPoint = new Geom2D(searchXY._1, searchXY._2)
 
@@ -154,25 +146,10 @@ object SpatialIdxOperations extends Serializable {
         if (row._1 != skipKdtNode)
           row._1 match {
             case kdtBRN: KdtBranchRootNode =>
-
               if (kdtBRN.left != null && idxRangeLookupInfo.rectSearchRegion.intersects(kdtBRN.left.rectNodeBounds))
                 queueKdtNode += ((kdtBRN.left, !row._2))
               if (kdtBRN.right != null && idxRangeLookupInfo.rectSearchRegion.intersects(kdtBRN.right.rectNodeBounds))
                 queueKdtNode += ((kdtBRN.right, !row._2))
-
-            //              findSearchRegionLocation(idxRangeLookupInfo.rectSearchRegion, kdtBRN.splitVal, row._2) match {
-            //                case 'L' =>
-            //                  if (kdtBRN.left != null && idxRangeLookupInfo.rectSearchRegion.intersects(kdtBRN.left.rectNodeBounds))
-            //                    queueKdtNode += ((kdtBRN.left, !row._2))
-            //                case 'R' =>
-            //                  if (kdtBRN.right != null && idxRangeLookupInfo.rectSearchRegion.intersects(kdtBRN.right.rectNodeBounds))
-            //                    queueKdtNode += ((kdtBRN.right, !row._2))
-            //                case _ =>
-            //                  if (kdtBRN.left != null && idxRangeLookupInfo.rectSearchRegion.intersects(kdtBRN.left.rectNodeBounds))
-            //                    queueKdtNode += ((kdtBRN.left, !row._2))
-            //                  if (kdtBRN.right != null && idxRangeLookupInfo.rectSearchRegion.intersects(kdtBRN.right.rectNodeBounds))
-            //                    queueKdtNode += ((kdtBRN.right, !row._2))
-            //              }
 
             case kdtLeafNode: KdtLeafNode =>
               if (idxRangeLookupInfo.rectSearchRegion.intersects(kdtLeafNode.rectNodeBounds))
@@ -193,12 +170,9 @@ object SpatialIdxOperations extends Serializable {
       splitX = true
       process(kdTree.rootNode, sPtBestNode)
     }
-    //println(idxRangeLookupInfo.rectSearchRegion.center.xy.toString() + idxRangeLookupInfo.rectSearchRegion.contains(new Geom2D(147,43)))
+
     idxRangeLookupInfo.sortList
   }
-
-  //  private def buildIdxRangeLookupInfo(searchPoint: Geom2D, rectMBR: Rectangle): IdxRangeLookupInfo =
-  //    IdxRangeLookupInfo(Rectangle(searchPoint, new Geom2D(computeDimension(searchPoint, rectMBR))))
 
   private def updateMatchListAndRegion(point: Point, idxRangeLookupInfo: IdxRangeLookupInfo, k: Int): Unit = {
 
@@ -244,10 +218,10 @@ object SpatialIdxOperations extends Serializable {
             //            val maxManhattanDist = Helper.max(math.abs(idxRangeLookupInfo.rectSearchRegion.center.x - idxRangeLookupInfo.limitNode.data.x), math.abs(idxRangeLookupInfo.rectSearchRegion.center.y - idxRangeLookupInfo.limitNode.data.y))
             //            idxRangeLookupInfo.sqrDim = /*2 * */ math.pow(maxManhattanDist, 2) + 4 // +4 for the diagonal of an additional 2 squares (aka 2*sqrt(2)) to account for the floor operation of the grid assignment
 
-            idxRangeLookupInfo.dimSquared = computeSquaredDist(Helper.manhattanDist(idxRangeLookupInfo.rectSearchRegion.center.x, idxRangeLookupInfo.rectSearchRegion.center.y, idxRangeLookupInfo.limitNode.data.x, idxRangeLookupInfo.limitNode.data.y))
-
-            idxRangeLookupInfo.rectSearchRegion.halfXY.x = math.sqrt(idxRangeLookupInfo.dimSquared)
+            idxRangeLookupInfo.rectSearchRegion.halfXY.x = math.sqrt(idxRangeLookupInfo.limitNode.distance) + 1
             idxRangeLookupInfo.rectSearchRegion.halfXY.y = idxRangeLookupInfo.rectSearchRegion.halfXY.x
+
+            idxRangeLookupInfo.dimSquared = 2 * idxRangeLookupInfo.rectSearchRegion.halfXY.x * idxRangeLookupInfo.rectSearchRegion.halfXY.x
 
             while (elem.next != null && elem.next.distance <= idxRangeLookupInfo.dimSquared) {
 

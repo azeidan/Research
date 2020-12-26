@@ -69,7 +69,7 @@ class QuadTree extends SpatialIndex {
   }
 
   @throws(classOf[IllegalStateException])
-  override def insert(rectBounds: Rectangle, iterPoints: Iterator[Point], otherInitializers: Any*): Boolean = {
+  override def insert(rectBounds: Rectangle, iterPoints: Iterator[Point], histogramBarWidth: Int): Boolean = {
 
     if (iterPoints.isEmpty) throw new IllegalStateException("Empty point iterator")
     else if (rectBounds == null) throw new IllegalStateException("Rectangle bounds cannot be null")
@@ -197,7 +197,7 @@ class QuadTree extends SpatialIndex {
 
   override def nearestNeighbor(searchPoint: Point, sortSetSqDist: SortedLinkedList[Point]) {
 
-    val sPtBestQT = if (sortSetSqDist.isFull) this else findBestQuadrant(searchPoint, sortSetSqDist.maxSize)
+    val sPtBestQT = findBestQuadrant(searchPoint, sortSetSqDist.maxSize)
 
     val knnLookupInfo = new KnnLookupInfo(searchPoint, sortSetSqDist, sPtBestQT.rectBounds)
 
