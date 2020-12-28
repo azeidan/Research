@@ -32,22 +32,28 @@ case class SortedLinkedList[T](maxSize: Int) /*(implicit ev$1: T => Comparable[_
 
   def add(distance: Double, data: T) {
 
-    if (!isFull || distance <= last.distance) {
+    if (nodeCount < maxSize || distance <= last.distance) {
 
       var prevNode: Node[T] = null
       var currNode = headNode
       var prevNodeIndex = -1
 
-      // distance sort
-      while (currNode != null && distance > currNode.distance) {
+      if (last != null && distance >= last.distance) {
 
-        prevNodeIndex += 1
-
-        prevNode = currNode
-        currNode = currNode.next
+        prevNodeIndex += nodeCount
+        prevNode = last
+        currNode = null
       }
 
-      //      if (currNode == null || !currNode.data.equals(data)) {
+      // distance sort
+      if (currNode != null)
+        while (distance > currNode.distance) {
+
+          prevNodeIndex += 1
+
+          prevNode = currNode
+          currNode = currNode.next
+        }
 
       nodeCount += 1
 
@@ -61,7 +67,6 @@ case class SortedLinkedList[T](maxSize: Int) /*(implicit ev$1: T => Comparable[_
       }
       else { // insert after
 
-        // line, xy
         prevNode.next = Node(distance, data)
         prevNode.next.next = currNode
 
@@ -78,26 +83,20 @@ case class SortedLinkedList[T](maxSize: Int) /*(implicit ev$1: T => Comparable[_
         }
 
         // jump to maxSize node
-        while (prevNodeIndex < maxSize - 1) {
+        while ((prevNodeIndex < maxSize - 1) || (prevNode.next != null && prevNode.distance == prevNode.next.distance)) {
 
           prevNode = prevNode.next
           prevNodeIndex += 1
         }
 
-        var tmp = prevNode
+        if (prevNode != lastNode) {
 
-        while (tmp.next != null && tmp.next.distance == prevNode.distance) {
-
-          tmp = tmp.next
-          prevNodeIndex += 1
+          lastNode = prevNode
+          lastNode.next = null
+          nodeCount = prevNodeIndex + 1
         }
-
-        lastNode = tmp
-        lastNode.next = null
-        nodeCount = prevNodeIndex + 1
       }
     }
-    //    }
   }
 
   def isFull: Boolean = nodeCount >= maxSize

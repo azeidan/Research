@@ -220,10 +220,6 @@ class KdTree extends SpatialIndex {
                 queueKdtNode += ((kdtBRN.right, !row._2))
 
             case kdtLeafNode: KdtLeafNode =>
-
-              //              if(kdtLeafNode.lstPoints.find(_.userData.toString.equalsIgnoreCase("bus_1_b_291848")).nonEmpty)
-              //                println
-
               if (knnLookupInfo.rectSearchRegion.intersects(kdtLeafNode.rectNodeBounds))
                 kdtLeafNode.lstPoints.foreach(testAndAddPoint(_, knnLookupInfo))
           }

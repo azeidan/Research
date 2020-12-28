@@ -56,6 +56,20 @@ final class RowData extends KryoSerializable {
     this.lstPartitionId = lstPartitionId
   }
 
+  def nextPartId: Int = {
+
+    var pId = -1
+
+    if (lstPartitionId.nonEmpty) {
+
+      pId = lstPartitionId.head
+
+      lstPartitionId = lstPartitionId.tail
+    }
+
+    pId
+  }
+
   override def write(kryo: Kryo, output: Output): Unit = {
 
     kryo.writeClassAndObject(output, point)

@@ -55,6 +55,8 @@ final class GlobalIndexPointData extends KryoSerializable {
 
 object SpatialIdxOperations extends Serializable {
 
+  val SEARCH_REGION_EXTEND = math.sqrt(8)
+
   final class IdxRangeLookupInfo {
 
     var rectSearchRegion: Rectangle = _
@@ -67,9 +69,9 @@ object SpatialIdxOperations extends Serializable {
 
       this()
 
-      rectSearchRegion = Rectangle(searchPoint, new Geom2D(math.sqrt(maxSquaredEucDist(searchPoint, rectBestNode)) + 1))
+      rectSearchRegion = Rectangle(searchPoint, new Geom2D(math.sqrt(maxSquaredEucDist(searchPoint, rectBestNode)) + SEARCH_REGION_EXTEND))
 
-      dimSquared = 2 * rectSearchRegion.halfXY.x * rectSearchRegion.halfXY.x
+      dimSquared = rectSearchRegion.halfXY.x * rectSearchRegion.halfXY.x
     }
   }
 
@@ -153,12 +155,7 @@ object SpatialIdxOperations extends Serializable {
 
             case kdtLeafNode: KdtLeafNode =>
               if (idxRangeLookupInfo.rectSearchRegion.intersects(kdtLeafNode.rectNodeBounds))
-                kdtLeafNode.lstPoints.foreach(pt => {
-
-                  //                  if ((pt.x.toString.startsWith("148") && pt.y.toString.startsWith("27")) /*|| (pt.x.toString.startsWith("193") && pt.y.toString.startsWith("88"))*/ )
-                  //                    print("")
-                  updateMatchListAndRegion(pt, idxRangeLookupInfo, k)
-                })
+                kdtLeafNode.lstPoints.foreach(updateMatchListAndRegion(_, idxRangeLookupInfo, k))
           }
       }
     }
@@ -218,10 +215,10 @@ object SpatialIdxOperations extends Serializable {
             //            val maxManhattanDist = Helper.max(math.abs(idxRangeLookupInfo.rectSearchRegion.center.x - idxRangeLookupInfo.limitNode.data.x), math.abs(idxRangeLookupInfo.rectSearchRegion.center.y - idxRangeLookupInfo.limitNode.data.y))
             //            idxRangeLookupInfo.sqrDim = /*2 * */ math.pow(maxManhattanDist, 2) + 4 // +4 for the diagonal of an additional 2 squares (aka 2*sqrt(2)) to account for the floor operation of the grid assignment
 
-            idxRangeLookupInfo.rectSearchRegion.halfXY.x = math.sqrt(idxRangeLookupInfo.limitNode.distance) + 1
+            idxRangeLookupInfo.rectSearchRegion.halfXY.x = math.sqrt(idxRangeLookupInfo.limitNode.distance) + SEARCH_REGION_EXTEND
             idxRangeLookupInfo.rectSearchRegion.halfXY.y = idxRangeLookupInfo.rectSearchRegion.halfXY.x
 
-            idxRangeLookupInfo.dimSquared = 2 * idxRangeLookupInfo.rectSearchRegion.halfXY.x * idxRangeLookupInfo.rectSearchRegion.halfXY.x
+            idxRangeLookupInfo.dimSquared = idxRangeLookupInfo.rectSearchRegion.halfXY.x * idxRangeLookupInfo.rectSearchRegion.halfXY.x
 
             while (elem.next != null && elem.next.distance <= idxRangeLookupInfo.dimSquared) {
 

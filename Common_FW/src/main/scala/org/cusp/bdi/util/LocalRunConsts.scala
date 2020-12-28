@@ -40,11 +40,11 @@ object LocalRunConsts {
   val pathKM_Bus_WGS84 = "/media/cusp/Data/GeoMatch_Files/InputFiles/KM_WGS84_LION_LineString_Bus_Point_ErrCorr_MBRExp_150_MaxDist_150.1K.csv"
   val pathKM_RandomPointsNonUniform = ""
 
-  //    val pathGM_TPEP = "/media/cusp/Data/GeoMatch_Files/OutputFiles/Simba/Bus_3_Grp2/*.gz"
-    val pathGM_TPEP = "/media/cusp/Data/GeoMatch_Files/OutputFiles/Simba/ALL_Knn/Bus_1_Grp1/*.gz"
-//  val pathGM_TPEP = "/media/cusp/Data/GeoMatch_Files/OutputFiles/Simba/Taxi_1_Grp1/*.gz"
+  //  val pathGM_TPEP = "/media/cusp/Data/GeoMatch_Files/OutputFiles/Simba/Bus_1_Grp1/*.gz"
+  val pathGM_TPEP = "/media/cusp/Data/GeoMatch_Files/OutputFiles/Simba/ALL_Knn/Bus_1_Grp1/*.gz"
+  //  val pathGM_TPEP = "/media/cusp/Data/GeoMatch_Files/OutputFiles/Simba/Taxi_1_Grp1/*.gz"
   val pathSparkKNN_FW_Output_1: String = pathGM_TPEP
-  val pathSparkKNN_FW_Output_2 = "/media/cusp/Data/GeoMatch_Files/OutputFiles/838/*.gz"
+  val pathSparkKNN_FW_Output_2 = "/media/cusp/Data/GeoMatch_Files/OutputFiles/531/*.gz"
 
   val pathGS_TPEP = "/media/cusp/Data/GeoMatch_Files/InputFiles/GeoSpark_LION_TPEP.csv"
   val pathLS_wgs_TPEP = "/media/cusp/Data/GeoMatch_Files/InputFiles/LocationSpark_LION_TPEP.csv"

@@ -20,7 +20,7 @@ object SpatialIndex extends Serializable {
 
     Helper.max(
       Helper.max(Helper.squaredEuclideanDist(point.x, point.y, left, bottom), Helper.squaredEuclideanDist(point.x, point.y, right, bottom)),
-      Helper.max(Helper.squaredEuclideanDist(point.x, point.y, left, top), Helper.squaredEuclideanDist(point.x, point.y, left, top))
+      Helper.max(Helper.squaredEuclideanDist(point.x, point.y, left, top), Helper.squaredEuclideanDist(point.x, point.y, right, top))
     ) + FLOAT_ERROR_RANGE
   }
 
