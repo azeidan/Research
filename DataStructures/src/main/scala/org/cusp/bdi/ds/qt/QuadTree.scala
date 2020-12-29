@@ -35,11 +35,11 @@ class QuadTree extends SpatialIndex {
     this.rectBounds = rectBounds
   }
 
-  override def dummyNode: AnyRef =
+  override def mockNode: AnyRef =
     new QuadTree()
 
   override def estimateNodeCount(pointCount: Long): Int =
-    math.ceil(pointCount / nodeCapacity).toInt
+    math.ceil(pointCount / nodeCapacity.toFloat).toInt
 
   override def getTotalPoints: Int = totalPoints
 

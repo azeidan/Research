@@ -71,7 +71,7 @@ object SpatialIndex extends Serializable {
 
 trait SpatialIndex extends KryoSerializable {
 
-  def dummyNode: AnyRef
+  def mockNode: AnyRef
 
   def estimateNodeCount(pointCount: Long): Int
 

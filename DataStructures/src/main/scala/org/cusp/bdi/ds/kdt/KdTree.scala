@@ -40,14 +40,14 @@ class KdTree extends SpatialIndex {
   def getTotalPoints: Int =
     rootNode.totalPoints
 
-  override def dummyNode: AnyRef =
+  override def mockNode: AnyRef =
     new KdtBranchRootNode()
 
   override def estimateNodeCount(pointCount: Long): Int = {
 
-    val height = Helper.log2(pointCount / nodeCapacity).toInt
+    val height = (1.44 * Helper.log2(pointCount / nodeCapacity)).toInt
 
-    (1 until height).map(h => Math.pow(2, h - 1).toInt).sum
+    (1 until height).map(h => Math.pow(2, h + 1).toInt).sum + 1
   }
 
   @throws(classOf[IllegalStateException])
