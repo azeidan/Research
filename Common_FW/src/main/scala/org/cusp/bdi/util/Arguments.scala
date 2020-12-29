@@ -37,6 +37,6 @@ object Arguments extends Serializable {
       Arguments.k._1, k.toString,
       Arguments.knnJoinType._1, joinType,
       Arguments.indexType._1, indexType) ++
-      other.map(row => Array(row._1, row._2.toString)).flatMap(_.seq)
+      other.map(row => Array(row._1, row._2)).flatMap(_.seq)
 }
 

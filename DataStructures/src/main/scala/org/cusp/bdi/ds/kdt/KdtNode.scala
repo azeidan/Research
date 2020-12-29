@@ -26,7 +26,7 @@ abstract class KdtNode extends KryoSerializable {
 }
 
 object KdtNode {
-  val SPLIT_VAL_NONE = Double.NegativeInfinity
+  val SPLIT_VAL_NONE: Double = Double.NegativeInfinity
 }
 
 final class KdtBranchRootNode extends KdtNode {

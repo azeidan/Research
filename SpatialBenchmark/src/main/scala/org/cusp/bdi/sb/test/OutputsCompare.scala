@@ -3,6 +3,7 @@ package org.cusp.bdi.sb.test
 
 import org.apache.spark.rdd.RDD
 import org.apache.spark.rdd.RDD.rddToPairRDDFunctions
+import org.cusp.bdi.sb.test
 import org.cusp.bdi.sb.test.OutputsCompare.{COL_WIDTH, lstOrdered, recordsBothNoMatch, recordsCorrectMatch, recordsCorrectMatchDistanceOnly, recordsCount, recordsFWOverMatched, recordsFWUnderMatched, recordsInFWOnly, recordsInKMOnly, recordsMismatch}
 import org.cusp.bdi.util.Helper
 
@@ -10,15 +11,15 @@ import scala.collection.mutable
 
 object OutputsCompare extends Enumeration with Serializable {
 
-  val recordsBothNoMatch = Value("Records both no match")
-  val recordsCount = Value("Total Number of Records")
-  val recordsCorrectMatch = Value("Records correctly matched")
-  val recordsCorrectMatchDistanceOnly = Value("Records correctly matched (Dist. only)")
-  val recordsMismatch = Value("Records framework incorrectly matched")
-  val recordsFWOverMatched = Value("Records framework overmatched")
-  val recordsFWUnderMatched = Value("Records framework undermatched")
-  val recordsInFWOnly = Value("Records appeared in framework only")
-  val recordsInKMOnly = Value("Records appeared in key match only")
+  val recordsBothNoMatch: test.OutputsCompare.Value = Value("Records both no match")
+  val recordsCount: test.OutputsCompare.Value = Value("Total Number of Records")
+  val recordsCorrectMatch: test.OutputsCompare.Value = Value("Records correctly matched")
+  val recordsCorrectMatchDistanceOnly: test.OutputsCompare.Value = Value("Records correctly matched (Dist. only)")
+  val recordsMismatch: test.OutputsCompare.Value = Value("Records framework incorrectly matched")
+  val recordsFWOverMatched: test.OutputsCompare.Value = Value("Records framework overmatched")
+  val recordsFWUnderMatched: test.OutputsCompare.Value = Value("Records framework undermatched")
+  val recordsInFWOnly: test.OutputsCompare.Value = Value("Records appeared in framework only")
+  val recordsInKMOnly: test.OutputsCompare.Value = Value("Records appeared in key match only")
 
   val COL_WIDTH: Int = this.values.map(_.toString.length).max
 

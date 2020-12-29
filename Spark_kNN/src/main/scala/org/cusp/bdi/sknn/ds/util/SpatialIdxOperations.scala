@@ -55,7 +55,7 @@ final class GlobalIndexPointData extends KryoSerializable {
 
 object SpatialIdxOperations extends Serializable {
 
-  val SEARCH_REGION_EXTEND = math.sqrt(8)
+  val SEARCH_REGION_EXTEND: Double = math.sqrt(8)
 
   final class IdxRangeLookupInfo {
 

@@ -54,15 +54,15 @@ case class SparkKnn(debugMode: Boolean, spatialIndexType: SupportedSpatialIndexe
 
   def knnJoin(): RDD[(Point, Iterator[(Double, Point)])] = {
 
-    val (partObjCapacityRight, squareDimRight, mbrDS) = computeCapacity(rddRight, false)
+    val (partObjCapacityRight, squareDimRight, mbrDS) = computeCapacity(rddRight, isAllKnn = false)
 
     knnJoinExecute(rddLeft, rddRight, mbrDS, SupportedSpatialIndexes(spatialIndexType), squareDimRight, partObjCapacityRight)
   }
 
   def allKnnJoin(): RDD[(Point, Iterator[(Double, Point)])] = {
 
-    val (partObjCapacityLeft, squareDimLeft, mbrDS_L) = computeCapacity(rddLeft, true)
-    val (partObjCapacityRight, squareDimRight, mbrDS_R) = computeCapacity(rddRight, true)
+    val (partObjCapacityLeft, squareDimLeft, mbrDS_L) = computeCapacity(rddLeft, isAllKnn = true)
+    val (partObjCapacityRight, squareDimRight, mbrDS_R) = computeCapacity(rddRight, isAllKnn = true)
 
     Helper.loggerSLf4J(debugMode, SparkKnn, ">>All kNN partObjCapacityLeft=%,d partObjCapacityRight=%,d".format(partObjCapacityLeft, partObjCapacityRight), lstDebugInfo)
 

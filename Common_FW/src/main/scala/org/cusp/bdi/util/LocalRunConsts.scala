@@ -5,7 +5,7 @@ import scala.collection.mutable.ListBuffer
 
 object LocalRunConsts {
 
-  val spacer = "%120s%n".format("").replaceAll(" ", "=")
+  val spacer: String = "%120s%n".format("").replaceAll(" ", "=")
 
   val pathOutput = "/media/cusp/Data/GeoMatch_Files/OutputFiles/"
   val sparkWorkDir = "/media/cusp/Data/GeoMatch_Files/spark_work_dir/"

@@ -14,7 +14,7 @@ object Histogram {
   type TypeAVL_Data = ListBuffer[(Int, Point)]
   type TypeAVL = AVLTree[TypeAVL_Data]
 
-  val fAddToAVL = (idxPoint: (Int, Point), avlTree: TypeAVL, currNodeVal: Int) => {
+  val fAddToAVL: ((Int, Point), TypeAVL, Int) => TypeAVL_Data = (idxPoint: (Int, Point), avlTree: TypeAVL, currNodeVal: Int) => {
 
     val avlNode = avlTree.findOrElseInsert(idxPoint._1)
 
