@@ -22,8 +22,8 @@ object SpatialBenchmarkSparkKnn extends Serializable {
     //        val clArgs = SB_CLArgs.LS_LionBus
     //        val clArgs = SB_CLArgs.LS_LionTPEP
     //        val clArgs = SB_CLArgs.SKNN_BusPoint_BusPointShift
-//    val clArgs = Benchmark_Local_CLArgs.SKNN_RandomPoint_RandomPoint
-                val clArgs = CLArgsParser(args, Arguments_Benchmark.lstArgInfo())
+//    val clArgs = Benchmark_Local_CLArgs.SKNN_RandomPoint_RandomPoint_knn
+            val clArgs = CLArgsParser(args, Arguments_Benchmark.lstArgInfo())
 
     val sparkConf = new SparkConf().setAppName("Spatial Benchmark")
 
@@ -37,35 +37,41 @@ object SpatialBenchmarkSparkKnn extends Serializable {
 
     // delete output dir if exists
     val hdfs = FileSystem.get(sparkContext.hadoopConfiguration)
-    val path = new Path(clArgs.getParamValueString(Arguments_Benchmark.outDir))
+    val outDir = clArgs.getParamValueString(Arguments_Benchmark.outDir)
+    val path = new Path(outDir)
+
     if (hdfs.exists(path))
       hdfs.delete(path, true)
 
-    val rddKeyMatch = sparkContext.textFile(clArgs.getParamValueString(Arguments_Benchmark.keyMatchInFile))
-
-    val rddTestFW = sparkContext.textFile(clArgs.getParamValueString(Arguments_Benchmark.testFWInFile))
+    val keyMatchInFile = clArgs.getParamValueString(Arguments_Benchmark.keyMatchInFile)
+    val testFWInFile = clArgs.getParamValueString(Arguments_Benchmark.testFWInFile)
 
     val debugMode = clArgs.getParamValueBoolean(Arguments_Benchmark.debug)
+    val classificationCount = clArgs.getParamValueInt(Arguments_Benchmark.classificationCount)
+    val keyMatchInFileParser = clArgs.getParamValueString(Arguments_Benchmark.keyMatchInFileParser)
+    val testFWInFileParser = clArgs.getParamValueString(Arguments_Benchmark.testFWInFileParser)
+    val keyRegex = clArgs.getParamValueString(Arguments_Benchmark.keyRegex)
 
-    val lstCompareResults = new OutputsCompare(debugMode, clArgs.getParamValueInt(Arguments_Benchmark.classificationCount),
-      rddKeyMatch, clArgs.getParamValueString(Arguments_Benchmark.keyMatchInFileParser),
-      rddTestFW, clArgs.getParamValueString(Arguments_Benchmark.testFWInFileParser))
-      .compare() ++ List("Total Runtime: %,d MS".format(System.currentTimeMillis() - startTime))
+    var lstCompareResults = OutputsCompare(debugMode, classificationCount, sparkContext.textFile(keyMatchInFile), keyMatchInFileParser, sparkContext.textFile(testFWInFile), testFWInFileParser, keyRegex)
+
+    val runtime = (System.currentTimeMillis() - startTime) / 1000.0
+
+    lstCompareResults ++= List("Total Runtime: %,.2f Sec".format(runtime))
 
     sparkContext.parallelize(lstCompareResults, 1)
-      .saveAsTextFile(clArgs.getParamValueString(Arguments_Benchmark.outDir), classOf[GzipCodec])
+      .saveAsTextFile(outDir, classOf[GzipCodec])
 
     if (clArgs.getParamValueBoolean(Arguments_Benchmark.local)) {
 
-      LocalRunConsts.logLocalRunEntry(LocalRunConsts.benchmarkLogFile, "sKNN",
-        clArgs.getParamValueString(Arguments_Benchmark.keyMatchInFile).substring(clArgs.getParamValueString(Arguments_Benchmark.keyMatchInFile).lastIndexOf("/") + 1),
-        clArgs.getParamValueString(Arguments_Benchmark.testFWInFile).substring(clArgs.getParamValueString(Arguments_Benchmark.testFWInFile).lastIndexOf("/") + 1),
-        lstCompareResults.mkString("\n"),
-        (System.currentTimeMillis() - startTime) / 1000.0,
-        null,
-        null)
+      val message = "%s\t%s\t%s\t%.4f%n\t%s%n%n".format(outDir.substring(outDir.lastIndexOf("/") + 1),
+        keyMatchInFile.substring(keyMatchInFile.lastIndexOf("/") + 1),
+        testFWInFile.substring(testFWInFile.lastIndexOf("/") + 1),
+        runtime,
+        lstCompareResults.mkString("\n"))
 
-      println("Output idr: " + clArgs.getParamValueString(Arguments_Benchmark.outDir))
+      LocalRunConsts.logLocalRunEntry(LocalRunConsts.benchmarkLogFile, message, null, null)
+
+      println("Output dir: " + outDir)
       lstCompareResults.foreach(println)
     }
   }

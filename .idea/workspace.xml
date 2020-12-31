@@ -39,11 +39,18 @@
     <list default="true" id="ee761a9d-eff2-4086-b83a-8096819a4548" name="Default Changelist" comment="KDT working with Histogram insert">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Common_FW/src/main/scala/org/cusp/bdi/util/LocalRunConsts.scala" beforeDir="false" afterPath="$PROJECT_DIR$/Common_FW/src/main/scala/org/cusp/bdi/util/LocalRunConsts.scala" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DataStructures/src/main/scala/org/cusp/bdi/ds/SpatialIndex.scala" beforeDir="false" afterPath="$PROJECT_DIR$/DataStructures/src/main/scala/org/cusp/bdi/ds/SpatialIndex.scala" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DataStructures/src/main/scala/org/cusp/bdi/ds/kdt/KdTree.scala" beforeDir="false" afterPath="$PROJECT_DIR$/DataStructures/src/main/scala/org/cusp/bdi/ds/kdt/KdTree.scala" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DataStructures/src/main/scala/org/cusp/bdi/ds/qt/QuadTree.scala" beforeDir="false" afterPath="$PROJECT_DIR$/DataStructures/src/main/scala/org/cusp/bdi/ds/qt/QuadTree.scala" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DataStructures/src/main/scala/org/cusp/bdi/ds/geom/Point.scala" beforeDir="false" afterPath="$PROJECT_DIR$/DataStructures/src/main/scala/org/cusp/bdi/ds/geom/Point.scala" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FW_Simba/src/test/scala/org/cusp/bdi/fw/simba/SIM_Example.scala" beforeDir="false" afterPath="$PROJECT_DIR$/FW_Simba/src/test/scala/org/cusp/bdi/fw/simba/SIM_Example.scala" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FW_Simba/src/test/scala/org/cusp/bdi/fw/simba/Simba_Local_CLArgs.scala" beforeDir="false" afterPath="$PROJECT_DIR$/FW_Simba/src/test/scala/org/cusp/bdi/fw/simba/Simba_Local_CLArgs.scala" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Spark_kNN/src/main/scala/org/cusp/bdi/sknn/SparkKnn.scala" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/src/main/scala/org/cusp/bdi/sknn/SparkKnn.scala" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/src/main/scala/org/cusp/bdi/sknn/util/GridOperation.scala" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/src/OLD/GridOperation.scala" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Spark_kNN/src/main/test/scala/org/cusp/bdi/sknn/test/SparkKNN_Local_CLArgs.scala" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/src/main/test/scala/org/cusp/bdi/sknn/test/SparkKNN_Local_CLArgs.scala" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Spark_kNN/src/main/test/scala/org/cusp/bdi/sknn/test/TestAllKnnJoin.scala" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/src/main/test/scala/org/cusp/bdi/sknn/test/TestAllKnnJoin.scala" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SpatialBenchmark/src/main/scala/org/cusp/bdi/sb/test/BenchmarkInputFileParser.scala" beforeDir="false" afterPath="$PROJECT_DIR$/SpatialBenchmark/src/main/scala/org/cusp/bdi/sb/test/BenchmarkInputFileParser.scala" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SpatialBenchmark/src/main/scala/org/cusp/bdi/sb/test/OutputsCompare.scala" beforeDir="false" afterPath="$PROJECT_DIR$/SpatialBenchmark/src/main/scala/org/cusp/bdi/sb/test/OutputsCompare.scala" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SpatialBenchmark/src/main/test/scala/org/cusp/bdi/sb/test/Arguments_Benchmark.scala" beforeDir="false" afterPath="$PROJECT_DIR$/SpatialBenchmark/src/main/test/scala/org/cusp/bdi/sb/test/Arguments_Benchmark.scala" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SpatialBenchmark/src/main/test/scala/org/cusp/bdi/sb/test/Benchmark_Local_CLArgs.scala" beforeDir="false" afterPath="$PROJECT_DIR$/SpatialBenchmark/src/main/test/scala/org/cusp/bdi/sb/test/Benchmark_Local_CLArgs.scala" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SpatialBenchmark/src/main/test/scala/org/cusp/bdi/sb/test/SpatialBenchmarkSparkKnn.scala" beforeDir="false" afterPath="$PROJECT_DIR$/SpatialBenchmark/src/main/test/scala/org/cusp/bdi/sb/test/SpatialBenchmarkSparkKnn.scala" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SpatialBenchmark/src/main/test/scala/org/cusp/bdi/sb/test/parser/SB_KeyMatchInputFileParser_RandomPoints.scala" beforeDir="false" afterPath="$PROJECT_DIR$/SpatialBenchmark/src/main/test/scala/org/cusp/bdi/sb/test/parser/SB_KeyMatchInputFileParser_RandomPoints.scala" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -733,15 +740,6 @@
     <option name="LAST_COMMIT_MESSAGE" value="100% accuracy." />
   </component>
   <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="scala-line">
-          <url>file://$PROJECT_DIR$/DataStructures/src/test/scala/org/cusp/bdi/ds/test/TestSortedLInkedList.scala</url>
-          <line>11</line>
-          <option name="timeStamp" value="317" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
     <pin-to-top-manager>
       <pinned-members>
         <PinnedItemInfo parentTag="scala.Tuple2" memberName="_2" />

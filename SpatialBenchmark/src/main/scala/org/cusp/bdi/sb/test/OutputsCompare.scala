@@ -4,22 +4,21 @@ package org.cusp.bdi.sb.test
 import org.apache.spark.rdd.RDD
 import org.apache.spark.rdd.RDD.rddToPairRDDFunctions
 import org.cusp.bdi.sb.test
-import org.cusp.bdi.sb.test.OutputsCompare.{COL_WIDTH, lstOrdered, recordsBothNoMatch, recordsCorrectMatch, recordsCorrectMatchDistanceOnly, recordsCount, recordsFWOverMatched, recordsFWUnderMatched, recordsInFWOnly, recordsInKMOnly, recordsMismatch}
 import org.cusp.bdi.util.Helper
 
 import scala.collection.mutable
 
 object OutputsCompare extends Enumeration with Serializable {
 
-  val recordsBothNoMatch: test.OutputsCompare.Value = Value("Records both no match")
   val recordsCount: test.OutputsCompare.Value = Value("Total Number of Records")
   val recordsCorrectMatch: test.OutputsCompare.Value = Value("Records correctly matched")
   val recordsCorrectMatchDistanceOnly: test.OutputsCompare.Value = Value("Records correctly matched (Dist. only)")
-  val recordsMismatch: test.OutputsCompare.Value = Value("Records framework incorrectly matched")
+  val recordsBothNoMatch: test.OutputsCompare.Value = Value("Records both no match")
   val recordsFWOverMatched: test.OutputsCompare.Value = Value("Records framework overmatched")
   val recordsFWUnderMatched: test.OutputsCompare.Value = Value("Records framework undermatched")
   val recordsInFWOnly: test.OutputsCompare.Value = Value("Records appeared in framework only")
   val recordsInKMOnly: test.OutputsCompare.Value = Value("Records appeared in key match only")
+  val recordsMismatch: test.OutputsCompare.Value = Value("Records framework incorrectly matched")
 
   val COL_WIDTH: Int = this.values.map(_.toString.length).max
 
@@ -43,22 +42,19 @@ object OutputsCompare extends Enumeration with Serializable {
       recordsFWUnderMatched -> 0.0,
       recordsInFWOnly -> 0.0,
       recordsInKMOnly -> 0.0)
-}
 
-final class OutputsCompare(debugMode: Boolean, classificationCount: Int,
-                           rddKeyMatch: RDD[String], keyMatchFileParserClass: String,
-                           rddTestFW: RDD[String], testFWFileParserClass: String) extends Serializable {
+  def apply(debugMode: Boolean, classificationCount: Int,
+            rddKeyMatch: RDD[String], keyMatchFileParserClass: String,
+            rddTestFW: RDD[String], testFWFileParserClass: String, keyRegex: String): List[String] = {
 
-  val keyMatchFileParser: BenchmarkInputFileParser = instantiateParser(keyMatchFileParserClass)
-  val testFWFileParser: BenchmarkInputFileParser = instantiateParser(testFWFileParserClass)
-
-  def compare(): List[String] = {
+    val keyMatchFileParser: BenchmarkInputFileParser = instantiateParser(keyMatchFileParserClass)
+    val testFWFileParser: BenchmarkInputFileParser = instantiateParser(testFWFileParserClass)
 
     val mapClassification = rddKeyMatch
-      .mapPartitions(_.map(keyMatchFileParser.parseLine))
+      .mapPartitions(_.map(keyMatchFileParser.parseLine(_, keyRegex)).filter(_ != null))
       .mapPartitions(_.map(row => (row._1, (row._2, Array[(String, String)]()))))
       .union(
-        rddTestFW.mapPartitions(_.map(testFWFileParser.parseLine))
+        rddTestFW.mapPartitions(_.map(testFWFileParser.parseLine(_, keyRegex)).filter(_ != null))
           .mapPartitions(_.map(row => (row._1, (Array[(String, String)](), row._2))))
       )
       .reduceByKey((tpl0, tpl1) => if (tpl0._1.isEmpty) (tpl1._1, tpl0._2) else (tpl0._1, tpl1._2))

@@ -16,8 +16,8 @@ object TestAllKnnJoin {
     val startTime = System.currentTimeMillis()
     //    var startTime2 = startTime
 
-//    val clArgs = SparkKNN_Local_CLArgs.random_sample()
-                val clArgs = CLArgsParser(args, Arguments.lstArgInfo())
+//        val clArgs = SparkKNN_Local_CLArgs.random_sample()
+    val clArgs = CLArgsParser(args, Arguments.lstArgInfo())
 
     //    val clArgs = SparkKNN_Local_CLArgs.busPoint_busPointShift(Arguments())
     //    val clArgs = SparkKNN_Local_CLArgs.busPoint_taxiPoint(Arguments())
@@ -91,16 +91,17 @@ object TestAllKnnJoin {
 
     if (clArgs.getParamValueBoolean(Arguments.local)) {
 
-      LocalRunConsts.logLocalRunEntry(LocalRunConsts.localRunLogFile, "sKNN_" + indexType,
-        clArgs.getParamValueString(Arguments.firstSet).substring(clArgs.getParamValueString(Arguments.firstSet).lastIndexOf("/") + 1),
-        clArgs.getParamValueString(Arguments.secondSet).substring(clArgs.getParamValueString(Arguments.secondSet).lastIndexOf("/") + 1),
-        clArgs.getParamValueString(Arguments.outDir).substring(clArgs.getParamValueString(Arguments.outDir).lastIndexOf("/") + 1),
-        (System.currentTimeMillis() - startTime) / 1000.0,
-        LocalRunConsts.localRunDebugLogFile,
-        sparkKNN.lstDebugInfo)
+      val message = "%s\t%s\t%s\t%s\t%.4f%n".format("sKNN_" + indexType,
+        firstSet.substring(firstSet.lastIndexOf("/") + 1),
+        secondSet.substring(secondSet.lastIndexOf("/") + 1),
+        outDir.substring(outDir.lastIndexOf("/") + 1),
+        (System.currentTimeMillis() - startTime) / 1000.0
+      )
+
+      LocalRunConsts.logLocalRunEntry(LocalRunConsts.localRunLogFile, message, LocalRunConsts.localRunDebugLogFile, sparkKNN.lstDebugInfo)
 
       printf("Total Time: %,.4f Sec%n", (System.currentTimeMillis() - startTime) / 1000.0)
-      println("Output: %s".format(clArgs.getParamValueString(Arguments.outDir)))
+      println("Output: %s".format(outDir))
       println("Run Log: %s".format(LocalRunConsts.localRunLogFile))
     }
   }

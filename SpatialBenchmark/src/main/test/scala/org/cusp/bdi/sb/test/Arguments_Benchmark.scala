@@ -12,11 +12,12 @@ object Arguments_Benchmark extends Serializable {
   val keyMatchInFileParser: (String, String, Null, String) = Arguments.buildTuple("-keyMatchInFileParser", "String", null, "The full class name of the key match result file specified in keyMatchInFile. Pass in the complete class name (package.className); the class should extend the class org.cusp.bdi.sb.BenchmarkInputFileParser. Reflection will be used to instantiate the class")
   val testFWInFile: (String, String, Null, String) = Arguments.buildTuple("-testFWInFile", "String", null, "Use if the framework's results should be obtained from an input file. Pass the full path of the file and specify the parser class.")
   val testFWInFileParser: (String, String, Null, String) = Arguments.buildTuple("-testFWInFileParser", "String", null, "The full class name of the framework's result file specified in testFWInFile. Pass in the complete class name (package.className); the class should extend the class org.cusp.bdi.sb.BenchmarkInputFileParser")
+  val keyRegex: (String, String, String, String) = Arguments.buildTuple("-keyRegex", "String", "", "Regex to apply to the key. If the regex matches, the key is allowed")
 
   def lstArgInfo() =
-    List(local, debug, outDir, classificationCount, keyMatchInFile, keyMatchInFileParser, testFWInFile, testFWInFileParser)
+    List(local, debug, outDir, classificationCount, keyMatchInFile, keyMatchInFileParser, testFWInFile, keyRegex, testFWInFileParser)
 
-  def apply(debug: Boolean, keyMatchInFile: String, keyMatchInFileParser: String, testFWInFile: String, testFWInFileParser: String, classificationCount: Int): Array[String] =
+  def apply(debug: Boolean, keyMatchInFile: String, keyMatchInFileParser: String, testFWInFile: String, testFWInFileParser: String, keyRegex: String, classificationCount: Int): Array[String] =
     Array(Arguments_Benchmark.local._1, " T",
       Arguments_Benchmark.debug._1, Helper.toString(debug),
       Arguments_Benchmark.outDir._1, Helper.randOutputDir(LocalRunConsts.pathOutput),
@@ -24,5 +25,6 @@ object Arguments_Benchmark extends Serializable {
       Arguments_Benchmark.keyMatchInFile._1, keyMatchInFile,
       Arguments_Benchmark.keyMatchInFileParser._1, keyMatchInFileParser,
       Arguments_Benchmark.testFWInFile._1, testFWInFile,
+      Arguments_Benchmark.keyRegex._1, keyRegex,
       Arguments_Benchmark.testFWInFileParser._1, testFWInFileParser)
 }

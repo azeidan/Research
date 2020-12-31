@@ -148,8 +148,8 @@ case class SparkKnn(debugMode: Boolean, spatialIndexType: SupportedSpatialIndexe
         val startTime = System.currentTimeMillis
         val mbr = bvArrPartitionMBRs.value(pIdx)
 
-        val minX = mbr._1 * squareDimRight + mbrDS_R._1 - FLOAT_ERROR_RANGE
-        val minY = mbr._2 * squareDimRight + mbrDS_R._2 - FLOAT_ERROR_RANGE
+        val minX = mbr._1 * squareDimRight + mbrDS_R._1 //- FLOAT_ERROR_RANGE
+        val minY = mbr._2 * squareDimRight + mbrDS_R._2 //- FLOAT_ERROR_RANGE
         val maxX = mbr._3 * squareDimRight + mbrDS_R._3 + squareDimRight
         val maxY = mbr._4 * squareDimRight + mbrDS_R._4 + squareDimRight
 
@@ -381,6 +381,6 @@ case class SparkKnn(debugMode: Boolean, spatialIndexType: SupportedSpatialIndexe
 
     val squareDim = math.ceil(densestRage._1 * INITIAL_GRID_WIDTH / (if (k > 2) math.ceil(Helper.log2(k)) else 2)).toInt
 
-    (coreObjCapacity, squareDim, (mbrLeft, mbrBottom, mbrRight, mbrTop))
+    (coreObjCapacity, squareDim, (math.floor(mbrLeft), math.floor(mbrBottom), math.ceil(mbrRight), math.ceil(mbrTop)))
   }
 }

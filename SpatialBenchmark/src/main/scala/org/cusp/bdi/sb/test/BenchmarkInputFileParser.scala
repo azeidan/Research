@@ -34,29 +34,34 @@ object BenchmarkInputFileParser {
 
 trait BenchmarkInputFileParser extends Serializable {
 
-  def parseLine(line: String): (String, Array[(String, String)])
+  def parseLine(line: String, keyRegex: String): (String, Array[(String, String)])
 
   /**
   * assumes line is in the following format:
- *  <key> <delimitChar> <delimitCharMajor> <delimitChar> <match2> <delimitCharMajor> <match3> <delimitCharMajor> ...
-*
+  *  <key> <delimitChar> <delimitCharMajor> <delimitChar> <match2> <delimitCharMajor> <match3> <delimitCharMajor> ...
+  *
   * key is assumed in the following format
- *  <label> <delimitCharMinor> <val1> <delimitCharMinor> <val2>
-*
- *  each match is assumed in the following format
-*   <value> <delimitCharMinor> <key>
-*/
-  protected def commonParseLine(line: String, delimitCharMajor: Char, delimitCharMinor: Char): (String, Array[(String, String)]) = {
+  *  <label> <delimitCharMinor> <val1> <delimitCharMinor> <val2>
+  *
+  *  each match is assumed in the following format
+  *   <value> <delimitCharMinor> <key>
+  */
+  protected def commonParseLine(line: String, delimitCharMajor: Char, delimitCharMinor: Char, keyRegex: String): (String, Array[(String, String)]) = {
 
     val arr = line.toLowerCase.split(delimitCharMajor)
 
-    val arrMatches =
-      sortSimilarByKey(arr
-        .tail
-        .map(_.split(delimitCharMinor))
-        .map(arrDistKey => (arrDistKey(0), arrDistKey(1)))
-      )
-    // sort similar values by key
-    (arr(0), arrMatches)
+    if (keyRegex.isEmpty || arr(0).matches(keyRegex)) {
+      val arrMatches =
+        sortSimilarByKey(arr
+          .tail
+          .map(_.split(delimitCharMinor))
+          .map(arrDistKey => (arrDistKey(0), arrDistKey(1)))
+        )
+
+      // sort similar values by key
+      (arr(0), arrMatches)
+    }
+    else
+      null
   }
 }

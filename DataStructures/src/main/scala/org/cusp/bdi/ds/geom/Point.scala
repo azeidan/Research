@@ -53,5 +53,5 @@ case class Point() extends Geom2D {
   }
 
   override def toString: String =
-    "(%.22f,%.22f,%s)".format(x, y, if (userData == null) "" else userData.toString)
+    "(%s,%s)".format(super.toString, if (userData == null) "" else userData.toString)
 }
