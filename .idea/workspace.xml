@@ -37,26 +37,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ee761a9d-eff2-4086-b83a-8096819a4548" name="Default Changelist" comment="KDT working with Histogram insert">
-      <change afterPath="$PROJECT_DIR$/Spark_kNN/src/OLD/SparkKnn_23_Uses_RepartitionAndSort.scala" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Common_FW/src/main/scala/org/cusp/bdi/util/Arguments.scala" beforeDir="false" afterPath="$PROJECT_DIR$/Common_FW/src/main/scala/org/cusp/bdi/util/Arguments.scala" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Common_FW/src/main/scala/org/cusp/bdi/util/LocalRunConsts.scala" beforeDir="false" afterPath="$PROJECT_DIR$/Common_FW/src/main/scala/org/cusp/bdi/util/LocalRunConsts.scala" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DataStructures/src/main/scala/org/cusp/bdi/ds/SpatialIndex.scala" beforeDir="false" afterPath="$PROJECT_DIR$/DataStructures/src/main/scala/org/cusp/bdi/ds/SpatialIndex.scala" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DataStructures/src/main/scala/org/cusp/bdi/ds/geom/Geom2D.scala" beforeDir="false" afterPath="$PROJECT_DIR$/DataStructures/src/main/scala/org/cusp/bdi/ds/geom/Geom2D.scala" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DataStructures/src/main/scala/org/cusp/bdi/ds/geom/Point.scala" beforeDir="false" afterPath="$PROJECT_DIR$/DataStructures/src/main/scala/org/cusp/bdi/ds/geom/Point.scala" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DataStructures/src/main/scala/org/cusp/bdi/ds/geom/Rectangle.scala" beforeDir="false" afterPath="$PROJECT_DIR$/DataStructures/src/main/scala/org/cusp/bdi/ds/geom/Rectangle.scala" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DataStructures/src/main/scala/org/cusp/bdi/ds/kdt/Histogram.scala" beforeDir="false" afterPath="$PROJECT_DIR$/DataStructures/src/main/scala/org/cusp/bdi/ds/kdt/Histogram.scala" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DataStructures/src/main/scala/org/cusp/bdi/ds/kdt/KdTree.scala" beforeDir="false" afterPath="$PROJECT_DIR$/DataStructures/src/main/scala/org/cusp/bdi/ds/kdt/KdTree.scala" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DataStructures/src/main/scala/org/cusp/bdi/ds/kdt/KdtNode.scala" beforeDir="false" afterPath="$PROJECT_DIR$/DataStructures/src/main/scala/org/cusp/bdi/ds/kdt/KdtNode.scala" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DataStructures/src/main/scala/org/cusp/bdi/ds/qt/QuadTree.scala" beforeDir="false" afterPath="$PROJECT_DIR$/DataStructures/src/main/scala/org/cusp/bdi/ds/qt/QuadTree.scala" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DataStructures/src/main/scala/org/cusp/bdi/ds/sortset/SortedLinkedList.scala" beforeDir="false" afterPath="$PROJECT_DIR$/DataStructures/src/main/scala/org/cusp/bdi/ds/sortset/SortedLinkedList.scala" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DataStructures/src/test/scala/org/cusp/bdi/ds/test/TestSortedLInkedList.scala" beforeDir="false" afterPath="$PROJECT_DIR$/DataStructures/src/test/scala/org/cusp/bdi/ds/test/TestSortedLInkedList.scala" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/src/test/scala/org/cusp/bdi/fw/simba/SIM_Example.scala" beforeDir="false" afterPath="$PROJECT_DIR$/FW_Simba/src/test/scala/org/cusp/bdi/fw/simba/SIM_Example.scala" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/src/OLD/SparkKNN_Iterative_Hilbert.scala" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/src/OLD/SparkKNN_21_Iterative_Hilbert.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/src/main/scala/org/cusp/bdi/sknn/SparkKNN_Objects.scala" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/src/main/scala/org/cusp/bdi/sknn/SparkKNN_Objects.scala" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Spark_kNN/src/main/scala/org/cusp/bdi/sknn/SparkKnn.scala" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/src/main/scala/org/cusp/bdi/sknn/SparkKnn.scala" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/src/main/scala/org/cusp/bdi/sknn/ds/util/SpatialIdxOperations.scala" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/src/main/scala/org/cusp/bdi/sknn/ds/util/SpatialIdxOperations.scala" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/src/main/test/scala/org/cusp/bdi/sknn/test/SizeTest.scala" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/src/main/test/scala/org/cusp/bdi/sknn/test/SizeTest.scala" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Spark_kNN/src/main/test/scala/org/cusp/bdi/sknn/test/SparkKNN_Local_CLArgs.scala" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/src/main/test/scala/org/cusp/bdi/sknn/test/SparkKNN_Local_CLArgs.scala" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Spark_kNN/src/main/test/scala/org/cusp/bdi/sknn/test/TestAllKnnJoin.scala" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/src/main/test/scala/org/cusp/bdi/sknn/test/TestAllKnnJoin.scala" afterDir="false" />
     </list>
@@ -744,7 +726,6 @@
     <ignored-roots>
       <path value="$PROJECT_DIR$" />
     </ignored-roots>
-    <MESSAGE value="Temp commit during OS upgrade" />
     <MESSAGE value="K-d Tree added" />
     <MESSAGE value="Simba fixes for local run&#10;introduced Arguments_Simba and flag to compute distance of matches" />
     <MESSAGE value="k-d tree accuracy fix" />
@@ -769,14 +750,15 @@
     <MESSAGE value="100% accuracy. Best runtime so far" />
     <MESSAGE value="100% accuracy." />
     <MESSAGE value="100% accuracy" />
-    <option name="LAST_COMMIT_MESSAGE" value="100% accuracy" />
+    <MESSAGE value="Uses UNION. Before attempting point data template" />
+    <option name="LAST_COMMIT_MESSAGE" value="Uses UNION. Before attempting point data template" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="scala-line">
           <url>file://$PROJECT_DIR$/Spark_kNN/src/main/scala/org/cusp/bdi/sknn/SparkKnn.scala</url>
-          <line>351</line>
+          <line>354</line>
           <option name="timeStamp" value="89" />
         </line-breakpoint>
       </breakpoints>

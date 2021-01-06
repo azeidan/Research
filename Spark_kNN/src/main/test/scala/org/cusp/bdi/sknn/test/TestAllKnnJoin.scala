@@ -145,10 +145,10 @@ object TestAllKnnJoin {
       println("Output: %s".format(outDir))
       println("Run Log: %s".format(LocalRunConsts.localRunLogFile))
 
-//            while (true) {
-//              print(". ")
-//              Thread.sleep(5000)
-//            }
+            while (true) {
+              print(". ")
+              Thread.sleep(5000)
+            }
     }
   }
 }
