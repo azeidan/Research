@@ -7,7 +7,7 @@ import org.cusp.bdi.ds.kdt.Histogram.{TypeAVL, TypeAVL_Data, fAddToAVL}
 import org.cusp.bdi.ds.kdt.KdtNode.SPLIT_VAL_NONE
 
 import scala.collection.mutable
-import scala.collection.mutable.ListBuffer
+import scala.collection.mutable.{ArrayBuffer, ListBuffer}
 
 object Histogram {
 
@@ -58,9 +58,9 @@ object Histogram {
 
 case class Histogram(avlTree: TypeAVL, otherIndexCount: Int, pointCount: Int) {
 
-  def extractPointInfo: (ListBuffer[Point], Rectangle) = {
+  def extractPointInfo: (ArrayBuffer[Point], Rectangle) = {
 
-    val lstPoints = ListBuffer[Point]()
+    val arrPoints = ArrayBuffer[Point]()
 
     var minX = Double.MaxValue
     var minY = Double.MaxValue
@@ -70,7 +70,7 @@ case class Histogram(avlTree: TypeAVL, otherIndexCount: Int, pointCount: Int) {
     avlTree.allNodes
       .foreach(_.data.foreach(row => {
 
-        lstPoints += row._2
+        arrPoints += row._2
 
         if (row._2.x < minX) minX = row._2.x
         if (row._2.x > maxX) maxX = row._2.x
@@ -79,7 +79,7 @@ case class Histogram(avlTree: TypeAVL, otherIndexCount: Int, pointCount: Int) {
         if (row._2.y > maxY) maxY = row._2.y
       }))
 
-    (lstPoints, buildRectBounds((minX, minY), (maxX, maxY)))
+    (arrPoints, buildRectBounds((minX, minY), (maxX, maxY)))
   }
 
   def partition(splitX: Boolean): (Double, Histogram, Histogram) = {

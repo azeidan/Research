@@ -13,6 +13,40 @@ object SupportedKnnOperations extends Enumeration with Serializable {
   val allKnn: SupportedKnnOperations.Value = Value("allknn")
 }
 
+//abstract class KeyPartIdx(_pIdx: Int) extends Ordered[KeyPartIdx] {
+//
+//  var pIdx: Int = _pIdx
+//
+//  override def compare(that: KeyPartIdx): Int = {
+//
+//    val thatSpIdx = that match {
+//      case _: KeyPartIdxSpIndex => true
+//      case _ => false
+//    }
+//
+//    this match {
+//      case _: KeyPartIdxSpIndex => -1
+//      case _ => if (thatSpIdx) 1 else 0
+//    }
+//  }
+//}
+//
+//class KeyPartIdxSpIndex extends KeyPartIdx(-1) {
+//
+//  def this(_pIdx: Int) = {
+//    this
+//    pIdx = _pIdx
+//  }
+//}
+//
+//class KeyPartIdxSpObject extends KeyPartIdx(-1) {
+//
+//  def this(_pIdx: Int) = {
+//    this
+//    pIdx = _pIdx
+//  }
+//}
+
 final class RangeInfo {
 
   val lstMBRCoord: ListBuffer[((Double, Double), Long)] = ListBuffer[((Double, Double), Long)]()
@@ -72,20 +106,16 @@ final class RowData extends KryoSerializable {
 
   override def write(kryo: Kryo, output: Output): Unit = {
 
-    kryo.writeClassAndObject(output, point)
-    kryo.writeClassAndObject(output, sortedList)
-    kryo.writeClassAndObject(output, lstPartitionId)
+    kryo.writeObject(output, point)
+    kryo.writeObject(output, sortedList)
+    kryo.writeObject(output, lstPartitionId)
   }
 
   override def read(kryo: Kryo, input: Input): Unit = {
 
-    point = kryo.readClassAndObject(input) match {
-      case pt: Point => pt
-    }
+    point = kryo.readObject(input, classOf[Point])
 
-    sortedList = kryo.readClassAndObject(input).asInstanceOf[SortedLinkedList[Point]]
-    lstPartitionId = kryo.readClassAndObject(input).asInstanceOf[ListBuffer[Int]]
+    sortedList = kryo.readObject(input, classOf[SortedLinkedList[Point]])
+    lstPartitionId = kryo.readObject(input, classOf[ListBuffer[Int]])
   }
 }
-
-//case class BroadcastWrapper(spatialIdx: SpatialIndex, arrPartitionMBRs: Array[(Double, Double, Double, Double)]) extends Serializable {}

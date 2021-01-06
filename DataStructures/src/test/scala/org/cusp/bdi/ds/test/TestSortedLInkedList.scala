@@ -6,7 +6,7 @@ object TestSortedLInkedList {
 
   def main(args: Array[String]): Unit = {
 
-    val sortedLInkedList = SortedLinkedList[String](10)
+    val sortedLInkedList = new SortedLinkedList[String](10)
 
     sortedLInkedList.add(0.00000000, "bus_3_a_120356")
     sortedLInkedList.add(0.00000000, "bus_3_a_979829")

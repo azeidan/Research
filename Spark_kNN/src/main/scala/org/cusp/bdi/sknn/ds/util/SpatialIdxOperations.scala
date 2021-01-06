@@ -1,7 +1,5 @@
 package org.cusp.bdi.sknn.ds.util
 
-import com.esotericsoftware.kryo.io.{Input, Output}
-import com.esotericsoftware.kryo.{Kryo, KryoSerializable}
 import org.cusp.bdi.ds.SpatialIndex.maxSquaredEucDist
 import org.cusp.bdi.ds._
 import org.cusp.bdi.ds.geom.{Geom2D, Point, Rectangle}
@@ -26,31 +24,31 @@ object SupportedSpatialIndexes extends Enumeration with Serializable {
     }
 }
 
-final class GlobalIndexPointData extends KryoSerializable {
+case class GlobalIndexPoint(numPoints: Long, partitionIdx: Int) extends Serializable {
 
-  var numPoints: Long = -1
-  var partitionIdx: Int = -1
-
-  def this(numPoints: Long, partitionIdx: Int) = {
-
-    this()
-    this.numPoints = numPoints
-    this.partitionIdx = partitionIdx
-  }
+  //  var numPoints: Long = -1
+  //  var partitionIdx: Int = -1
+  //
+  //  def this(numPoints: Long, partitionIdx: Int) = {
+  //
+  //    this()
+  //    this.numPoints = numPoints
+  //    this.partitionIdx = partitionIdx
+  //  }
 
   override def equals(other: Any): Boolean = false
 
-  override def write(kryo: Kryo, output: Output): Unit = {
-
-    output.writeLong(numPoints)
-    output.writeInt(partitionIdx)
-  }
-
-  override def read(kryo: Kryo, input: Input): Unit = {
-
-    numPoints = input.readLong()
-    partitionIdx = input.readInt()
-  }
+  //  override def write(kryo: Kryo, output: Output): Unit = {
+  //
+  //    output.writeLong(numPoints)
+  //    output.writeInt(partitionIdx)
+  //  }
+  //
+  //  override def read(kryo: Kryo, input: Input): Unit = {
+  //
+  //    numPoints = input.readLong()
+  //    partitionIdx = input.readInt()
+  //  }
 }
 
 object SpatialIdxOperations extends Serializable {
@@ -81,7 +79,7 @@ object SpatialIdxOperations extends Serializable {
       case kdTree: KdTree => lookup(kdTree, searchXY, k)
     })
       .map(_.data.userData match {
-        case globalIndexPointData: GlobalIndexPointData => globalIndexPointData.partitionIdx
+        case globalIndexPoint: GlobalIndexPoint => globalIndexPoint.partitionIdx
       })
       .to[ListBuffer]
       .distinct
@@ -105,7 +103,7 @@ object SpatialIdxOperations extends Serializable {
         if (qt != skipQT)
           if (idxRangeLookupInfo.rectSearchRegion.intersects(qt.rectBounds)) {
 
-            qt.lstPoints.foreach(updateMatchListAndRegion(_, idxRangeLookupInfo, k))
+            qt.arrPoints.foreach(updateMatchListAndRegion(_, idxRangeLookupInfo, k))
 
             if (qt.topLeft != null)
               lstQT += qt.topLeft
@@ -155,7 +153,7 @@ object SpatialIdxOperations extends Serializable {
 
             case kdtLeafNode: KdtLeafNode =>
               if (idxRangeLookupInfo.rectSearchRegion.intersects(kdtLeafNode.rectNodeBounds))
-                kdtLeafNode.lstPoints.foreach(updateMatchListAndRegion(_, idxRangeLookupInfo, k))
+                kdtLeafNode.arrPoints.foreach(updateMatchListAndRegion(_, idxRangeLookupInfo, k))
           }
       }
     }
@@ -177,7 +175,7 @@ object SpatialIdxOperations extends Serializable {
     //      print("")
 
     def getNumPoints(point: Point): Long = point.userData match {
-      case globalIndexPointData: GlobalIndexPointData => globalIndexPointData.numPoints
+      case globalIndexPoint: GlobalIndexPoint => globalIndexPoint.numPoints
     }
 
     if (idxRangeLookupInfo.rectSearchRegion.contains(point)) {
@@ -198,18 +196,20 @@ object SpatialIdxOperations extends Serializable {
         if ((idxRangeLookupInfo.limitNode == null || idxRangeLookupInfo.sortList.last.data != point) &&
           (idxRangeLookupInfo.weight - getNumPoints(idxRangeLookupInfo.sortList.last.data)) >= k) {
 
-          var elem = idxRangeLookupInfo.sortList.head
-          var newWeight = getNumPoints(elem.data)
+          var currNode = idxRangeLookupInfo.sortList.head
+          var newWeight = getNumPoints(currNode.data)
+          var nodeCount = 1
 
           while (newWeight < k) {
 
-            elem = elem.next
-            newWeight += getNumPoints(elem.data)
+            currNode = currNode.next
+            nodeCount += 1
+            newWeight += getNumPoints(currNode.data)
           }
 
-          if (idxRangeLookupInfo.limitNode != elem) {
+          if (idxRangeLookupInfo.limitNode != currNode) {
 
-            idxRangeLookupInfo.limitNode = elem
+            idxRangeLookupInfo.limitNode = currNode
 
             //            idxRangeLookupInfo.rectSearchRegion.halfXY.x = 2 + math.sqrt(idxRangeLookupInfo.limitNode.distance / 2)
             //            val maxManhattanDist = Helper.max(math.abs(idxRangeLookupInfo.rectSearchRegion.center.x - idxRangeLookupInfo.limitNode.data.x), math.abs(idxRangeLookupInfo.rectSearchRegion.center.y - idxRangeLookupInfo.limitNode.data.y))
@@ -220,13 +220,14 @@ object SpatialIdxOperations extends Serializable {
 
             idxRangeLookupInfo.dimSquared = idxRangeLookupInfo.rectSearchRegion.halfXY.x * idxRangeLookupInfo.rectSearchRegion.halfXY.x
 
-            while (elem.next != null && elem.next.distance <= idxRangeLookupInfo.dimSquared) {
+            while (currNode.next != null && currNode.next.distance <= idxRangeLookupInfo.dimSquared) {
 
-              elem = elem.next
-              newWeight += getNumPoints(elem.data)
+              currNode = currNode.next
+              nodeCount += 1
+              newWeight += getNumPoints(currNode.data)
             }
 
-            idxRangeLookupInfo.sortList.stopAt(elem)
+            idxRangeLookupInfo.sortList.stopAt(currNode, nodeCount)
             idxRangeLookupInfo.weight = newWeight
           }
         }

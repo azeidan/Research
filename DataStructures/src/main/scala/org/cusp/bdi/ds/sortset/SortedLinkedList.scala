@@ -1,27 +1,57 @@
 package org.cusp.bdi.ds.sortset
 
+import com.esotericsoftware.kryo.io.{Input, Output}
+import com.esotericsoftware.kryo.{Kryo, KryoSerializable}
+import com.esotericsoftware.minlog.Log
+
 import scala.collection.AbstractIterator
 import scala.collection.immutable.Iterable
 
-case class Node[T](distance: Double, data: T) /*(implicit ev$1: T => Comparable[_ >: T])*/ {
+class Node[T]() extends KryoSerializable /*(implicit ev$1: T => Comparable[_ >: T])*/ {
 
+  var distance: Double = Double.NegativeInfinity
+  var data: T = _
   var next: Node[T] = _
+
+  def this(distance: Double, data: T) {
+
+    this()
+    this.distance = distance
+    this.data = data
+  }
 
   override def toString: String =
     "%f, %s".format(distance, data)
+
+  override def write(kryo: Kryo, output: Output): Unit = {
+
+    output.writeDouble(distance)
+    kryo.writeClassAndObject(output, data)
+  }
+
+  override def read(kryo: Kryo, input: Input): Unit = {
+
+    distance = input.readDouble()
+    data = kryo.readClassAndObject(input).asInstanceOf[T]
+  }
 }
 
-case class SortedLinkedList[T](maxSize: Int) /*(implicit ev$1: T => Comparable[_ >: T])*/ extends Serializable with Iterable[Node[T]] {
+case class SortedLinkedList[T]() /*(implicit ev$1: T => Comparable[_ >: T])*/ extends KryoSerializable with Iterable[Node[T]] {
 
+  //  Log.set(Log.LEVEL_DEBUG)
+
+  var maxSize: Int = Int.MaxValue
   private var headNode: Node[T] = _
   private var lastNode: Node[T] = _
   private var nodeCount = 0
 
-  if (maxSize < 1)
-    throw new IllegalArgumentException("Invalid maxSize parameter. Values > 0 only")
+  require(maxSize > 0, "Invalid maxSize parameter. Values > 0 only")
 
-  def this() =
-    this(Int.MaxValue)
+  def this(maxSize: Int) = {
+
+    this()
+    this.maxSize = maxSize
+  }
 
   def clear(): Unit = {
 
@@ -30,8 +60,7 @@ case class SortedLinkedList[T](maxSize: Int) /*(implicit ev$1: T => Comparable[_
     nodeCount = 0
   }
 
-  def add(distance: Double, data: T) {
-
+  def add(distance: Double, data: T): Unit =
     if (nodeCount < maxSize || distance <= last.distance) {
 
       var prevNode: Node[T] = null
@@ -59,7 +88,7 @@ case class SortedLinkedList[T](maxSize: Int) /*(implicit ev$1: T => Comparable[_
 
       if (prevNode == null) { // insert first
 
-        headNode = Node(distance, data)
+        headNode = new Node(distance, data)
         headNode.next = currNode
 
         if (lastNode == null)
@@ -67,7 +96,7 @@ case class SortedLinkedList[T](maxSize: Int) /*(implicit ev$1: T => Comparable[_
       }
       else { // insert after
 
-        prevNode.next = Node(distance, data)
+        prevNode.next = new Node(distance, data)
         prevNode.next.next = currNode
 
         if (lastNode == prevNode)
@@ -97,18 +126,16 @@ case class SortedLinkedList[T](maxSize: Int) /*(implicit ev$1: T => Comparable[_
         }
       }
     }
-  }
 
   def isFull: Boolean = nodeCount >= maxSize
 
-  def stopAt(node: Node[T]): Unit = {
-
-    if (node != null && node.next != null) {
+  def stopAt(node: Node[T], nodeCount: Int): Unit =
+    if (node != null && node != lastNode) {
 
       lastNode = node
       lastNode.next = null
+      this.nodeCount = nodeCount
     }
-  }
 
   def get(idx: Int): Node[T] = {
 
@@ -128,6 +155,8 @@ case class SortedLinkedList[T](maxSize: Int) /*(implicit ev$1: T => Comparable[_
   override def last: Node[T] = lastNode
 
   def length: Int = nodeCount
+
+  def capacity: Int = maxSize
 
   override def size: Int = nodeCount
 
@@ -154,4 +183,36 @@ case class SortedLinkedList[T](maxSize: Int) /*(implicit ev$1: T => Comparable[_
 
   override def mkString(sep: String): String =
     this.map(node => "%s%s".format(node, sep)).mkString("")
+
+  override def write(kryo: Kryo, output: Output): Unit = {
+
+    output.writeInt(maxSize)
+    output.writeInt(nodeCount)
+
+    var currNode = head
+
+    while (currNode != null) {
+
+      kryo.writeClassAndObject(output, currNode)
+      currNode = currNode.next
+    }
+  }
+
+  override def read(kryo: Kryo, input: Input): Unit = {
+
+    maxSize = input.readInt()
+    nodeCount = input.readInt()
+
+    if (nodeCount > 0) {
+
+      headNode = kryo.readClassAndObject(input).asInstanceOf[Node[T]]
+      lastNode = headNode
+
+      for (_ <- 1 until nodeCount) {
+
+        lastNode.next = kryo.readClassAndObject(input).asInstanceOf[Node[T]]
+        lastNode = lastNode.next
+      }
+    }
+  }
 }

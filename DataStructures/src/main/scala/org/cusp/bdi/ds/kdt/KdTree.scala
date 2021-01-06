@@ -10,7 +10,7 @@ import org.cusp.bdi.ds.kdt.KdtNode.SPLIT_VAL_NONE
 import org.cusp.bdi.ds.sortset.SortedLinkedList
 import org.cusp.bdi.util.Helper
 
-import scala.collection.mutable.ListBuffer
+import scala.collection.mutable.{ArrayBuffer, ListBuffer}
 import scala.collection.{AbstractIterator, mutable}
 
 object KdTree extends Serializable {
@@ -51,7 +51,7 @@ class KdTree extends SpatialIndex {
   }
 
   @throws(classOf[IllegalStateException])
-  override def insert(rectBounds: Rectangle, iterPoints: Iterator[Point], histogramBarWidth: Int): Boolean = {
+  override def insert(rectBounds: Rectangle, iterPoints: Iterator[Point], histogramBarWidth: Int) {
 
     if (rootNode != null) throw new IllegalStateException("KD Tree already built")
     if (rectBounds == null) throw new IllegalStateException("Rectangle bounds cannot be null")
@@ -91,8 +91,6 @@ class KdTree extends SpatialIndex {
     }
 
     updateBoundsAndTotalPoint()
-
-    true
   }
 
   override def findExact(searchXY: (Double, Double)): Point = {
@@ -116,7 +114,7 @@ class KdTree extends SpatialIndex {
 
         case kdtLeafNode: KdtLeafNode =>
 
-          val optPoint = kdtLeafNode.lstPoints.find(pt => pt.x.equals(searchXY._1) && pt.y.equals(searchXY._2))
+          val optPoint = kdtLeafNode.arrPoints.find(pt => pt.x.equals(searchXY._1) && pt.y.equals(searchXY._2))
 
           if (optPoint.nonEmpty)
             return optPoint.get
@@ -221,7 +219,7 @@ class KdTree extends SpatialIndex {
 
             case kdtLeafNode: KdtLeafNode =>
               if (knnLookupInfo.rectSearchRegion.intersects(kdtLeafNode.rectNodeBounds))
-                kdtLeafNode.lstPoints.foreach(testAndAddPoint(_, knnLookupInfo))
+                kdtLeafNode.arrPoints.foreach(testAndAddPoint(_, knnLookupInfo))
           }
       }
     }
@@ -240,38 +238,42 @@ class KdTree extends SpatialIndex {
 
   override def write(kryo: Kryo, output: Output): Unit = {
 
-    val lstNode = ListBuffer(this.rootNode)
+    val qNode = mutable.Queue(this.rootNode)
 
-    lstNode.foreach(kdtNode => {
+    while (qNode.nonEmpty) {
+
+      val kdtNode = qNode.dequeue()
 
       kryo.writeClassAndObject(output, kdtNode)
 
       kdtNode match {
         case brn: KdtBranchRootNode =>
-          lstNode += (brn.left, brn.right)
+          qNode += (brn.left, brn.right)
         case _ =>
       }
-    })
+    }
   }
 
   override def read(kryo: Kryo, input: Input): Unit = {
 
     def readNode() = kryo.readClassAndObject(input) match {
       case kdtNode: KdtNode => kdtNode
+      case _ => null
     }
 
     this.rootNode = readNode()
 
-    val lstNode = ListBuffer(this.rootNode)
+    val qNode = mutable.Queue(this.rootNode)
 
-    lstNode.foreach {
-      case brn: KdtBranchRootNode =>
-        brn.left = readNode()
-        brn.right = readNode()
+    while (qNode.nonEmpty)
+      qNode.dequeue() match {
+        case kdtBranchRootNode: KdtBranchRootNode =>
+          kdtBranchRootNode.left = readNode()
+          kdtBranchRootNode.right = readNode()
 
-        lstNode += (brn.left, brn.right)
-      case _ =>
-    }
+          qNode += (kdtBranchRootNode.left, kdtBranchRootNode.right)
+        case _ =>
+      }
   }
 
   private def updateBoundsAndTotalPoint(): Unit =
@@ -317,18 +319,18 @@ class KdTree extends SpatialIndex {
       case _ =>
     }
 
-  override def allPoints: Iterator[Iterator[Point]] = new AbstractIterator[Iterator[Point]] {
+  override def allPoints: Iterator[ArrayBuffer[Point]] = new AbstractIterator[ArrayBuffer[Point]] {
 
     private val queueNode = mutable.Queue[KdtNode](rootNode)
 
     override def hasNext: Boolean = queueNode.nonEmpty
 
-    override def next(): Iterator[Point] =
+    override def next(): ArrayBuffer[Point] =
       if (!hasNext)
         throw new NoSuchElementException("next on empty Iterator")
       else {
 
-        var ans: Iterator[Point] = null
+        var ans: ArrayBuffer[Point] = null
 
         while (ans == null && queueNode.nonEmpty)
           ans = this.queueNode.dequeue match {
@@ -336,7 +338,7 @@ class KdTree extends SpatialIndex {
               this.queueNode += (kdtBRN.left, kdtBRN.right)
               null
             case kdtLeafNode: KdtLeafNode =>
-              kdtLeafNode.lstPoints.iterator
+              kdtLeafNode.arrPoints
             case _ =>
               null
           }

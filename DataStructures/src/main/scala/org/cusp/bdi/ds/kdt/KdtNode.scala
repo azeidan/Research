@@ -5,7 +5,11 @@ import com.esotericsoftware.kryo.io.{Input, Output}
 import org.cusp.bdi.ds.geom.{Point, Rectangle}
 import org.cusp.bdi.ds.kdt.KdtNode.SPLIT_VAL_NONE
 
-import scala.collection.mutable.ListBuffer
+import scala.collection.mutable.ArrayBuffer
+
+object KdtNode {
+  val SPLIT_VAL_NONE: Double = Double.NegativeInfinity
+}
 
 abstract class KdtNode extends KryoSerializable {
 
@@ -17,16 +21,10 @@ abstract class KdtNode extends KryoSerializable {
     "%s\t%,d".format(rectNodeBounds, totalPoints)
 
   override def write(kryo: Kryo, output: Output): Unit =
-    kryo.writeClassAndObject(output, rectNodeBounds)
+    kryo.writeObject(output, rectNodeBounds)
 
   override def read(kryo: Kryo, input: Input): Unit =
-    rectNodeBounds = kryo.readClassAndObject(input) match {
-      case rectangle: Rectangle => rectangle
-    }
-}
-
-object KdtNode {
-  val SPLIT_VAL_NONE: Double = Double.NegativeInfinity
+    rectNodeBounds = kryo.readObject(input, classOf[Rectangle])
 }
 
 final class KdtBranchRootNode extends KdtNode {
@@ -65,14 +63,14 @@ final class KdtBranchRootNode extends KdtNode {
 
 final class KdtLeafNode extends KdtNode {
 
-  var lstPoints: ListBuffer[Point] = _
+  var arrPoints: ArrayBuffer[Point] = _
 
-  override def totalPoints: Int = lstPoints.length
+  override def totalPoints: Int = arrPoints.length
 
-  def this(nodeInfo: (ListBuffer[Point], Rectangle)) = {
+  def this(nodeInfo: (ArrayBuffer[Point], Rectangle)) = {
 
     this()
-    this.lstPoints = nodeInfo._1
+    this.arrPoints = nodeInfo._1
     this.rectNodeBounds = nodeInfo._2
   }
 
@@ -80,13 +78,19 @@ final class KdtLeafNode extends KdtNode {
 
     super.write(kryo, output)
 
-    kryo.writeClassAndObject(output, lstPoints)
+    output.writeInt(arrPoints.length)
+    arrPoints.foreach(kryo.writeObject(output, _))
   }
 
   override def read(kryo: Kryo, input: Input): Unit = {
 
     super.read(kryo, input)
 
-    lstPoints = kryo.readClassAndObject(input).asInstanceOf[ListBuffer[Point]]
+    val arrLength = input.readInt()
+
+    arrPoints = ArrayBuffer[Point]()
+    arrPoints.sizeHint(arrLength)
+
+    (0 until arrLength).foreach(_ => arrPoints += kryo.readObject(input, classOf[Point]))
   }
 }

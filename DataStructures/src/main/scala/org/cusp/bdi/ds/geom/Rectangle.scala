@@ -1,11 +1,6 @@
 package org.cusp.bdi.ds.geom
 
-import org.cusp.bdi.util.Helper
-
 case class Rectangle(center: Geom2D, halfXY: Geom2D) extends Serializable {
-
-  def this() =
-    this(new Geom2D(), new Geom2D())
 
   def this(other: Rectangle) =
     this(new Geom2D(other.center), new Geom2D(other.halfXY))
@@ -55,13 +50,6 @@ case class Rectangle(center: Geom2D, halfXY: Geom2D) extends Serializable {
   def left: Double =
     center.x - halfXY.x
 
-  //  def maxUnitDistance(searchPoint: Geom2D): Int =
-  //    Helper.max(
-  //      Helper.max(math.abs(searchPoint.x - left), math.abs(searchPoint.x - right)),
-  //      Helper.max(math.abs(searchPoint.y - bottom), math.abs(searchPoint.y - top)))
-  //      .ceil
-  //      .toInt
-
   def contains(mbr: (Double, Double, Double, Double)): Boolean =
     left <= mbr._1 && bottom <= mbr._2 && right >= mbr._3 && top >= mbr._4
 
@@ -108,4 +96,20 @@ case class Rectangle(center: Geom2D, halfXY: Geom2D) extends Serializable {
 
   override def toString: String =
     "%s\t%s".format(center, halfXY)
+
+  //  override def write(kryo: Kryo, output: Output) {
+  //
+  //    kryo.writeClassAndObject(output, center)
+  //    kryo.writeClassAndObject(output, halfXY)
+  //  }
+  //
+  //  override def read(kryo: Kryo, input: Input) {
+  //
+  //    center = kryo.readClassAndObject(input) match {
+  //      case geom2D: Geom2D => geom2D
+  //    }
+  //    halfXY = kryo.readClassAndObject(input) match {
+  //      case geom2D: Geom2D => geom2D
+  //    }
+  //  }
 }

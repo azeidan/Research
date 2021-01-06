@@ -83,27 +83,6 @@ object SIM_Example extends Serializable {
       .mapPartitions(_.map(row => "%s;%s".format(row._1, row._2.map(row => "%.8f,%s".format(row._1, row._2)).mkString(";"))))
       .saveAsTextFile(clArgs.getParamValueString(Arguments.outDir), classOf[GzipCodec])
 
-    /*
-        DS1.knnJoin(DS2, Array("x", "y"), Array("x", "y"), kParam)
-          .mapPartitions(_.map(processRow))
-          .rdd
-          .reduceByKey(_ ++ _)
-          //        .union(
-          //          DS2.knnJoin(DS1, Array("x", "y"), Array("x", "y"), kParam)
-          //            .rdd
-          //            .mapPartitions(_.map(processRow))
-          //            .reduceByKey(_ ++ _)
-          //        )
-          .mapPartitions(_.map(row =>
-            "%s;%s".format(row._1, row._2.map(distData => ("%.8f,%s".format(distData._1, distData._2))).mkString(";"))))
-          .saveAsTextFile(clArgs.getParamValueString(Arguments.outDir), classOf[GzipCodec])
-        else
-        DS1.knnJoin(DS2, Array("x", "y"), Array("x", "y"), kParam).rdd
-          //        .union(DS2.knnJoin(DS1, Array("x", "y"), Array("x", "y"), kParam).rdd)
-          .mapPartitions(_.map(row => "%s,%.8f,%.8f".format(row.get(2).toString, row(0).toString.toFloat, row(1).toString.toFloat)))
-          .saveAsTextFile(clArgs.getParamValueString(Arguments.outDir), classOf[GzipCodec])
-    */
-
     simbaSession.stop()
 
     if (clArgs.getParamValueBoolean(Arguments.local)) {
@@ -163,8 +142,6 @@ object SIM_Example extends Serializable {
     val y2 = row(4) match {
       case d: Double => d
     }
-
-    //    val sSet = mutable.SortedSet((dist, row(5).toString))
 
     val pointInfo = "%s,%.8f,%.8f".format(row.get(2).toString, x1, y1)
 

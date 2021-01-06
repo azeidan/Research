@@ -1,8 +1,5 @@
 package org.cusp.bdi.ds.geom
 
-import com.esotericsoftware.kryo.Kryo
-import com.esotericsoftware.kryo.io.{Input, Output}
-
 case class Point() extends Geom2D {
 
   var userData: Any = _
@@ -34,15 +31,15 @@ case class Point() extends Geom2D {
   def this(xy: (Double, Double)) =
     this(xy._1, xy._2)
 
-  override def write(kryo: Kryo, output: Output): Unit = {
-    super.write(kryo, output)
-    kryo.writeClassAndObject(output, userData)
-  }
-
-  override def read(kryo: Kryo, input: Input): Unit = {
-    super.read(kryo, input)
-    userData = kryo.readClassAndObject(input)
-  }
+  //  override def write(kryo: Kryo, output: Output): Unit = {
+  //    super.write(kryo, output)
+  //    kryo.writeClassAndObject(output, userData)
+  //  }
+  //
+  //  override def read(kryo: Kryo, input: Input): Unit = {
+  //    super.read(kryo, input)
+  //    userData = kryo.readClassAndObject(input)
+  //  }
 
   override def equals(other: Any): Boolean = other match {
     case pt: Point =>

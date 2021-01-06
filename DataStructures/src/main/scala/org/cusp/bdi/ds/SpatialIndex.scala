@@ -6,6 +6,8 @@ import org.cusp.bdi.ds.sortset.SortedLinkedList
 import org.cusp.bdi.util.Helper
 import org.cusp.bdi.util.Helper.FLOAT_ERROR_RANGE
 
+import scala.collection.mutable.ArrayBuffer
+
 object SpatialIndex extends Serializable {
 
   //  def computeSquaredDist(manhattanDist: Int) =
@@ -78,11 +80,11 @@ trait SpatialIndex extends KryoSerializable {
   def getTotalPoints: Int
 
   @throws(classOf[IllegalStateException])
-  def insert(rectBounds: Rectangle, iterPoints: Iterator[Point], histogramBarWidth: Int): Boolean
+  def insert(rectBounds: Rectangle, iterPoints: Iterator[Point], histogramBarWidth: Int)
 
   def findExact(searchXY: (Double, Double)): Point
 
-  def allPoints: Iterator[Iterator[Point]]
+  def allPoints: Iterator[ArrayBuffer[Point]]
 
   def nearestNeighbor(searchPoint: Point, sortSetSqDist: SortedLinkedList[Point])
 }

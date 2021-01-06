@@ -7,7 +7,7 @@ import org.apache.spark.{SparkConf, SparkContext}
 import org.cusp.bdi.ds.geom.Point
 import org.cusp.bdi.sknn.ds.util.SupportedSpatialIndexes
 import org.cusp.bdi.sknn.{SparkKnn, SupportedKnnOperations}
-import org.cusp.bdi.util.{Arguments, CLArgsParser, Helper, InputFileParsers, LocalRunConsts}
+import org.cusp.bdi.util._
 
 object TestAllKnnJoin {
 
@@ -16,8 +16,9 @@ object TestAllKnnJoin {
     val startTime = System.currentTimeMillis()
     //    var startTime2 = startTime
 
-//        val clArgs = SparkKNN_Local_CLArgs.random_sample()
-    val clArgs = CLArgsParser(args, Arguments.lstArgInfo())
+    //    val clArgs = SparkKNN_Local_CLArgs.bus_30_mil
+        val clArgs = SparkKNN_Local_CLArgs.random_sample()
+//    val clArgs = CLArgsParser(args, Arguments.lstArgInfo())
 
     //    val clArgs = SparkKNN_Local_CLArgs.busPoint_busPointShift(Arguments())
     //    val clArgs = SparkKNN_Local_CLArgs.busPoint_taxiPoint(Arguments())
@@ -59,6 +60,40 @@ object TestAllKnnJoin {
 
     val sc = new SparkContext(sparkConf)
 
+    if (localMode)
+      sc.setCheckpointDir("/var/tmp/spark_work_dir/checkpoints")
+
+    //    var rddLeft = sc.textFile(firstSet)
+    //      .mapPartitions(_.map(InputFileParsers.getLineParser(firstSetObjType)))
+    //      .filter(_ != null)
+    //      .mapPartitions(_.map(row => (Random.nextInt(19), new Point(row._2._1.toDouble, row._2._2.toDouble, row._1))))
+    //
+    //    var rddRight = sc.textFile(secondSet)
+    //      .mapPartitions(_.map(InputFileParsers.getLineParser(secondSetObjType)))
+    //      .filter(_ != null)
+    //      .mapPartitions(_.map(row => (Random.nextInt(19), new Point(row._2._1.toDouble, row._2._2.toDouble, row._1))))
+    //
+    //    val part = new Partitioner() {
+    //      override def numPartitions: Int = 19
+    //
+    //      override def getPartition(key: Any): Int = key.asInstanceOf[Int]
+    //    }
+    //
+    //    rddLeft = rddLeft.mapPartitions(_.map(identity), true).cache().partitionBy(part)
+    //    rddRight = rddRight.mapPartitions(_.map(identity), true)
+    //
+    //    //    rddRight = (rddLeft ++ rddRight).mapPartitions(_.map(x => (Random.nextInt(19), x._2)), true)
+    //    //    rddLeft.count
+    //    (0 until 3).foreach(_ => {
+    //
+    //      rddRight = (rddLeft ++ new ShuffledRDD(rddRight, rddLeft.partitioner.get))
+    //        .mapPartitions(_.map(x => (Random.nextInt(19), x._2)), true)
+    //    })
+    //    rddRight.saveAsTextFile(outDir+"/result/", classOf[GzipCodec])
+
+    //    val firstSet = "/gws/projects/project-taxi_capstone_2016/share/Bus_TripRecod_NAD83/part-0000[0-5]]*"
+    //    val secondSet = "/gws/projects/project-taxi_capstone_2016/share/Bus_TripRecod_NAD83/part-0000[0-5]]*"
+
     val rddLeft = sc.textFile(firstSet)
       .mapPartitions(_.map(InputFileParsers.getLineParser(firstSetObjType)))
       .filter(_ != null)
@@ -77,17 +112,23 @@ object TestAllKnnJoin {
       case _ => throw new IllegalArgumentException("Unsupported kNN join type: %s".format(clArgs.getParamValueString(Arguments.knnJoinType)))
     }
 
-    //    println(rddResult.toDebugString)
-
     // delete output dir if exists
     val hdfs = FileSystem.get(sc.hadoopConfiguration)
     val path = new Path(outDir)
     if (hdfs.exists(path)) hdfs.delete(path, true)
 
-    rddResult.mapPartitions(_.map(row =>
-      "%s,%.8f,%.8f;%s".format(row._1.userData, row._1.x, row._1.y, row._2.map(matchInfo =>
-        "%.8f,%s".format(math.sqrt(matchInfo._1), matchInfo._2.userData)).mkString(";"))))
-      .saveAsTextFile(outDir, classOf[GzipCodec])
+    Helper.loggerSLf4J(debugMode, SparkKnn, ">>toDebugString: \t%s".format(rddResult.toDebugString), null)
+
+//    try {
+      rddResult.mapPartitions(_.map(row =>
+        "%s,%.8f,%.8f;%s".format(row._1.userData, row._1.x, row._1.y, row._2.map(matchInfo =>
+          "%.8f,%s".format(math.sqrt(matchInfo._1), matchInfo._2.userData)).mkString(";"))))
+        .saveAsTextFile(outDir, classOf[GzipCodec])
+//    }
+//    catch {
+//      case ex: Exception =>
+//        sc.getExecutorMemoryStatus.foreach(row => printf(">>ExecutorMemoryStatus: %s\t%d\t%d%n", row._1, row._2._1, row._2._2))
+//    }
 
     if (clArgs.getParamValueBoolean(Arguments.local)) {
 
@@ -103,6 +144,11 @@ object TestAllKnnJoin {
       printf("Total Time: %,.4f Sec%n", (System.currentTimeMillis() - startTime) / 1000.0)
       println("Output: %s".format(outDir))
       println("Run Log: %s".format(LocalRunConsts.localRunLogFile))
+
+//            while (true) {
+//              print(". ")
+//              Thread.sleep(5000)
+//            }
     }
   }
 }

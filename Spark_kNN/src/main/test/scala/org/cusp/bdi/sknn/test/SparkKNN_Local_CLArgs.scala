@@ -20,9 +20,21 @@ object SparkKNN_Local_CLArgs {
       LocalRunConsts.pathRandSample_B_NAD83,
       InputFileParsers.CODE_THREE_PART_LINE,
       10,
-                  SupportedKnnOperations.knn,
-//      SupportedKnnOperations.allKnn,
-      SupportedSpatialIndexes.quadTree)
+//      SupportedKnnOperations.knn,
+            SupportedKnnOperations.allKnn,
+            SupportedSpatialIndexes.quadTree)
+//      SupportedSpatialIndexes.kdTree)
 
-  //      SupportedSpatialIndexes.kdTree)
+  def bus_30_mil: CLArgsParser =
+    apply("8G",
+      "16G",
+      4,
+      5,
+      LocalRunConsts.pathRandSample_A_NAD83,
+      InputFileParsers.CODE_THREE_PART_LINE,
+      LocalRunConsts.pathRandSample_B_NAD83,
+      InputFileParsers.CODE_THREE_PART_LINE,
+      10,
+      SupportedKnnOperations.knn,
+      SupportedSpatialIndexes.quadTree)
 }

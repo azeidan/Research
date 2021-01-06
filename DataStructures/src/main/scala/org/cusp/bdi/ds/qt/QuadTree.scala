@@ -5,10 +5,10 @@ import com.esotericsoftware.kryo.io.{Input, Output}
 import org.cusp.bdi.ds.SpatialIndex
 import org.cusp.bdi.ds.SpatialIndex.{KnnLookupInfo, testAndAddPoint}
 import org.cusp.bdi.ds.geom.{Geom2D, Point, Rectangle}
-import org.cusp.bdi.ds.qt.QuadTree.{SER_MARKER, SER_MARKER_NULL, nodeCapacity}
+import org.cusp.bdi.ds.qt.QuadTree.{SER_MARKER_NULL, nodeCapacity}
 import org.cusp.bdi.ds.sortset.SortedLinkedList
 
-import scala.collection.mutable.ListBuffer
+import scala.collection.mutable.ArrayBuffer
 import scala.collection.{AbstractIterator, mutable}
 
 object QuadTree extends Serializable {
@@ -16,13 +16,12 @@ object QuadTree extends Serializable {
   val nodeCapacity = 4
 
   val SER_MARKER_NULL: Byte = Byte.MinValue
-  val SER_MARKER: Byte = Byte.MaxValue
 }
 
 class QuadTree extends SpatialIndex {
 
   var totalPoints = 0
-  var lstPoints: ListBuffer[Point] = ListBuffer[Point]()
+  var arrPoints = ArrayBuffer[Point]()
 
   var rectBounds: Rectangle = _
   var topLeft: QuadTree = _
@@ -38,8 +37,10 @@ class QuadTree extends SpatialIndex {
   override def mockNode: AnyRef =
     new QuadTree()
 
-  override def estimateNodeCount(pointCount: Long): Int =
-    math.ceil(pointCount / nodeCapacity.toFloat).toInt
+  override def estimateNodeCount(objCount: Long): Int =
+    (math.floor((objCount - nodeCapacity) / 7.0 * 4) + 1).toInt
+
+  //    math.ceil(pointCount / nodeCapacity.toFloat).toInt
 
   override def getTotalPoints: Int = totalPoints
 
@@ -52,9 +53,9 @@ class QuadTree extends SpatialIndex {
 
     while (qTree != null) {
 
-      val lst = qTree.lstPoints.filter(qtPoint => searchXY._1.equals(qtPoint.x) && searchXY._2.equals(qtPoint.y)).take(1)
+      val optPoint = qTree.arrPoints.find(qtPoint => searchXY._1.equals(qtPoint.x) && searchXY._2.equals(qtPoint.y))
 
-      if (lst.isEmpty)
+      if (optPoint.isEmpty)
         qTree =
           if (contains(qTree.topLeft, searchXY)) qTree.topLeft
           else if (contains(qTree.topRight, searchXY)) qTree.topRight
@@ -62,23 +63,21 @@ class QuadTree extends SpatialIndex {
           else if (contains(qTree.bottomRight, searchXY)) qTree.bottomRight
           else null
       else
-        return lst.head
+        return optPoint.get
     }
 
     null
   }
 
   @throws(classOf[IllegalStateException])
-  override def insert(rectBounds: Rectangle, iterPoints: Iterator[Point], histogramBarWidth: Int): Boolean = {
+  override def insert(rectBounds: Rectangle, iterPoints: Iterator[Point], histogramBarWidth: Int) {
 
     if (iterPoints.isEmpty) throw new IllegalStateException("Empty point iterator")
-    else if (rectBounds == null) throw new IllegalStateException("Rectangle bounds cannot be null")
+    if (rectBounds == null) throw new IllegalStateException("Rectangle bounds cannot be null")
 
     this.rectBounds = rectBounds
 
     iterPoints.foreach(insertPoint)
-
-    true
   }
 
   private def contains(quadTree: QuadTree, searchXY: (Double, Double)) =
@@ -96,9 +95,9 @@ class QuadTree extends SpatialIndex {
 
         qTree.totalPoints += 1
 
-        if (qTree.lstPoints.length < nodeCapacity) {
+        if (qTree.arrPoints.length < nodeCapacity) {
 
-          qTree.lstPoints += point
+          qTree.arrPoints += point
           return true
         }
         else {
@@ -140,28 +139,37 @@ class QuadTree extends SpatialIndex {
   }
 
   override def toString: String =
-    "%s\t%,d\t%,d".format(rectBounds, lstPoints.length, totalPoints)
+    "%s\t%,d\t%,d".format(rectBounds, arrPoints.length, totalPoints)
 
   override def write(kryo: Kryo, output: Output): Unit = {
 
     val queueQT = mutable.Queue(this)
 
+    def writeQT(qt: QuadTree) =
+      output.writeByte(if (qt == null)
+        SER_MARKER_NULL
+      else {
+
+        queueQT += qt
+
+        Byte.MaxValue
+      })
+
     while (queueQT.nonEmpty) {
 
       val qTree = queueQT.dequeue()
 
-      qTree match {
-        case null =>
-          output.writeByte(SER_MARKER_NULL)
-        case _ =>
+      output.writeInt(qTree.totalPoints)
 
-          output.writeByte(SER_MARKER)
-          output.writeLong(qTree.totalPoints)
-          kryo.writeClassAndObject(output, qTree.rectBounds)
-          kryo.writeClassAndObject(output, qTree.lstPoints)
+      output.writeInt(qTree.arrPoints.length)
+      qTree.arrPoints.foreach(kryo.writeObject(output, _))
 
-          queueQT += (qTree.topLeft, qTree.topRight, qTree.bottomLeft, qTree.bottomRight)
-      }
+      kryo.writeObject(output, qTree.rectBounds)
+
+      writeQT(qTree.topLeft)
+      writeQT(qTree.topRight)
+      writeQT(qTree.bottomLeft)
+      writeQT(qTree.bottomRight)
     }
   }
 
@@ -173,31 +181,38 @@ class QuadTree extends SpatialIndex {
         case _ => new QuadTree(null)
       }
 
-    val queueQT = mutable.Queue(this)
+    val qQT = mutable.Queue(this)
 
-    while (queueQT.nonEmpty) {
+    while (qQT.nonEmpty) {
 
-      val qTree = queueQT.dequeue()
+      val qTree = qQT.dequeue()
 
       qTree.totalPoints = input.readInt()
-      qTree.rectBounds = kryo.readClassAndObject(input) match {
-        case bx: Rectangle => bx
-      }
 
-      qTree.lstPoints = kryo.readClassAndObject(input).asInstanceOf[ListBuffer[Point]]
+      val arrLength = input.readInt()
+
+      qTree.arrPoints = ArrayBuffer[Point]()
+      qTree.arrPoints.sizeHint(arrLength)
+
+      (0 until arrLength).foreach(_ => qTree.arrPoints += kryo.readObject(input, classOf[Point]))
+
+      qTree.rectBounds = kryo.readObject(input, classOf[Rectangle])
 
       qTree.topLeft = instantiateQT()
       qTree.topRight = instantiateQT()
       qTree.bottomLeft = instantiateQT()
       qTree.bottomRight = instantiateQT()
 
-      queueQT += (qTree.topLeft, qTree.topRight, qTree.bottomLeft, qTree.bottomRight)
+      if (qTree.topLeft != null) qQT += qTree.topLeft
+      if (qTree.topRight != null) qQT += qTree.topRight
+      if (qTree.bottomLeft != null) qQT += qTree.bottomLeft
+      if (qTree.bottomRight != null) qQT += qTree.bottomRight
     }
   }
 
   override def nearestNeighbor(searchPoint: Point, sortSetSqDist: SortedLinkedList[Point]) {
 
-    val sPtBestQT = findBestQuadrant(searchPoint, sortSetSqDist.maxSize)
+    val sPtBestQT = findBestQuadrant(searchPoint, sortSetSqDist.capacity)
 
     val knnLookupInfo = new KnnLookupInfo(searchPoint, sortSetSqDist, sPtBestQT.rectBounds)
 
@@ -211,7 +226,7 @@ class QuadTree extends SpatialIndex {
 
         if (qTree != skipQT && knnLookupInfo.rectSearchRegion.intersects(qTree.rectBounds)) {
 
-          qTree.lstPoints.foreach(testAndAddPoint(_, knnLookupInfo))
+          qTree.arrPoints.foreach(testAndAddPoint(_, knnLookupInfo))
 
           if (qTree.topLeft != null)
             queueQT += qTree.topLeft
@@ -254,13 +269,13 @@ class QuadTree extends SpatialIndex {
     null
   }
 
-  override def allPoints: Iterator[Iterator[Point]] = new AbstractIterator[Iterator[Point]] {
+  override def allPoints: Iterator[ArrayBuffer[Point]] = new AbstractIterator[ArrayBuffer[Point]] {
 
     private val queue = mutable.Queue[QuadTree](QuadTree.this)
 
     override def hasNext: Boolean = queue.nonEmpty
 
-    override def next(): Iterator[Point] =
+    override def next(): ArrayBuffer[Point] =
       if (!hasNext)
         throw new NoSuchElementException("next on empty Iterator")
       else {
@@ -272,7 +287,7 @@ class QuadTree extends SpatialIndex {
         if (ans.bottomLeft != null) queue += ans.bottomLeft
         if (ans.bottomRight != null) queue += ans.bottomRight
 
-        ans.lstPoints.iterator
+        ans.arrPoints
       }
   }
 }
