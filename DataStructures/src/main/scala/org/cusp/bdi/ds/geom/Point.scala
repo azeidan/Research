@@ -31,22 +31,13 @@ case class Point() extends Geom2D {
   def this(xy: (Double, Double)) =
     this(xy._1, xy._2)
 
-  //  override def write(kryo: Kryo, output: Output): Unit = {
-  //    super.write(kryo, output)
-  //    kryo.writeClassAndObject(output, userData)
-  //  }
-  //
-  //  override def read(kryo: Kryo, input: Input): Unit = {
-  //    super.read(kryo, input)
-  //    userData = kryo.readClassAndObject(input)
-  //  }
-
   override def equals(other: Any): Boolean = other match {
     case pt: Point =>
       if (userData == null || pt.userData == null)
         this.x.equals(pt.x) && this.y.equals(pt.y)
       else
         userData.equals(pt.userData)
+    case _ => false
   }
 
   override def toString: String =

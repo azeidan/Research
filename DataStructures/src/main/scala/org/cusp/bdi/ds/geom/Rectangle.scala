@@ -5,14 +5,6 @@ case class Rectangle(center: Geom2D, halfXY: Geom2D) extends Serializable {
   def this(other: Rectangle) =
     this(new Geom2D(other.center), new Geom2D(other.halfXY))
 
-  def halveBy(splitAlongX: Boolean): (Rectangle, Rectangle) = {
-
-    val (newHalfX, newHalfY) = if (splitAlongX) (this.halfXY.x / 2, this.halfXY.y) else (this.halfXY.x, this.halfXY.y / 2)
-
-    (Rectangle(new Geom2D(this.left + newHalfX, this.bottom + newHalfY), new Geom2D(newHalfX, newHalfY)),
-      Rectangle(new Geom2D(this.right - newHalfX, this.top - newHalfY), new Geom2D(newHalfX, newHalfY)))
-  }
-
   def contains(other: Rectangle): Boolean =
     !(this.left > other.left || this.right < other.right ||
       this.bottom > other.bottom || this.top < other.top)
@@ -38,8 +30,8 @@ case class Rectangle(center: Geom2D, halfXY: Geom2D) extends Serializable {
       this.center.y = minY + this.halfXY.y
     }
 
-  def top: Double =
-    center.y + halfXY.y
+  def left: Double =
+    center.x - halfXY.x
 
   def bottom: Double =
     center.y - halfXY.y
@@ -47,8 +39,8 @@ case class Rectangle(center: Geom2D, halfXY: Geom2D) extends Serializable {
   def right: Double =
     center.x + halfXY.x
 
-  def left: Double =
-    center.x - halfXY.x
+  def top: Double =
+    center.y + halfXY.y
 
   def contains(mbr: (Double, Double, Double, Double)): Boolean =
     left <= mbr._1 && bottom <= mbr._2 && right >= mbr._3 && top >= mbr._4
@@ -91,25 +83,6 @@ case class Rectangle(center: Geom2D, halfXY: Geom2D) extends Serializable {
   def quarterDim =
     new Geom2D(halfXY.x / 2, halfXY.y / 2)
 
-  def mbr: String =
-    "%.10f,%.10f,%.10f,%.10f".format(left, bottom, right, top)
-
   override def toString: String =
     "%s\t%s".format(center, halfXY)
-
-  //  override def write(kryo: Kryo, output: Output) {
-  //
-  //    kryo.writeClassAndObject(output, center)
-  //    kryo.writeClassAndObject(output, halfXY)
-  //  }
-  //
-  //  override def read(kryo: Kryo, input: Input) {
-  //
-  //    center = kryo.readClassAndObject(input) match {
-  //      case geom2D: Geom2D => geom2D
-  //    }
-  //    halfXY = kryo.readClassAndObject(input) match {
-  //      case geom2D: Geom2D => geom2D
-  //    }
-  //  }
 }

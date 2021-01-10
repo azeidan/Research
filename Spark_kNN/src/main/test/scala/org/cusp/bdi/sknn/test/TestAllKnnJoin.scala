@@ -17,8 +17,8 @@ object TestAllKnnJoin {
     //    var startTime2 = startTime
 
     //    val clArgs = SparkKNN_Local_CLArgs.bus_30_mil
-        val clArgs = SparkKNN_Local_CLArgs.random_sample()
-//    val clArgs = CLArgsParser(args, Arguments.lstArgInfo())
+//            val clArgs = SparkKNN_Local_CLArgs.random_sample()
+    val clArgs = CLArgsParser(args, Arguments.lstArgInfo())
 
     //    val clArgs = SparkKNN_Local_CLArgs.busPoint_busPointShift(Arguments())
     //    val clArgs = SparkKNN_Local_CLArgs.busPoint_taxiPoint(Arguments())
@@ -119,16 +119,10 @@ object TestAllKnnJoin {
 
     Helper.loggerSLf4J(debugMode, SparkKnn, ">>toDebugString: \t%s".format(rddResult.toDebugString), null)
 
-//    try {
       rddResult.mapPartitions(_.map(row =>
         "%s,%.8f,%.8f;%s".format(row._1.userData, row._1.x, row._1.y, row._2.map(matchInfo =>
-          "%.8f,%s".format(math.sqrt(matchInfo._1), matchInfo._2.userData)).mkString(";"))))
+          "%.8f,%s".format(matchInfo._1, matchInfo._2.userData)).mkString(";"))))
         .saveAsTextFile(outDir, classOf[GzipCodec])
-//    }
-//    catch {
-//      case ex: Exception =>
-//        sc.getExecutorMemoryStatus.foreach(row => printf(">>ExecutorMemoryStatus: %s\t%d\t%d%n", row._1, row._2._1, row._2._2))
-//    }
 
     if (clArgs.getParamValueBoolean(Arguments.local)) {
 
@@ -145,10 +139,10 @@ object TestAllKnnJoin {
       println("Output: %s".format(outDir))
       println("Run Log: %s".format(LocalRunConsts.localRunLogFile))
 
-            while (true) {
-              print(". ")
-              Thread.sleep(5000)
-            }
+      //            while (true) {
+      //              print(". ")
+      //              Thread.sleep(5000)
+      //            }
     }
   }
 }

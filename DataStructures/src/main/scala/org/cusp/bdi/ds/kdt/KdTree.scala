@@ -196,9 +196,9 @@ class KdTree extends SpatialIndex {
     //    if (searchPoint.userData.toString().equalsIgnoreCase("Taxi_1_A_3237"))
     //      println
 
-    var (sPtBestNode, splitX) = findBestNode(searchPoint, sortSetSqDist.maxSize)
+    var (sPtBestNode, splitX) = if (sortSetSqDist.isFull) (rootNode, true) else findBestNode(searchPoint, sortSetSqDist.maxSize)
 
-    val knnLookupInfo = new KnnLookupInfo(searchPoint, sortSetSqDist, sPtBestNode.rectNodeBounds)
+    val knnLookupInfo = KnnLookupInfo(searchPoint, sortSetSqDist /*, sPtBestNode.rectNodeBounds*/)
 
     def process(kdtNode: KdtNode, skipKdtNode: KdtNode) {
 

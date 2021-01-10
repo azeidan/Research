@@ -13,7 +13,7 @@ import scala.util.Random
 
 object Helper {
 
-  val FLOAT_ERROR_RANGE = 1e-6
+  //  val FLOAT_ERROR_RANGE = 1e-6
 
   def max(x: Int, y: Int): Int = if (x > y) x else y
 

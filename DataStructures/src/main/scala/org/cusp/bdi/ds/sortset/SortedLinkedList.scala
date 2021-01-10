@@ -103,7 +103,7 @@ case class SortedLinkedList[T]() /*(implicit ev$1: T => Comparable[_ >: T])*/ ex
           lastNode = prevNode.next
       }
 
-      if (nodeCount > maxSize) {
+      if (nodeCount > maxSize && distance != lastNode.distance) {
 
         if (prevNode == null) {
 

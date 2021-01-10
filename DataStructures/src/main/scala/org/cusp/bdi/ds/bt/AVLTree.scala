@@ -162,6 +162,29 @@ class AVLTree[T] extends Serializable {
   //    (currNode, valueNode)
   //  }
 
+  def breadthFirst: Iterator[AVLNode[T]] = new AbstractIterator[AVLNode[T]] {
+
+    private val queue = if (rootNode == null) null else mutable.Queue(rootNode)
+
+    override def hasNext: Boolean = queue != null && queue.nonEmpty
+
+    override def next(): AVLNode[T] =
+      if (hasNext) {
+
+        val ret = queue.dequeue()
+
+        if (ret.left != null)
+          queue += ret.left
+
+        if (ret.right != null)
+          queue += ret.right
+
+        ret
+      }
+      else
+        throw new NoSuchElementException("next on empty Iterator")
+  }
+
   def allNodes: Iterator[AVLNode[T]] = new AbstractIterator[AVLNode[T]] {
 
     private val stack = if (rootNode == null) null else mutable.Stack(rootNode)

@@ -1,6 +1,7 @@
 package org.cusp.bdi.sknn.ds.util
 
-import org.cusp.bdi.ds.SpatialIndex.maxSquaredEucDist
+import com.esotericsoftware.kryo.{Kryo, KryoSerializable}
+import com.esotericsoftware.kryo.io.{Input, Output}
 import org.cusp.bdi.ds._
 import org.cusp.bdi.ds.geom.{Geom2D, Point, Rectangle}
 import org.cusp.bdi.ds.kdt.{KdTree, KdtBranchRootNode, KdtLeafNode, KdtNode}
@@ -24,31 +25,30 @@ object SupportedSpatialIndexes extends Enumeration with Serializable {
     }
 }
 
-case class GlobalIndexPoint(numPoints: Long, partitionIdx: Int) extends Serializable {
+final class GlobalIndexPoint extends KryoSerializable {
 
-  //  var numPoints: Long = -1
-  //  var partitionIdx: Int = -1
-  //
-  //  def this(numPoints: Long, partitionIdx: Int) = {
-  //
-  //    this()
-  //    this.numPoints = numPoints
-  //    this.partitionIdx = partitionIdx
-  //  }
+  var numPoints: Long = -1
+  var partitionIdx: Int = -1
+
+  def this(numPoints: Long, partIdx: Int) = {
+    this()
+    this.numPoints = numPoints
+    this.partitionIdx = partIdx
+  }
 
   override def equals(other: Any): Boolean = false
 
-  //  override def write(kryo: Kryo, output: Output): Unit = {
-  //
-  //    output.writeLong(numPoints)
-  //    output.writeInt(partitionIdx)
-  //  }
-  //
-  //  override def read(kryo: Kryo, input: Input): Unit = {
-  //
-  //    numPoints = input.readLong()
-  //    partitionIdx = input.readInt()
-  //  }
+  override def write(kryo: Kryo, output: Output): Unit = {
+
+    output.writeLong(numPoints)
+    output.writeInt(partitionIdx)
+  }
+
+  override def read(kryo: Kryo, input: Input): Unit = {
+
+    numPoints = input.readLong()
+    partitionIdx = input.readInt()
+  }
 }
 
 object SpatialIdxOperations extends Serializable {
@@ -60,17 +60,23 @@ object SpatialIdxOperations extends Serializable {
     var rectSearchRegion: Rectangle = _
     val sortList: SortedLinkedList[Point] = new SortedLinkedList[Point]()
     var limitNode: Node[Point] = _
-    var dimSquared: Double = 0
+    var dimSquared: Double = Double.MaxValue
     var weight: Long = 0L
 
-    def this(searchPoint: Geom2D, rectBestNode: Rectangle) = {
+    def this(searchPoint: Geom2D) {
 
       this()
-
-      rectSearchRegion = Rectangle(searchPoint, new Geom2D(math.sqrt(maxSquaredEucDist(searchPoint, rectBestNode)) + SEARCH_REGION_EXTEND))
-
-      dimSquared = rectSearchRegion.halfXY.x * rectSearchRegion.halfXY.x
+      this.rectSearchRegion = Rectangle(searchPoint, new Geom2D(Double.MaxValue))
     }
+
+    //    def this(searchPoint: Geom2D, rectBestNode: Rectangle) = {
+    //
+    //      this()
+    //
+    //      rectSearchRegion = Rectangle(searchPoint, new Geom2D(math.sqrt(maxSquaredEucDist(searchPoint, rectBestNode)) + SEARCH_REGION_EXTEND))
+    //
+    //      dimSquared = rectSearchRegion.halfXY.x * rectSearchRegion.halfXY.x
+    //    }
   }
 
   def extractLstPartition(spatialIndex: SpatialIndex, searchXY: (Double, Double), k: Int): ListBuffer[Int] =
@@ -93,7 +99,7 @@ object SpatialIdxOperations extends Serializable {
 
     val sPtBestQT = quadTree.findBestQuadrant(searchPoint, k)
 
-    val idxRangeLookupInfo = new IdxRangeLookupInfo(searchPoint, sPtBestQT.rectBounds)
+    val idxRangeLookupInfo = new IdxRangeLookupInfo(searchPoint)
 
     def process(rootQT: QuadTree, skipQT: QuadTree) {
 
@@ -133,7 +139,7 @@ object SpatialIdxOperations extends Serializable {
 
     var (sPtBestNode, splitX) = kdTree.findBestNode(searchPoint, k)
 
-    val idxRangeLookupInfo = new IdxRangeLookupInfo(searchPoint, sPtBestNode.rectNodeBounds)
+    val idxRangeLookupInfo = new IdxRangeLookupInfo(searchPoint)
 
     def process(kdtNode: KdtNode, skipKdtNode: KdtNode) {
 

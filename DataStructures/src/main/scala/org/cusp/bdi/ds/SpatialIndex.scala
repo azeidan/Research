@@ -4,7 +4,6 @@ import com.esotericsoftware.kryo.KryoSerializable
 import org.cusp.bdi.ds.geom.{Geom2D, Point, Rectangle}
 import org.cusp.bdi.ds.sortset.SortedLinkedList
 import org.cusp.bdi.util.Helper
-import org.cusp.bdi.util.Helper.FLOAT_ERROR_RANGE
 
 import scala.collection.mutable.ArrayBuffer
 
@@ -13,35 +12,36 @@ object SpatialIndex extends Serializable {
   //  def computeSquaredDist(manhattanDist: Int) =
   //    2 * math.pow(manhattanDist + 2, 2)
 
-  def maxSquaredEucDist[T <: Geom2D](point: T, rect: Rectangle): Double = {
-
-    val left = rect.left
-    val bottom = rect.bottom
-    val right = rect.right
-    val top = rect.top
-
-    Helper.max(
-      Helper.max(Helper.squaredEuclideanDist(point.x, point.y, left, bottom), Helper.squaredEuclideanDist(point.x, point.y, right, bottom)),
-      Helper.max(Helper.squaredEuclideanDist(point.x, point.y, left, top), Helper.squaredEuclideanDist(point.x, point.y, right, top))
-    ) + FLOAT_ERROR_RANGE
-  }
+//  def maxSquaredEucDist[T <: Geom2D](point: T, rect: Rectangle): Double = {
+//
+//    val left = rect.left
+//    val bottom = rect.bottom
+//    val right = rect.right
+//    val top = rect.top
+//
+//    Helper.max(
+//      Helper.max(Helper.squaredEuclideanDist(point.x, point.y, left, bottom), Helper.squaredEuclideanDist(point.x, point.y, right, bottom)),
+//      Helper.max(Helper.squaredEuclideanDist(point.x, point.y, left, top), Helper.squaredEuclideanDist(point.x, point.y, right, top))
+//    ) + FLOAT_ERROR_RANGE
+//  }
 
   case class KnnLookupInfo(searchPoint: Point, sortSetSqDist: SortedLinkedList[Point]) {
 
-    var rectSearchRegion: Rectangle = _
-    var limitSquaredDist: Double = -1
+    var limitSquaredDist: Double = if (sortSetSqDist.isFull) sortSetSqDist.last.distance else Double.MaxValue
+    var rectSearchRegion: Rectangle = Rectangle(this.searchPoint, new Geom2D(math.sqrt(this.limitSquaredDist)))
 
-    def this(searchPoint: Point, sortSetSqDist: SortedLinkedList[Point], rectBestNode: => Rectangle) = {
+    //    def this(searchPoint: Point, sortSetSqDist: SortedLinkedList[Point], rectBestNode: => Rectangle) = {
+    //
+    //      this(searchPoint, sortSetSqDist)
 
-      this(searchPoint, sortSetSqDist)
+    //      this.limitSquaredDist = if (sortSetSqDist.isFull)
+    //        sortSetSqDist.last.distance
+    //      else
+    //        Double.MaxValue
+    //        maxSquaredEucDist(this.searchPoint, rectBestNode)
 
-      this.limitSquaredDist = if (sortSetSqDist.isFull)
-        sortSetSqDist.last.distance
-      else
-        maxSquaredEucDist(this.searchPoint, rectBestNode)
-
-      this.rectSearchRegion = Rectangle(this.searchPoint, new Geom2D(math.sqrt(this.limitSquaredDist)))
-    }
+    //      this.rectSearchRegion = Rectangle(this.searchPoint, new Geom2D(math.sqrt(this.limitSquaredDist)))
+    //    }
   }
 
   def buildRectBounds(mbrEnds: ((Double, Double), (Double, Double))): Rectangle = {
@@ -63,7 +63,7 @@ object SpatialIndex extends Serializable {
 
     if (knnLookupInfo.sortSetSqDist.isFull && knnLookupInfo.limitSquaredDist != knnLookupInfo.sortSetSqDist.last.distance) {
 
-      knnLookupInfo.limitSquaredDist = knnLookupInfo.sortSetSqDist.last.distance + FLOAT_ERROR_RANGE // double precision errors
+      knnLookupInfo.limitSquaredDist = knnLookupInfo.sortSetSqDist.last.distance //+ FLOAT_ERROR_RANGE // double precision errors
 
       knnLookupInfo.rectSearchRegion.halfXY.x = math.sqrt(knnLookupInfo.limitSquaredDist)
       knnLookupInfo.rectSearchRegion.halfXY.y = knnLookupInfo.rectSearchRegion.halfXY.x
