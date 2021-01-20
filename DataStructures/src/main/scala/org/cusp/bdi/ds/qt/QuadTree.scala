@@ -4,12 +4,11 @@ import com.esotericsoftware.kryo.Kryo
 import com.esotericsoftware.kryo.io.{Input, Output}
 import org.cusp.bdi.ds.SpatialIndex
 import org.cusp.bdi.ds.SpatialIndex.{KnnLookupInfo, testAndAddPoint}
-import org.cusp.bdi.ds.bt.AVLTree
 import org.cusp.bdi.ds.geom.{Geom2D, Point, Rectangle}
 import org.cusp.bdi.ds.qt.QuadTree.{SER_MARKER_NULL, nodeCapacity}
 import org.cusp.bdi.ds.sortset.SortedLinkedList
 
-import scala.collection.mutable.{ArrayBuffer, ListBuffer}
+import scala.collection.mutable.ArrayBuffer
 import scala.collection.{AbstractIterator, mutable}
 
 object QuadTree extends Serializable {
@@ -39,9 +38,9 @@ class QuadTree extends SpatialIndex {
     new QuadTree()
 
   override def estimateNodeCount(objCount: Long): Int =
-    (math.floor((objCount - nodeCapacity) / 7.0 * 4) + 1).toInt
+    math.ceil(((objCount - nodeCapacity) / 7.0 * 4) + 1).toInt
 
-  //    math.ceil(pointCount / nodeCapacity.toFloat).toInt
+  override def estimateObjCount(gIdxNodeCount: Int): Long = -1
 
   override def getTotalPoints: Int = totalPoints
 
@@ -49,6 +48,9 @@ class QuadTree extends SpatialIndex {
 
     //    if(searchXY._1.toInt==15407 && searchXY._2.toInt==3243)
     //      println
+
+    def contains(quadTree: QuadTree) =
+      quadTree != null && quadTree.rectBounds.contains(searchXY)
 
     var qTree = this
 
@@ -58,11 +60,12 @@ class QuadTree extends SpatialIndex {
 
       if (optPoint.isEmpty)
         qTree =
-          if (contains(qTree.topLeft, searchXY)) qTree.topLeft
-          else if (contains(qTree.topRight, searchXY)) qTree.topRight
-          else if (contains(qTree.bottomLeft, searchXY)) qTree.bottomLeft
-          else if (contains(qTree.bottomRight, searchXY)) qTree.bottomRight
-          else null
+          getNextQuad(qTree, searchXY._1, searchXY._2) match {
+            case 0 => if (contains(qTree.bottomLeft)) qTree.bottomLeft else null
+            case 1 => if (contains(qTree.topLeft)) qTree.topLeft else null
+            case 2 => if (contains(qTree.bottomRight)) qTree.bottomRight else null
+            case _ => if (contains(qTree.topRight)) qTree.topRight else null
+          }
       else
         return optPoint.get
     }
@@ -73,28 +76,13 @@ class QuadTree extends SpatialIndex {
   @throws(classOf[IllegalStateException])
   override def insert(rectBounds: Rectangle, iterPoints: Iterator[Point], histogramBarWidth: Int) {
 
-//    if (iterPoints.isEmpty) throw new IllegalStateException("Empty point iterator")
+    //    if (iterPoints.isEmpty) throw new IllegalStateException("Empty point iterator")
     if (rectBounds == null) throw new IllegalStateException("Rectangle bounds cannot be null")
-
-    //    val getX = rectBounds.halfXY.x > rectBounds.halfXY.y
-    //    val subtract = if (getX) rectBounds.left else rectBounds.bottom
 
     this.rectBounds = rectBounds
 
-    //    val avlTree = new AVLTree[ListBuffer[Point]]()
-    //
-    //    iterPoints.foreach(pt => {
-    //
-    //      val node = avlTree.findOrElseInsert((if (getX) pt.x - subtract else pt.y - subtract).toInt)
-    //
-    //      if (node.data == null) node.data = ListBuffer(pt) else node.data += pt
-    //    })
-
     iterPoints.foreach(insertPoint)
   }
-
-  private def contains(quadTree: QuadTree, searchXY: (Double, Double)) =
-    quadTree != null && quadTree.rectBounds.contains(searchXY)
 
   private def insertPoint(point: Point): Boolean = {
 
@@ -115,35 +103,27 @@ class QuadTree extends SpatialIndex {
         }
         else {
           // switch to proper quadrant?
-
-          qTree = if (point.x <= qTree.rectBounds.center.x)
-            if (point.y >= qTree.rectBounds.center.y) {
-
-              if (qTree.topLeft == null)
-                qTree.topLeft = new QuadTree(qTree.rectBounds.topLeftQuadrant)
-
-              qTree.topLeft
-            }
-            else {
-
+          qTree = getNextQuad(qTree, point.x, point.y) match {
+            case 0 =>
               if (qTree.bottomLeft == null)
                 qTree.bottomLeft = new QuadTree(qTree.rectBounds.bottomLeftQuadrant)
 
               qTree.bottomLeft
-            }
-          else if (point.y >= qTree.rectBounds.center.y) {
+            case 1 =>
+              if (qTree.topLeft == null)
+                qTree.topLeft = new QuadTree(qTree.rectBounds.topLeftQuadrant)
 
-            if (qTree.topRight == null)
-              qTree.topRight = new QuadTree(qTree.rectBounds.topRightQuadrant)
+              qTree.topLeft
+            case 2 =>
+              if (qTree.bottomRight == null)
+                qTree.bottomRight = new QuadTree(qTree.rectBounds.bottomRightQuadrant)
 
-            qTree.topRight
-          }
-          else {
+              qTree.bottomRight
+            case _ =>
+              if (qTree.topRight == null)
+                qTree.topRight = new QuadTree(qTree.rectBounds.topRightQuadrant)
 
-            if (qTree.bottomRight == null)
-              qTree.bottomRight = new QuadTree(qTree.rectBounds.bottomRightQuadrant)
-
-            qTree.bottomRight
+              qTree.topRight
           }
         }
       }
@@ -228,9 +208,7 @@ class QuadTree extends SpatialIndex {
     //    if (searchPoint.userData.toString.equalsIgnoreCase("Bus_1_A_270"))
     //      println
 
-    val sPtBestQT = if (sortSetSqDist.isFull) this else findBestQuadrant(searchPoint, sortSetSqDist.capacity)
-
-    val knnLookupInfo = KnnLookupInfo(searchPoint, sortSetSqDist /*, sPtBestQT.rectBounds*/)
+    val knnLookupInfo = KnnLookupInfo(searchPoint, sortSetSqDist)
 
     def process(rootQT: QuadTree, skipQT: QuadTree) {
 
@@ -256,10 +234,15 @@ class QuadTree extends SpatialIndex {
       }
     }
 
-    process(sPtBestQT, null)
+    if (sortSetSqDist.isFull)
+      process(this, null)
+    else {
 
-    if (sPtBestQT != this)
+      val sPtBestQT = findBestQuadrant(searchPoint, sortSetSqDist.capacity)
+
+      process(sPtBestQT, null)
       process(this, sPtBestQT)
+    }
   }
 
   def findBestQuadrant(searchPoint: Geom2D, minCount: Int): QuadTree = {
@@ -270,21 +253,24 @@ class QuadTree extends SpatialIndex {
     def testQuad(qtQuad: QuadTree) =
       qtQuad != null && qtQuad.totalPoints >= minCount && qtQuad.rectBounds.contains(searchPoint)
 
-    while (true) {
-
-      val left = searchPoint.x <= qTree.rectBounds.center.x
-
-      if (searchPoint.y <= qTree.rectBounds.center.y) // bottom
-        if (left)
-          if (testQuad(qTree.bottomLeft)) qTree = qTree.bottomLeft else return qTree
-        else if (testQuad(qTree.bottomRight)) qTree = qTree.bottomRight else return qTree
-      else if (left)
-        if (testQuad(qTree.topLeft)) qTree = qTree.topLeft else return qTree
-      else if (testQuad(qTree.topRight)) qTree = qTree.topRight else return qTree
-    }
+    while (true)
+      getNextQuad(qTree, searchPoint.x, searchPoint.y) match {
+        case 0 => if (testQuad(qTree.bottomLeft)) qTree = qTree.bottomLeft else return qTree
+        case 1 => if (testQuad(qTree.topLeft)) qTree = qTree.topLeft else return qTree
+        case 2 => if (testQuad(qTree.bottomRight)) qTree = qTree.bottomRight else return qTree
+        case _ => if (testQuad(qTree.topRight)) qTree = qTree.topRight else return qTree
+      }
 
     null
   }
+
+  private def getNextQuad(qTree: QuadTree, searchX: Double, searchY: Double) =
+    if (searchX <= qTree.rectBounds.center.x) // Left
+      if (searchY <= qTree.rectBounds.center.y) 0 // Bottom
+      else 1 // Top
+    else // Right
+      if (searchY <= qTree.rectBounds.center.y) 2 // Bottom
+      else 3 // Top
 
   override def allPoints: Iterator[ArrayBuffer[Point]] = new AbstractIterator[ArrayBuffer[Point]] {
 

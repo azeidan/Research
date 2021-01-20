@@ -17,8 +17,8 @@ object TestAllKnnJoin {
     //    var startTime2 = startTime
 
     //    val clArgs = SparkKNN_Local_CLArgs.bus_30_mil
-//            val clArgs = SparkKNN_Local_CLArgs.random_sample()
-    val clArgs = CLArgsParser(args, Arguments.lstArgInfo())
+//    val clArgs = SparkKNN_Local_CLArgs.random_sample()
+        val clArgs = CLArgsParser(args, Arguments.lstArgInfo())
 
     //    val clArgs = SparkKNN_Local_CLArgs.busPoint_busPointShift(Arguments())
     //    val clArgs = SparkKNN_Local_CLArgs.busPoint_taxiPoint(Arguments())
@@ -117,12 +117,12 @@ object TestAllKnnJoin {
     val path = new Path(outDir)
     if (hdfs.exists(path)) hdfs.delete(path, true)
 
-    Helper.loggerSLf4J(debugMode, SparkKnn, ">>toDebugString: \t%s".format(rddResult.toDebugString), null)
+    //    Helper.loggerSLf4J(debugMode, SparkKnn, ">>toDebugString: \t%s".format(rddResult.toDebugString), null)
 
-      rddResult.mapPartitions(_.map(row =>
-        "%s,%.8f,%.8f;%s".format(row._1.userData, row._1.x, row._1.y, row._2.map(matchInfo =>
-          "%.8f,%s".format(matchInfo._1, matchInfo._2.userData)).mkString(";"))))
-        .saveAsTextFile(outDir, classOf[GzipCodec])
+    rddResult.mapPartitions(_.map(row =>
+      "%s,%.8f,%.8f;%s".format(row._1.userData, row._1.x, row._1.y, row._2.map(matchInfo =>
+        "%.8f,%s".format(matchInfo._1, matchInfo._2.userData)).mkString(";"))))
+      .saveAsTextFile(outDir, classOf[GzipCodec])
 
     if (clArgs.getParamValueBoolean(Arguments.local)) {
 

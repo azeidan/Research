@@ -13,66 +13,76 @@ object SupportedKnnOperations extends Enumeration with Serializable {
   val allKnn: SupportedKnnOperations.Value = Value("allknn")
 }
 
-//abstract class KeyPartIdx(_pIdx: Int) extends Ordered[KeyPartIdx] {
-//
-//  var pIdx: Int = _pIdx
-//
-//  override def compare(that: KeyPartIdx): Int = {
-//
-//    val thatSpIdx = that match {
-//      case _: KeyPartIdxSpIndex => true
-//      case _ => false
-//    }
-//
-//    this match {
-//      case _: KeyPartIdxSpIndex => -1
-//      case _ => if (thatSpIdx) 1 else 0
-//    }
-//  }
-//}
-//
-//class KeyPartIdxSpIndex extends KeyPartIdx(-1) {
-//
-//  def this(_pIdx: Int) = {
-//    this
-//    pIdx = _pIdx
-//  }
-//}
-//
-//class KeyPartIdxSpObject extends KeyPartIdx(-1) {
-//
-//  def this(_pIdx: Int) = {
-//    this
-//    pIdx = _pIdx
-//  }
-//}
+/*
+ [@specialized(Float, Double) T: Fractional]
+  val fractionalOps = implicitly[Fractional[T]]
 
-final class RangeInfo {
+  import fractionalOps._
+ */
 
-  val lstMBRCoord: ListBuffer[((Double, Double), Long)] = ListBuffer[((Double, Double), Long)]()
-  var totalWeight = 0L
-  var left: Double = _
-  var bottom: Double = _
-  var right: Double = _
-  var top: Double = _
+case class InsufficientMemoryException(message: String) extends Exception(message) {}
 
-  def this(seed: ((Double, Double), Long)) = {
+final class MBRInfo extends Serializable {
+
+  var left: Double = Double.MaxValue
+  var bottom: Double = Double.MaxValue
+  var right: Double = Double.MinValue
+  var top: Double = Double.MinValue
+
+  def this(seedX: Double, seedY: Double) = {
 
     this()
-
-    this.lstMBRCoord += seed
-    this.totalWeight = seed._2
-    this.left = seed._1._1
-    this.bottom = seed._1._2
-    this.right = seed._1._1
-    this.top = seed._1._2
+    this.left = seedX
+    this.bottom = seedY
+    this.right = seedX
+    this.top = seedY
   }
 
-  def mbr: (Double, Double, Double, Double) =
-    (left, bottom, right, top)
+  def this(seed: (Double, Double)) =
+    this(seed._1, seed._2)
+
+  def merge(other: MBRInfo): MBRInfo = {
+
+    if (other.left < left) left = other.left
+    if (other.bottom < bottom) bottom = other.bottom
+    if (other.right > right) right = other.right
+    if (other.top > top) top = other.top
+
+    this
+  }
+
+  def stretch(): MBRInfo = {
+
+    this.left = math.floor(this.left)
+    this.bottom = math.floor(this.bottom)
+
+    this.right = math.ceil(this.right)
+    this.top = math.ceil(this.top)
+
+    this
+  }
+
+  //  def mbr: (Double, Double, Double, Double) =
+  //    (left, bottom, right, top)
 
   override def toString: String =
-    "%f\t%f\t%f\t%f\t%,d".format(left, bottom, right, top, totalWeight)
+    "%,.4f\t%,.4f\t%,.4f\t%,.4f".format(left, bottom, right, top)
+
+  //  override def write(kryo: Kryo, output: Output): Unit = {
+  //
+  //    output.writeDouble(left)
+  //    output.writeDouble(bottom)
+  //    output.writeDouble(right)
+  //    output.writeDouble(top)
+  //  }
+  //
+  //  override def read(kryo: Kryo, input: Input): Unit = {
+  //
+  //    left = input.readDouble()
+  //    bottom = input.readDouble()
+  //    right = input.readDouble()
+  //    top = input.readDouble()
+  //  }
 }
 
 final class RowData extends KryoSerializable {

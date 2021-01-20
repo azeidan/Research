@@ -1,56 +1,43 @@
-import org.apache.spark.serializer.KryoSerializer
-import org.apache.spark.util.SizeEstimator
-import org.apache.spark.{SparkConf, SparkContext}
-import org.cusp.bdi.ds.geom.{Geom2D, Point, Rectangle}
-import org.cusp.bdi.ds.kdt.KdTree
-import org.cusp.bdi.sknn.SparkKnn
-import org.cusp.bdi.util.LocalRunConsts
-
-import scala.util.Random
+import scala.collection.mutable
+import scala.io.Source
 
 object Test {
 
   def main(args: Array[String]): Unit = {
-
-    val rect = Rectangle(new Geom2D(50000), new Geom2D(50000))
-
-    val kdt = new KdTree
-    kdt.insert(rect, (0 to 5).map(i => {
-
-      val userData = new String(Array.fill(16)('@'))
-
-      new Point(Random.nextInt(1000000), Random.nextInt(1000000), userData)
-    }).iterator, 1)
-
-    //    println(SizeEstimator.estimate(new Point(0, 0,"         ")))
-    println(SizeEstimator.estimate(kdt))
-
-    //    val sparkConf = new SparkConf()
-    //      .setAppName(this.getClass.getName)
-    //      .set("spark.serializer", classOf[KryoSerializer].getName)
-    //      .registerKryoClasses(SparkKnn.getSparkKNNClasses)
-    //      .set("spark.local.dir", LocalRunConsts.sparkWorkDir)
-    //      .setMaster("local[*]")
+    //    val debugMode = true
+    //    val lstDebugInfo = null
+    //    val stackRangeInfo = mutable.Stack[RangeInfo]()
+    //    val partObjCapacity = 739966
     //
-    //    val sc = new SparkContext(sparkConf)
+    //    val lines = Source.fromFile("/home/cusp/Dropbox/Research/Projects/IntelliJ/Research/Spark_kNN/src/main/test/scala/TBD.CSV")
+    //      .getLines()
+    //      .map(line => {
+    //        val arr = line.split(",")
+    //        ((arr(0).toDouble, arr(1).toDouble), arr(2).toLong)
+    //      })
+    //      .foreach(row => { // group cells on partitions
     //
-    //    val rdd1 = getRDD(sc, 1)
+    ////        Helper.loggerSLf4J(debugMode, SparkKnn, ">>>\t%,.2f\t%,.2f\t%,d".format(row._1._1, row._1._2, row._2), lstDebugInfo)
     //
-    //    val rdd2 = getRDD(sc, 2)
+    //        if (stackRangeInfo.isEmpty || stackRangeInfo.top.totalWeight + row._2 > partObjCapacity)
+    //          stackRangeInfo.push(new RangeInfo(row))
+    //        else {
     //
-    //    //    val rddRes = rdd1.reduce().union(rdd2)
-    //    //
-    //    //    println("Done: " + rddRes)
-  }
-
-  private def getRDD(sc: SparkContext, code: Int) = {
-
-    println("getRDD: ", code)
-
-    sc.textFile(LocalRunConsts.pathRandSample_A_NAD83)
-      .mapPartitions(_.map(line => {
-        print(">")
-        line
-      }))
+    //          stackRangeInfo.top.lstMBRCoord += row
+    //          stackRangeInfo.top.totalWeight += row._2
+    //          stackRangeInfo.top.right = row._1._1
+    //
+    //          if (row._1._2 < stackRangeInfo.top.bottom)
+    //            stackRangeInfo.top.bottom = row._1._2
+    //          else if (row._1._2 > stackRangeInfo.top.top)
+    //            stackRangeInfo.top.top = row._1._2
+    //        }
+    //      })
+    //
+    //    var partCounter = -1
+    //    stackRangeInfo.reverse.foreach(rangeInfo => {
+    //      partCounter+=1
+    //      println(">>%s\t%,d".format(rangeInfo.toString, partCounter))
+    //    })
   }
 }

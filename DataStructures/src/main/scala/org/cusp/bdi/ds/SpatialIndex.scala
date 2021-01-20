@@ -9,53 +9,23 @@ import scala.collection.mutable.ArrayBuffer
 
 object SpatialIndex extends Serializable {
 
-  //  def computeSquaredDist(manhattanDist: Int) =
-  //    2 * math.pow(manhattanDist + 2, 2)
-
-//  def maxSquaredEucDist[T <: Geom2D](point: T, rect: Rectangle): Double = {
-//
-//    val left = rect.left
-//    val bottom = rect.bottom
-//    val right = rect.right
-//    val top = rect.top
-//
-//    Helper.max(
-//      Helper.max(Helper.squaredEuclideanDist(point.x, point.y, left, bottom), Helper.squaredEuclideanDist(point.x, point.y, right, bottom)),
-//      Helper.max(Helper.squaredEuclideanDist(point.x, point.y, left, top), Helper.squaredEuclideanDist(point.x, point.y, right, top))
-//    ) + FLOAT_ERROR_RANGE
-//  }
-
   case class KnnLookupInfo(searchPoint: Point, sortSetSqDist: SortedLinkedList[Point]) {
 
     var limitSquaredDist: Double = if (sortSetSqDist.isFull) sortSetSqDist.last.distance else Double.MaxValue
     var rectSearchRegion: Rectangle = Rectangle(this.searchPoint, new Geom2D(math.sqrt(this.limitSquaredDist)))
-
-    //    def this(searchPoint: Point, sortSetSqDist: SortedLinkedList[Point], rectBestNode: => Rectangle) = {
-    //
-    //      this(searchPoint, sortSetSqDist)
-
-    //      this.limitSquaredDist = if (sortSetSqDist.isFull)
-    //        sortSetSqDist.last.distance
-    //      else
-    //        Double.MaxValue
-    //        maxSquaredEucDist(this.searchPoint, rectBestNode)
-
-    //      this.rectSearchRegion = Rectangle(this.searchPoint, new Geom2D(math.sqrt(this.limitSquaredDist)))
-    //    }
   }
 
-  def buildRectBounds(mbrEnds: ((Double, Double), (Double, Double))): Rectangle = {
+  def buildRectBounds(mbrEnds: ((Double, Double), (Double, Double))): Rectangle =
+    buildRectBounds(mbrEnds._1._1, mbrEnds._1._2, mbrEnds._2._1, mbrEnds._2._2)
 
-    val halfXY = new Geom2D((mbrEnds._2._1 - mbrEnds._1._1) / 2, (mbrEnds._2._2 - mbrEnds._1._2) / 2)
+  def buildRectBounds(minX: Double, minY: Double, maxX: Double, maxY: Double): Rectangle = {
 
-    Rectangle(new Geom2D(mbrEnds._1._1 + halfXY.x, mbrEnds._1._2 + halfXY.y), halfXY)
+    val halfXY = new Geom2D((maxX - minX) / 2, (maxY - minY) / 2)
+
+    Rectangle(new Geom2D(minX + halfXY.x, minY + halfXY.y), halfXY)
   }
 
   def testAndAddPoint(point: Point, knnLookupInfo: KnnLookupInfo) {
-
-    //    if (knnLookupInfo.searchPoint.userData.toString.equalsIgnoreCase("bus_1_a_855565") &&
-    //      (point.userData.toString.equalsIgnoreCase("bus_1_b_650832") || point.userData.toString.equalsIgnoreCase("bus_1_b_291848 ")))
-    //      println
 
     val sqDist = Helper.squaredEuclideanDist(knnLookupInfo.rectSearchRegion.center.x, knnLookupInfo.rectSearchRegion.center.y, point.x, point.y)
 
@@ -76,6 +46,8 @@ trait SpatialIndex extends KryoSerializable {
   def mockNode: AnyRef
 
   def estimateNodeCount(pointCount: Long): Int
+
+  def estimateObjCount(gIdxNodeCount: Int): Long
 
   def getTotalPoints: Int
 

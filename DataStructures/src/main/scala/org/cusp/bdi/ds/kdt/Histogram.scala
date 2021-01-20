@@ -79,7 +79,7 @@ case class Histogram(avlTree: TypeAVL, otherIndexCount: Int, pointCount: Int) {
         if (row._2.y > maxY) maxY = row._2.y
       }))
 
-    (arrPoints, buildRectBounds((minX, minY), (maxX, maxY)))
+    (arrPoints, buildRectBounds(minX, minY, maxX, maxY))
   }
 
   def partition(splitX: Boolean): (Double, Histogram, Histogram) = {

@@ -16,21 +16,6 @@ import scala.collection.{AbstractIterator, mutable}
 object KdTree extends Serializable {
 
   val nodeCapacity = 4
-
-  //  def findSearchRegionLocation(rectSearchRegion: Rectangle, nodeSplitVal: Double, splitX: Boolean): Char = {
-  //
-  //    lazy val limits = if (splitX)
-  //      (rectSearchRegion.left, rectSearchRegion.right)
-  //    else
-  //      (rectSearchRegion.bottom, rectSearchRegion.top)
-  //
-  //    nodeSplitVal match {
-  //      case SPLIT_VAL_NONE => 'B'
-  //      case sVal if sVal < limits._1 => 'R' // region to the right (or below) of the splitKey
-  //      case sVal if sVal > limits._2 => 'L' // region to the left (or above) of the splitKey
-  //      case _ => 'B' // region contains the splitKey
-  //    }
-  //  }
 }
 
 class KdTree extends SpatialIndex {
@@ -45,10 +30,12 @@ class KdTree extends SpatialIndex {
 
   override def estimateNodeCount(pointCount: Long): Int = {
 
-    val height = (1.44 * Helper.log2(pointCount / nodeCapacity)).toInt
+    val height = (1.44 * Helper.log(pointCount / nodeCapacity, 2)).toInt
 
     (1 until height).map(h => Math.pow(2, h + 1).toInt).sum + 1
   }
+
+  override def estimateObjCount(gIdxNodeCount: Int): Long = -1
 
   @throws(classOf[IllegalStateException])
   override def insert(rectBounds: Rectangle, iterPoints: Iterator[Point], histogramBarWidth: Int) {
@@ -142,51 +129,39 @@ class KdTree extends SpatialIndex {
     }
   }
 
-  def findBestNode(searchPoint: Geom2D, minCount: Int): (KdtNode, Boolean) = {
+  def findBestNode(searchPoint: Geom2D, minCount: Int): KdtNode /*(KdtNode, Boolean)*/ = {
 
     // find leaf containing point
     val fNodeCheck = (kdtNode: KdtNode) => kdtNode != null && kdtNode.totalPoints >= minCount && kdtNode.rectNodeBounds.contains(searchPoint)
     var currNode = rootNode
     var splitX = true
 
-    while (currNode != null) {
-
+    while (currNode != null)
       currNode match {
         case kdtBRN: KdtBranchRootNode =>
 
-          if (kdtBRN.splitVal == SPLIT_VAL_NONE) {
-
+          if (kdtBRN.splitVal == SPLIT_VAL_NONE)
             if (fNodeCheck(kdtBRN.left))
               currNode = kdtBRN.left
             else if (fNodeCheck(kdtBRN.right))
               currNode = kdtBRN.right
             else
-              return (kdtBRN, splitX)
-            //            // switch to node with larger side
-            //            val sideLeft = if (fNodeCheck(kdtBRN.left)) math.max(kdtBRN.left.rectNodeBounds.halfXY.x, kdtBRN.left.rectNodeBounds.halfXY.y) else Double.NegativeInfinity
-            //            val sideRight = if (fNodeCheck(kdtBRN.right)) math.max(kdtBRN.right.rectNodeBounds.halfXY.x, kdtBRN.right.rectNodeBounds.halfXY.y) else Double.NegativeInfinity
-            //
-            //            if (sideLeft == Double.NegativeInfinity && sideRight == Double.NegativeInfinity)
-            //              return (kdtBRN, splitX)
-            //
-            //            currNode = if (sideLeft > sideRight) kdtBRN.left else kdtBRN.right
-          }
+              return kdtBRN
           else if ((if (splitX) searchPoint.x else searchPoint.y) <= kdtBRN.splitVal)
             if (fNodeCheck(kdtBRN.left))
               currNode = kdtBRN.left
             else
-              return (currNode, splitX)
+              return currNode
           else if (fNodeCheck(kdtBRN.right))
             currNode = kdtBRN.right
           else
-            return (currNode, splitX)
+            return currNode
 
           splitX = !splitX
 
         case _: KdtNode =>
-          return (currNode, splitX)
+          return currNode //(currNode, splitX)
       }
-    }
 
     null
   }
@@ -196,26 +171,24 @@ class KdTree extends SpatialIndex {
     //    if (searchPoint.userData.toString().equalsIgnoreCase("Taxi_1_A_3237"))
     //      println
 
-    var (sPtBestNode, splitX) = if (sortSetSqDist.isFull) (rootNode, true) else findBestNode(searchPoint, sortSetSqDist.maxSize)
-
-    val knnLookupInfo = KnnLookupInfo(searchPoint, sortSetSqDist /*, sPtBestNode.rectNodeBounds*/)
+    val knnLookupInfo = KnnLookupInfo(searchPoint, sortSetSqDist)
 
     def process(kdtNode: KdtNode, skipKdtNode: KdtNode) {
 
-      val queueKdtNode = mutable.Queue((kdtNode, splitX))
+      val queueKdtNode = mutable.Queue(kdtNode)
 
       while (queueKdtNode.nonEmpty) {
 
-        val row = queueKdtNode.dequeue()
+        val kdt = queueKdtNode.dequeue()
 
-        if (row._1 != skipKdtNode)
-          row._1 match {
+        if (kdt != skipKdtNode)
+          kdt match {
             case kdtBRN: KdtBranchRootNode =>
 
               if (kdtBRN.left != null && knnLookupInfo.rectSearchRegion.intersects(kdtBRN.left.rectNodeBounds))
-                queueKdtNode += ((kdtBRN.left, !row._2))
+                queueKdtNode += kdtBRN.left
               if (kdtBRN.right != null && knnLookupInfo.rectSearchRegion.intersects(kdtBRN.right.rectNodeBounds))
-                queueKdtNode += ((kdtBRN.right, !row._2))
+                queueKdtNode += kdtBRN.right
 
             case kdtLeafNode: KdtLeafNode =>
               if (knnLookupInfo.rectSearchRegion.intersects(kdtLeafNode.rectNodeBounds))
@@ -224,11 +197,13 @@ class KdTree extends SpatialIndex {
       }
     }
 
-    process(sPtBestNode, null)
+    if (sortSetSqDist.isFull)
+      process(this.rootNode, null)
+    else {
 
-    if (sPtBestNode != this.rootNode) {
+      val sPtBestNode = if (sortSetSqDist.isFull) rootNode else findBestNode(searchPoint, sortSetSqDist.maxSize)
 
-      splitX = true
+      process(sPtBestNode, null)
       process(this.rootNode, sPtBestNode)
     }
   }

@@ -68,15 +68,6 @@ object SpatialIdxOperations extends Serializable {
       this()
       this.rectSearchRegion = Rectangle(searchPoint, new Geom2D(Double.MaxValue))
     }
-
-    //    def this(searchPoint: Geom2D, rectBestNode: Rectangle) = {
-    //
-    //      this()
-    //
-    //      rectSearchRegion = Rectangle(searchPoint, new Geom2D(math.sqrt(maxSquaredEucDist(searchPoint, rectBestNode)) + SEARCH_REGION_EXTEND))
-    //
-    //      dimSquared = rectSearchRegion.halfXY.x * rectSearchRegion.halfXY.x
-    //    }
   }
 
   def extractLstPartition(spatialIndex: SpatialIndex, searchXY: (Double, Double), k: Int): ListBuffer[Int] =
@@ -97,30 +88,34 @@ object SpatialIdxOperations extends Serializable {
 
     val searchPoint = new Geom2D(searchXY._1, searchXY._2)
 
-    val sPtBestQT = quadTree.findBestQuadrant(searchPoint, k)
-
     val idxRangeLookupInfo = new IdxRangeLookupInfo(searchPoint)
 
     def process(rootQT: QuadTree, skipQT: QuadTree) {
 
-      val lstQT = ListBuffer(rootQT)
+      val qQT = mutable.Queue(rootQT)
 
-      lstQT.foreach(qt =>
+      while (qQT.nonEmpty) {
+
+        val qt = qQT.dequeue()
+
         if (qt != skipQT)
           if (idxRangeLookupInfo.rectSearchRegion.intersects(qt.rectBounds)) {
 
             qt.arrPoints.foreach(updateMatchListAndRegion(_, idxRangeLookupInfo, k))
 
             if (qt.topLeft != null)
-              lstQT += qt.topLeft
+              qQT += qt.topLeft
             if (qt.topRight != null)
-              lstQT += qt.topRight
+              qQT += qt.topRight
             if (qt.bottomLeft != null)
-              lstQT += qt.bottomLeft
+              qQT += qt.bottomLeft
             if (qt.bottomRight != null)
-              lstQT += qt.bottomRight
-          })
+              qQT += qt.bottomRight
+          }
+      }
     }
+
+    val sPtBestQT = quadTree.findBestQuadrant(searchPoint, k)
 
     process(sPtBestQT, null)
 
@@ -137,25 +132,23 @@ object SpatialIdxOperations extends Serializable {
 
     val searchPoint = new Geom2D(searchXY._1, searchXY._2)
 
-    var (sPtBestNode, splitX) = kdTree.findBestNode(searchPoint, k)
-
     val idxRangeLookupInfo = new IdxRangeLookupInfo(searchPoint)
 
     def process(kdtNode: KdtNode, skipKdtNode: KdtNode) {
 
-      val queueKdtNode = mutable.Queue((kdtNode, splitX))
+      val qKdtNode = mutable.Queue(kdtNode)
 
-      while (queueKdtNode.nonEmpty) {
+      while (qKdtNode.nonEmpty) {
 
-        val row = queueKdtNode.dequeue()
+        val node = qKdtNode.dequeue()
 
-        if (row._1 != skipKdtNode)
-          row._1 match {
+        if (node != skipKdtNode)
+          node match {
             case kdtBRN: KdtBranchRootNode =>
               if (kdtBRN.left != null && idxRangeLookupInfo.rectSearchRegion.intersects(kdtBRN.left.rectNodeBounds))
-                queueKdtNode += ((kdtBRN.left, !row._2))
+                qKdtNode += kdtBRN.left
               if (kdtBRN.right != null && idxRangeLookupInfo.rectSearchRegion.intersects(kdtBRN.right.rectNodeBounds))
-                queueKdtNode += ((kdtBRN.right, !row._2))
+                qKdtNode += kdtBRN.right
 
             case kdtLeafNode: KdtLeafNode =>
               if (idxRangeLookupInfo.rectSearchRegion.intersects(kdtLeafNode.rectNodeBounds))
@@ -164,13 +157,12 @@ object SpatialIdxOperations extends Serializable {
       }
     }
 
+    val sPtBestNode = kdTree.findBestNode(searchPoint, k)
+
     process(sPtBestNode, null)
 
-    if (sPtBestNode != kdTree.rootNode) {
-
-      splitX = true
+    if (sPtBestNode != kdTree.rootNode)
       process(kdTree.rootNode, sPtBestNode)
-    }
 
     idxRangeLookupInfo.sortList
   }
