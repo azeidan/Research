@@ -102,16 +102,15 @@ final class RowData extends KryoSerializable {
 
   def nextPartId: Int = {
 
-    var pId = -1
-
     if (lstPartitionId.nonEmpty) {
 
-      pId = lstPartitionId.head
+      val pId = lstPartitionId.head
 
       lstPartitionId = lstPartitionId.tail
-    }
 
-    pId
+      pId
+    }
+    else -1
   }
 
   override def write(kryo: Kryo, output: Output): Unit = {

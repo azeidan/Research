@@ -199,30 +199,27 @@ case class SparkKnn(debugMode: Boolean, spatialIndexType: SupportedSpatialIndexe
 
     (0 until numRounds).foreach(roundNum => {
 
-      //      rddPoint = (rddSpIdx ++ new ShuffledRDD(rddPoint, rddSpIdx.partitioner.get))
-      rddPoint = (rddSpIdx ++ rddPoint.partitionBy(rddSpIdx.partitioner.get))
+      rddPoint = (rddSpIdx ++ new ShuffledRDD(rddPoint, rddSpIdx.partitioner.get))
         .mapPartitionsWithIndex((pIdx, iter) => {
 
           var startTime = System.currentTimeMillis()
 
           // first entry is always the spatial index
-          var spatialIndex: SpatialIndex = null
+          var spatialIndex: SpatialIndex = iter.next._2 match {
+            case spIdx: SpatialIndex =>
+              Helper.loggerSLf4J(debugMode, SparkKnn, ">>Got index %d roundNum: %d".format(pIdx, roundNum), lstDebugInfo)
+              spIdx
+          }
 
-          iter.map(row => {
+          iter.map(row =>
             row._2 match {
-              case spIdx: SpatialIndex =>
-                spatialIndex = spIdx
-                Helper.loggerSLf4J(debugMode, SparkKnn, ">>Got index %d roundNum: %d".format(pIdx, roundNum), lstDebugInfo)
-                null
               case rowData: RowData =>
 
                 if (row._1 != -1)
                   spatialIndex.nearestNeighbor(rowData.point, rowData.sortedList)
 
                 (rowData.nextPartId, rowData)
-            }
-          })
-            .filter(_ != null)
+            })
         })
 
       bvGlobalIndexRight.unpersist(false)
@@ -302,6 +299,7 @@ case class SparkKnn(debugMode: Boolean, spatialIndexType: SupportedSpatialIndexe
       coreObjCapacityMax /= 2
 
     // compute global index grid box dimension
+    // 100÷(284603÷(739966×.05
     var rate = maxCount / (coreObjCapacityMin * 0.05)
     var gIdxGridSquareDim = math.ceil(initialGridWidth / rate).toInt
     var gIdxObjCount = math.ceil(gridCellCount * rate).toLong

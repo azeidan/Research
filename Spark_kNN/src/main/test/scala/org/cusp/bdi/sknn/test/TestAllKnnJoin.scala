@@ -63,37 +63,6 @@ object TestAllKnnJoin {
     if (localMode)
       sc.setCheckpointDir("/var/tmp/spark_work_dir/checkpoints")
 
-    //    var rddLeft = sc.textFile(firstSet)
-    //      .mapPartitions(_.map(InputFileParsers.getLineParser(firstSetObjType)))
-    //      .filter(_ != null)
-    //      .mapPartitions(_.map(row => (Random.nextInt(19), new Point(row._2._1.toDouble, row._2._2.toDouble, row._1))))
-    //
-    //    var rddRight = sc.textFile(secondSet)
-    //      .mapPartitions(_.map(InputFileParsers.getLineParser(secondSetObjType)))
-    //      .filter(_ != null)
-    //      .mapPartitions(_.map(row => (Random.nextInt(19), new Point(row._2._1.toDouble, row._2._2.toDouble, row._1))))
-    //
-    //    val part = new Partitioner() {
-    //      override def numPartitions: Int = 19
-    //
-    //      override def getPartition(key: Any): Int = key.asInstanceOf[Int]
-    //    }
-    //
-    //    rddLeft = rddLeft.mapPartitions(_.map(identity), true).cache().partitionBy(part)
-    //    rddRight = rddRight.mapPartitions(_.map(identity), true)
-    //
-    //    //    rddRight = (rddLeft ++ rddRight).mapPartitions(_.map(x => (Random.nextInt(19), x._2)), true)
-    //    //    rddLeft.count
-    //    (0 until 3).foreach(_ => {
-    //
-    //      rddRight = (rddLeft ++ new ShuffledRDD(rddRight, rddLeft.partitioner.get))
-    //        .mapPartitions(_.map(x => (Random.nextInt(19), x._2)), true)
-    //    })
-    //    rddRight.saveAsTextFile(outDir+"/result/", classOf[GzipCodec])
-
-    //    val firstSet = "/gws/projects/project-taxi_capstone_2016/share/Bus_TripRecod_NAD83/part-0000[0-5]]*"
-    //    val secondSet = "/gws/projects/project-taxi_capstone_2016/share/Bus_TripRecod_NAD83/part-0000[0-5]]*"
-
     val rddLeft = sc.textFile(firstSet)
       .mapPartitions(_.map(InputFileParsers.getLineParser(firstSetObjType)))
       .filter(_ != null)
