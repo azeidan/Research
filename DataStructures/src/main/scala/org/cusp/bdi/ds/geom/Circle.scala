@@ -77,5 +77,5 @@ case class Circle(center: Geom2D) extends Serializable {
     radius += expandBy
 
   override def toString: String =
-    "%f,%f,%f".format(center.x, center.y, radius)
+    "%,.8f,%,.8f,%,.8f".format(center.x, center.y, radius)
 }

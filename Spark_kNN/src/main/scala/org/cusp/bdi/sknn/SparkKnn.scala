@@ -2,13 +2,14 @@ package org.cusp.bdi.sknn
 
 import org.apache.spark.Partitioner
 import org.apache.spark.broadcast.Broadcast
-import org.apache.spark.rdd.{RDD, ShuffledRDD}
+import org.apache.spark.rdd.RDD
 import org.apache.spark.storage.StorageLevel
 import org.apache.spark.util.SizeEstimator
 import org.cusp.bdi.ds.SpatialIndex.buildRectBounds
 import org.cusp.bdi.ds._
 import org.cusp.bdi.ds.geom.{Circle, Geom2D, Point, Rectangle}
 import org.cusp.bdi.ds.kdt.{KdTree, KdtBranchRootNode, KdtLeafNode, KdtNode}
+import org.cusp.bdi.ds.qt.QuadTree
 import org.cusp.bdi.ds.sortset.{Node, SortedLinkedList}
 import org.cusp.bdi.sknn.ds.util.{GlobalIndexPoint, SpatialIdxOperations, SupportedSpatialIndexes}
 import org.cusp.bdi.util.Helper
@@ -31,6 +32,7 @@ object SparkKnn extends Serializable {
       classOf[Geom2D],
       classOf[GlobalIndexPoint],
       classOf[KdTree],
+      classOf[QuadTree],
       KdTree.getClass,
       classOf[KdtNode],
       classOf[KdtBranchRootNode],
@@ -97,7 +99,7 @@ case class SparkKnn(debugMode: Boolean, spatialIndexType: SupportedSpatialIndexe
 
           val newWeight = totalWeight + row._2
 
-          if (stackRangeInfo.isEmpty || /*totalWeight > partObjCapacity._1 ||*/ newWeight > partObjCapacity._1) {
+          if (stackRangeInfo.isEmpty || totalWeight > partObjCapacity._1 || newWeight > partObjCapacity._2) {
 
             partCounter += 1
             totalWeight = row._2
@@ -164,7 +166,7 @@ case class SparkKnn(debugMode: Boolean, spatialIndexType: SupportedSpatialIndexe
 
         spatialIndex.insert(buildRectBounds(minX, minY, maxX, maxY), iter.map(_._2), Helper.min(gridSquareDim_ActiveRight, gridSquareDim_ActiveRight))
 
-        Helper.loggerSLf4J(debugMode, SparkKnn, ">>SpatialIndex on partition %,d time in %,d MS. Index: %s. Total Size: %,d".format(pIdx, System.currentTimeMillis - startTime, spatialIndex, /*SizeEstimator.estimate(spatialIndex)*/ -1), lstDebugInfo)
+        Helper.loggerSLf4J(debugMode, SparkKnn, ">>SpatialIndex on partition %,d time in %,d MS. Index: %s. Total Size: %,d".format(pIdx, System.currentTimeMillis - startTime, spatialIndex, SizeEstimator.estimate(spatialIndex)), lstDebugInfo)
 
         Iterator((pIdx, spatialIndex.asInstanceOf[Any]))
       }, preservesPartitioning = true)
@@ -199,13 +201,13 @@ case class SparkKnn(debugMode: Boolean, spatialIndexType: SupportedSpatialIndexe
 
     (0 until numRounds).foreach(roundNum => {
 
-      rddPoint = (rddSpIdx ++ new ShuffledRDD(rddPoint, rddSpIdx.partitioner.get))
+      rddPoint = (rddSpIdx ++ rddPoint.partitionBy(rddSpIdx.partitioner.get))
         .mapPartitionsWithIndex((pIdx, iter) => {
 
           var startTime = System.currentTimeMillis()
 
           // first entry is always the spatial index
-          var spatialIndex: SpatialIndex = iter.next._2 match {
+          val spatialIndex: SpatialIndex = iter.next._2 match {
             case spIdx: SpatialIndex =>
               Helper.loggerSLf4J(debugMode, SparkKnn, ">>Got index %d roundNum: %d".format(pIdx, roundNum), lstDebugInfo)
               spIdx
@@ -217,6 +219,9 @@ case class SparkKnn(debugMode: Boolean, spatialIndexType: SupportedSpatialIndexe
 
                 if (row._1 != -1)
                   spatialIndex.nearestNeighbor(rowData.point, rowData.sortedList)
+
+                if (!iter.hasNext)
+                  Helper.loggerSLf4J(debugMode, SparkKnn, ">>kNN done index %d roundNum: %d".format(pIdx, roundNum), lstDebugInfo)
 
                 (rowData.nextPartId, rowData)
             })
@@ -287,7 +292,7 @@ case class SparkKnn(debugMode: Boolean, spatialIndexType: SupportedSpatialIndexe
 
     if (numPartitions < totalAvailCores) {
 
-      numPartitions = if (numExecutors == 1) totalAvailCores else (numExecutors - 1) * numCoresPerExecutor - 1
+      numPartitions = if (numExecutors == 1) totalAvailCores else (numExecutors - 1) * numCoresPerExecutor
 
       coreObjCapacityMin = (if (isAllKnn) rowCount * 2 else rowCount) / numPartitions
 

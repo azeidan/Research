@@ -7,6 +7,7 @@ import org.cusp.bdi.ds.SpatialIndex.{KnnLookupInfo, testAndAddPoint}
 import org.cusp.bdi.ds.geom.{Geom2D, Point, Rectangle}
 import org.cusp.bdi.ds.qt.QuadTree.{SER_MARKER_NULL, nodeCapacity}
 import org.cusp.bdi.ds.sortset.SortedLinkedList
+import org.cusp.bdi.util.Helper
 
 import scala.collection.mutable.ArrayBuffer
 import scala.collection.{AbstractIterator, mutable}
@@ -136,21 +137,21 @@ class QuadTree extends SpatialIndex {
 
   override def write(kryo: Kryo, output: Output): Unit = {
 
-    val queueQT = mutable.Queue(this)
+    val qQT = mutable.Queue(this)
 
     def writeQT(qt: QuadTree) =
       output.writeByte(if (qt == null)
         SER_MARKER_NULL
       else {
 
-        queueQT += qt
+        qQT += qt
 
         Byte.MaxValue
       })
 
-    while (queueQT.nonEmpty) {
+    while (qQT.nonEmpty) {
 
-      val qTree = queueQT.dequeue()
+      val qTree = qQT.dequeue()
 
       output.writeInt(qTree.totalPoints)
 
@@ -212,24 +213,28 @@ class QuadTree extends SpatialIndex {
 
     def process(rootQT: QuadTree, skipQT: QuadTree) {
 
-      val queueQT = mutable.Queue(rootQT)
+      val qQT = mutable.Queue(rootQT)
 
-      while (queueQT.nonEmpty) {
+      while (qQT.nonEmpty) {
 
-        val qTree = queueQT.dequeue()
+        val qTree = qQT.dequeue()
 
         if (qTree != skipQT && knnLookupInfo.rectSearchRegion.intersects(qTree.rectBounds)) {
 
-          qTree.arrPoints.foreach(testAndAddPoint(_, knnLookupInfo))
+          qTree.arrPoints
+            .foreach(point =>
+              if (knnLookupInfo.rectSearchRegion.contains(point.x, point.y))
+                testAndAddPoint(point, knnLookupInfo)
+            )
 
           if (qTree.topLeft != null)
-            queueQT += qTree.topLeft
+            qQT += qTree.topLeft
           if (qTree.topRight != null)
-            queueQT += qTree.topRight
+            qQT += qTree.topRight
           if (qTree.bottomLeft != null)
-            queueQT += qTree.bottomLeft
+            qQT += qTree.bottomLeft
           if (qTree.bottomRight != null)
-            queueQT += qTree.bottomRight
+            qQT += qTree.bottomRight
         }
       }
     }

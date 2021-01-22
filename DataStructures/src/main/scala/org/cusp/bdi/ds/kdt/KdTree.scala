@@ -192,7 +192,10 @@ class KdTree extends SpatialIndex {
 
             case kdtLeafNode: KdtLeafNode =>
               if (knnLookupInfo.rectSearchRegion.intersects(kdtLeafNode.rectNodeBounds))
-                kdtLeafNode.arrPoints.foreach(testAndAddPoint(_, knnLookupInfo))
+                kdtLeafNode.arrPoints
+                  .foreach(point =>
+                    if (knnLookupInfo.rectSearchRegion.contains(point.x, point.y))
+                      testAndAddPoint(point, knnLookupInfo))
           }
       }
     }

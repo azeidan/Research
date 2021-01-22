@@ -13,6 +13,14 @@ import scala.util.Random
 
 object Helper {
 
+  def absDiff(x1: Double, x2: Double): Double = {
+
+    val diff = x1 - x2
+
+    if (diff < 0) -diff else diff
+  }
+
+
   //  val FLOAT_ERROR_RANGE = 1e-6
 
   def max(x: Int, y: Int): Int = if (x > y) x else y

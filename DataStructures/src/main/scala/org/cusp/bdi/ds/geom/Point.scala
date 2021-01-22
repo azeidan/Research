@@ -1,5 +1,8 @@
 package org.cusp.bdi.ds.geom
 
+import com.esotericsoftware.kryo.Kryo
+import com.esotericsoftware.kryo.io.{Input, Output}
+
 case class Point() extends Geom2D {
 
   var userData: Any = _
@@ -42,4 +45,18 @@ case class Point() extends Geom2D {
 
   override def toString: String =
     "(%s,%s)".format(super.toString, if (userData == null) "" else userData.toString)
+
+  override def write(kryo: Kryo, output: Output): Unit = {
+
+    super.write(kryo, output)
+
+    kryo.writeClassAndObject(output, userData)
+  }
+
+  override def read(kryo: Kryo, input: Input): Unit = {
+
+    super.read(kryo, input)
+
+    userData = kryo.readClassAndObject(input)
+  }
 }

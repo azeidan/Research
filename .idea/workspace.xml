@@ -38,10 +38,19 @@
   <component name="ChangeListManager">
     <list default="true" id="ee761a9d-eff2-4086-b83a-8096819a4548" name="Default Changelist" comment="KDT working with Histogram insert">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Common/src/main/scala/org/cusp/bdi/util/Helper.scala" beforeDir="false" afterPath="$PROJECT_DIR$/Common/src/main/scala/org/cusp/bdi/util/Helper.scala" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Common_FW/src/main/scala/org/cusp/bdi/util/LocalRunConsts.scala" beforeDir="false" afterPath="$PROJECT_DIR$/Common_FW/src/main/scala/org/cusp/bdi/util/LocalRunConsts.scala" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DataStructures/src/main/scala/org/cusp/bdi/ds/geom/Circle.scala" beforeDir="false" afterPath="$PROJECT_DIR$/DataStructures/src/main/scala/org/cusp/bdi/ds/geom/Circle.scala" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DataStructures/src/main/scala/org/cusp/bdi/ds/geom/Geom2D.scala" beforeDir="false" afterPath="$PROJECT_DIR$/DataStructures/src/main/scala/org/cusp/bdi/ds/geom/Geom2D.scala" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DataStructures/src/main/scala/org/cusp/bdi/ds/geom/Point.scala" beforeDir="false" afterPath="$PROJECT_DIR$/DataStructures/src/main/scala/org/cusp/bdi/ds/geom/Point.scala" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DataStructures/src/main/scala/org/cusp/bdi/ds/geom/Rectangle.scala" beforeDir="false" afterPath="$PROJECT_DIR$/DataStructures/src/main/scala/org/cusp/bdi/ds/geom/Rectangle.scala" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DataStructures/src/main/scala/org/cusp/bdi/ds/kdt/KdTree.scala" beforeDir="false" afterPath="$PROJECT_DIR$/DataStructures/src/main/scala/org/cusp/bdi/ds/kdt/KdTree.scala" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DataStructures/src/main/scala/org/cusp/bdi/ds/qt/QuadTree.scala" beforeDir="false" afterPath="$PROJECT_DIR$/DataStructures/src/main/scala/org/cusp/bdi/ds/qt/QuadTree.scala" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DataStructures/src/main/scala/org/cusp/bdi/ds/sortset/SortedLinkedList.scala" beforeDir="false" afterPath="$PROJECT_DIR$/DataStructures/src/main/scala/org/cusp/bdi/ds/sortset/SortedLinkedList.scala" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DataStructures/src/test/scala/org/cusp/bdi/ds/test/TestKdTree.scala" beforeDir="false" afterPath="$PROJECT_DIR$/DataStructures/src/test/scala/org/cusp/bdi/ds/test/TestKdTree.scala" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DataStructures/src/test/scala/org/cusp/bdi/ds/test/TestSortedLInkedList.scala" beforeDir="false" afterPath="$PROJECT_DIR$/DataStructures/src/test/scala/org/cusp/bdi/ds/test/TestSortedLInkedList.scala" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Spark_kNN/src/main/scala/org/cusp/bdi/sknn/SparkKNN_Objects.scala" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/src/main/scala/org/cusp/bdi/sknn/SparkKNN_Objects.scala" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Spark_kNN/src/main/scala/org/cusp/bdi/sknn/SparkKnn.scala" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/src/main/scala/org/cusp/bdi/sknn/SparkKnn.scala" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/src/main/test/scala/org/cusp/bdi/sknn/test/TestAllKnnJoin.scala" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/src/main/test/scala/org/cusp/bdi/sknn/test/TestAllKnnJoin.scala" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/SpatialBenchmark/src/main/test/scala/org/cusp/bdi/sb/test/SpatialBenchmarkSparkKnn.scala" beforeDir="false" afterPath="$PROJECT_DIR$/SpatialBenchmark/src/main/test/scala/org/cusp/bdi/sb/test/SpatialBenchmarkSparkKnn.scala" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -118,7 +127,7 @@
     <property name="restartRequiresConfirmation" value="false" />
     <property name="run.code.analysis.last.selected.profile" value="pProject Default" />
     <property name="scala_project_settings_configurable.last_selected_tab_index" value="0" />
-    <property name="settings.editor.selected.configurable" value="preferences.keymap" />
+    <property name="settings.editor.selected.configurable" value="reference.settingsdialog.IDE.editor.colors.Language Defaults" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
@@ -210,6 +219,16 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="TestSortedLInkedList" type="Application" factoryName="Application" temporary="true">
+      <option name="MAIN_CLASS_NAME" value="org.cusp.bdi.ds.test.TestSortedLInkedList" />
+      <module name="DataStructures" />
+      <selectedOptions>
+        <option name="vmParameters" />
+      </selectedOptions>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration default="true" type="Application" factoryName="Application">
       <selectedOptions>
         <option name="vmParameters" />
@@ -224,11 +243,13 @@
       <item itemvalue="Application.TestAllKnnJoin" />
       <item itemvalue="Application.TestKdTree" />
       <item itemvalue="Application.Test" />
+      <item itemvalue="Application.TestSortedLInkedList" />
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Application.Test" />
+        <item itemvalue="Application.TestSortedLInkedList" />
         <item itemvalue="Application.TestKdTree" />
+        <item itemvalue="Application.Test" />
       </list>
     </recent_temporary>
   </component>
@@ -255,13 +276,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1594702468860</updated>
-    </task>
-    <task id="LOCAL-00012" summary="100% accuracy in all 18 tests">
-      <created>1596767343544</created>
-      <option name="number" value="00012" />
-      <option name="presentableId" value="LOCAL-00012" />
-      <option name="project" value="LOCAL" />
-      <updated>1596767343544</updated>
     </task>
     <task id="LOCAL-00013" summary="100% accuracy in all 18 tests">
       <created>1596773523165</created>
@@ -599,7 +613,14 @@
       <option name="project" value="LOCAL" />
       <updated>1611138911632</updated>
     </task>
-    <option name="localTasksCounter" value="61" />
+    <task id="LOCAL-00061" summary="Bus dataset on cluster @ 56m 40s">
+      <created>1611203205772</created>
+      <option name="number" value="00061" />
+      <option name="presentableId" value="LOCAL-00061" />
+      <option name="project" value="LOCAL" />
+      <updated>1611203205772</updated>
+    </task>
+    <option name="localTasksCounter" value="62" />
     <servers />
   </component>
   <component name="UnloadedModulesList">
@@ -698,7 +719,6 @@
     <ignored-roots>
       <path value="$PROJECT_DIR$" />
     </ignored-roots>
-    <MESSAGE value="k-d tree accuracy fix" />
     <MESSAGE value="K-d Tree not yet finalized" />
     <MESSAGE value="kd Tree @ 100% using Bus_3_Grp2 file. 1.5X slower than QT" />
     <MESSAGE value="kNN using median. Accuracy NOT @ 100%" />
@@ -723,7 +743,8 @@
     <MESSAGE value="Uses UNION. Before attempting point data template" />
     <MESSAGE value="Cluster tested using entire BUS dataset" />
     <MESSAGE value="Bus dataset on cluster @ 56m 7s" />
-    <option name="LAST_COMMIT_MESSAGE" value="Bus dataset on cluster @ 56m 7s" />
+    <MESSAGE value="Bus dataset on cluster @ 56m 40s" />
+    <option name="LAST_COMMIT_MESSAGE" value="Bus dataset on cluster @ 56m 40s" />
   </component>
   <component name="XDebuggerManager">
     <pin-to-top-manager>

@@ -22,7 +22,7 @@ object SupportedKnnOperations extends Enumeration with Serializable {
 
 case class InsufficientMemoryException(message: String) extends Exception(message) {}
 
-final class MBRInfo extends Serializable {
+final class MBRInfo extends KryoSerializable with Serializable {
 
   var left: Double = Double.MaxValue
   var bottom: Double = Double.MaxValue
@@ -62,27 +62,24 @@ final class MBRInfo extends Serializable {
     this
   }
 
-  //  def mbr: (Double, Double, Double, Double) =
-  //    (left, bottom, right, top)
-
   override def toString: String =
     "%,.4f\t%,.4f\t%,.4f\t%,.4f".format(left, bottom, right, top)
 
-  //  override def write(kryo: Kryo, output: Output): Unit = {
-  //
-  //    output.writeDouble(left)
-  //    output.writeDouble(bottom)
-  //    output.writeDouble(right)
-  //    output.writeDouble(top)
-  //  }
-  //
-  //  override def read(kryo: Kryo, input: Input): Unit = {
-  //
-  //    left = input.readDouble()
-  //    bottom = input.readDouble()
-  //    right = input.readDouble()
-  //    top = input.readDouble()
-  //  }
+  override def write(kryo: Kryo, output: Output): Unit = {
+
+    output.writeDouble(left)
+    output.writeDouble(bottom)
+    output.writeDouble(right)
+    output.writeDouble(top)
+  }
+
+  override def read(kryo: Kryo, input: Input): Unit = {
+
+    left = input.readDouble()
+    bottom = input.readDouble()
+    right = input.readDouble()
+    top = input.readDouble()
+  }
 }
 
 final class RowData extends KryoSerializable {
@@ -117,14 +114,20 @@ final class RowData extends KryoSerializable {
 
     kryo.writeObject(output, point)
     kryo.writeObject(output, sortedList)
-    kryo.writeObject(output, lstPartitionId)
+
+    output.writeInt(lstPartitionId.length)
+    lstPartitionId.foreach(output.writeInt)
   }
 
   override def read(kryo: Kryo, input: Input): Unit = {
 
     point = kryo.readObject(input, classOf[Point])
-
     sortedList = kryo.readObject(input, classOf[SortedLinkedList[Point]])
-    lstPartitionId = kryo.readObject(input, classOf[ListBuffer[Int]])
+
+    val arrLength = input.readInt()
+
+    lstPartitionId = new ListBuffer[Int]()
+
+    (0 until arrLength).foreach(_ => lstPartitionId += input.readInt)
   }
 }

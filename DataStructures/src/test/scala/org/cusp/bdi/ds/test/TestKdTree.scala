@@ -1,68 +1,59 @@
 package org.cusp.bdi.ds.test
 
-import org.cusp.bdi.ds.SpatialIndex
 import org.cusp.bdi.ds.SpatialIndex.buildRectBounds
 import org.cusp.bdi.ds.geom.Point
-import org.cusp.bdi.ds.kdt.KdTree
+import org.cusp.bdi.ds.qt.QuadTree
 import org.cusp.bdi.ds.sortset.SortedLinkedList
 
-import scala.collection.SortedSet
-import scala.collection.mutable.ListBuffer
+import scala.io.Source
 
 object TestKdTree {
 
   def main(args: Array[String]): Unit = {
 
-    val lstPoints = ListBuffer(new Point(3119.0000000000000000000000, 719),
-      new Point(3119.0000000000000000000000, 719),
-      new Point(3119.0000000000000000000000, 719),
-      new Point(3119.0000000000000000000000, 719),
-      new Point(3119.0000000000000000000000, 719),
-      new Point(3119.0000000000000000000000, 719)
-      //      new Point(3119.0000000000000000000000, 721),
-      //      new Point(3119.0000000000000000000000, 722),
-      //      new Point(3119.0000000000000000000000, 723),
-      //      new Point(3119.0000000000000000000000, 724),
-      //      new Point(3119.0000000000000000000000, 725),
-      //      new Point(3119.0000000000000000000000, 726),
-      //      new Point(3119.0000000000000000000000, 727),
-      //      new Point(3119.0000000000000000000000, 728),
-      //      new Point(3119.0000000000000000000000, 730),
-      //      new Point(3119.0000000000000000000000, 731),
-      //      new Point(3119.0000000000000000000000, 732),
-      //      new Point(3119.0000000000000000000000, 734),
-      //      new Point(3120.0000000000000000000000, 720),
-      //      new Point(3120.0000000000000000000000, 722),
-      //      new Point(3120.0000000000000000000000, 723),
-      //      new Point(3120.0000000000000000000000, 724),
-      //      new Point(3120.0000000000000000000000, 725),
-      //      new Point(3120.0000000000000000000000, 732),
-      //      new Point(3120.0000000000000000000000, 732),
-      //      new Point(3120.0000000000000000000000, 732),
-      //      new Point(3120.0000000000000000000000, 732),
-      //      new Point(3120.0000000000000000000000, 732),
-      //      new Point(3120.0000000000000000000000, 732),
-      //      new Point(3120.0000000000000000000000, 732),
-      //      new Point(3120.0000000000000000000000, 732),
-      //      new Point(3120.0000000000000000000000, 732),
-      //      new Point(3120.0000000000000000000000, 732)
-    )
+    val qt = new QuadTree
 
-    val minX = lstPoints.minBy(_.x).x
-    val maxX = lstPoints.maxBy(_.x).x
-    val minY = lstPoints.minBy(_.y).y
-    val maxY = lstPoints.maxBy(_.y).y
+    val points = Source.fromFile("/media/cusp/Data/GeoMatch_Files/InputFiles/RandomSamples_OLD/Bus_1_A.csv")
+      .getLines()
+      .map(_.split(","))
+      .map(arr => new Point(arr(1).toDouble, arr(2).toDouble, arr(0)))
+      .toList
 
-    val kdt = new KdTree()
+    var (minX, minY, maxX, maxY) = (Double.MaxValue, Double.MaxValue, Double.MinValue, Double.MinValue)
 
-    kdt.insert(SpatialIndex.buildRectBounds(minX, minY, maxX, maxY), lstPoints.iterator, 1)
+    points.foreach(pt => {
 
-    kdt.printIndented()
+      if (pt.x < minX) minX = pt.x
+      if (pt.x > maxX) maxX = pt.x
 
-    println(kdt.findExact((3119.0000000000000000000000, 719)))
+      if (pt.y < minY) minY = pt.y
+      if (pt.y > maxY) maxY = pt.y
+    })
 
-    val sortSetSqDist = new SortedLinkedList[Point](1100)
-    kdt.nearestNeighbor(new Point(3119.0000000000000000000000, 719), sortSetSqDist)
-    sortSetSqDist.foreach(println)
+    minX = minX.floor
+    minY = minY.floor
+    maxX = maxX.ceil
+    maxY = maxY.ceil
+
+    qt.insert(buildRectBounds(minX, minY, maxX, maxY), points.iterator, 1)
+
+    println(qt)
+
+    var counter = 1
+
+    qt.nearestNeighbor(new Point(914077.4375*2, 122589.3594*2), new SortedLinkedList[Point](10))
+
+    Source.fromFile("/media/cusp/Data/GeoMatch_Files/InputFiles/RandomSamples_OLD/Bus_1_B.csv")
+      .getLines()
+      .map(_.split(","))
+      .map(arr => new Point(arr(1).toDouble+914077, arr(2).toDouble+122589, arr(0)))
+      .foreach(pt => {
+
+        val sortSetSqDist = new SortedLinkedList[Point](3)
+        counter += 1
+        qt.nearestNeighbor(pt, sortSetSqDist)
+        if (counter % 1000 == 0)
+          println(">> " + counter)
+      })
   }
 }

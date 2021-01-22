@@ -2,7 +2,6 @@ package org.cusp.bdi.ds.sortset
 
 import com.esotericsoftware.kryo.io.{Input, Output}
 import com.esotericsoftware.kryo.{Kryo, KryoSerializable}
-import com.esotericsoftware.minlog.Log
 
 import scala.collection.AbstractIterator
 import scala.collection.immutable.Iterable
@@ -21,7 +20,7 @@ class Node[T]() extends KryoSerializable /*(implicit ev$1: T => Comparable[_ >: 
   }
 
   override def toString: String =
-    "%f, %s".format(distance, data)
+    "%,.8f, %s".format(distance, data)
 
   override def write(kryo: Kryo, output: Output): Unit = {
 
@@ -61,7 +60,7 @@ case class SortedLinkedList[T]() /*(implicit ev$1: T => Comparable[_ >: T])*/ ex
   }
 
   def add(distance: Double, data: T): Unit =
-    if (nodeCount < maxSize || distance <= last.distance) {
+    if (nodeCount < maxSize || distance < last.distance) {
 
       var prevNode: Node[T] = null
       var currNode = headNode
@@ -103,7 +102,7 @@ case class SortedLinkedList[T]() /*(implicit ev$1: T => Comparable[_ >: T])*/ ex
           lastNode = prevNode.next
       }
 
-      if (nodeCount > maxSize && distance != lastNode.distance) {
+      if (nodeCount > maxSize) {
 
         if (prevNode == null) {
 
@@ -112,7 +111,7 @@ case class SortedLinkedList[T]() /*(implicit ev$1: T => Comparable[_ >: T])*/ ex
         }
 
         // jump to maxSize node
-        while ((prevNodeIndex < maxSize - 1) || (prevNode.next != null && prevNode.distance == prevNode.next.distance)) {
+        while (prevNodeIndex < maxSize - 1) {
 
           prevNode = prevNode.next
           prevNodeIndex += 1

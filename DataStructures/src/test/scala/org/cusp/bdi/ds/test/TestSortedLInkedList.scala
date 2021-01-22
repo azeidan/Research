@@ -10,6 +10,15 @@ object TestSortedLInkedList {
 
     sortedLInkedList.add(0.00000000, "bus_3_a_120356")
     sortedLInkedList.add(0.00000000, "bus_3_a_979829")
+    sortedLInkedList.add(0.00000000, "bus_3_a_979829")
+    sortedLInkedList.add(0.00000000, "bus_3_a_979829")
+    sortedLInkedList.add(0.00000000, "bus_3_a_979829")
+    sortedLInkedList.add(0.00000000, "bus_3_a_979829")
+    sortedLInkedList.add(0.00000000, "bus_3_a_979829")
+    sortedLInkedList.add(0.00000000, "bus_3_a_979829")
+    sortedLInkedList.add(0.00000000, "bus_3_a_979829")
+    sortedLInkedList.add(0.00000000, "bus_3_a_979829")
+    sortedLInkedList.add(0.00000000, "bus_3_a_979829")
     sortedLInkedList.add(3.31886894, "bus_3_a_76465")
     sortedLInkedList.add(1.10628962, "bus_3_a_347976")
     sortedLInkedList.add(3.31886894, "bus_3_a_76465_2")
@@ -26,5 +35,45 @@ object TestSortedLInkedList {
     sortedLInkedList.foreach(println)
 
     println("Length: " + sortedLInkedList.length)
+    /*
+    val sortedLinkedList = new SortedLinkedList[Point](300)
+
+    Source.fromFile("/media/cusp/Data/GeoMatch_Files/InputFiles/RandomSamples_OLD/Bread_1_B.csv")
+      .getLines()
+      .map(_.split(","))
+      .map(arr => new Point(arr(1).toDouble, arr(2).toDouble, arr(0)))
+      .foreach(pt => {
+
+        val dist = Helper.squaredEuclideanDist(0, 0, pt.x, pt.y)
+
+        sortedLinkedList.add(dist, pt)
+      })
+
+    Source.fromFile("/media/cusp/Data/GeoMatch_Files/InputFiles/RandomSamples_OLD/Bus_1_A.csv")
+      .getLines()
+      .map(_.split(","))
+      .map(arr => new Point(arr(1).toDouble, arr(2).toDouble, arr(0)))
+      .foreach(pt => {
+
+        if (sortedLinkedList.length > 100) {
+
+          var count = 1
+          var currNode = sortedLinkedList.head
+          for (_ <- (0 until Random.nextInt(50))) {
+            currNode = currNode.next
+            count += 1
+          }
+
+          sortedLinkedList.stopAt(currNode, count)
+        }
+
+        val dist = Helper.squaredEuclideanDist(0, 0, pt.x, pt.y)
+
+        sortedLinkedList.add(dist, pt)
+      })
+
+    println(sortedLinkedList.length)
+    sortedLinkedList.foreach(println)
+     */
   }
 }
