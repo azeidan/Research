@@ -7,9 +7,7 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="Spark_kNN" />
-        <module name="FW_Simba_Source" />
         <module name="Common_FW" />
-        <module name="FW_Simba" />
         <module name="DataStructures" />
         <module name="SpatialBenchmark" />
         <module name="Common" />

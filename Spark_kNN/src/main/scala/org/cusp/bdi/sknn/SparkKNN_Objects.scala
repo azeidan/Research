@@ -62,6 +62,10 @@ final class MBRInfo extends KryoSerializable with Serializable {
     this
   }
 
+  def width: Double = right - left
+
+  def height: Double = top - bottom
+
   override def toString: String =
     "%,.4f\t%,.4f\t%,.4f\t%,.4f".format(left, bottom, right, top)
 

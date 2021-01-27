@@ -11,7 +11,7 @@ import org.cusp.bdi.ds.geom.{Circle, Geom2D, Point, Rectangle}
 import org.cusp.bdi.ds.kdt.{KdTree, KdtBranchRootNode, KdtLeafNode, KdtNode}
 import org.cusp.bdi.ds.qt.QuadTree
 import org.cusp.bdi.ds.sortset.{Node, SortedLinkedList}
-import org.cusp.bdi.sknn.SparkKnn.{COST_INT, EXECUTOR_MEM_CACHE_RATE, INITIAL_GRID_WIDTH, OBJECT_COUNT_DISCOUNT_RATE, SHUFFLE_PARTITION_MAX_BYTE_SIZE}
+import org.cusp.bdi.sknn.SparkKnn.{EXECUTOR_MEM_CACHE_RATE, INITIAL_GRID_WIDTH, OBJECT_COUNT_DISCOUNT_RATE, SHUFFLE_PARTITION_MAX_BYTE_SIZE}
 import org.cusp.bdi.sknn.ds.util.{GlobalIndexPointUserData, SpatialIdxOperations, SupportedSpatialIndexes}
 import org.cusp.bdi.util.Helper
 
@@ -25,7 +25,8 @@ object SparkKnn extends Serializable {
   val OBJECT_COUNT_DISCOUNT_RATE: Double = 0.10
   val SHUFFLE_PARTITION_MAX_BYTE_SIZE: Double = 2e9
   val EXECUTOR_MEM_CACHE_RATE: Double = 0.50
-  val COST_INT: Long = 4
+  //  val COST_INT: Long = 4
+  //  val COST_LONG: Long = 8
 
   def getSparkKNNClasses: Array[Class[_]] =
     Array(
@@ -291,7 +292,7 @@ case class SparkKnn(debugMode: Boolean, spatialIndexType: SupportedSpatialIndexe
 
     val costObjRight = SizeEstimator.estimate(spatialIndexMockRight) - costSpIdxRight - costRect
 
-    val sizeRightRDD = rowCountRight * (costObjRight + COST_INT) + (costSpIdxRight + costRect) * spatialIndexMockRight.estimateNodeCount(rowCountRight)
+    val sizeRightRDD = rowCountRight * costObjRight + (costSpIdxRight + costRect) * spatialIndexMockRight.estimateNodeCount(rowCountRight)
 
     val coreAvailCacheMem = (numExecutors * (execAssignedMem - execOverheadMem) * EXECUTOR_MEM_CACHE_RATE) / (totalAvailCores + 1)
     val partitionMemSizeRight = Helper.min(coreAvailCacheMem, SHUFFLE_PARTITION_MAX_BYTE_SIZE)
@@ -310,14 +311,14 @@ case class SparkKnn(debugMode: Boolean, spatialIndexType: SupportedSpatialIndexe
      *   SortedLinkedList: point matches from the right RDD of size up to k
      */
     val pointMockLeft = new Point(0, 0, ("%" + maxRowSizeLeft + "s").format(" "))
-    val lstPartIdMockLeft = ListBuffer.fill[Int](rddLeft.partitions.length)(0)
+    val lstPartIdMockLeft = ListBuffer.fill[Int](numPartitionsRight.toInt)(0)
     val sortLstMockLeft = new SortedLinkedList[Point](k)
     (0 until k).foreach(i => sortLstMockLeft.add(i, pointMockRight)) // <- right points inserted into the sorted list
     val rowDataMockLeft = new RowData(pointMockLeft, sortLstMockLeft, lstPartIdMockLeft)
 
     val costRowDataLeft = SizeEstimator.estimate(rowDataMockLeft)
 
-    val sizeLeftRDD = rowCountLeft * (costRowDataLeft + COST_INT) * rddLeft.partitions.length // <- the estimate on the left RDD was for 1 partition, hence the * rddLeft.partitions.length
+    val sizeLeftRDD = rowCountLeft * costRowDataLeft * rddLeft.partitions.length // <- the estimate on the left RDD was for 1 partition, hence the * rddLeft.partitions.length
     val numPartitionsLeft = Helper.max(totalAvailCores, math.ceil(sizeLeftRDD / SHUFFLE_PARTITION_MAX_BYTE_SIZE))
 
     val numPartitions = Helper.max(numPartitionsRight, numPartitionsLeft)

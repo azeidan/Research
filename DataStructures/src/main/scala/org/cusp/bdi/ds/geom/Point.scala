@@ -5,7 +5,7 @@ import com.esotericsoftware.kryo.io.{Input, Output}
 
 case class Point() extends Geom2D {
 
-  var userData: Any = _
+  var userData: AnyRef = _
 
   def this(x: Double, y: Double) = {
 
@@ -21,14 +21,14 @@ case class Point() extends Geom2D {
     this.userData = other.userData
   }
 
-  def this(x: Double, y: Double, userData: Any) = {
+  def this(x: Double, y: Double, userData: AnyRef) = {
 
     this(x, y)
 
     this.userData = userData
   }
 
-  def this(xy: (Double, Double), userData: Any) =
+  def this(xy: (Double, Double), userData: AnyRef) =
     this(xy._1, xy._2, userData)
 
   def this(xy: (Double, Double)) =

@@ -25,7 +25,7 @@ object SupportedSpatialIndexes extends Enumeration with Serializable {
     }
 }
 
-final class GlobalIndexPoint extends KryoSerializable {
+final class GlobalIndexPointUserData extends KryoSerializable {
 
   var numPoints: Long = -1
   var partitionIdx: Int = -1
@@ -76,7 +76,7 @@ object SpatialIdxOperations extends Serializable {
       case kdTree: KdTree => lookup(kdTree, searchXY, k)
     })
       .map(_.data.userData match {
-        case globalIndexPoint: GlobalIndexPoint => globalIndexPoint.partitionIdx
+        case globalIndexPoint: GlobalIndexPointUserData => globalIndexPoint.partitionIdx
       })
       .to[ListBuffer]
       .distinct
@@ -173,7 +173,7 @@ object SpatialIdxOperations extends Serializable {
     //      print("")
 
     def getNumPoints(point: Point): Long = point.userData match {
-      case globalIndexPoint: GlobalIndexPoint => globalIndexPoint.numPoints
+      case globalIndexPoint: GlobalIndexPointUserData => globalIndexPoint.numPoints
     }
 
     if (idxRangeLookupInfo.rectSearchRegion.contains(point)) {
