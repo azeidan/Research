@@ -7,24 +7,14 @@ case class Rectangle(center: Geom2D, halfXY: Geom2D) extends Serializable {
   def this(other: Rectangle) =
     this(new Geom2D(other.center), new Geom2D(other.halfXY))
 
-  //  def contains(other: Rectangle): Boolean =
-  //    !(this.left > other.left || this.right < other.right ||
-  //      this.bottom > other.bottom || this.top < other.top)
-
   def contains(x: Double, y: Double) =
     Helper.absDiff(x, this.center.x) <= this.halfXY.x && Helper.absDiff(y, this.center.y) <= this.halfXY.y
 
   def contains(point: Geom2D): Boolean =
     contains(point.x, point.y)
 
-  //    Helper.absDiff(point.x, this.center.x) <= this.halfXY.x && Helper.absDiff(point.y, this.center.y) <= this.halfXY.y
-  //      !(point.x < left || point.x > right || point.y < bottom || point.y > top)
-
   def contains(xy: (Double, Double)): Boolean =
     contains(xy._1, xy._2)
-
-  //    Helper.absDiff(xy._1, this.center.x) <= this.halfXY.x && Helper.absDiff(xy._2, this.center.y) <= this.halfXY.y
-  //    !(xy._1 < left || xy._1 > right || xy._2 < bottom || xy._2 > top)
 
   def mergeWith(other: Rectangle): Unit =
     if (other != null) {
@@ -52,9 +42,6 @@ case class Rectangle(center: Geom2D, halfXY: Geom2D) extends Serializable {
 
   def top: Double =
     center.y + halfXY.y
-
-  //  def contains(mbr: (Double, Double, Double, Double)): Boolean =
-  //    left <= mbr._1 && bottom <= mbr._2 && right >= mbr._3 && top >= mbr._4
 
   def intersects(other: Rectangle): Boolean = {
 
