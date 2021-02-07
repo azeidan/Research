@@ -5,12 +5,11 @@ import com.esotericsoftware.kryo.io.{Input, Output}
 import org.cusp.bdi.ds.SpatialIndex
 import org.cusp.bdi.ds.SpatialIndex.{KnnLookupInfo, testAndAddPoint}
 import org.cusp.bdi.ds.geom.{Geom2D, Point, Rectangle}
-import org.cusp.bdi.ds.kdt.KdTree.nodeCapacity
 import org.cusp.bdi.ds.kdt.KdtNode.SPLIT_VAL_NONE
 import org.cusp.bdi.ds.sortset.SortedLinkedList
 import org.cusp.bdi.util.Helper
 
-import scala.collection.mutable.{ArrayBuffer, ListBuffer}
+import scala.collection.mutable.ArrayBuffer
 import scala.collection.{AbstractIterator, mutable}
 
 object KdTree extends Serializable {
@@ -25,10 +24,9 @@ class KdTree extends SpatialIndex {
   def getTotalPoints: Int =
     rootNode.totalPoints
 
-  override def mockNode: AnyRef =
-    new KdtBranchRootNode()
+  override def nodeCapacity: Int = KdTree.nodeCapacity
 
-  override def estimateNodeCount(pointCount: Long): Int = {
+  override def estimateNodeCount(pointCount: Long): Long = {
 
     val height = (1.44 * Helper.log(pointCount / nodeCapacity, 2)).toInt
 

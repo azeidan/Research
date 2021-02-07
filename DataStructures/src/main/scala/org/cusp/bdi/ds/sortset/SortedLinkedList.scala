@@ -6,7 +6,7 @@ import com.esotericsoftware.kryo.{Kryo, KryoSerializable}
 import scala.collection.AbstractIterator
 import scala.collection.immutable.Iterable
 
-class Node[T]() extends KryoSerializable /*(implicit ev$1: T => Comparable[_ >: T])*/ {
+class Node[T <: Serializable]() extends KryoSerializable {
 
   var distance: Double = Double.NegativeInfinity
   var data: T = _
@@ -35,9 +35,7 @@ class Node[T]() extends KryoSerializable /*(implicit ev$1: T => Comparable[_ >: 
   }
 }
 
-case class SortedLinkedList[T]() /*(implicit ev$1: T => Comparable[_ >: T])*/ extends KryoSerializable with Iterable[Node[T]] {
-
-  //  Log.set(Log.LEVEL_DEBUG)
+case class SortedLinkedList[T <: Serializable]() extends KryoSerializable with Iterable[Node[T]] {
 
   var maxSize: Int = Int.MaxValue
   private var headNode: Node[T] = _
@@ -72,9 +70,7 @@ case class SortedLinkedList[T]() /*(implicit ev$1: T => Comparable[_ >: T])*/ ex
         prevNode = last
         currNode = null
       }
-
-      // distance sort
-      if (currNode != null)
+      else if (currNode != null)
         while (distance > currNode.distance) {
 
           prevNodeIndex += 1

@@ -10,7 +10,7 @@ import org.cusp.bdi.ds.sortset.{Node, SortedLinkedList}
 import org.cusp.bdi.util.Helper
 
 import scala.collection.mutable
-import scala.collection.mutable.ListBuffer
+import scala.collection.mutable.{ArrayBuffer, ListBuffer}
 
 object SupportedSpatialIndexes extends Enumeration with Serializable {
 
@@ -34,6 +34,11 @@ final class GlobalIndexPointUserData extends KryoSerializable {
     this()
     this.numPoints = numPoints
     this.partitionIdx = partIdx
+  }
+
+  def this(numPoints: Long) = {
+    this()
+    this.numPoints = numPoints
   }
 
   override def equals(other: Any): Boolean = false
@@ -70,7 +75,7 @@ object SpatialIdxOperations extends Serializable {
     }
   }
 
-  def extractLstPartition(spatialIndex: SpatialIndex, searchXY: (Double, Double), k: Int): ListBuffer[Int] =
+  def extractLstPartition(spatialIndex: SpatialIndex, searchXY: (Double, Double), k: Int): ArrayBuffer[Int] =
     (spatialIndex match {
       case quadTree: QuadTree => lookup(quadTree, searchXY, k)
       case kdTree: KdTree => lookup(kdTree, searchXY, k)
@@ -78,7 +83,7 @@ object SpatialIdxOperations extends Serializable {
       .map(_.data.userData match {
         case globalIndexPoint: GlobalIndexPointUserData => globalIndexPoint.partitionIdx
       })
-      .to[ListBuffer]
+      .to[ArrayBuffer]
       .distinct
 
   private def lookup(quadTree: QuadTree, searchXY: (Double, Double), k: Int): SortedLinkedList[Point] = {

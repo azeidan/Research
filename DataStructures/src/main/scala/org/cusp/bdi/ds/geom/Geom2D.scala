@@ -3,7 +3,7 @@ package org.cusp.bdi.ds.geom
 import com.esotericsoftware.kryo.io.{Input, Output}
 import com.esotericsoftware.kryo.{Kryo, KryoSerializable}
 
-class Geom2D() extends KryoSerializable {
+class Geom2D() extends KryoSerializable with Serializable {
 
   var x = 0.0
   var y = 0.0

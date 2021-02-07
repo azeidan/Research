@@ -5,9 +5,8 @@ import com.esotericsoftware.kryo.io.{Input, Output}
 import org.cusp.bdi.ds.SpatialIndex
 import org.cusp.bdi.ds.SpatialIndex.{KnnLookupInfo, testAndAddPoint}
 import org.cusp.bdi.ds.geom.{Geom2D, Point, Rectangle}
-import org.cusp.bdi.ds.qt.QuadTree.{SER_MARKER_NULL, nodeCapacity}
+import org.cusp.bdi.ds.qt.QuadTree.SER_MARKER_NULL
 import org.cusp.bdi.ds.sortset.SortedLinkedList
-import org.cusp.bdi.util.Helper
 
 import scala.collection.mutable.ArrayBuffer
 import scala.collection.{AbstractIterator, mutable}
@@ -30,16 +29,18 @@ class QuadTree extends SpatialIndex {
   var bottomLeft: QuadTree = _
   var bottomRight: QuadTree = _
 
+
   private def this(rectBounds: Rectangle) = {
     this()
     this.rectBounds = rectBounds
   }
 
-  override def mockNode: AnyRef =
-    new QuadTree()
+  override def nodeCapacity: Int = QuadTree.nodeCapacity
 
-  override def estimateNodeCount(objCount: Long): Int =
+  override def estimateNodeCount(objCount: Long): Long =
     math.ceil(((objCount - nodeCapacity) / 7.0 * 4) + 1).toInt
+
+  //    math.ceil(objCount / nodeCapacity.toDouble).toLong
 
   override def estimateObjCount(gIdxNodeCount: Int): Long = -1
 

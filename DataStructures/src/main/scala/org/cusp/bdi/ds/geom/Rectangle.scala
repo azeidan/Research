@@ -7,6 +7,9 @@ case class Rectangle(center: Geom2D, halfXY: Geom2D) extends Serializable {
   def this(other: Rectangle) =
     this(new Geom2D(other.center), new Geom2D(other.halfXY))
 
+  def this(geom2D: Geom2D) =
+    this(geom2D, geom2D)
+
   def contains(x: Double, y: Double) =
     Helper.absDiff(x, this.center.x) <= this.halfXY.x && Helper.absDiff(y, this.center.y) <= this.halfXY.y
 

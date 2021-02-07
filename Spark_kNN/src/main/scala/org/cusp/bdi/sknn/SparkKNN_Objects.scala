@@ -5,7 +5,7 @@ import com.esotericsoftware.kryo.{Kryo, KryoSerializable}
 import org.cusp.bdi.ds.geom.Point
 import org.cusp.bdi.ds.sortset.SortedLinkedList
 
-import scala.collection.mutable.ListBuffer
+import scala.collection.mutable.ArrayBuffer
 
 object SupportedKnnOperations extends Enumeration with Serializable {
 
@@ -90,28 +90,29 @@ final class RowData extends KryoSerializable {
 
   var point: Point = _
   var sortedList: SortedLinkedList[Point] = _
-  var lstPartitionId: ListBuffer[Int] = _
+  var arrPartitionId: ArrayBuffer[Int] = _
 
-  def this(point: Point, sortedList: SortedLinkedList[Point], lstPartitionId: ListBuffer[Int]) = {
+  def this(point: Point, sortedList: SortedLinkedList[Point], arrPartitionId: ArrayBuffer[Int]) = {
 
     this()
 
     this.point = point
     this.sortedList = sortedList
-    this.lstPartitionId = lstPartitionId
+    this.arrPartitionId = arrPartitionId
   }
 
   def nextPartId: Int = {
 
-    if (lstPartitionId.nonEmpty) {
+    if (arrPartitionId.nonEmpty) {
 
-      val pId = lstPartitionId.head
+      val pId = arrPartitionId.head
 
-      lstPartitionId = lstPartitionId.tail
+      arrPartitionId = arrPartitionId.tail
 
       pId
     }
-    else -1
+    else
+      -1
   }
 
   override def write(kryo: Kryo, output: Output): Unit = {
@@ -119,8 +120,8 @@ final class RowData extends KryoSerializable {
     kryo.writeObject(output, point)
     kryo.writeObject(output, sortedList)
 
-    output.writeInt(lstPartitionId.length)
-    lstPartitionId.foreach(output.writeInt)
+    output.writeInt(arrPartitionId.length)
+    arrPartitionId.foreach(output.writeInt)
   }
 
   override def read(kryo: Kryo, input: Input): Unit = {
@@ -130,8 +131,9 @@ final class RowData extends KryoSerializable {
 
     val arrLength = input.readInt()
 
-    lstPartitionId = new ListBuffer[Int]()
+    arrPartitionId = new ArrayBuffer[Int]()
+    arrPartitionId.sizeHint(arrLength)
 
-    (0 until arrLength).foreach(_ => lstPartitionId += input.readInt)
+    (0 until arrLength).foreach(_ => arrPartitionId += input.readInt)
   }
 }
