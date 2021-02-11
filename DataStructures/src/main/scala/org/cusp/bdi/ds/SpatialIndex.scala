@@ -15,7 +15,7 @@ object SpatialIndex extends Serializable {
     var rectSearchRegion: Rectangle = Rectangle(this.searchPoint, new Geom2D(math.sqrt(this.limitSquaredDist)))
   }
 
-  def buildRectBounds(mbrEnds: ((Double, Double), (Double, Double))): Rectangle =
+  def buildRectBounds(mbrEnds: ((Int, Int), (Int, Int))): Rectangle =
     buildRectBounds(mbrEnds._1._1, mbrEnds._1._2, mbrEnds._2._1, mbrEnds._2._2)
 
   def buildRectBounds(minX: Double, minY: Double, maxX: Double, maxY: Double): Rectangle = {

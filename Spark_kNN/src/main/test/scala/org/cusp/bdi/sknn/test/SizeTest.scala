@@ -36,7 +36,7 @@ object SizeTest {
     val start = System.currentTimeMillis()
 
     var qt = new QuadTree()
-    val rect = buildRectBounds((mbr._1.floor, mbr._2.floor), (mbr._3.ceil, mbr._4.ceil))
+    val rect = buildRectBounds(mbr._1.floor, mbr._2.floor, mbr._3.ceil, mbr._4.ceil)
     //    println("All points Size: " + lstPoints.map(SizeEstimator.estimate(_)).sum)
     val qtCost = SizeEstimator.estimate(qt)
     val rectCost = SizeEstimator.estimate(rect)

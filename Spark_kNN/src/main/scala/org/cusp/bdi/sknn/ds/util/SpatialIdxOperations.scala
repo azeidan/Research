@@ -1,7 +1,7 @@
 package org.cusp.bdi.sknn.ds.util
 
-import com.esotericsoftware.kryo.{Kryo, KryoSerializable}
 import com.esotericsoftware.kryo.io.{Input, Output}
+import com.esotericsoftware.kryo.{Kryo, KryoSerializable}
 import org.cusp.bdi.ds._
 import org.cusp.bdi.ds.geom.{Geom2D, Point, Rectangle}
 import org.cusp.bdi.ds.kdt.{KdTree, KdtBranchRootNode, KdtLeafNode, KdtNode}
@@ -10,7 +10,7 @@ import org.cusp.bdi.ds.sortset.{Node, SortedLinkedList}
 import org.cusp.bdi.util.Helper
 
 import scala.collection.mutable
-import scala.collection.mutable.{ArrayBuffer, ListBuffer}
+import scala.collection.mutable.ArrayBuffer
 
 object SupportedSpatialIndexes extends Enumeration with Serializable {
 
@@ -42,6 +42,9 @@ final class GlobalIndexPointUserData extends KryoSerializable {
   }
 
   override def equals(other: Any): Boolean = false
+
+  override def toString: String =
+    "%,d %,d".format(numPoints, partitionIdx)
 
   override def write(kryo: Kryo, output: Output): Unit = {
 
@@ -75,7 +78,7 @@ object SpatialIdxOperations extends Serializable {
     }
   }
 
-  def extractLstPartition(spatialIndex: SpatialIndex, searchXY: (Double, Double), k: Int): ArrayBuffer[Int] =
+  def extractLstPartition(spatialIndex: SpatialIndex, searchXY: (Int, Int), k: Int): ArrayBuffer[Int] =
     (spatialIndex match {
       case quadTree: QuadTree => lookup(quadTree, searchXY, k)
       case kdTree: KdTree => lookup(kdTree, searchXY, k)
@@ -86,7 +89,7 @@ object SpatialIdxOperations extends Serializable {
       .to[ArrayBuffer]
       .distinct
 
-  private def lookup(quadTree: QuadTree, searchXY: (Double, Double), k: Int): SortedLinkedList[Point] = {
+  private def lookup(quadTree: QuadTree, searchXY: (Int, Int), k: Int): SortedLinkedList[Point] = {
 
     //    if (searchPointXY._1.toString().startsWith("26167") && searchPointXY._2.toString().startsWith("4966"))
     //      println
@@ -130,7 +133,7 @@ object SpatialIdxOperations extends Serializable {
     idxRangeLookupInfo.sortList
   }
 
-  private def lookup(kdTree: KdTree, searchXY: (Double, Double), k: Int): SortedLinkedList[Point] = {
+  private def lookup(kdTree: KdTree, searchXY: (Int, Int), k: Int): SortedLinkedList[Point] = {
 
     //            if (searchXY._1.toString().startsWith("248") && searchXY._2.toString().startsWith("58"))
     //              println

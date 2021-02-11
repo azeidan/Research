@@ -29,7 +29,6 @@ class QuadTree extends SpatialIndex {
   var bottomLeft: QuadTree = _
   var bottomRight: QuadTree = _
 
-
   private def this(rectBounds: Rectangle) = {
     this()
     this.rectBounds = rectBounds
@@ -38,9 +37,9 @@ class QuadTree extends SpatialIndex {
   override def nodeCapacity: Int = QuadTree.nodeCapacity
 
   override def estimateNodeCount(objCount: Long): Long =
-    math.ceil(((objCount - nodeCapacity) / 7.0 * 4) + 1).toInt
+    Math.ceil(((objCount - nodeCapacity) / 7.0 * 4) + 1).toInt
 
-  //    math.ceil(objCount / nodeCapacity.toDouble).toLong
+  //    Math.ceil(objCount / nodeCapacity.toDouble).toLong
 
   override def estimateObjCount(gIdxNodeCount: Int): Long = -1
 

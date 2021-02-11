@@ -22,10 +22,10 @@ case class Rectangle(center: Geom2D, halfXY: Geom2D) extends Serializable {
   def mergeWith(other: Rectangle): Unit =
     if (other != null) {
 
-      val minX = math.min(this.left, other.left)
-      val minY = math.min(this.bottom, other.bottom)
-      val maxX = math.max(this.right, other.right)
-      val maxY = math.max(this.top, other.top)
+      val minX = Helper.min(this.left, other.left)
+      val minY = Helper.min(this.bottom, other.bottom)
+      val maxX = Helper.max(this.right, other.right)
+      val maxY = Helper.max(this.top, other.top)
 
       this.halfXY.x = (maxX - minX) / 2
       this.halfXY.y = (maxY - minY) / 2

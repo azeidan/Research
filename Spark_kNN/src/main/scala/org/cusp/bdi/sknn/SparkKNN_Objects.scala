@@ -56,8 +56,8 @@ final class MBRInfo extends KryoSerializable with Serializable {
     this.left = math.floor(this.left)
     this.bottom = math.floor(this.bottom)
 
-    this.right = math.ceil(this.right)
-    this.top = math.ceil(this.top)
+    this.right = Math.ceil(this.right)
+    this.top = Math.ceil(this.top)
 
     this
   }
@@ -101,8 +101,7 @@ final class RowData extends KryoSerializable {
     this.arrPartitionId = arrPartitionId
   }
 
-  def nextPartId: Int = {
-
+  def nextPartId: Int =
     if (arrPartitionId.nonEmpty) {
 
       val pId = arrPartitionId.head
@@ -113,7 +112,6 @@ final class RowData extends KryoSerializable {
     }
     else
       -1
-  }
 
   override def write(kryo: Kryo, output: Output): Unit = {
 
