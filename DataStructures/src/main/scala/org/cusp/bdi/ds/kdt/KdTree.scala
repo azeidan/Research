@@ -36,46 +36,49 @@ class KdTree extends SpatialIndex {
   override def estimateObjCount(gIdxNodeCount: Int): Long = -1
 
   @throws(classOf[IllegalStateException])
+  def insertIter(rectBounds: Rectangle, iterPoints: Iterator[TraversableOnce[Point]], histogramBarWidth: Int): Unit = {}
+
+  @throws(classOf[IllegalStateException])
   override def insert(rectBounds: Rectangle, iterPoints: Iterator[Point], histogramBarWidth: Int) {
 
-    if (rootNode != null) throw new IllegalStateException("KD Tree already built")
-    if (rectBounds == null) throw new IllegalStateException("Rectangle bounds cannot be null")
-    if (iterPoints.isEmpty) throw new IllegalStateException("Empty point iterator")
-    if (histogramBarWidth < 1) throw new IllegalStateException("%s%d".format("Histogram bar width must be >= 1: Got: ", histogramBarWidth))
-
-    val queueNodeInfo = mutable.Queue[(KdtBranchRootNode, Boolean, Histogram, Histogram)]()
-
-    val lowerBounds = (rectBounds.left, rectBounds.bottom)
-
-    def buildNode(nodeAVLSplitInfo: Histogram, splitX: Boolean): KdtNode = {
-
-      if (nodeAVLSplitInfo.pointCount <= nodeCapacity)
-        new KdtLeafNode(nodeAVLSplitInfo.extractPointInfo)
-      else {
-
-        val avlSplitInfoParts = nodeAVLSplitInfo.partition(splitX)
-
-        val kdtBranchRootNode = new KdtBranchRootNode(avlSplitInfoParts._1, nodeAVLSplitInfo.pointCount)
-
-        queueNodeInfo += ((kdtBranchRootNode, splitX, avlSplitInfoParts._2, avlSplitInfoParts._3))
-
-        kdtBranchRootNode
-      }
-    }
-
-    rootNode = buildNode(Histogram(iterPoints, histogramBarWidth, lowerBounds), splitX = true)
-
-    while (queueNodeInfo.nonEmpty) {
-
-      val (currNode, splitX, avlSplitInfoLeft, avlSplitInfoRight) = queueNodeInfo.dequeue
-
-      if (avlSplitInfoLeft != null)
-        currNode.left = buildNode(avlSplitInfoLeft, !splitX)
-      if (avlSplitInfoRight != null)
-        currNode.right = buildNode(avlSplitInfoRight, !splitX)
-    }
-
-    updateBoundsAndTotalPoint()
+    //    if (rootNode != null) throw new IllegalStateException("KD Tree already built")
+    //    if (rectBounds == null) throw new IllegalStateException("Rectangle bounds cannot be null")
+    //    if (iterPoints.isEmpty) throw new IllegalStateException("Empty point iterator")
+    //    if (histogramBarWidth < 1) throw new IllegalStateException("%s%d".format("Histogram bar width must be >= 1: Got: ", histogramBarWidth))
+    //
+    //    val queueNodeInfo = mutable.Queue[(KdtBranchRootNode, Boolean, Histogram, Histogram)]()
+    //
+    //    val lowerBounds = (rectBounds.left, rectBounds.bottom)
+    //
+    //    def buildNode(nodeAVLSplitInfo: Histogram, splitX: Boolean): KdtNode = {
+    //
+    //      if (nodeAVLSplitInfo.pointCount <= nodeCapacity)
+    //        new KdtLeafNode(nodeAVLSplitInfo.extractPointInfo)
+    //      else {
+    //
+    //        val avlSplitInfoParts = nodeAVLSplitInfo.partition(splitX)
+    //
+    //        val kdtBranchRootNode = new KdtBranchRootNode(avlSplitInfoParts._1, nodeAVLSplitInfo.pointCount)
+    //
+    //        queueNodeInfo += ((kdtBranchRootNode, splitX, avlSplitInfoParts._2, avlSplitInfoParts._3))
+    //
+    //        kdtBranchRootNode
+    //      }
+    //    }
+    //
+    //    rootNode = buildNode(Histogram(iterPoints, histogramBarWidth, lowerBounds), splitX = true)
+    //
+    //    while (queueNodeInfo.nonEmpty) {
+    //
+    //      val (currNode, splitX, avlSplitInfoLeft, avlSplitInfoRight) = queueNodeInfo.dequeue
+    //
+    //      if (avlSplitInfoLeft != null)
+    //        currNode.left = buildNode(avlSplitInfoLeft, !splitX)
+    //      if (avlSplitInfoRight != null)
+    //        currNode.right = buildNode(avlSplitInfoRight, !splitX)
+    //    }
+    //
+    //    updateBoundsAndTotalPoint()
   }
 
   override def findExact(searchXY: (Double, Double)): Point = {

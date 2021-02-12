@@ -85,6 +85,16 @@ class QuadTree extends SpatialIndex {
     iterPoints.foreach(insertPoint)
   }
 
+  def insertIter(rectBounds: Rectangle, iterPoints: Iterator[TraversableOnce[Point]], histogramBarWidth: Int): Unit = {
+
+    //    if (iterPoints.isEmpty) throw new IllegalStateException("Empty point iterator")
+    if (rectBounds == null) throw new IllegalStateException("Rectangle bounds cannot be null")
+
+    this.rectBounds = rectBounds
+
+    iterPoints.map(_.foreach(insertPoint))
+  }
+
   private def insertPoint(point: Point): Boolean = {
 
     //    if (point.userData.toString.equalsIgnoreCase("Yellow_2_A_507601"))

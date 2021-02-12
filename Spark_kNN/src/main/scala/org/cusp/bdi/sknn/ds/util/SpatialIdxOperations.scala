@@ -27,34 +27,34 @@ object SupportedSpatialIndexes extends Enumeration with Serializable {
 
 final class GlobalIndexPointUserData extends KryoSerializable {
 
-  var numPoints: Long = -1
+  var objCount: Long = -1
   var partitionIdx: Int = -1
 
   def this(numPoints: Long, partIdx: Int) = {
     this()
-    this.numPoints = numPoints
+    this.objCount = numPoints
     this.partitionIdx = partIdx
   }
 
-  def this(numPoints: Long) = {
-    this()
-    this.numPoints = numPoints
-  }
+//  def this(numPoints: Long) = {
+//    this()
+//    this.objCount = numPoints
+//  }
 
   override def equals(other: Any): Boolean = false
 
   override def toString: String =
-    "%,d %,d".format(numPoints, partitionIdx)
+    "%,d %,d".format(objCount, partitionIdx)
 
   override def write(kryo: Kryo, output: Output): Unit = {
 
-    output.writeLong(numPoints)
+    output.writeLong(objCount)
     output.writeInt(partitionIdx)
   }
 
   override def read(kryo: Kryo, input: Input): Unit = {
 
-    numPoints = input.readLong()
+    objCount = input.readLong()
     partitionIdx = input.readInt()
   }
 }
@@ -181,7 +181,7 @@ object SpatialIdxOperations extends Serializable {
     //      print("")
 
     def getNumPoints(point: Point): Long = point.userData match {
-      case globalIndexPoint: GlobalIndexPointUserData => globalIndexPoint.numPoints
+      case globalIndexPoint: GlobalIndexPointUserData => globalIndexPoint.objCount
     }
 
     if (idxRangeLookupInfo.rectSearchRegion.contains(point)) {

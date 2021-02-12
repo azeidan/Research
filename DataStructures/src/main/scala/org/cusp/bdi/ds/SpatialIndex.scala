@@ -54,6 +54,9 @@ trait SpatialIndex extends KryoSerializable {
   @throws(classOf[IllegalStateException])
   def insert(rectBounds: Rectangle, iterPoints: Iterator[Point], histogramBarWidth: Int)
 
+  @throws(classOf[IllegalStateException])
+  def insertIter(rectBounds: Rectangle, iterPoints: Iterator[TraversableOnce[Point]], histogramBarWidth: Int)
+
   def findExact(searchXY: (Double, Double)): Point
 
   def allPoints: Iterator[ArrayBuffer[Point]]

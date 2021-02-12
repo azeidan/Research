@@ -24,12 +24,12 @@ case class InsufficientMemoryException(message: String) extends Exception(messag
 
 final class MBRInfo extends KryoSerializable with Serializable {
 
-  var left: Double = Double.MaxValue
-  var bottom: Double = Double.MaxValue
-  var right: Double = Double.MinValue
-  var top: Double = Double.MinValue
+  var left: Int = Int.MaxValue
+  var bottom: Int = Int.MaxValue
+  var right: Int = Int.MinValue
+  var top: Int = Int.MinValue
 
-  def this(seedX: Double, seedY: Double) = {
+  def this(seedX: Int, seedY: Int) = {
 
     this()
     this.left = seedX
@@ -38,7 +38,7 @@ final class MBRInfo extends KryoSerializable with Serializable {
     this.top = seedY
   }
 
-  def this(seed: (Double, Double)) =
+  def this(seed: (Int, Int)) =
     this(seed._1, seed._2)
 
   def merge(other: MBRInfo): MBRInfo = {
@@ -53,36 +53,36 @@ final class MBRInfo extends KryoSerializable with Serializable {
 
   def stretch(): MBRInfo = {
 
-    this.left = math.floor(this.left)
-    this.bottom = math.floor(this.bottom)
+    //    this.left = Math.floor(this.left).toFloat
+    //    this.bottom = Math.floor(this.bottom).toFloat
 
-    this.right = Math.ceil(this.right)
-    this.top = Math.ceil(this.top)
+    this.right += 1 // Math.ceil(this.right).toFloat
+    this.top += 1 // Math.ceil(this.top).toFloat
 
     this
   }
 
-  def width: Double = right - left
+  def width: Int = right - left
 
-  def height: Double = top - bottom
+  def height: Int = top - bottom
 
   override def toString: String =
-    "%,.4f\t%,.4f\t%,.4f\t%,.4f".format(left, bottom, right, top)
+    "%,d\t%,d\t%,d\t%,d".format(left, bottom, right, top)
 
   override def write(kryo: Kryo, output: Output): Unit = {
 
-    output.writeDouble(left)
-    output.writeDouble(bottom)
-    output.writeDouble(right)
-    output.writeDouble(top)
+    output.writeInt(left)
+    output.writeInt(bottom)
+    output.writeInt(right)
+    output.writeInt(top)
   }
 
   override def read(kryo: Kryo, input: Input): Unit = {
 
-    left = input.readDouble()
-    bottom = input.readDouble()
-    right = input.readDouble()
-    top = input.readDouble()
+    left = input.readInt()
+    bottom = input.readInt()
+    right = input.readInt()
+    top = input.readInt()
   }
 }
 
