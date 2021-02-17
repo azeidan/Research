@@ -3,7 +3,7 @@ package org.cusp.bdi.fw.simba
 import org.apache.hadoop.fs.{FileSystem, Path}
 import org.apache.hadoop.io.compress.GzipCodec
 import org.apache.spark.sql.Row
-import org.apache.spark.sql.simba.SimbaSession
+import org.apache.spark.sql. simba.SimbaSession
 import org.cusp.bdi.fw.simba.Simba_Local_CLArgs.SupportedKnnOperations
 import org.cusp.bdi.util.{Arguments, Helper, InputFileParsers, LocalRunConsts}
 

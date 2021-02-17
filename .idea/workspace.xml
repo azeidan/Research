@@ -6,7 +6,7 @@
   </component>
   <component name="ArtifactsWorkspaceSettings">
     <artifacts-to-build>
-      <artifact name="FW_Simba" />
+      <artifact name="DataSetTools:jar" />
     </artifacts-to-build>
   </component>
   <component name="AutoImportSettings">
@@ -14,12 +14,12 @@
   </component>
   <component name="AutomaticModuleUnloader">
     <loaded-modules>
-      <module name="Common_FW" />
-      <module name="DataStructures" />
-      <module name="SpatialBenchmark" />
-      <module name="Research" />
       <module name="Common" />
       <module name="Spark_kNN" />
+      <module name="Research" />
+      <module name="DataStructures" />
+      <module name="Common_FW" />
+      <module name="SpatialBenchmark" />
     </loaded-modules>
   </component>
   <component name="BranchesTreeState">
@@ -35,18 +35,20 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ee761a9d-eff2-4086-b83a-8096819a4548" name="Default Changelist" comment="KDT working with Histogram insert">
-      <change afterPath="$PROJECT_DIR$/Spark_kNN/src/OLD/SparkKNN_Before_switching_to_square_split.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Spark_kNN/src/OLD/SparkKnn_24_Before_removing_gIdx_sizeEstimate" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Spark_kNN/src/main/scala/org/cusp/bdi/sknn/SparkKNN_25_Broken.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Spark_kNN/src/main/scala/org/cusp/bdi/sknn/TBD.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Common/src/main/scala/org/cusp/bdi/util/RandomWeighted.scala" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/DataSetTools/src/main/java/PartitionLoadCounts.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Common_FW/src/main/scala/org/cusp/bdi/util/Arguments.scala" beforeDir="false" afterPath="$PROJECT_DIR$/Common_FW/src/main/scala/org/cusp/bdi/util/Arguments.scala" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Common_FW/src/main/scala/org/cusp/bdi/util/LocalRunConsts.scala" beforeDir="false" afterPath="$PROJECT_DIR$/Common_FW/src/main/scala/org/cusp/bdi/util/LocalRunConsts.scala" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DataStructures/src/main/scala/org/cusp/bdi/ds/SpatialIndex.scala" beforeDir="false" afterPath="$PROJECT_DIR$/DataStructures/src/main/scala/org/cusp/bdi/ds/SpatialIndex.scala" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DataStructures/src/main/scala/org/cusp/bdi/ds/kdt/KdTree.scala" beforeDir="false" afterPath="$PROJECT_DIR$/DataStructures/src/main/scala/org/cusp/bdi/ds/kdt/KdTree.scala" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DataStructures/src/main/scala/org/cusp/bdi/ds/geom/Rectangle.scala" beforeDir="false" afterPath="$PROJECT_DIR$/DataStructures/src/main/scala/org/cusp/bdi/ds/geom/Rectangle.scala" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DataStructures/src/main/scala/org/cusp/bdi/ds/qt/QuadTree.scala" beforeDir="false" afterPath="$PROJECT_DIR$/DataStructures/src/main/scala/org/cusp/bdi/ds/qt/QuadTree.scala" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FW_Simba/src/test/scala/org/cusp/bdi/fw/simba/SIM_Example.scala" beforeDir="false" afterPath="$PROJECT_DIR$/FW_Simba/src/test/scala/org/cusp/bdi/fw/simba/SIM_Example.scala" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Spark_kNN/src/OLD/SparkKnn_23_Uses_RepartitionAndSort.scala" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/src/OLD/SparkKnn_23_Uses_RepartitionAndSort.scala" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Spark_kNN/src/main/scala/org/cusp/bdi/sknn/SparkKNN_25_Broken.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/src/OLD/SparkKNN_25_Broken.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Spark_kNN/src/main/scala/org/cusp/bdi/sknn/SparkKNN_Objects.scala" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/src/main/scala/org/cusp/bdi/sknn/SparkKNN_Objects.scala" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Spark_kNN/src/main/scala/org/cusp/bdi/sknn/SparkKnn.scala" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/src/main/scala/org/cusp/bdi/sknn/SparkKnn.scala" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/src/main/scala/org/cusp/bdi/sknn/ds/util/SpatialIdxOperations.scala" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/src/main/scala/org/cusp/bdi/sknn/ds/util/SpatialIdxOperations.scala" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Spark_kNN/src/main/scala/org/cusp/bdi/sknn/TBD.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/src/OLD/TBD.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Spark_kNN/src/main/test/scala/TBD.CSV" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Spark_kNN/src/main/test/scala/org/cusp/bdi/sknn/test/TestAllKnnJoin.scala" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/src/main/test/scala/org/cusp/bdi/sknn/test/TestAllKnnJoin.scala" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -67,6 +69,7 @@
         <option value="Package Object" />
         <option value="Scala Trait" />
         <option value="Scala Class" />
+        <option value="Class" />
       </list>
     </option>
   </component>
@@ -117,7 +120,7 @@
     <property name="TODO_SCOPE" value="All Places" />
     <property name="last_directory_selection" value="$PROJECT_DIR$/DataStructures/src/main/scala/org/cusp/bdi/ds/kdt" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/Spark_kNN/src/OLD" />
-    <property name="project.structure.last.edited" value="Modules" />
+    <property name="project.structure.last.edited" value="Artifacts" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.34280476" />
     <property name="restartRequiresConfirmation" value="false" />
@@ -156,6 +159,18 @@
     </key>
   </component>
   <component name="RunManager" selected="Application.TestAllKnnJoin">
+    <configuration name="PartitionLoadCounts" type="Application" factoryName="Application" nameIsGenerated="true">
+      <output_file path="/media/ayman/Data/GeoMatch_Files/OutputFiles/IntelliJ_Logs/PartitionLoadCounts" is_save="true" />
+      <option name="MAIN_CLASS_NAME" value="PartitionLoadCounts" />
+      <module name="DataSetTools" />
+      <option name="PROGRAM_PARAMETERS" value="/media/ayman/Data/GeoMatch_Files/InputFiles/tbd.480.txt 221715342 496 9" />
+      <selectedOptions>
+        <option name="vmParameters" />
+      </selectedOptions>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="SIM_Example" type="Application" factoryName="Application">
       <option name="INCLUDE_PROVIDED_SCOPE" value="true" />
       <option name="MAIN_CLASS_NAME" value="org.cusp.bdi.fw.simba.SIM_Example" />
@@ -237,12 +252,14 @@
       <item itemvalue="Application.SIM_Example" />
       <item itemvalue="Application.SpatialBenchmarkSpark_kNN" />
       <item itemvalue="Application.TestAllKnnJoin" />
+      <item itemvalue="Application.PartitionLoadCounts" />
       <item itemvalue="Application.TestKdTree" />
       <item itemvalue="Application.Test" />
       <item itemvalue="Application.TestSortedLInkedList" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Application.PartitionLoadCounts" />
         <item itemvalue="Application.TestSortedLInkedList" />
         <item itemvalue="Application.TestKdTree" />
         <item itemvalue="Application.Test" />
@@ -272,13 +289,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1594702468860</updated>
-    </task>
-    <task id="LOCAL-00018" summary="Merged with branch">
-      <created>1598310171915</created>
-      <option name="number" value="00018" />
-      <option name="presentableId" value="LOCAL-00018" />
-      <option name="project" value="LOCAL" />
-      <updated>1598310171915</updated>
     </task>
     <task id="LOCAL-00019" summary="Merged with branch">
       <created>1598310206057</created>
@@ -616,11 +626,17 @@
       <option name="project" value="LOCAL" />
       <updated>1613030704501</updated>
     </task>
-    <option name="localTasksCounter" value="67" />
+    <task id="LOCAL-00067" summary="15% memory overhead deduction">
+      <created>1613145976414</created>
+      <option name="number" value="00067" />
+      <option name="presentableId" value="LOCAL-00067" />
+      <option name="project" value="LOCAL" />
+      <updated>1613145976414</updated>
+    </task>
+    <option name="localTasksCounter" value="68" />
     <servers />
   </component>
   <component name="UnloadedModulesList">
-    <module name="DataSetTools" />
     <module name="FW_GeoMatch" />
     <module name="FW_LocationSpark" />
     <module name="FW_LocationSpark_Src" />
@@ -629,12 +645,12 @@
     <module name="GeoMatch" />
   </component>
   <component name="Vcs.Log.History.Properties">
-    <option name="COLUMN_ORDER">
+    <option name="COLUMN_ID_ORDER">
       <list>
-        <option value="0" />
-        <option value="2" />
-        <option value="3" />
-        <option value="1" />
+        <option value="Default.Root" />
+        <option value="Default.Author" />
+        <option value="Default.Date" />
+        <option value="Default.Subject" />
       </list>
     </option>
   </component>

@@ -4,8 +4,30 @@ import com.esotericsoftware.kryo.io.{Input, Output}
 import com.esotericsoftware.kryo.{Kryo, KryoSerializable}
 import org.cusp.bdi.ds.geom.Point
 import org.cusp.bdi.ds.sortset.SortedLinkedList
+import org.cusp.bdi.util.RandomWeighted
 
 import scala.collection.mutable.ArrayBuffer
+
+class RandomWeighted2 extends RandomWeighted with KryoSerializable {
+
+  override def write(kryo: Kryo, output: Output): Unit = {
+
+    output.writeFloat(totalItemWeight)
+    output.writeInt(arrItemWeight.length)
+
+    arrItemWeight.foreach(tuple => kryo.writeClassAndObject(output, tuple))
+  }
+
+  override def read(kryo: Kryo, input: Input): Unit = {
+
+    totalItemWeight = input.readFloat()
+
+    val len = input.readInt()
+
+    for (_ <- 0 until len)
+      arrItemWeight += kryo.readClassAndObject(input).asInstanceOf[(Int, Float)]
+  }
+}
 
 object SupportedKnnOperations extends Enumeration with Serializable {
 
@@ -24,65 +46,69 @@ case class InsufficientMemoryException(message: String) extends Exception(messag
 
 final class MBRInfo extends KryoSerializable with Serializable {
 
-  var left: Int = Int.MaxValue
-  var bottom: Int = Int.MaxValue
-  var right: Int = Int.MinValue
-  var top: Int = Int.MinValue
+  var left: (Int, Int) = _
+  var bottom: (Int, Int) = _
+  var right: (Int, Int) = _
+  var top: (Int, Int) = _
 
-  def this(seedX: Int, seedY: Int) = {
+  def this(startXY: (Int, Int)) = {
 
     this()
-    this.left = seedX
-    this.bottom = seedY
-    this.right = seedX
-    this.top = seedY
+    this.left = startXY
+    this.bottom = startXY
+    this.right = startXY
+    this.top = startXY
   }
 
-  def this(seed: (Int, Int)) =
-    this(seed._1, seed._2)
+  def contains(lookupXY: (Int, Int)): Boolean =
+    !(lookupXY._1 < left._1 || lookupXY._1 > right._1 || lookupXY._2 < bottom._2 || lookupXY._2 > top._2)
 
   def merge(other: MBRInfo): MBRInfo = {
 
-    if (other.left < left) left = other.left
-    if (other.bottom < bottom) bottom = other.bottom
-    if (other.right > right) right = other.right
-    if (other.top > top) top = other.top
+    if (other.left._1 < left._1) left = other.left
+    if (other.bottom._2 < bottom._2) bottom = other.bottom
+    if (other.right._1 > right._1) right = other.right
+    if (other.top._2 > top._2) top = other.top
 
     this
   }
 
-  def stretch(): MBRInfo = {
+  //  def stretch(): MBRInfo = {
+  //
+  //    //    this.left = Math.floor(this.left).toFloat
+  //    //    this.bottom = Math.floor(this.bottom).toFloat
+  //
+  //    this.right = (this.right._1 + 1, this.right._2) // Math.ceil(this.right).toFloat
+  //    this.top = (this.top._1, this.top._2 + 1) // Math.ceil(this.top).toFloat
+  //
+  //    this
+  //  }
 
-    //    this.left = Math.floor(this.left).toFloat
-    //    this.bottom = Math.floor(this.bottom).toFloat
+  def width: Int = right._1 - left._1
 
-    this.right += 1 // Math.ceil(this.right).toFloat
-    this.top += 1 // Math.ceil(this.top).toFloat
-
-    this
-  }
-
-  def width: Int = right - left
-
-  def height: Int = top - bottom
+  def height: Int = top._2 - bottom._2
 
   override def toString: String =
-    "%,d\t%,d\t%,d\t%,d".format(left, bottom, right, top)
+    "%,d\t%,d\t%,d\t%,d".format(left._1, bottom._2, right._1, top._2)
 
   override def write(kryo: Kryo, output: Output): Unit = {
 
-    output.writeInt(left)
-    output.writeInt(bottom)
-    output.writeInt(right)
-    output.writeInt(top)
+    output.writeInt(left._1)
+    output.writeInt(left._2)
+    output.writeInt(bottom._1)
+    output.writeInt(bottom._2)
+    output.writeInt(right._1)
+    output.writeInt(right._2)
+    output.writeInt(top._1)
+    output.writeInt(top._2)
   }
 
   override def read(kryo: Kryo, input: Input): Unit = {
 
-    left = input.readInt()
-    bottom = input.readInt()
-    right = input.readInt()
-    top = input.readInt()
+    left = (input.readInt(), input.readInt())
+    bottom = (input.readInt(), input.readInt())
+    right = (input.readInt(), input.readInt())
+    top = (input.readInt(), input.readInt())
   }
 }
 
@@ -101,7 +127,7 @@ final class RowData extends KryoSerializable {
     this.arrPartitionId = arrPartitionId
   }
 
-  def nextPartId: Int =
+  def nextPartId(default: Int): Int =
     if (arrPartitionId.nonEmpty) {
 
       val pId = arrPartitionId.head
@@ -111,7 +137,7 @@ final class RowData extends KryoSerializable {
       pId
     }
     else
-      -1
+      default
 
   override def write(kryo: Kryo, output: Output): Unit = {
 
@@ -132,6 +158,7 @@ final class RowData extends KryoSerializable {
     arrPartitionId = new ArrayBuffer[Int]()
     arrPartitionId.sizeHint(arrLength)
 
-    (0 until arrLength).foreach(_ => arrPartitionId += input.readInt)
+    for (_ <- 0 until arrLength)
+      arrPartitionId += input.readInt
   }
 }

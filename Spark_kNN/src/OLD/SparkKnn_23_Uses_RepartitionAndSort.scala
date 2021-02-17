@@ -141,10 +141,13 @@ case class SparkKnn_23_Uses_RepartitionAndSort(debugMode: Boolean, spatialIndexT
     startTime = System.currentTimeMillis
 
     val numRounds = rddActiveLeft
-      .mapPartitions(_.map(computeSquarePoint))
-      .distinct
-      .mapPartitions(_.map(SpatialIdxOperations.extractLstPartition(bvGlobalIndexRight.value, _, k).length))
-      .max
+      .mapPartitions(_.map(point => (computeSquarePoint(point), null)))
+      .reduceByKey((_, _) => null)
+      .mapPartitions(iter => {
+
+        iter.map(row=>SpatialIdxOperations.extractLstPartition(bvGlobalIndexRight.value, row, k).length)
+      })
+//      .max
 
     Helper.loggerSLf4J(debugMode, SparkKnn, ">>LeftDS numRounds time in %,d MS, numRounds: %, d".format(System.currentTimeMillis - startTime, numRounds), lstDebugInfo)
 
@@ -224,8 +227,8 @@ case class SparkKnn_23_Uses_RepartitionAndSort(debugMode: Boolean, spatialIndexT
 
                 if (startTime == -1)
                   startTime = System.currentTimeMillis()
-//                if (spatialIndex == null)
-//                  println
+                //                if (spatialIndex == null)
+                //                  println
                 if (row._1 != -1) {
                   //                                    if (rowData.point.userData.toString.equalsIgnoreCase("bus_1_a_855565"))
                   //                                      println(pIdx)

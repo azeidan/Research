@@ -57,9 +57,9 @@ class QuadTree extends SpatialIndex {
 
     while (qTree != null) {
 
-      val optPoint = qTree.arrPoints.find(qtPoint => searchXY._1.equals(qtPoint.x) && searchXY._2.equals(qtPoint.y))
+      val pointFound = qTree.arrPoints.find(qtPoint => searchXY._1.equals(qtPoint.x) && searchXY._2.equals(qtPoint.y)).getOrElse(null)
 
-      if (optPoint.isEmpty)
+      if (pointFound == null)
         qTree =
           getNextQuad(qTree, searchXY._1, searchXY._2) match {
             case 0 => if (contains(qTree.bottomLeft)) qTree.bottomLeft else null
@@ -68,7 +68,7 @@ class QuadTree extends SpatialIndex {
             case _ => if (contains(qTree.topRight)) qTree.topRight else null
           }
       else
-        return optPoint.get
+        return pointFound
     }
 
     null

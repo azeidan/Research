@@ -17,7 +17,7 @@ object Arguments extends Serializable {
   val secondSet: (String, String, Null, String) = buildTuple("-secondSet", "String", null, "Second data set input file path (Bus, TPEP, Yellow)")
   val secondSetObjType: (String, String, Null, String) = buildTuple("-secondSetObjType", "String", null, "The object type indicator (e.g. LION_LineString, TPEP_Point ...)")
   val k: (String, String, Int, String) = buildTuple("-k", "Int", 3, "Value of k")
-/*TBD*/  val gridWidth: (String, String, Int, String) = buildTuple("-gridWidth", "Int", 100, "Width of the reduction grid for building the global index. For example, 100 sets the grid square width to group all points within 100 units into one")
+  val gridWidth: (String, String, Int, String) = buildTuple("-gridWidth", "Int", 100, "Width of the reduction grid for building the global index. For example, 100 sets the grid square width to group all points within 100 units into one")
   val indexType: (String, String, Null, String) = buildTuple("-indexType", "String", null, "qt for QuadTree, kdt for K-d Tree")
   val knnJoinType: (String, String, Null, String) = buildTuple("-knnJoinType", "String", null, "knn for Left knn Right, allKNN for both datasets")
 

@@ -10,8 +10,10 @@ case class Rectangle(center: Geom2D, halfXY: Geom2D) extends Serializable {
   def this(geom2D: Geom2D) =
     this(geom2D, geom2D)
 
-  def contains(x: Double, y: Double) =
-    Helper.absDiff(x, this.center.x) <= this.halfXY.x && Helper.absDiff(y, this.center.y) <= this.halfXY.y
+  def contains(x: Double, y: Double): Boolean =
+    !(x < left || x > right || y < bottom || y > top)
+
+  //    Helper.absDiff(x, this.center.x) <= this.halfXY.x && Helper.absDiff(y, this.center.y) <= this.halfXY.y
 
   def contains(point: Geom2D): Boolean =
     contains(point.x, point.y)
