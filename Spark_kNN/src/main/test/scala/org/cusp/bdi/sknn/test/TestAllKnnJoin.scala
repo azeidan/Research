@@ -17,7 +17,7 @@ object TestAllKnnJoin {
     //    var startTime2 = startTime
 
     //    val clArgs = SparkKNN_Local_CLArgs.bus_30_mil
-//        val clArgs = SparkKNN_Local_CLArgs.random_sample()
+//            val clArgs = SparkKNN_Local_CLArgs.random_sample()
     val clArgs = CLArgsParser(args, Arguments.lstArgInfo())
 
     //    val clArgs = SparkKNN_Local_CLArgs.busPoint_busPointShift(Arguments())
@@ -64,8 +64,11 @@ object TestAllKnnJoin {
       .set("spark.driver.memoryOverhead", "%.0fb".format(driverAssignedMem * 0.15))
       .registerKryoClasses(SparkKnn.getSparkKNNClasses)
 
-    if (debugMode)
+    if (debugMode) {
+
       Helper.loggerSLf4J(debugMode, SparkKnn, ">>SparkConf: \n\t\t>>%s".format(sparkConf.getAll.mkString("\n\t\t>>")), null)
+      Helper.loggerSLf4J(debugMode, SparkKnn, ">>CLArgs: \n\t\t>>%s".format(clArgs.toString), null)
+    }
 
     val sc = new SparkContext(sparkConf)
 

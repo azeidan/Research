@@ -43,8 +43,10 @@ object LocalRunConsts {
   //  val pathGM_TPEP = "/media/cusp/Data/GeoMatch_Files/OutputFiles/Simba/Bread_3_Grp1/*.gz"
   //  val pathGM_TPEP = "/media/cusp/Data/GeoMatch_Files/OutputFiles/Simba/ALL_Knn/Taxi_1_Grp1/*.gz"
   val pathGM_TPEP = "/media/cusp/Data/GeoMatch_Files/OutputFiles/Simba/Bread_1_Grp1/*.gz"
+
+  //  val pathGM_TPEP = "/media/cusp/Data/GeoMatch_Files/OutputFiles/Simba/Bread_1_Grp2/*.gz"
   val pathSparkKNN_FW_Output_1: String = pathGM_TPEP
-  val pathSparkKNN_FW_Output_2 = "/media/cusp/Data/GeoMatch_Files/OutputFiles/476/*.gz"
+  val pathSparkKNN_FW_Output_2 = "/media/cusp/Data/GeoMatch_Files/OutputFiles/424/*.gz"
 
   val pathGS_TPEP = "/media/cusp/Data/GeoMatch_Files/InputFiles/GeoSpark_LION_TPEP.csv"
   val pathLS_wgs_TPEP = "/media/cusp/Data/GeoMatch_Files/InputFiles/LocationSpark_LION_TPEP.csv"
@@ -55,10 +57,12 @@ object LocalRunConsts {
 
   val pathTaxi1M_NAD83 = "/media/cusp/Data/GeoMatch_Files/InputFiles/Yellow_TLC_TripRecord_NAD83_1M.csv"
 
-//  val pathRandSample_A_NAD83 = "/media/cusp/Data/GeoMatch_Files/InputFiles/RandomSamples/0_Bus_All.csv"
-    val pathRandSample_A_NAD83 = "/media/cusp/Data/GeoMatch_Files/InputFiles/RandomSamples_OLD/Bread_1_A.csv"
-//  val pathRandSample_B_NAD83 = "/media/cusp/Data/GeoMatch_Files/InputFiles/RandomSamples/0_Bus_All.csv"
-      val pathRandSample_B_NAD83 = "/media/cusp/Data/GeoMatch_Files/InputFiles/RandomSamples_OLD/Bread_1_B.csv"
+  //  val pathRandSample_A_NAD83 = "/media/cusp/Data/GeoMatch_Files/InputFiles/RandomSamples/0_Bus_All.csv"
+  val pathRandSample_A_NAD83 = "/media/cusp/Data/GeoMatch_Files/InputFiles/RandomSamples_OLD/Bread_1_A.csv"
+//    val pathRandSample_A_NAD83 = "/media/cusp/Data/GeoMatch_Files/InputFiles/RandomSamples/Bread_2_A.csv"
+  //  val pathRandSample_B_NAD83 = "/media/cusp/Data/GeoMatch_Files/InputFiles/RandomSamples/0_Bus_All.csv"
+  val pathRandSample_B_NAD83 = "/media/cusp/Data/GeoMatch_Files/InputFiles/RandomSamples_OLD/Bread_1_B.csv"
+//    val pathRandSample_B_NAD83 = "/media/cusp/Data/GeoMatch_Files/InputFiles/RandomSamples/Bread_2_B.csv"
 
   def logLocalRunEntry(logFileName: String, message: String, debugInfoFileName: String, lstDebugInfo: ListBuffer[String]): Unit = {
 

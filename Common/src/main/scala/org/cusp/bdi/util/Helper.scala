@@ -12,6 +12,13 @@ import scala.collection.mutable.ListBuffer
 import scala.util.Random
 
 object Helper {
+  def roundToInt(doubleVal: Double): Int = {
+
+    val intVal = doubleVal.toInt
+
+    if (doubleVal < intVal + 0.5) intVal else doubleVal.ceil.toInt
+  }
+
 
   def absDiff(x1: Double, x2: Double): Double = {
 
@@ -19,9 +26,6 @@ object Helper {
 
     if (diff < 0) -diff else diff
   }
-
-
-  //  val FLOAT_ERROR_RANGE = 1e-6
 
   def max(x: Int, y: Int): Int = if (x > y) x else y
 

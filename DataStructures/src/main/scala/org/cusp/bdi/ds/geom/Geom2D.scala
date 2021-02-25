@@ -35,10 +35,10 @@ class Geom2D() extends KryoSerializable with Serializable {
     y = input.readDouble()
   }
 
-  override def equals(other: Any): Boolean = other match {
-    case ptBase: Geom2D =>
-      this.x.equals(ptBase.x) && this.y.equals(ptBase.y)
-  }
+//  override def equals(other: Any): Boolean = other match {
+//    case ptBase: Geom2D =>
+//      this.x.equals(ptBase.x) && this.y.equals(ptBase.y)
+//  }
 
   override def toString: String =
     "(%.10f,%.10f)".format(x, y)

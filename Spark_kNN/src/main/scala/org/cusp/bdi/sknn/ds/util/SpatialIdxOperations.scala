@@ -36,12 +36,16 @@ final class GlobalIndexPointUserData extends KryoSerializable {
     this.partitionIdx = partIdx
   }
 
-//  def this(numPoints: Long) = {
-//    this()
-//    this.objCount = numPoints
-//  }
+  //  def this(numPoints: Long) = {
+  //    this()
+  //    this.objCount = numPoints
+  //  }
 
-  override def equals(other: Any): Boolean = false
+  //  override def equals(other: Any): Boolean =false
+  //    other match {
+  //      case globalIndexPointUserData: GlobalIndexPointUserData => globalIndexPointUserData.objCount == this.objCount && globalIndexPointUserData.partitionIdx == this.partitionIdx
+  //      case _ => false
+  //    }
 
   override def toString: String =
     "%,d %,d".format(objCount, partitionIdx)
@@ -61,7 +65,16 @@ final class GlobalIndexPointUserData extends KryoSerializable {
 
 object SpatialIdxOperations extends Serializable {
 
-  val SEARCH_REGION_EXTEND: Double = math.sqrt(8)
+  // best case is the two points are d units apart where d is a multiple of sqrt(2)
+  // To account for the expansion of one square, add sqrt(2). The other sqrt(2)-1 is to account
+  //  for the shift from the best case (multiple of 2) to a 1 (i.e. the point is d` units away where d` is a multiple of 1)
+  val SEARCH_REGION_EXTEND: Double = 2 * Math.sqrt(2) - 1
+  //  val SQRT_2: Double = Math.sqrt(2)
+  //  val SQRT_2_LESS_ONE: Double = Math.sqrt(2) - 1
+
+  def fCastToGlobalIndexPointUserData: Point => GlobalIndexPointUserData = (point: Point) => point.userData match {
+    case globalIndexPoint: GlobalIndexPointUserData => globalIndexPoint
+  }
 
   final class IdxRangeLookupInfo {
 
@@ -83,15 +96,13 @@ object SpatialIdxOperations extends Serializable {
       case quadTree: QuadTree => lookup(quadTree, searchXY, k)
       case kdTree: KdTree => lookup(kdTree, searchXY, k)
     })
-      .map(_.data.userData match {
-        case globalIndexPoint: GlobalIndexPointUserData => globalIndexPoint.partitionIdx
-      })
+      .map(point => fCastToGlobalIndexPointUserData(point.data).partitionIdx)
       .to[ArrayBuffer]
       .distinct
 
   private def lookup(quadTree: QuadTree, searchXY: (Int, Int), k: Int): SortedLinkedList[Point] = {
 
-    //    if (searchPointXY._1.toString().startsWith("26167") && searchPointXY._2.toString().startsWith("4966"))
+    //    if (searchXY._1 == 19922 && searchXY._2 == 3940 /*&& point.x == 19917 && point.y == 4399*/ )
     //      println
 
     val searchPoint = new Geom2D(searchXY._1, searchXY._2)
@@ -109,7 +120,9 @@ object SpatialIdxOperations extends Serializable {
         if (qt != skipQT)
           if (idxRangeLookupInfo.rectSearchRegion.intersects(qt.rectBounds)) {
 
-            qt.arrPoints.foreach(updateMatchListAndRegion(_, idxRangeLookupInfo, k))
+            qt.arrPoints.foreach(point =>
+              if (idxRangeLookupInfo.rectSearchRegion.contains(point))
+                updateMatchListAndRegion(point, idxRangeLookupInfo, k))
 
             if (qt.topLeft != null)
               qQT += qt.topLeft
@@ -129,6 +142,9 @@ object SpatialIdxOperations extends Serializable {
 
     if (sPtBestQT != quadTree)
       process(quadTree, sPtBestQT)
+
+    //    if (idxRangeLookupInfo.sortList.map(_.data.userData.asInstanceOf[GlobalIndexPointUserData].partitionIdx).toArray.distinct.length > 25)
+    //      Helper.loggerSLf4J(true, SparkKnn, ">>>\t%s\t%s".format(searchPoint.toString(), idxRangeLookupInfo.sortList.mkString(",\t")), null)
 
     idxRangeLookupInfo.sortList
   }
@@ -160,7 +176,10 @@ object SpatialIdxOperations extends Serializable {
 
             case kdtLeafNode: KdtLeafNode =>
               if (idxRangeLookupInfo.rectSearchRegion.intersects(kdtLeafNode.rectNodeBounds))
-                kdtLeafNode.arrPoints.foreach(updateMatchListAndRegion(_, idxRangeLookupInfo, k))
+                kdtLeafNode.arrPoints
+                  .filter(idxRangeLookupInfo.rectSearchRegion.contains)
+                  .foreach(point =>
+                    updateMatchListAndRegion(point, idxRangeLookupInfo, k))
           }
       }
     }
@@ -177,67 +196,72 @@ object SpatialIdxOperations extends Serializable {
 
   private def updateMatchListAndRegion(point: Point, idxRangeLookupInfo: IdxRangeLookupInfo, k: Int): Unit = {
 
-    //    if (point.x.toString().startsWith("143") && point.y.toString().startsWith("874"))
+    //    if (idxRangeLookupInfo.rectSearchRegion.center.x == 19693&& idxRangeLookupInfo.rectSearchRegion.center.y == 2994 /*&& point.x == 19917 && point.y == 4399*/ )
     //      print("")
+    //
+    //    if (point.x == 19690 && point.y == 2992)
+    //      println
 
-    def getNumPoints(point: Point): Long = point.userData match {
-      case globalIndexPoint: GlobalIndexPointUserData => globalIndexPoint.objCount
+    def updateSearchRegion() {
+
+      //      val extendX = idxRangeLookupInfo.limitNode.data.x + (if (idxRangeLookupInfo.limitNode.data.x > idxRangeLookupInfo.rectSearchRegion.center.x) 1 else -1)
+      //      val extendY = idxRangeLookupInfo.limitNode.data.y + (if (idxRangeLookupInfo.limitNode.data.y > idxRangeLookupInfo.rectSearchRegion.center.y) 1 else -1)
+
+      val dist = Math.sqrt(idxRangeLookupInfo.limitNode.distance) + SEARCH_REGION_EXTEND
+
+      idxRangeLookupInfo.rectSearchRegion.halfXY.x = dist.floor
+      idxRangeLookupInfo.rectSearchRegion.halfXY.y = idxRangeLookupInfo.rectSearchRegion.halfXY.x
+      idxRangeLookupInfo.dimSquared = dist * dist // Helper.squaredEuclideanDist(idxRangeLookupInfo.rectSearchRegion.center.x, idxRangeLookupInfo.rectSearchRegion.center.y, extendX, extendY)
+      //
+      //      idxRangeLookupInfo.dimSquared += 1e-4
     }
 
-    if (idxRangeLookupInfo.rectSearchRegion.contains(point)) {
+    val sqDistQTPoint = Helper.squaredEuclideanDist(idxRangeLookupInfo.rectSearchRegion.center.x, idxRangeLookupInfo.rectSearchRegion.center.y, point.x, point.y)
 
-      //              if (qtPoint.x.toString().startsWith("26157") && qtPoint.y.toString().startsWith("4965"))
-      //                print("")
+    // add point if it's within the search radius
+    if (sqDistQTPoint <= idxRangeLookupInfo.dimSquared) {
 
-      val sqDistQTPoint = Helper.squaredEuclideanDist(idxRangeLookupInfo.rectSearchRegion.center.x, idxRangeLookupInfo.rectSearchRegion.center.y, point.x, point.y)
+      idxRangeLookupInfo.sortList.add(sqDistQTPoint, point)
 
-      // add point if it's within the search radius
-      if (idxRangeLookupInfo.limitNode == null || sqDistQTPoint <= idxRangeLookupInfo.dimSquared) {
+      idxRangeLookupInfo.weight += fCastToGlobalIndexPointUserData(point).objCount
 
-        idxRangeLookupInfo.sortList.add(sqDistQTPoint, point)
+      if (idxRangeLookupInfo.weight >= k)
+        if (idxRangeLookupInfo.limitNode eq null) {
 
-        idxRangeLookupInfo.weight += getNumPoints(point)
+          idxRangeLookupInfo.limitNode = idxRangeLookupInfo.sortList.last
 
-        // see if region can shrink and if at least the last node can be dropped
-        if ((idxRangeLookupInfo.limitNode == null || idxRangeLookupInfo.sortList.last.data != point) &&
-          (idxRangeLookupInfo.weight - getNumPoints(idxRangeLookupInfo.sortList.last.data)) >= k) {
+          updateSearchRegion()
+        }
+        else if (sqDistQTPoint < idxRangeLookupInfo.limitNode.distance) {
 
           var currNode = idxRangeLookupInfo.sortList.head
-          var newWeight = getNumPoints(currNode.data)
+          var newWeight = fCastToGlobalIndexPointUserData(currNode.data).objCount
           var nodeCount = 1
 
           while (newWeight < k) {
 
             currNode = currNode.next
             nodeCount += 1
-            newWeight += getNumPoints(currNode.data)
+            newWeight += fCastToGlobalIndexPointUserData(currNode.data).objCount
           }
 
-          if (idxRangeLookupInfo.limitNode != currNode) {
+          if ((idxRangeLookupInfo.limitNode ne currNode) && idxRangeLookupInfo.limitNode.distance != currNode.distance) {
 
             idxRangeLookupInfo.limitNode = currNode
+            idxRangeLookupInfo.weight = newWeight
 
-            //            idxRangeLookupInfo.rectSearchRegion.halfXY.x = 2 + math.sqrt(idxRangeLookupInfo.limitNode.distance / 2)
-            //            val maxManhattanDist = Helper.max(math.abs(idxRangeLookupInfo.rectSearchRegion.center.x - idxRangeLookupInfo.limitNode.data.x), math.abs(idxRangeLookupInfo.rectSearchRegion.center.y - idxRangeLookupInfo.limitNode.data.y))
-            //            idxRangeLookupInfo.sqrDim = /*2 * */ math.pow(maxManhattanDist, 2) + 4 // +4 for the diagonal of an additional 2 squares (aka 2*sqrt(2)) to account for the floor operation of the grid assignment
-
-            idxRangeLookupInfo.rectSearchRegion.halfXY.x = math.sqrt(idxRangeLookupInfo.limitNode.distance) + SEARCH_REGION_EXTEND
-            idxRangeLookupInfo.rectSearchRegion.halfXY.y = idxRangeLookupInfo.rectSearchRegion.halfXY.x
-
-            idxRangeLookupInfo.dimSquared = idxRangeLookupInfo.rectSearchRegion.halfXY.x * idxRangeLookupInfo.rectSearchRegion.halfXY.x
+            updateSearchRegion()
 
             while (currNode.next != null && currNode.next.distance <= idxRangeLookupInfo.dimSquared) {
 
               currNode = currNode.next
+              idxRangeLookupInfo.weight += fCastToGlobalIndexPointUserData(currNode.data).objCount
               nodeCount += 1
-              newWeight += getNumPoints(currNode.data)
             }
 
             idxRangeLookupInfo.sortList.stopAt(currNode, nodeCount)
-            idxRangeLookupInfo.weight = newWeight
           }
         }
-      }
     }
   }
 }

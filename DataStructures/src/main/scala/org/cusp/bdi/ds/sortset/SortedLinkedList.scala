@@ -64,13 +64,13 @@ case class SortedLinkedList[T <: Serializable]() extends KryoSerializable with I
       var currNode = headNode
       var prevNodeIndex = -1
 
-      if (last != null && distance >= last.distance) {
+      if (last.ne(null) && distance >= last.distance) {
 
         prevNodeIndex += nodeCount
         prevNode = last
         currNode = null
       }
-      else if (currNode != null)
+      else if (currNode ne null)
         while (distance > currNode.distance) {
 
           prevNodeIndex += 1
@@ -81,12 +81,12 @@ case class SortedLinkedList[T <: Serializable]() extends KryoSerializable with I
 
       nodeCount += 1
 
-      if (prevNode == null) { // insert first
+      if (prevNode eq null) { // insert first
 
         headNode = new Node(distance, data)
         headNode.next = currNode
 
-        if (lastNode == null)
+        if (lastNode eq null)
           lastNode = headNode
       }
       else { // insert after
@@ -94,13 +94,13 @@ case class SortedLinkedList[T <: Serializable]() extends KryoSerializable with I
         prevNode.next = new Node(distance, data)
         prevNode.next.next = currNode
 
-        if (lastNode == prevNode)
+        if (lastNode eq prevNode)
           lastNode = prevNode.next
       }
 
       if (nodeCount > maxSize) {
 
-        if (prevNode == null) {
+        if (prevNode eq null) {
 
           prevNode = headNode
           prevNodeIndex = 0
@@ -113,7 +113,7 @@ case class SortedLinkedList[T <: Serializable]() extends KryoSerializable with I
           prevNodeIndex += 1
         }
 
-        if (prevNode != lastNode) {
+        if (prevNode ne lastNode) {
 
           lastNode = prevNode
           lastNode.next = null
@@ -125,7 +125,7 @@ case class SortedLinkedList[T <: Serializable]() extends KryoSerializable with I
   def isFull: Boolean = nodeCount >= maxSize
 
   def stopAt(node: Node[T], nodeCount: Int): Unit =
-    if (node != null && node != lastNode) {
+    if (node.ne(null) && node.ne(lastNode)) {
 
       lastNode = node
       lastNode.next = null
@@ -159,7 +159,7 @@ case class SortedLinkedList[T <: Serializable]() extends KryoSerializable with I
 
     var cursor: Node[T] = if (SortedLinkedList.this.isEmpty()) null else headNode
 
-    override def hasNext: Boolean = cursor != null
+    override def hasNext: Boolean = cursor ne null
 
     override def next(): Node[T] =
       if (!hasNext)
@@ -171,7 +171,7 @@ case class SortedLinkedList[T <: Serializable]() extends KryoSerializable with I
       }
   }
 
-  override def isEmpty(): Boolean = headNode == null
+  override def isEmpty(): Boolean = headNode eq null
 
   override def toString(): String =
     mkString("\n")
@@ -186,7 +186,7 @@ case class SortedLinkedList[T <: Serializable]() extends KryoSerializable with I
 
     var currNode = head
 
-    while (currNode != null) {
+    while (currNode ne null) {
 
       kryo.writeClassAndObject(output, currNode)
       currNode = currNode.next
