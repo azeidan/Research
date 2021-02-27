@@ -51,17 +51,24 @@ final class MBRInfo extends KryoSerializable with Serializable {
   var right: Int = Int.MinValue
   var top: Int = Int.MinValue
 
-  def this(seedX: Int, seedY: Int) = {
+  def this(seedXY: (Int, Int)) = {
 
     this()
-    this.left = seedX
-    this.bottom = seedY
-    this.right = seedX
-    this.top = seedY
+    this.left = seedXY._1
+    this.bottom = seedXY._2
+    this.right = left
+    this.top = bottom
   }
 
-  def this(seed: (Int, Int)) =
-    this(seed._1, seed._2)
+  def update(newGridXY: (Int, Int)): Unit = {
+
+    right = newGridXY._1
+
+    if (newGridXY._2 < bottom)
+      bottom = newGridXY._2
+    else if (newGridXY._2 > top)
+      top = newGridXY._2
+  }
 
   def merge(other: MBRInfo): MBRInfo = {
 
@@ -72,21 +79,6 @@ final class MBRInfo extends KryoSerializable with Serializable {
 
     this
   }
-
-  //  def stretch(): MBRInfo = {
-  //
-  //    //    this.left = Math.floor(this.left).toFloat
-  //    //    this.bottom = Math.floor(this.bottom).toFloat
-  //
-  //    this.right = (this.right._1 + 1, this.right._2) // Math.ceil(this.right).toFloat
-  //    this.top = (this.top._1, this.top._2 + 1) // Math.ceil(this.top).toFloat
-  //
-  //    this
-  //  }
-
-  def width: Int = right - left
-
-  def height: Int = top - bottom
 
   override def toString: String =
     "%,d\t%,d\t%,d\t%,d".format(left, bottom, right, top)

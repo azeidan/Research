@@ -36,17 +36,6 @@ final class GlobalIndexPointUserData extends KryoSerializable {
     this.partitionIdx = partIdx
   }
 
-  //  def this(numPoints: Long) = {
-  //    this()
-  //    this.objCount = numPoints
-  //  }
-
-  //  override def equals(other: Any): Boolean =false
-  //    other match {
-  //      case globalIndexPointUserData: GlobalIndexPointUserData => globalIndexPointUserData.objCount == this.objCount && globalIndexPointUserData.partitionIdx == this.partitionIdx
-  //      case _ => false
-  //    }
-
   override def toString: String =
     "%,d %,d".format(objCount, partitionIdx)
 
@@ -65,12 +54,10 @@ final class GlobalIndexPointUserData extends KryoSerializable {
 
 object SpatialIdxOperations extends Serializable {
 
-  // best case is the two points are d units apart where d is a multiple of sqrt(2)
+  // best case is the two points are d units apart where d is a multiple of 1
   // To account for the expansion of one square, add sqrt(2). The other sqrt(2)-1 is to account
-  //  for the shift from the best case (multiple of 2) to a 1 (i.e. the point is d` units away where d` is a multiple of 1)
-  val SEARCH_REGION_EXTEND: Double = 2 * Math.sqrt(2) - 1
-  //  val SQRT_2: Double = Math.sqrt(2)
-  //  val SQRT_2_LESS_ONE: Double = Math.sqrt(2) - 1
+  //  for the shift from the best case (multiple of 1) to a 1 (i.e. the point is d` units away where d` is a multiple of 1)
+  val SEARCH_REGION_EXTEND: Double = Math.sqrt(8) - 1 // 2 * Math.sqrt(2) - 1
 
   def fCastToGlobalIndexPointUserData: Point => GlobalIndexPointUserData = (point: Point) => point.userData match {
     case globalIndexPoint: GlobalIndexPointUserData => globalIndexPoint
@@ -120,9 +107,10 @@ object SpatialIdxOperations extends Serializable {
         if (qt != skipQT)
           if (idxRangeLookupInfo.rectSearchRegion.intersects(qt.rectBounds)) {
 
-            qt.arrPoints.foreach(point =>
-              if (idxRangeLookupInfo.rectSearchRegion.contains(point))
-                updateMatchListAndRegion(point, idxRangeLookupInfo, k))
+            qt.arrPoints
+              .foreach(point =>
+                if (idxRangeLookupInfo.rectSearchRegion.contains(point))
+                  updateMatchListAndRegion(point, idxRangeLookupInfo, k))
 
             if (qt.topLeft != null)
               qQT += qt.topLeft
@@ -176,10 +164,11 @@ object SpatialIdxOperations extends Serializable {
 
             case kdtLeafNode: KdtLeafNode =>
               if (idxRangeLookupInfo.rectSearchRegion.intersects(kdtLeafNode.rectNodeBounds))
-                kdtLeafNode.arrPoints
-                  .filter(idxRangeLookupInfo.rectSearchRegion.contains)
+                kdtLeafNode
+                  .arrPoints
                   .foreach(point =>
-                    updateMatchListAndRegion(point, idxRangeLookupInfo, k))
+                    if (idxRangeLookupInfo.rectSearchRegion.contains(point))
+                      updateMatchListAndRegion(point, idxRangeLookupInfo, k))
           }
       }
     }
@@ -252,7 +241,7 @@ object SpatialIdxOperations extends Serializable {
 
             updateSearchRegion()
 
-            while (currNode.next != null && currNode.next.distance <= idxRangeLookupInfo.dimSquared) {
+            while ((currNode.next ne null) && currNode.next.distance <= idxRangeLookupInfo.dimSquared) {
 
               currNode = currNode.next
               idxRangeLookupInfo.weight += fCastToGlobalIndexPointUserData(currNode.data).objCount

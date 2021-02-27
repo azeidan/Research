@@ -12,7 +12,11 @@ import scala.collection.mutable.ListBuffer
 import scala.util.Random
 
 object Helper {
-  def roundToInt(doubleVal: Double): Int = {
+
+  /**
+  * rounds to the nearest integer based on the tenth place value (d). Rounds down if d<0.5, else rounds up
+  */
+  def round(doubleVal: Double): Int = {
 
     val intVal = doubleVal.toInt
 
