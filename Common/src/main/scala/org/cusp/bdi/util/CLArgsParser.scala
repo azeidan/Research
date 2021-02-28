@@ -148,6 +148,6 @@ object Test_CLArgsParser {
     val arrArgs = "-local F -debug T -firstSet1 /media/cusp/Data/GeoMatch_Files/InputFiles/RandomSamples_OLD/Taxi_1_A.csv -firstSetObjType Three_Part_Line -secondSet /media/cusp/Data/GeoMatch_Files/InputFiles/RandomSamples_OLD/Taxi_1_B.csv -secondSetObjType Three_Part_Line -k 10 -indexType qt -knnJoinType knn -outDir /media/cusp/Data/GeoMatch_Files/OutputFiles/sKNN/Taxi_1_Grp1_qt_knn"
       .split(" ")
 
-    println(CLArgsParser(arrArgs, lstArgInfo))
+    println(CLArgsParser(arrArgs, lstArgInfo()))
   }
 }

@@ -63,7 +63,7 @@ class QuadTree extends SpatialIndex {
 
     while (qTree != null) {
 
-      val pointFound = qTree.arrPoints.find(qtPoint => searchXY._1.equals(qtPoint.x) && searchXY._2.equals(qtPoint.y)).getOrElse(null)
+      val pointFound = qTree.arrPoints.find(qtPoint => searchXY._1.equals(qtPoint.x) && searchXY._2.equals(qtPoint.y)).orNull
 
       if (pointFound == null)
         qTree = fGetNextQuad(qTree, searchXY._1, searchXY._2) match {
@@ -95,7 +95,7 @@ class QuadTree extends SpatialIndex {
 
     this.rectBounds = rectBounds
 
-    iterPoints.map(_.foreach(insertPoint))
+    iterPoints.foreach(_.foreach(insertPoint))
   }
 
   private def insertPoint(point: Point): Boolean = {
