@@ -160,13 +160,14 @@ case class SparkKnn(debugMode: Boolean, spatialIndexType: SupportedSpatialIndexe
 
         override def getPartition(key: Any): Int =
           key match {
-            case pIdx: Int =>              if (pIdx < 0) -pIdx - 1 else pIdx
+            case pIdx: Int => if (pIdx < 0) -pIdx - 1 else pIdx
           }
       })
       .mapPartitionsWithIndex((pIdx, iter) => { // build spatial index
 
         val startTime = System.currentTimeMillis
-        val mbrInfo = bvArrPartitionMBR_ActiveRight.value(bvArrPartitionMBR_ActiveRight.value.length - 1 - pIdx) // the (actualNumPartitions - 1 - arr index) due to the stack. Points are added in reverse order!
+        // The (actualNumPartitions - 1 - arr index) due to the stack. Points are added in reverse order!
+        val mbrInfo = bvArrPartitionMBR_ActiveRight.value(bvArrPartitionMBR_ActiveRight.value.length - 1 - pIdx)
 
         val spatialIndex = SupportedSpatialIndexes(spatialIndexType)
 
@@ -256,7 +257,7 @@ case class SparkKnn(debugMode: Boolean, spatialIndexType: SupportedSpatialIndexe
 
     val numExecutors = rddRight.context.getConf.get("spark.executor.instances").toInt
     val execAssignedMem = Helper.toByte(rddRight.context.getConf.get("spark.executor.memory"))
-    val execOverheadMem = Helper.max(384e6, 0.15 * execAssignedMem).toLong // 10% reduction in memory to account for yarn overhead
+    val execOverheadMem = Helper.max(384e6, 0.15 * execAssignedMem).toLong // 15% reduction in memory to account for yarn overhead
     val numCoresPerExecutor = rddRight.context.getConf.get("spark.executor.cores").toInt
     val coreAvailMem = (execAssignedMem - execOverheadMem) / numCoresPerExecutor
     val partitionAssignedMem = Helper.min(coreAvailMem, SHUFFLE_PARTITION_MAX_BYTE_SIZE)
@@ -291,7 +292,7 @@ case class SparkKnn(debugMode: Boolean, spatialIndexType: SupportedSpatialIndexe
 
     val estimateNodeCount = spatialIndexMockRight.estimateNodeCount(rowCountRight)
 
-    val costRightRDD = (rowCountRight * costMaxPointRight) + (estimateNodeCount * (costSpatialIndexMockRight + costRect + costSpIdxInsertOverhead))
+    val costRightRDD = (rowCountRight * costMaxPointRight) + (estimateNodeCount * (costSpatialIndexMockRight + costRect + costSpIdxInsertOverhead)) * (if (isAllKnn) 2 else 1)
 
     val numPartitionsRight = Math.ceil(costRightRDD / partitionAssignedMem).toInt
 
@@ -328,9 +329,8 @@ case class SparkKnn(debugMode: Boolean, spatialIndexType: SupportedSpatialIndexe
     val tupleMockLeft = (0, new RowData())
     val costTupleObjLeft = SizeEstimator.estimate(tupleMockLeft) + costMaxPointLeft + costArrPartIdLeft + costSortLstLeft
 
-    val costLeftRDD = rowCountLeft * costTupleObjLeft
+    val costLeftRDD = rowCountLeft * costTupleObjLeft * (if (isAllKnn) 2 else 1)
     val numPartitionsLeft = Math.ceil(costLeftRDD / partitionAssignedMem)
-    //    val coreObjCapacityLeft = (rowCountLeft / numPartitionsLeft).toLong
 
     Helper.loggerSLf4J(debugMode, SparkKnn, ">>Left DS costMaxPointLeft: %,d costSortLstLeft: %,d costSortLstInsertOverhead: %,d costTupleObjLeft: %,d costLeftRDD: %,d numPartitionsLeft: %,.2f"
       .format(costMaxPointLeft, costSortLstLeft, costSortLstInsertOverhead, costTupleObjLeft, costLeftRDD, numPartitionsLeft), lstDebugInfo)
@@ -350,7 +350,6 @@ case class SparkKnn(debugMode: Boolean, spatialIndexType: SupportedSpatialIndexe
     Helper.loggerSLf4J(debugMode, SparkKnn, ">>costLeftRDD: %,d numPartitionsMin: %,d numPartitionsPreferred: %,d coreObjCapacityRight: %s rate: %,.4f gridWidth: %,d"
       .format(costLeftRDD, numPartitionsMin, numPartitionsPreferred, coreObjCapacityRight, rate, gridWidth), lstDebugInfo)
 
-    //        System.exit(-555)
     (coreObjCapacityRight, mbrInfoRight, gridWidth /*, totalAvailCores*/ )
   }
 }
