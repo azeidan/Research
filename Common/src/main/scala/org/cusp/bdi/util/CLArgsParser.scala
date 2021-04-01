@@ -35,6 +35,8 @@ case class CLArgsParser(args: Array[String], lstArgInfo: List[(String, String, A
 
   def getParamValueInt(paramInfo: (String, String, Any, String)): Int = getParamValueString(paramInfo).toInt
 
+  def getParamValueLong(paramInfo: (String, String, Any, String)) = getParamValueString(paramInfo).toLong
+
   def getParamValueString(paramInfo: (String, String, Any, String)): String = mapProgramArg(paramInfo._1.toLowerCase()).toString
 
   def getParamValueBoolean(paramInfo: (String, String, Any, String)): Boolean = getParamValueString(paramInfo).toLowerCase() match {

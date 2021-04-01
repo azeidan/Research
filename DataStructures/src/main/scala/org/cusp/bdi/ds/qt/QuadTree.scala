@@ -27,7 +27,7 @@ object QuadTree extends Serializable {
 class QuadTree extends SpatialIndex {
 
   var totalPoints = 0
-  var arrPoints = ArrayBuffer[Point]()
+  var arrPoints: ArrayBuffer[Point] = ArrayBuffer[Point]()
 
   var rectBounds: Rectangle = _
   var topLeft: QuadTree = _
@@ -44,8 +44,6 @@ class QuadTree extends SpatialIndex {
 
   override def estimateNodeCount(objCount: Long): Long =
     Math.ceil(((objCount - nodeCapacity) / 7.0 * 4) + 1).toInt
-
-  //    Math.ceil(objCount / nodeCapacity.toDouble).toLong
 
   override def estimateObjCount(gIdxNodeCount: Int): Long = -1
 
@@ -120,22 +118,22 @@ class QuadTree extends SpatialIndex {
           qTree = fGetNextQuad(qTree, point.x, point.y) match {
             case 0 =>
               if (qTree.bottomLeft == null)
-                qTree.bottomLeft = new QuadTree(qTree.rectBounds.bottomLeftQuadrant)
+                qTree.bottomLeft = new QuadTree(qTree.bottomLeftQuadrant)
 
               qTree.bottomLeft
             case 1 =>
               if (qTree.topLeft == null)
-                qTree.topLeft = new QuadTree(qTree.rectBounds.topLeftQuadrant)
+                qTree.topLeft = new QuadTree(qTree.topLeftQuadrant)
 
               qTree.topLeft
             case 2 =>
               if (qTree.bottomRight == null)
-                qTree.bottomRight = new QuadTree(qTree.rectBounds.bottomRightQuadrant)
+                qTree.bottomRight = new QuadTree(qTree.bottomRightQuadrant)
 
               qTree.bottomRight
             case _ =>
               if (qTree.topRight == null)
-                qTree.topRight = new QuadTree(qTree.rectBounds.topRightQuadrant)
+                qTree.topRight = new QuadTree(qTree.topRightQuadrant)
 
               qTree.topRight
           }
@@ -145,6 +143,22 @@ class QuadTree extends SpatialIndex {
     throw new Exception("Point insert failed: %s in QuadTree: %s".format(point, this))
   }
 
+
+  private def topLeftQuadrant: Rectangle =
+    Rectangle(new Geom2D(rectBounds.center.x - rectBounds.halfXY.x / 2, rectBounds.center.y + rectBounds.halfXY.y / 2), quarterDim)
+
+  private def topRightQuadrant: Rectangle =
+    Rectangle(new Geom2D(rectBounds.center.x + rectBounds.halfXY.x / 2, rectBounds.center.y + rectBounds.halfXY.y / 2), quarterDim)
+
+  private def bottomLeftQuadrant: Rectangle =
+    Rectangle(new Geom2D(rectBounds.center.x - rectBounds.halfXY.x / 2, rectBounds.center.y - rectBounds.halfXY.y / 2), quarterDim)
+
+  private def bottomRightQuadrant: Rectangle =
+    Rectangle(new Geom2D(rectBounds.center.x + rectBounds.halfXY.x / 2, rectBounds.center.y - rectBounds.halfXY.y / 2), quarterDim)
+
+  private def quarterDim =
+    new Geom2D(rectBounds.halfXY.x / 2, rectBounds.halfXY.y / 2)
+
   override def toString: String =
     "%s\t%,d\t%,d".format(rectBounds, arrPoints.length, totalPoints)
 
@@ -152,7 +166,7 @@ class QuadTree extends SpatialIndex {
 
     val qQT = mutable.Queue(this)
 
-    def writeQT(qt: QuadTree) =
+    def writeQT(qt: QuadTree): Unit =
       output.writeByte(if (qt == null)
         Byte.MinValue
       else {

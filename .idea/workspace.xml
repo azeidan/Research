@@ -14,12 +14,13 @@
   </component>
   <component name="AutomaticModuleUnloader">
     <loaded-modules>
-      <module name="DataStructures" />
-      <module name="Common_FW" />
-      <module name="Research" />
-      <module name="SpatialBenchmark" />
-      <module name="Common" />
       <module name="Spark_kNN" />
+      <module name="DataStructures" />
+      <module name="Common" />
+      <module name="Common_FW" />
+      <module name="SpatialBenchmark" />
+      <module name="FW_Simba_Source" />
+      <module name="Research" />
     </loaded-modules>
   </component>
   <component name="BranchesTreeState">
@@ -35,10 +36,19 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ee761a9d-eff2-4086-b83a-8096819a4548" name="Default Changelist" comment="KDT working with Histogram insert">
+      <change afterPath="$PROJECT_DIR$/DataSetTools/src/main/scala/spark/DatasetSummaryForHeatMap.scala" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/DataStructures/src/main/scala/Base.scala" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Spark_kNN/src/OLD/TBD_SparkKnn.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Common/src/main/scala/org/cusp/bdi/util/CLArgsParser.scala" beforeDir="false" afterPath="$PROJECT_DIR$/Common/src/main/scala/org/cusp/bdi/util/CLArgsParser.scala" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DataStructures/src/main/scala/org/cusp/bdi/ds/SpatialIndex.scala" beforeDir="false" afterPath="$PROJECT_DIR$/DataStructures/src/main/scala/org/cusp/bdi/ds/SpatialIndex.scala" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Common_FW/src/main/scala/org/cusp/bdi/util/Arguments.scala" beforeDir="false" afterPath="$PROJECT_DIR$/Common_FW/src/main/scala/org/cusp/bdi/util/Arguments.scala" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Common_FW/src/main/scala/org/cusp/bdi/util/LocalRunConsts.scala" beforeDir="false" afterPath="$PROJECT_DIR$/Common_FW/src/main/scala/org/cusp/bdi/util/LocalRunConsts.scala" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DataStructures/src/main/scala/org/cusp/bdi/ds/geom/Rectangle.scala" beforeDir="false" afterPath="$PROJECT_DIR$/DataStructures/src/main/scala/org/cusp/bdi/ds/geom/Rectangle.scala" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DataStructures/src/main/scala/org/cusp/bdi/ds/qt/QuadTree.scala" beforeDir="false" afterPath="$PROJECT_DIR$/DataStructures/src/main/scala/org/cusp/bdi/ds/qt/QuadTree.scala" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Spark_kNN/src/main/scala/org/cusp/bdi/sknn/SparkKNN_Objects.scala" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/src/main/scala/org/cusp/bdi/sknn/SparkKNN_Objects.scala" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Spark_kNN/src/main/scala/org/cusp/bdi/sknn/SparkKnn.scala" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/src/main/scala/org/cusp/bdi/sknn/SparkKnn.scala" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Spark_kNN/src/main/test/scala/org/cusp/bdi/sknn/test/SparkKNN_Local_CLArgs.scala" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/src/main/test/scala/org/cusp/bdi/sknn/test/SparkKNN_Local_CLArgs.scala" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Spark_kNN/src/main/test/scala/org/cusp/bdi/sknn/test/TestAllKnnJoin.scala" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/src/main/test/scala/org/cusp/bdi/sknn/test/TestAllKnnJoin.scala" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -108,7 +118,7 @@
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="TODO_SCOPE" value="All Places" />
     <property name="last_directory_selection" value="$PROJECT_DIR$/DataStructures/src/main/scala/org/cusp/bdi/ds/kdt" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/Spark_kNN/src/OLD" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/Spark_kNN" />
     <property name="project.structure.last.edited" value="Artifacts" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.34280476" />
@@ -119,11 +129,11 @@
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/Spark_kNN" />
       <recent name="$PROJECT_DIR$/Spark_kNN/src/OLD" />
       <recent name="$PROJECT_DIR$/FW_Simba/src/test" />
       <recent name="$PROJECT_DIR$/Spark_kNN/src/main/scala/org/cusp/bdi/sknn" />
       <recent name="$PROJECT_DIR$/Archery-master/src" />
-      <recent name="$PROJECT_DIR$/FW_Simba/src/main/scala" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/Spark_kNN/src/OLD" />
@@ -147,7 +157,7 @@
       <recent name="org.cusp.bdi.fw.simba" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.SpatialBenchmarkSpark_kNN">
+  <component name="RunManager" selected="Application.TestAllKnnJoin">
     <configuration name="PartitionLoadCounts" type="Application" factoryName="Application" nameIsGenerated="true">
       <output_file path="/media/ayman/Data/GeoMatch_Files/OutputFiles/IntelliJ_Logs/PartitionLoadCounts" is_save="true" />
       <option name="MAIN_CLASS_NAME" value="PartitionLoadCounts" />
@@ -278,13 +288,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1594702468860</updated>
-    </task>
-    <task id="LOCAL-00023" summary="updated KryoSerializer class">
-      <created>1598317457312</created>
-      <option name="number" value="00023" />
-      <option name="presentableId" value="LOCAL-00023" />
-      <option name="project" value="LOCAL" />
-      <updated>1598317457312</updated>
     </task>
     <task id="LOCAL-00024" summary="expandBy = math.sqrt(8)">
       <created>1598342180250</created>
@@ -622,15 +625,22 @@
       <option name="project" value="LOCAL" />
       <updated>1614474530598</updated>
     </task>
-    <option name="localTasksCounter" value="72" />
+    <task id="LOCAL-00072" summary="Code Merge. TPEP @3h 18m 36s">
+      <created>1614536571354</created>
+      <option name="number" value="00072" />
+      <option name="presentableId" value="LOCAL-00072" />
+      <option name="project" value="LOCAL" />
+      <updated>1614536571354</updated>
+    </task>
+    <option name="localTasksCounter" value="73" />
     <servers />
   </component>
   <component name="UnloadedModulesList">
+    <module name="DataSetTools" />
     <module name="FW_GeoMatch" />
     <module name="FW_LocationSpark" />
     <module name="FW_LocationSpark_Src" />
     <module name="FW_Simba" />
-    <module name="FW_Simba_Source" />
     <module name="GeoMatch" />
   </component>
   <component name="Vcs.Log.History.Properties">
@@ -722,7 +732,6 @@
     <ignored-roots>
       <path value="$PROJECT_DIR$" />
     </ignored-roots>
-    <MESSAGE value="moved rectangle field from KdTree to insert()" />
     <MESSAGE value="Fixed accuracy issue by adding expandError to initial search region" />
     <MESSAGE value="mid changes commit: added allKNN join. Not yet tested" />
     <MESSAGE value="Temp commit. Before OOM exception" />
@@ -747,7 +756,8 @@
     <MESSAGE value="TPEP @ 3h 16m 49s" />
     <MESSAGE value="Code Merge. Bus @ 7m 17s" />
     <MESSAGE value="Code Merge. TPEP @3h 17m 12s" />
-    <option name="LAST_COMMIT_MESSAGE" value="Code Merge. TPEP @3h 17m 12s" />
+    <MESSAGE value="Code Merge. TPEP @3h 18m 36s" />
+    <option name="LAST_COMMIT_MESSAGE" value="Code Merge. TPEP @3h 18m 36s" />
   </component>
   <component name="XDebuggerManager">
     <pin-to-top-manager>

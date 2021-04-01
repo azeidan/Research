@@ -7,8 +7,8 @@ import org.cusp.bdi.util.{Arguments, CLArgsParser, InputFileParsers, LocalRunCon
 
 object SparkKNN_Local_CLArgs {
 
-  def apply(driverMemory: String, executorMemory: String, numExecutors: Int, executorCores: Int, firstSet: String, firstSetObj: String, secondSet: String, secondSetObj: String, k: Int, gridWidth: Int, knnJoinType: SupportedKnnOperations.Value, indexType: SupportedSpatialIndexes.Value): CLArgsParser =
-    CLArgsParser(Arguments(debug = true, driverMemory, executorMemory, numExecutors, executorCores, firstSet, firstSetObj, secondSet, secondSetObj, k, gridWidth, knnJoinType.toString, indexType.toString), Arguments.lstArgInfo())
+  def apply(driverMemory: String, executorMemory: String, numExecutors: Int, executorCores: Int, firstSet: String, firstSetObj: String, secondSet: String, secondSetObj: String, k: Int, gridWidth: Int, partitionMaxByteSize: Long, knnJoinType: SupportedKnnOperations.Value, indexType: SupportedSpatialIndexes.Value): CLArgsParser =
+    CLArgsParser(Arguments(debug = true, driverMemory, executorMemory, numExecutors, executorCores, firstSet, firstSetObj, secondSet, secondSetObj, k, gridWidth, partitionMaxByteSize, knnJoinType.toString, indexType.toString), Arguments.lstArgInfo())
 
   def random_sample(): CLArgsParser =
     apply("2G",
@@ -20,9 +20,10 @@ object SparkKNN_Local_CLArgs {
       LocalRunConsts.pathRandSample_B_NAD83,
       InputFileParsers.CODE_THREE_PART_LINE,
       10,
-      50,
-      SupportedKnnOperations.knn,
-      //            SupportedKnnOperations.allKnn,
+      100,
+      2e9.toLong,
+            SupportedKnnOperations.knn,
+      //      SupportedKnnOperations.allKnn,
       SupportedSpatialIndexes.quadTree)
 
   //      SupportedSpatialIndexes.kdTree)
@@ -38,6 +39,7 @@ object SparkKNN_Local_CLArgs {
       InputFileParsers.CODE_THREE_PART_LINE,
       10,
       100,
+      2e9.toLong,
       SupportedKnnOperations.knn,
       SupportedSpatialIndexes.quadTree)
 }

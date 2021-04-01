@@ -44,7 +44,7 @@ object SupportedKnnOperations extends Enumeration with Serializable {
 
 case class InsufficientMemoryException(message: String) extends Exception(message) {}
 
-final class MBRInfo extends KryoSerializable with Serializable {
+final class MBR extends KryoSerializable with Serializable {
 
   var left: Int = Int.MaxValue
   var bottom: Int = Int.MaxValue
@@ -70,7 +70,7 @@ final class MBRInfo extends KryoSerializable with Serializable {
       top = newGridXY._2
   }
 
-  def merge(other: MBRInfo): MBRInfo = {
+  def merge(other: MBR): MBR = {
 
     if (other.left < left) left = other.left
     if (other.bottom < bottom) bottom = other.bottom

@@ -18,12 +18,13 @@ object Arguments extends Serializable {
   val secondSetObjType: (String, String, Null, String) = buildTuple("-secondSetObjType", "String", null, "The object type indicator (e.g. LION_LineString, TPEP_Point ...)")
   val k: (String, String, Int, String) = buildTuple("-k", "Int", 3, "Value of k")
   val gridWidth: (String, String, Int, String) = buildTuple("-gridWidth", "Int", 100, "Width of the reduction grid for building the global index. For example, 100 sets the grid square width to group all points within 100 units into one")
+  val partitionMaxByteSize: (String, String, Long, String) = buildTuple("-partitionMaxByteSize", "Long", 0L, "The maximum allowed Byte size of a single partition")
   val indexType: (String, String, Null, String) = buildTuple("-indexType", "String", null, "qt for QuadTree, kdt for K-d Tree")
   val knnJoinType: (String, String, Null, String) = buildTuple("-knnJoinType", "String", null, "knn for Left knn Right, allKNN for both datasets")
 
-  def lstArgInfo() = List(local, debug, driverMemory, executorMemory, numExecutors, executorCores, outDir, firstSet, firstSetObjType, secondSet, secondSetObjType, k, gridWidth, knnJoinType, indexType)
+  def lstArgInfo() = List(local, debug, driverMemory, executorMemory, numExecutors, executorCores, outDir, firstSet, firstSetObjType, secondSet, secondSetObjType, k, gridWidth, partitionMaxByteSize, knnJoinType, indexType)
 
-  def apply(debug: Boolean, driverMemory: String, executorMemory: String, numExecutors: Int, executorCores: Int, firstSet: String, firstSetObj: String, secondSet: String, secondSetObj: String, k: Int, gridWidth: Int, joinType: String, indexType: String, other: (String, String)*): Array[String] =
+  def apply(debug: Boolean, driverMemory: String, executorMemory: String, numExecutors: Int, executorCores: Int, firstSet: String, firstSetObj: String, secondSet: String, secondSetObj: String, k: Int, gridWidth: Int, partitionMaxByteSize: Long, joinType: String, indexType: String, other: (String, String)*): Array[String] =
     Array(Arguments.local._1, "T",
       Arguments.debug._1, Helper.toString(debug),
       Arguments.driverMemory._1, driverMemory,
@@ -36,9 +37,11 @@ object Arguments extends Serializable {
       Arguments.secondSet._1, secondSet,
       Arguments.secondSetObjType._1, secondSetObj,
       Arguments.gridWidth._1, gridWidth.toString,
+      Arguments.partitionMaxByteSize._1, partitionMaxByteSize.toString,
       Arguments.k._1, k.toString,
       Arguments.knnJoinType._1, joinType,
       Arguments.indexType._1, indexType) ++
       other.map(row => Array(row._1, row._2)).flatMap(_.seq)
+
 }
 

@@ -69,21 +69,6 @@ case class Rectangle(center: Geom2D, halfXY: Geom2D) extends Serializable {
       thisBottom > otherTop)
   }
 
-  def topLeftQuadrant: Rectangle =
-    Rectangle(new Geom2D(center.x - halfXY.x / 2, center.y + halfXY.y / 2), quarterDim)
-
-  def topRightQuadrant: Rectangle =
-    Rectangle(new Geom2D(center.x + halfXY.x / 2, center.y + halfXY.y / 2), quarterDim)
-
-  def bottomLeftQuadrant: Rectangle =
-    Rectangle(new Geom2D(center.x - halfXY.x / 2, center.y - halfXY.y / 2), quarterDim)
-
-  def bottomRightQuadrant: Rectangle =
-    Rectangle(new Geom2D(center.x + halfXY.x / 2, center.y - halfXY.y / 2), quarterDim)
-
-  def quarterDim =
-    new Geom2D(halfXY.x / 2, halfXY.y / 2)
-
   override def toString: String =
     "%s\t%s".format(center, halfXY)
 }

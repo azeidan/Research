@@ -17,7 +17,7 @@ object TestAllKnnJoin {
     //    var startTime2 = startTime
 
     //    val clArgs = SparkKNN_Local_CLArgs.bus_30_mil
-//            val clArgs = SparkKNN_Local_CLArgs.random_sample()
+    //    val clArgs = SparkKNN_Local_CLArgs.random_sample()
     val clArgs = CLArgsParser(args, Arguments.lstArgInfo())
 
     //    val clArgs = SparkKNN_Local_CLArgs.busPoint_busPointShift(Arguments())
@@ -35,15 +35,13 @@ object TestAllKnnJoin {
     val kParam = clArgs.getParamValueInt(Arguments.k)
 
     val gridWidth = clArgs.getParamValueInt(Arguments.gridWidth)
+    val partitionMaxByteSize = clArgs.getParamValueLong(Arguments.partitionMaxByteSize)
 
     val indexType = clArgs.getParamValueString(Arguments.indexType) match {
       case s if s.equalsIgnoreCase(SupportedSpatialIndexes.quadTree.toString) => SupportedSpatialIndexes.quadTree
       case s if s.equalsIgnoreCase(SupportedSpatialIndexes.kdTree.toString) => SupportedSpatialIndexes.kdTree
       case _ => throw new IllegalArgumentException("Unsupported spatial index type: %s".format(clArgs.getParamValueString(Arguments.indexType)))
     }
-
-    //    val numPartitions = if (clArgs.getParamValueBoolean(Arguments.local)) 17 else 0
-
 
     val sparkConf = new SparkConf()
 
@@ -85,7 +83,7 @@ object TestAllKnnJoin {
       .filter(_ != null)
       .mapPartitions(_.map(row => new Point(row._2._1.toDouble, row._2._2.toDouble, row._1)))
 
-    val sparkKNN = SparkKnn(debugMode, indexType, rddLeft, rddRight, kParam, gridWidth)
+    val sparkKNN = SparkKnn(debugMode, indexType, rddLeft, rddRight, kParam, gridWidth, partitionMaxByteSize)
 
     val rddResult = clArgs.getParamValueString(Arguments.knnJoinType) match {
       case s if s.equalsIgnoreCase(SupportedKnnOperations.knn.toString) => sparkKNN.knnJoin()
