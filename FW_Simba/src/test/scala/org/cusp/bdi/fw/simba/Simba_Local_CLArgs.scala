@@ -33,11 +33,23 @@ object Simba_Local_CLArgs {
   }
 
   def apply(driverMemory: String, executorMemory: String, numExecutors: Int, executorCores: Int, firstSet: String, firstSetObj: String, secondSet: String, secondSetObj: String, k: Int, knnJoinType: SupportedKnnOperations.Value): CLArgsParser =
-    CLArgsParser(Arguments(debug = true, driverMemory, executorMemory, numExecutors, executorCores, firstSet, firstSetObj, secondSet, secondSetObj, k, knnJoinType.toString, ""), Arguments.lstArgInfo())
+    CLArgsParser(Arguments(debug = true, driverMemory, executorMemory, numExecutors, executorCores, firstSet, firstSetObj, secondSet, secondSetObj, k, -1, -1, knnJoinType.toString, ""), Arguments.lstArgInfo())
 
-  def random_sample(): CLArgsParser =
+  def corePOI_NYC =
     apply("2G",
-      "4G",
+      "8G",
+      4,
+      5,
+      LocalRunConsts.pathPOI_NYC_NAD83,
+      InputFileParsers.CODE_POI_NYC,
+      LocalRunConsts.pathRandSample_B_NAD83,
+      InputFileParsers.CODE_THREE_PART_LINE,
+      10,
+      SupportedKnnOperations.knn)
+
+  def random_sample: CLArgsParser =
+    apply("2G",
+      "8G",
       4,
       5,
       LocalRunConsts.pathRandSample_A_NAD83,

@@ -17,8 +17,9 @@ object TestAllKnnJoin {
     //    var startTime2 = startTime
 
     //    val clArgs = SparkKNN_Local_CLArgs.bus_30_mil
-    //    val clArgs = SparkKNN_Local_CLArgs.random_sample()
-    val clArgs = CLArgsParser(args, Arguments.lstArgInfo())
+//    val clArgs = SparkKNN_Local_CLArgs.random_sample
+    val clArgs = SparkKNN_Local_CLArgs.corePOI_NYC
+//    val clArgs = CLArgsParser(args, Arguments.lstArgInfo())
 
     //    val clArgs = SparkKNN_Local_CLArgs.busPoint_busPointShift(Arguments())
     //    val clArgs = SparkKNN_Local_CLArgs.busPoint_taxiPoint(Arguments())
@@ -60,6 +61,8 @@ object TestAllKnnJoin {
       .set("spark.serializer", classOf[KryoSerializer].getName)
       .set("spark.executor.memoryOverhead", "%.0fb".format(execAssignedMem * 0.15))
       .set("spark.driver.memoryOverhead", "%.0fb".format(driverAssignedMem * 0.15))
+      .set("spark.executor.heartbeatInterval", "40000")
+      .set("spark.network.timeout", "150000")
       .registerKryoClasses(SparkKnn.getSparkKNNClasses)
 
     if (debugMode) {
@@ -99,7 +102,7 @@ object TestAllKnnJoin {
     //    Helper.loggerSLf4J(debugMode, SparkKnn, ">>toDebugString: \t%s".format(rddResult.toDebugString), null)
 
     rddResult.mapPartitions(_.map(row =>
-      "%s,%.8f,%.8f;%s".format(row._1.userData, row._1.x, row._1.y, row._2.map(matchInfo =>
+      "%s;%s".format(row._1.userData, row._2.map(matchInfo =>
         "%.8f,%s".format(matchInfo._1, matchInfo._2.userData)).mkString(";"))))
       .saveAsTextFile(outDir, classOf[GzipCodec])
 

@@ -19,8 +19,8 @@ class Geom2D() extends KryoSerializable with Serializable {
   def this(dim: Double) =
     this(dim, dim)
 
-  def this(point: Geom2D) =
-    this(point.x, point.y)
+  def this(geom2D: Geom2D) =
+    this(geom2D.x, geom2D.y)
 
   def this(xy: (Double, Double)) =
     this(xy._1, xy._2)

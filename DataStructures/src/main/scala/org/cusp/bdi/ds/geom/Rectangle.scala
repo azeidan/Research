@@ -1,8 +1,20 @@
 package org.cusp.bdi.ds.geom
 
+import com.esotericsoftware.kryo.io.{Input, Output}
+import com.esotericsoftware.kryo.{Kryo, KryoSerializable}
 import org.cusp.bdi.util.Helper
 
-case class Rectangle(center: Geom2D, halfXY: Geom2D) extends Serializable {
+class Rectangle() extends KryoSerializable with Serializable {
+
+  var center: Geom2D = _
+  var halfXY: Geom2D = _
+
+  def this(center: Geom2D, halfXY: Geom2D) {
+
+    this()
+    this.center = center
+    this.halfXY = halfXY
+  }
 
   def this(other: Rectangle) =
     this(new Geom2D(other.center), new Geom2D(other.halfXY))
@@ -71,4 +83,21 @@ case class Rectangle(center: Geom2D, halfXY: Geom2D) extends Serializable {
 
   override def toString: String =
     "%s\t%s".format(center, halfXY)
+
+  override def write(kryo: Kryo, output: Output): Unit = {
+
+    kryo.writeClassAndObject(output, center)
+    kryo.writeClassAndObject(output, halfXY)
+  }
+
+  override def read(kryo: Kryo, input: Input): Unit = {
+
+    center = kryo.readClassAndObject(input) match {
+      case geom2D: Geom2D => geom2D
+    }
+
+    halfXY = kryo.readClassAndObject(input) match {
+      case geom2D: Geom2D => geom2D
+    }
+  }
 }

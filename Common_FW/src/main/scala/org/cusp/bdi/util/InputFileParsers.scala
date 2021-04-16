@@ -9,6 +9,7 @@ object InputFileParsers extends Serializable {
   val CODE_OSM_POINT_WGS84 = "OSM_Point_WGS84"
   val CODE_TAXI_POINT = "Taxi_Point"
   val CODE_THREE_PART_LINE = "Three_Part_Line"
+  val CODE_POI_NYC = "POI_NYC"
   val CODE_BUS_POINT = "Bus_Point"
   val CODE_BUS_POINT_SHIFTED = "Bus_Point_shifted"
   val CODE_RAND_POINT = "Rand_Point"
@@ -23,6 +24,7 @@ object InputFileParsers extends Serializable {
       case s if s matches "(?i)" + CODE_BUS_POINT => InputFileParsers.busPoints
       case s if s matches "(?i)" + CODE_BUS_POINT_SHIFTED => InputFileParsers.busPoints
       case s if s matches "(?i)" + CODE_RAND_POINT => InputFileParsers.randPoints
+      case s if s matches "(?i)" + CODE_POI_NYC => InputFileParsers.poiNYC
     }
 
   def nycLION: String => (String, Array[(String, String)]) = (line: String) => {
@@ -141,13 +143,26 @@ object InputFileParsers extends Serializable {
 
   def busPoints_WGS84: String => (String, (String, String)) = (line: String) => {
 
-    val xy = getXY(line, 1 /*, false*/)
+    val xy = getXY(line, 1)
 
     if (xy == null)
       null
     else
       (line, (xy._2, xy._1)) // lon/lat reversed in data source
   }
+
+  def poiNYC: String => (String, (String, String)) = (line: String) =>
+    if (line.length == 0)
+      null
+    else {
+
+      val xy = getXY(line, 10)
+
+      if (xy == null)
+        null
+      else
+        (line, (xy._1, xy._2)) // lon/lat reversed in data source
+    }
 
   def osmPoints_WGS84: String => (String, (String, String)) = (line: String) =>
     getXY_NoLoad(line)
@@ -158,44 +173,6 @@ object InputFileParsers extends Serializable {
 
     (xy(0), (xy(1), xy(2)))
   }
-
-  //    def osmBuildings = (line: String) => {
-  //
-  //        if (line.length() > 10) {
-  //
-  //            val idx = Helper.indexOf(line, ",")
-  //
-  //            val id = line.substring(0, idx)
-  //            val coordStr = line.substring(idx + 11, line.length() - 3)
-  //
-  //            val coordArr = ListBuffer[(Int, Int)]()
-  //
-  //            coordStr.split(",")
-  //                .map(x => parseXY(x, ' '))
-  //                .map(x => coordArr += x)
-  //
-  //            if (coordArr.head != coordArr.last)
-  //                coordArr += coordArr.head
-  //
-  //            while (coordArr.length < 4)
-  //                coordArr += coordArr.head
-  //
-  //            (line, coordArr.toArray)
-  //        }
-  //        else
-  //            null
-  //    }
-
-  //    def keyBus = (line: String) => {
-  //
-  //        val idx = Helper.indexOf(line, ",", 11)
-  //
-  //        //         (String,List[String])
-  //        if (idx != -1)
-  //            (line.substring(0, idx), line.substring(idx + 1).split(','))
-  //        else
-  //            (line, null)
-  //    }
 
   private def getXY_NoLoad(line: String) =
     try {
@@ -214,7 +191,7 @@ object InputFileParsers extends Serializable {
         null
     }
 
-  private def getXY(line: String, startCommaNum: Int /*, removeDecimal: Boolean*/) = {
+  private def getXY(line: String, startCommaNum: Int) = {
 
     def getCommaPos(commaNum: Int, startIdx: Int) = {
 
@@ -240,12 +217,6 @@ object InputFileParsers extends Serializable {
 
       val x = line.substring(idx0, idx1 - 1)
       val y = line.substring(idx1, idx2 - 1)
-
-      //            if (removeDecimal) {
-      //
-      //                x = x.substring(0, x.indexOf('.'))
-      //                y = y.substring(0, y.indexOf('.'))
-      //            }
 
       if (x(0) != '-' && (x(0) < '0' || x(0) > '9'))
         null

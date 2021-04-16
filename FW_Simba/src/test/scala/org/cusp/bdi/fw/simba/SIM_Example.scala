@@ -3,7 +3,7 @@ package org.cusp.bdi.fw.simba
 import org.apache.hadoop.fs.{FileSystem, Path}
 import org.apache.hadoop.io.compress.GzipCodec
 import org.apache.spark.sql.Row
-import org.apache.spark.sql. simba.SimbaSession
+import org.apache.spark.sql.simba.SimbaSession
 import org.cusp.bdi.fw.simba.Simba_Local_CLArgs.SupportedKnnOperations
 import org.cusp.bdi.util.{Arguments, Helper, InputFileParsers, LocalRunConsts}
 
@@ -28,7 +28,8 @@ object SIM_Example extends Serializable {
     //        val clArgs = SIM_CLArgs.lion_PolyRect_Taxi_Point
     //        val clArgs = SIM_CLArgs.OSM_Point_OSM_Point
 
-    val clArgs = Simba_Local_CLArgs.random_sample()
+//    val clArgs = Simba_Local_CLArgs.random_sample
+    val clArgs = Simba_Local_CLArgs.corePOI_NYC
     //        val clArgs = CLArgsParser(args, Arguments_Simba.lstArgInfo())
 
     val simbaBuilder = SimbaSession.builder()
@@ -63,12 +64,11 @@ object SIM_Example extends Serializable {
       .map(InputFileParsers.getLineParser(clArgs.getParamValueString(Arguments.firstSetObjType)))
       .filter(_ != null)
       .map(row => PointData(row._2._1.toDouble, row._2._2.toDouble, row._1))
-    //      .limit(100)
+
     val DS2 = simbaSession.read.textFile(clArgs.getParamValueString(Arguments.secondSet))
       .map(InputFileParsers.getLineParser(clArgs.getParamValueString(Arguments.secondSetObjType)))
       .filter(_ != null)
       .map(row => PointData(row._2._1.toDouble, row._2._2.toDouble, row._1))
-    //      .limit(100)
 
     (clArgs.getParamValueString(Arguments.knnJoinType) match {
       case s if s eq SupportedKnnOperations.allKnn.toString =>
@@ -79,7 +79,7 @@ object SIM_Example extends Serializable {
     })
       .mapPartitions(_.map(processRow))
       .rdd
-      .reduceByKey(_ ++ _)
+//      .reduceByKey(_ ++ _)
       .mapPartitions(_.map(row => "%s;%s".format(row._1, row._2.map(row => "%.8f,%s".format(row._1, row._2)).mkString(";"))))
       .saveAsTextFile(clArgs.getParamValueString(Arguments.outDir), classOf[GzipCodec])
 
@@ -130,7 +130,7 @@ object SIM_Example extends Serializable {
   private def euclideanDist(x1: Double, y1: Double, x2: Double, y2: Double): Double =
     math.sqrt(Helper.squaredEuclideanDist(x1, y1, x2, y2))
 
-  def processRow(row: Row) = {
+  def processRow(row: Row): (String, ListBuffer[(Double, String)]) = {
 
     val x1 = row(0).toString.toDouble
     val y1 = row(1).toString.toDouble
@@ -143,7 +143,7 @@ object SIM_Example extends Serializable {
       case d: Double => d
     }
 
-    val pointInfo = "%s,%.8f,%.8f".format(row.get(2).toString, x1, y1)
+    val pointInfo = "%s".format(row.get(2).toString, x1, y1)
 
     (pointInfo, ListBuffer((euclideanDist(x1, y1, x2, y2), row(5).toString)))
   }

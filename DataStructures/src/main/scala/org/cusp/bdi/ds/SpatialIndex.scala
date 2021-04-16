@@ -12,7 +12,7 @@ object SpatialIndex extends Serializable {
   case class KnnLookupInfo(searchPoint: Point, sortSetSqDist: SortedLinkedList[Point]) {
 
     var limitSquaredDist: Double = if (sortSetSqDist.isFull) sortSetSqDist.last.distance else Double.MaxValue
-    val rectSearchRegion: Rectangle = Rectangle(this.searchPoint, new Geom2D(math.sqrt(this.limitSquaredDist)))
+    val rectSearchRegion: Rectangle = new Rectangle(this.searchPoint, new Geom2D(math.sqrt(this.limitSquaredDist)))
   }
 
   def buildRectBounds(mbrEnds: ((Int, Int), (Int, Int))): Rectangle =
@@ -22,7 +22,7 @@ object SpatialIndex extends Serializable {
 
     val halfXY = new Geom2D((maxX - minX) / 2, (maxY - minY) / 2)
 
-    Rectangle(new Geom2D(minX + halfXY.x, minY + halfXY.y), halfXY)
+    new Rectangle(new Geom2D(minX + halfXY.x, minY + halfXY.y), halfXY)
   }
 
   def testAndAddPoint(point: Point, knnLookupInfo: KnnLookupInfo) {

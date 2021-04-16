@@ -5,6 +5,14 @@ import org.cusp.bdi.util.{CLArgsParser, LocalRunConsts}
 
 object Benchmark_Local_CLArgs {
 
+  val SKNN_POI_NYC_Knn: CLArgsParser = apply(
+    LocalRunConsts.path_Output_poiNYC_Key,
+    SB_KeyMatchInputFileParser_RandomPoints.getClass.getName,
+    LocalRunConsts.path_Output_poiNYC_FW,
+    SB_KeyMatchInputFileParser_RandomPoints.getClass.getName,
+    "",
+    10)
+
   val SKNN_RandomPoint_RandomPoint_allKnn: CLArgsParser = apply(
     LocalRunConsts.pathSparkKNN_FW_Output_1,
     SB_KeyMatchInputFileParser_RandomPoints.getClass.getName,

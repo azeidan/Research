@@ -14,13 +14,14 @@
   </component>
   <component name="AutomaticModuleUnloader">
     <loaded-modules>
-      <module name="Spark_kNN" />
+      <module name="FW_Simba_Source" />
       <module name="DataStructures" />
       <module name="Common" />
       <module name="Common_FW" />
+      <module name="Spark_kNN" />
       <module name="SpatialBenchmark" />
-      <module name="FW_Simba_Source" />
       <module name="Research" />
+      <module name="FW_Simba" />
     </loaded-modules>
   </component>
   <component name="BranchesTreeState">
@@ -36,19 +37,43 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ee761a9d-eff2-4086-b83a-8096819a4548" name="Default Changelist" comment="KDT working with Histogram insert">
-      <change afterPath="$PROJECT_DIR$/DataSetTools/src/main/scala/spark/DatasetSummaryForHeatMap.scala" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/DataStructures/src/main/scala/Base.scala" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Spark_kNN/src/OLD/TBD_SparkKnn.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/DataSetTools/Log.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/DataSetTools/Summary.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/DataSetTools/src/main/java/LogSummary$PartitionCounts.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/DataSetTools/src/main/java/LogSummary.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/DataSetTools/src/main/java/LogSummary.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/HelperProjects_Python/HelperProjects_Python.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/HelperProjects_Python/src/NYCBus.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/HelperProjects_Python/src/NYC_Yellow_Taxi.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/HelperProjects_Python/src/POI_NYC.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/HelperProjects_Python/src/Test_PyProj.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/HelperProjects_Python/src/del.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Spark_kNN/src/main/test/scala/org/cusp/bdi/sknn/test/ShuffleTest.scala" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Common/src/main/scala/org/cusp/bdi/util/CLArgsParser.scala" beforeDir="false" afterPath="$PROJECT_DIR$/Common/src/main/scala/org/cusp/bdi/util/CLArgsParser.scala" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Common_FW/src/main/scala/org/cusp/bdi/util/Arguments.scala" beforeDir="false" afterPath="$PROJECT_DIR$/Common_FW/src/main/scala/org/cusp/bdi/util/Arguments.scala" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Common_FW/src/main/scala/org/cusp/bdi/util/InputFileParsers.scala" beforeDir="false" afterPath="$PROJECT_DIR$/Common_FW/src/main/scala/org/cusp/bdi/util/InputFileParsers.scala" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Common_FW/src/main/scala/org/cusp/bdi/util/LocalRunConsts.scala" beforeDir="false" afterPath="$PROJECT_DIR$/Common_FW/src/main/scala/org/cusp/bdi/util/LocalRunConsts.scala" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DataStructures/src/main/scala/org/cusp/bdi/ds/SpatialIndex.scala" beforeDir="false" afterPath="$PROJECT_DIR$/DataStructures/src/main/scala/org/cusp/bdi/ds/SpatialIndex.scala" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DataStructures/src/main/scala/org/cusp/bdi/ds/geom/Geom2D.scala" beforeDir="false" afterPath="$PROJECT_DIR$/DataStructures/src/main/scala/org/cusp/bdi/ds/geom/Geom2D.scala" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DataStructures/src/main/scala/org/cusp/bdi/ds/geom/Point.scala" beforeDir="false" afterPath="$PROJECT_DIR$/DataStructures/src/main/scala/org/cusp/bdi/ds/geom/Point.scala" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DataStructures/src/main/scala/org/cusp/bdi/ds/geom/Rectangle.scala" beforeDir="false" afterPath="$PROJECT_DIR$/DataStructures/src/main/scala/org/cusp/bdi/ds/geom/Rectangle.scala" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DataStructures/src/main/scala/org/cusp/bdi/ds/qt/QuadTree.scala" beforeDir="false" afterPath="$PROJECT_DIR$/DataStructures/src/main/scala/org/cusp/bdi/ds/qt/QuadTree.scala" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FW_Simba/FW_Simba.iml" beforeDir="false" afterPath="$PROJECT_DIR$/FW_Simba/FW_Simba.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FW_Simba/src/test/scala/org/cusp/bdi/fw/simba/SIM_Example.scala" beforeDir="false" afterPath="$PROJECT_DIR$/FW_Simba/src/test/scala/org/cusp/bdi/fw/simba/SIM_Example.scala" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FW_Simba/src/test/scala/org/cusp/bdi/fw/simba/Simba_Local_CLArgs.scala" beforeDir="false" afterPath="$PROJECT_DIR$/FW_Simba/src/test/scala/org/cusp/bdi/fw/simba/Simba_Local_CLArgs.scala" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FW_Simba_Source/FW_Simba_Source.iml" beforeDir="false" afterPath="$PROJECT_DIR$/FW_Simba_Source/FW_Simba_Source.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Research.iml" beforeDir="false" afterPath="$PROJECT_DIR$/Research.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Spark_kNN/Spark_kNN.iml" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/Spark_kNN.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Spark_kNN/src/main/scala/org/cusp/bdi/sknn/SparkKNN_Objects.scala" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/src/main/scala/org/cusp/bdi/sknn/SparkKNN_Objects.scala" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Spark_kNN/src/main/scala/org/cusp/bdi/sknn/SparkKnn.scala" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/src/main/scala/org/cusp/bdi/sknn/SparkKnn.scala" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Spark_kNN/src/main/scala/org/cusp/bdi/sknn/ds/util/SpatialIdxOperations.scala" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/src/main/scala/org/cusp/bdi/sknn/ds/util/SpatialIdxOperations.scala" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Spark_kNN/src/main/test/scala/Test.scala" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Spark_kNN/src/main/test/scala/org/cusp/bdi/sknn/test/SparkKNN_Local_CLArgs.scala" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/src/main/test/scala/org/cusp/bdi/sknn/test/SparkKNN_Local_CLArgs.scala" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Spark_kNN/src/main/test/scala/org/cusp/bdi/sknn/test/TestAllKnnJoin.scala" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/src/main/test/scala/org/cusp/bdi/sknn/test/TestAllKnnJoin.scala" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SpatialBenchmark/src/main/test/scala/org/cusp/bdi/sb/test/Benchmark_Local_CLArgs.scala" beforeDir="false" afterPath="$PROJECT_DIR$/SpatialBenchmark/src/main/test/scala/org/cusp/bdi/sb/test/Benchmark_Local_CLArgs.scala" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SpatialBenchmark/src/main/test/scala/org/cusp/bdi/sb/test/SpatialBenchmarkSparkKnn.scala" beforeDir="false" afterPath="$PROJECT_DIR$/SpatialBenchmark/src/main/test/scala/org/cusp/bdi/sb/test/SpatialBenchmarkSparkKnn.scala" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -89,12 +114,8 @@
       <filtered-out-file-type name="COMMIT_BY_MESSAGE" />
     </file-type-list>
   </component>
-  <component name="MavenImportPreferences">
-    <option name="importingSettings">
-      <MavenImportingSettings>
-        <option name="useMavenOutput" value="false" />
-      </MavenImportingSettings>
-    </option>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="jar://$MAVEN_REPOSITORY$/org/apache/spark/spark-core_2.11/2.4.0/spark-core_2.11-2.4.0.jar!/org/apache/spark/rdd/PairRDDFunctions.class" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="ProjectCodeStyleSettingsMigration">
     <option name="version" value="1" />
@@ -117,23 +138,27 @@
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="TODO_SCOPE" value="All Places" />
+    <property name="jdk.selected.PYTHON_MODULE" value="Python 2.7" />
     <property name="last_directory_selection" value="$PROJECT_DIR$/DataStructures/src/main/scala/org/cusp/bdi/ds/kdt" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/Spark_kNN" />
-    <property name="project.structure.last.edited" value="Artifacts" />
+    <property name="last_opened_file_path" value="$MAVEN_REPOSITORY$/org/apache/spark/spark-core_2.11/2.4.0/spark-core_2.11-2.4.0.jar" />
+    <property name="project.structure.last.edited" value="Modules" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.34280476" />
     <property name="restartRequiresConfirmation" value="false" />
     <property name="run.code.analysis.last.selected.profile" value="pProject Default" />
     <property name="scala_project_settings_configurable.last_selected_tab_index" value="0" />
-    <property name="settings.editor.selected.configurable" value="Debugger_Data_Views_Java" />
+    <property name="settings.editor.selected.configurable" value="editor.reader.mode" />
+  </component>
+  <component name="ReaderModeSettings">
+    <option name="enabled" value="false" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/HelperProjects_Python/src" />
       <recent name="$PROJECT_DIR$/Spark_kNN" />
       <recent name="$PROJECT_DIR$/Spark_kNN/src/OLD" />
       <recent name="$PROJECT_DIR$/FW_Simba/src/test" />
       <recent name="$PROJECT_DIR$/Spark_kNN/src/main/scala/org/cusp/bdi/sknn" />
-      <recent name="$PROJECT_DIR$/Archery-master/src" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/Spark_kNN/src/OLD" />
@@ -157,7 +182,7 @@
       <recent name="org.cusp.bdi.fw.simba" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.TestAllKnnJoin">
+  <component name="RunManager" selected="Application.SIM_Example">
     <configuration name="PartitionLoadCounts" type="Application" factoryName="Application" nameIsGenerated="true">
       <output_file path="/media/ayman/Data/GeoMatch_Files/OutputFiles/IntelliJ_Logs/PartitionLoadCounts" is_save="true" />
       <option name="MAIN_CLASS_NAME" value="PartitionLoadCounts" />
@@ -170,16 +195,12 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="SIM_Example" type="Application" factoryName="Application">
-      <option name="INCLUDE_PROVIDED_SCOPE" value="true" />
+    <configuration name="SIM_Example" type="Application" factoryName="Application" temporary="true">
       <option name="MAIN_CLASS_NAME" value="org.cusp.bdi.fw.simba.SIM_Example" />
       <module name="FW_Simba" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="org.cusp.bdi.fw.simba.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
+      <selectedOptions>
+        <option name="vmParameters" />
+      </selectedOptions>
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -198,43 +219,9 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="Test" type="Application" factoryName="Application" temporary="true">
-      <option name="MAIN_CLASS_NAME" value="Test" />
-      <module name="Spark_kNN" />
-      <selectedOptions>
-        <option name="vmParameters" />
-      </selectedOptions>
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
     <configuration name="TestKdTree" type="Application" factoryName="Application" temporary="true">
       <option name="MAIN_CLASS_NAME" value="org.cusp.bdi.ds.test.TestKdTree" />
       <module name="DataStructures" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="TestKdTree" type="Application" factoryName="Application" temporary="true">
-      <option name="MAIN_CLASS_NAME" value="org.cusp.bdi.ds.test.TestKdTree" />
-      <module name="DataStructures" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="TestKdTree" type="Application" factoryName="Application" temporary="true">
-      <option name="MAIN_CLASS_NAME" value="org.cusp.bdi.ds.test.TestKdTree" />
-      <module name="DataStructures" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="TestSortedLInkedList" type="Application" factoryName="Application" temporary="true">
-      <option name="MAIN_CLASS_NAME" value="org.cusp.bdi.ds.test.TestSortedLInkedList" />
-      <module name="DataStructures" />
-      <selectedOptions>
-        <option name="vmParameters" />
-      </selectedOptions>
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -247,21 +234,60 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="POI_NYC" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="HelperProjects_Python" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/HelperProjects_Python/src" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/HelperProjects_Python/src/POI_NYC.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration default="true" type="PythonConfigurationType" factoryName="Python">
+      <module name="SpatialBenchmark" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1:/usr/lib/python3/dist-packages" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <list>
-      <item itemvalue="Application.SIM_Example" />
       <item itemvalue="Application.SpatialBenchmarkSpark_kNN" />
       <item itemvalue="Application.TestAllKnnJoin" />
       <item itemvalue="Application.PartitionLoadCounts" />
-      <item itemvalue="Application.TestKdTree" />
-      <item itemvalue="Application.Test" />
-      <item itemvalue="Application.TestSortedLInkedList" />
+      <item itemvalue="Python.POI_NYC" />
+      <item itemvalue="Application.SIM_Example" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Application.SIM_Example" />
+        <item itemvalue="Python.POI_NYC" />
         <item itemvalue="Application.PartitionLoadCounts" />
-        <item itemvalue="Application.TestSortedLInkedList" />
-        <item itemvalue="Application.TestKdTree" />
-        <item itemvalue="Application.Test" />
       </list>
     </recent_temporary>
   </component>
@@ -288,13 +314,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1594702468860</updated>
-    </task>
-    <task id="LOCAL-00024" summary="expandBy = math.sqrt(8)">
-      <created>1598342180250</created>
-      <option name="number" value="00024" />
-      <option name="presentableId" value="LOCAL-00024" />
-      <option name="project" value="LOCAL" />
-      <updated>1598342180250</updated>
     </task>
     <task id="LOCAL-00025" summary="Reduced rddRight reads to 3 and used repartitionAndSortWithinPartitions twice instead of once">
       <created>1598588979119</created>
@@ -632,16 +651,22 @@
       <option name="project" value="LOCAL" />
       <updated>1614536571354</updated>
     </task>
-    <option name="localTasksCounter" value="73" />
+    <task id="LOCAL-00073" summary="TPEP kNN @ 3h 20m">
+      <created>1617306458792</created>
+      <option name="number" value="00073" />
+      <option name="presentableId" value="LOCAL-00073" />
+      <option name="project" value="LOCAL" />
+      <updated>1617306458794</updated>
+    </task>
+    <option name="localTasksCounter" value="74" />
     <servers />
   </component>
   <component name="UnloadedModulesList">
-    <module name="DataSetTools" />
     <module name="FW_GeoMatch" />
     <module name="FW_LocationSpark" />
     <module name="FW_LocationSpark_Src" />
-    <module name="FW_Simba" />
     <module name="GeoMatch" />
+    <module name="HelperProjects_Python" />
   </component>
   <component name="Vcs.Log.History.Properties">
     <option name="COLUMN_ID_ORDER">
@@ -706,6 +731,31 @@
             </State>
           </value>
         </entry>
+        <entry key="3">
+          <value>
+            <State>
+              <option name="SHOW_ONLY_AFFECTED_CHANGES" value="true" />
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="HEAD" />
+                      </list>
+                    </value>
+                  </entry>
+                  <entry key="structure">
+                    <value>
+                      <list>
+                        <option value="dir:/home/ayman/Dropbox/Research/Projects/IntelliJ/Research/Spark_kNN" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
+          </value>
+        </entry>
         <entry key="MAIN">
           <value>
             <State>
@@ -723,6 +773,7 @@
       <map>
         <entry key="1" value="TOOL_WINDOW" />
         <entry key="2" value="TOOL_WINDOW" />
+        <entry key="3" value="TOOL_WINDOW" />
       </map>
     </option>
     <option name="oldMeFiltersMigrated" value="true" />
@@ -732,7 +783,6 @@
     <ignored-roots>
       <path value="$PROJECT_DIR$" />
     </ignored-roots>
-    <MESSAGE value="Fixed accuracy issue by adding expandError to initial search region" />
     <MESSAGE value="mid changes commit: added allKNN join. Not yet tested" />
     <MESSAGE value="Temp commit. Before OOM exception" />
     <MESSAGE value="Local run test 100% accuracy" />
@@ -757,9 +807,19 @@
     <MESSAGE value="Code Merge. Bus @ 7m 17s" />
     <MESSAGE value="Code Merge. TPEP @3h 17m 12s" />
     <MESSAGE value="Code Merge. TPEP @3h 18m 36s" />
-    <option name="LAST_COMMIT_MESSAGE" value="Code Merge. TPEP @3h 18m 36s" />
+    <MESSAGE value="TPEP kNN @ 3h 20m" />
+    <option name="LAST_COMMIT_MESSAGE" value="TPEP kNN @ 3h 20m" />
   </component>
   <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <default-breakpoints>
+        <breakpoint type="python-exception">
+          <properties notifyOnTerminate="true" exception="BaseException">
+            <option name="notifyOnTerminate" value="true" />
+          </properties>
+        </breakpoint>
+      </default-breakpoints>
+    </breakpoint-manager>
     <pin-to-top-manager>
       <pinned-members>
         <PinnedItemInfo parentTag="scala.Tuple2" memberName="_2" />

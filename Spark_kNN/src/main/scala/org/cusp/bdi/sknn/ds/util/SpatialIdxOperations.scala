@@ -25,12 +25,13 @@ object SupportedSpatialIndexes extends Enumeration with Serializable {
     }
 }
 
-final class GlobalIndexPointUserData extends KryoSerializable {
+final class PartitionerPointUserData extends KryoSerializable {
 
   var objCount: Long = -1
   var partitionIdx: Int = -1
 
   def this(numPoints: Long, partIdx: Int) = {
+
     this()
     this.objCount = numPoints
     this.partitionIdx = partIdx
@@ -59,8 +60,8 @@ object SpatialIdxOperations extends Serializable {
   //  for the shift from the best case (multiple of 1) to a 1 (i.e. the point is d` units away where d` is a multiple of 1)
   val SEARCH_REGION_EXTEND: Double = Math.sqrt(8) - 1 // 2 * Math.sqrt(2) - 1
 
-  def fCastToGlobalIndexPointUserData: Point => GlobalIndexPointUserData = (point: Point) => point.userData match {
-    case globalIndexPoint: GlobalIndexPointUserData => globalIndexPoint
+  def fCastToPartitionerPointUserData: Point => PartitionerPointUserData = (point: Point) => point.userData match {
+    case globalIndexPoint: PartitionerPointUserData => globalIndexPoint
   }
 
   final class IdxRangeLookupInfo {
@@ -74,7 +75,7 @@ object SpatialIdxOperations extends Serializable {
     def this(searchPoint: Geom2D) {
 
       this()
-      this.rectSearchRegion = Rectangle(searchPoint, new Geom2D(Double.MaxValue))
+      this.rectSearchRegion = new Rectangle(searchPoint, new Geom2D(Double.MaxValue))
     }
   }
 
@@ -83,7 +84,7 @@ object SpatialIdxOperations extends Serializable {
       case quadTree: QuadTree => lookup(quadTree, searchXY, k)
       case kdTree: KdTree => lookup(kdTree, searchXY, k)
     })
-      .map(point => fCastToGlobalIndexPointUserData(point.data).partitionIdx)
+      .map(point => fCastToPartitionerPointUserData(point.data).partitionIdx)
       .to[ArrayBuffer]
       .distinct
 
@@ -212,7 +213,7 @@ object SpatialIdxOperations extends Serializable {
 
       idxRangeLookupInfo.sortList.add(sqDistQTPoint, point)
 
-      idxRangeLookupInfo.weight += fCastToGlobalIndexPointUserData(point).objCount
+      idxRangeLookupInfo.weight += fCastToPartitionerPointUserData(point).objCount
 
       if (idxRangeLookupInfo.weight >= k)
         if (idxRangeLookupInfo.limitNode eq null) {
@@ -224,14 +225,14 @@ object SpatialIdxOperations extends Serializable {
         else if (sqDistQTPoint < idxRangeLookupInfo.limitNode.distance) {
 
           var currNode = idxRangeLookupInfo.sortList.head
-          var newWeight = fCastToGlobalIndexPointUserData(currNode.data).objCount
+          var newWeight = fCastToPartitionerPointUserData(currNode.data).objCount
           var nodeCount = 1
 
           while (newWeight < k) {
 
             currNode = currNode.next
             nodeCount += 1
-            newWeight += fCastToGlobalIndexPointUserData(currNode.data).objCount
+            newWeight += fCastToPartitionerPointUserData(currNode.data).objCount
           }
 
           if ((idxRangeLookupInfo.limitNode ne currNode) && idxRangeLookupInfo.limitNode.distance != currNode.distance) {
@@ -244,7 +245,7 @@ object SpatialIdxOperations extends Serializable {
             while ((currNode.next ne null) && currNode.next.distance <= idxRangeLookupInfo.dimSquared) {
 
               currNode = currNode.next
-              idxRangeLookupInfo.weight += fCastToGlobalIndexPointUserData(currNode.data).objCount
+              idxRangeLookupInfo.weight += fCastToPartitionerPointUserData(currNode.data).objCount
               nodeCount += 1
             }
 

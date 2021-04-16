@@ -4,30 +4,74 @@ import com.esotericsoftware.kryo.io.{Input, Output}
 import com.esotericsoftware.kryo.{Kryo, KryoSerializable}
 import org.cusp.bdi.ds.geom.Point
 import org.cusp.bdi.ds.sortset.SortedLinkedList
-import org.cusp.bdi.util.RandomWeighted
 
 import scala.collection.mutable.ArrayBuffer
 
-class RandomWeighted2 extends RandomWeighted with KryoSerializable {
+//case class CountAndPartIdx(pId: Int, countPoints: Long, countKNN: Long) extends Ordered[CountAndPartIdx] {
+//
+//  def this(other: CountAndPartIdx, updateCountKNN: Boolean) =
+//    this(other.pId, other.countPoints + 1, if (updateCountKNN) other.countKNN + 1 else other.countKNN)
+//
+//  override def equals(obj: Any): Boolean =
+//    obj match {
+//      case that: CountAndPartIdx => compareTo(that) == 0
+//      case _ => false
+//    }
+//
+//  override def compareTo(that: CountAndPartIdx): Int =
+//    if (this.eq(that))
+//      0
+//    else this.countPoints.compareTo(that.countPoints).signum match {
+//      case 0 =>
+//        this.pId.compareTo(that.pId)
+//      case x =>
+//        x
+//    }
+//
+//  override def compare(that: CountAndPartIdx): Int =
+//    compareTo(that)
+//
+//  override def toString: String =
+//    "(%d, %d, %d)".format(pId, countPoints, countKNN)
+//}
 
-  override def write(kryo: Kryo, output: Output): Unit = {
+//object TBD {
+//  def main(args: Array[String]): Unit = {
+//
+//    val set = mutable.SortedSet(new CountAndPartIdx(5, 5))
+//    set += CountAndPartIdx(6, 6)
+//    set += CountAndPartIdx(0, -11)
+//    set += CountAndPartIdx(0, -22)
+//    set += CountAndPartIdx(2, 2)
+//    val temp = CountAndPartIdx(set.head.pId, set.head.countPoints + 1)
+//    set.remove(set.head)
+//    set += temp
+//    set.foreach(println)
+//
+//    println(set.find(_.pId == 6).take(1))
+//  }
+//}
 
-    output.writeFloat(totalItemWeight)
-    output.writeInt(arrItemWeight.length)
-
-    arrItemWeight.foreach(tuple => kryo.writeClassAndObject(output, tuple))
-  }
-
-  override def read(kryo: Kryo, input: Input): Unit = {
-
-    totalItemWeight = input.readFloat()
-
-    val len = input.readInt()
-
-    for (_ <- 0 until len)
-      arrItemWeight += kryo.readClassAndObject(input).asInstanceOf[(Int, Float)]
-  }
-}
+//class RandomWeighted2 extends RandomWeighted with KryoSerializable {
+//
+//  override def write(kryo: Kryo, output: Output): Unit = {
+//
+//    output.writeFloat(totalItemWeight)
+//    output.writeInt(arrItemWeight.length)
+//
+//    arrItemWeight.foreach(tuple => kryo.writeClassAndObject(output, tuple))
+//  }
+//
+//  override def read(kryo: Kryo, input: Input): Unit = {
+//
+//    totalItemWeight = input.readFloat()
+//
+//    val len = input.readInt()
+//
+//    for (_ <- 0 until len)
+//      arrItemWeight += kryo.readClassAndObject(input).asInstanceOf[(Int, Float)]
+//  }
+//}
 
 object SupportedKnnOperations extends Enumeration with Serializable {
 
@@ -42,7 +86,7 @@ object SupportedKnnOperations extends Enumeration with Serializable {
   import fractionalOps._
  */
 
-case class InsufficientMemoryException(message: String) extends Exception(message) {}
+//case class InsufficientMemoryException(message: String) extends Exception(message) {}
 
 final class MBR extends KryoSerializable with Serializable {
 
@@ -115,8 +159,14 @@ final class RowData extends KryoSerializable {
     this.arrPartitionId = arrPartitionId
   }
 
-  def nextPartId(default: Int): Int =
-    if (arrPartitionId.nonEmpty) {
+  def nextPartId(): Int =
+    if (arrPartitionId.isEmpty) {
+
+      arrPartitionId = null
+
+      -1
+    }
+    else {
 
       val pId = arrPartitionId.head
 
@@ -124,8 +174,6 @@ final class RowData extends KryoSerializable {
 
       pId
     }
-    else
-      default
 
   override def write(kryo: Kryo, output: Output): Unit = {
 

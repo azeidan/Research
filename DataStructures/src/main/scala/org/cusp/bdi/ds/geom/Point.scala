@@ -15,6 +15,9 @@ case class Point() extends Geom2D {
     this.y = y
   }
 
+  def this(xy: Double) =
+    this(xy, xy)
+
   def this(other: Point) = {
 
     this(other.x, other.y)
@@ -34,14 +37,14 @@ case class Point() extends Geom2D {
   def this(xy: (Double, Double)) =
     this(xy._1, xy._2)
 
-//  override def equals(other: Any): Boolean = other match {
-//    case pt: Point =>
-//      if (userData == null || pt.userData == null)
-//        this.x.equals(pt.x) && this.y.equals(pt.y)
-//      else
-//        userData.equals(pt.userData)
-//    case _ => false
-//  }
+  //  override def equals(other: Any): Boolean = other match {
+  //    case pt: Point =>
+  //      if (userData == null || pt.userData == null)
+  //        this.x.equals(pt.x) && this.y.equals(pt.y)
+  //      else
+  //        userData.equals(pt.userData)
+  //    case _ => false
+  //  }
 
   override def toString: String =
     "(%s,%s)".format(super.toString, if (userData == null) "" else userData.toString)

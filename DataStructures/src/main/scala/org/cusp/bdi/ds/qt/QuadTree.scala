@@ -118,22 +118,22 @@ class QuadTree extends SpatialIndex {
           qTree = fGetNextQuad(qTree, point.x, point.y) match {
             case 0 =>
               if (qTree.bottomLeft == null)
-                qTree.bottomLeft = new QuadTree(qTree.bottomLeftQuadrant)
+                qTree.bottomLeft = new QuadTree(qTree.rectBottomLeft)
 
               qTree.bottomLeft
             case 1 =>
               if (qTree.topLeft == null)
-                qTree.topLeft = new QuadTree(qTree.topLeftQuadrant)
+                qTree.topLeft = new QuadTree(qTree.rectTopLeft)
 
               qTree.topLeft
             case 2 =>
               if (qTree.bottomRight == null)
-                qTree.bottomRight = new QuadTree(qTree.bottomRightQuadrant)
+                qTree.bottomRight = new QuadTree(qTree.rectBottomRight)
 
               qTree.bottomRight
             case _ =>
               if (qTree.topRight == null)
-                qTree.topRight = new QuadTree(qTree.topRightQuadrant)
+                qTree.topRight = new QuadTree(qTree.rectTopRight)
 
               qTree.topRight
           }
@@ -144,17 +144,17 @@ class QuadTree extends SpatialIndex {
   }
 
 
-  private def topLeftQuadrant: Rectangle =
-    Rectangle(new Geom2D(rectBounds.center.x - rectBounds.halfXY.x / 2, rectBounds.center.y + rectBounds.halfXY.y / 2), quarterDim)
+  private def rectTopLeft: Rectangle =
+    new Rectangle(new Geom2D(rectBounds.center.x - rectBounds.halfXY.x / 2, rectBounds.center.y + rectBounds.halfXY.y / 2), quarterDim)
 
-  private def topRightQuadrant: Rectangle =
-    Rectangle(new Geom2D(rectBounds.center.x + rectBounds.halfXY.x / 2, rectBounds.center.y + rectBounds.halfXY.y / 2), quarterDim)
+  private def rectTopRight: Rectangle =
+    new Rectangle(new Geom2D(rectBounds.center.x + rectBounds.halfXY.x / 2, rectBounds.center.y + rectBounds.halfXY.y / 2), quarterDim)
 
-  private def bottomLeftQuadrant: Rectangle =
-    Rectangle(new Geom2D(rectBounds.center.x - rectBounds.halfXY.x / 2, rectBounds.center.y - rectBounds.halfXY.y / 2), quarterDim)
+  private def rectBottomLeft: Rectangle =
+    new Rectangle(new Geom2D(rectBounds.center.x - rectBounds.halfXY.x / 2, rectBounds.center.y - rectBounds.halfXY.y / 2), quarterDim)
 
-  private def bottomRightQuadrant: Rectangle =
-    Rectangle(new Geom2D(rectBounds.center.x + rectBounds.halfXY.x / 2, rectBounds.center.y - rectBounds.halfXY.y / 2), quarterDim)
+  private def rectBottomRight: Rectangle =
+    new Rectangle(new Geom2D(rectBounds.center.x + rectBounds.halfXY.x / 2, rectBounds.center.y - rectBounds.halfXY.y / 2), quarterDim)
 
   private def quarterDim =
     new Geom2D(rectBounds.halfXY.x / 2, rectBounds.halfXY.y / 2)
@@ -176,6 +176,8 @@ class QuadTree extends SpatialIndex {
         Byte.MaxValue
       })
 
+    kryo.writeObject(output, this.rectBounds)
+
     while (qQT.nonEmpty) {
 
       val qTree = qQT.dequeue()
@@ -185,7 +187,7 @@ class QuadTree extends SpatialIndex {
       output.writeInt(qTree.arrPoints.length)
       qTree.arrPoints.foreach(kryo.writeObject(output, _))
 
-      kryo.writeObject(output, qTree.rectBounds)
+      //      kryo.writeObject(output, qTree.rectBounds)
 
       writeQT(qTree.topLeft)
       writeQT(qTree.topRight)
@@ -196,11 +198,13 @@ class QuadTree extends SpatialIndex {
 
   override def read(kryo: Kryo, input: Input): Unit = {
 
-    def instantiateQT() =
+    def instantiateQT(rectBounds: Rectangle) =
       input.readByte() match {
         case Byte.MinValue => null
-        case _ => new QuadTree(null)
+        case _ => new QuadTree(rectBounds)
       }
+
+    this.rectBounds = kryo.readObject(input, classOf[Rectangle])
 
     val qQT = mutable.Queue(this)
 
@@ -217,12 +221,10 @@ class QuadTree extends SpatialIndex {
 
       (0 until arrLength).foreach(_ => qTree.arrPoints += kryo.readObject(input, classOf[Point]))
 
-      qTree.rectBounds = kryo.readObject(input, classOf[Rectangle])
-
-      qTree.topLeft = instantiateQT()
-      qTree.topRight = instantiateQT()
-      qTree.bottomLeft = instantiateQT()
-      qTree.bottomRight = instantiateQT()
+      qTree.topLeft = instantiateQT(qTree.rectTopLeft)
+      qTree.topRight = instantiateQT(qTree.rectTopRight)
+      qTree.bottomLeft = instantiateQT(qTree.rectBottomLeft)
+      qTree.bottomRight = instantiateQT(qTree.rectBottomRight)
 
       if (qTree.topLeft != null) qQT += qTree.topLeft
       if (qTree.topRight != null) qQT += qTree.topRight

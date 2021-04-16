@@ -1,0 +1,210 @@
+# Command
+#        spark-submit --num-executors 2 --name "HW6" Ayman_HW6.py feb2014_citibike.csv feb2014_TLC.csv -74.002638 40.7390167 0.25 10 HW6_output
+
+import sys
+import time
+import pyspark
+import pyproj
+from rtree import index
+from datetime import datetime
+
+CSV_FILE_CITI_BIKE = ''
+CSV_FILE_TLC = ''
+
+# Test station coordinates
+SEARCH_STATION_LONG = -9999
+SEARCH_STATION_LAT = -9999
+
+# 0.25 Miles to meters
+DISTANCE_METERS = -9999
+
+# Time range search in mins
+SEARCH_TIME = -9999
+
+SEARCH_TIME_SECONDS = -9999
+
+# projection object for converting from GPS coordinates to X,Y coordinates
+proj = pyproj.Proj(init='EPSG:2263', preserve_units=True)
+
+# ###################################################################################################################### #
+# ###################################################################################################################### #
+# ###################################################################################################################### #
+
+# Parses the CSV file
+# The lines are parsed by commas. Commas and newline feeds inside columns with double quotes are preserved in one column
+def csvParse(splitIndex, part):
+
+    join = False
+    retList = []
+
+    # A column with \n is assumed to be surronded by double quotes
+    for line in part:
+        for col in line.lower().split(','):
+
+            # empty or 1 character columns
+            if len(col) <= 1:
+                retList.append(col)
+            else:
+                if join: # True when an open quote was observed
+                    if col[-1] == "\"":
+                        col = col[0:-1] # remove the last "
+                        join = False
+                    retList[-1] = "".join((retList[-1], ",", col))
+                else:
+                    if col[0:1] == "\"": # starts with "
+                        col = col[1:] # remove the leading "
+                        if col[-1] == "\"":
+                            col = col[0:-1] # remove the last "
+                        else:
+                            join = True
+                    retList.append(col)
+        if not join:
+            copyList = retList[:]
+            retList = []
+            yield copyList
+
+# Function to returns stations with longitude and latitude that fall within the search stations limits
+# The limits of the search station are defined by its long and lat +/- DISTANCE_METERS
+#
+#      ------------- <- (x+distance_meters, y+distance_meters)
+#     |             |
+#     |             |
+#     |    (x,y)    |
+#     |             |
+#     |             |
+#      -------------
+#    ^
+#    |----(x-distance_meters, y-distance_meters)
+# Parameter
+#          part, the data row
+#          longIdx, the index of the column with the longitude
+#          latIdx, the index of the column with the latitude
+def getRowsWithinSearchRegion(splitIndex, part, longIdx, latIdx):
+
+    proj = pyproj.Proj(init='EPSG:2263', preserve_units=True)
+
+    # X,Y coordinates for the search station
+    search_station_xy = proj(SEARCH_STATION_LONG, SEARCH_STATION_LAT)
+
+    # build an r-tree containing one region around the search station
+    regionBounds = (search_station_xy[0] - DISTANCE_METERS,
+                    search_station_xy[1] - DISTANCE_METERS,
+                    search_station_xy[0] + DISTANCE_METERS,
+                    search_station_xy[1] + DISTANCE_METERS)
+
+    # only return rows that fall within the search region
+    for row in part:
+         try:
+            stationLong = float(row[longIdx])
+            stationLat = float(row[latIdx])
+
+            stationXY = proj(stationLong, stationLat)
+            stationXY = (float(format(stationXY[0], ".6f")), float(format(stationXY[1], ".6f")))
+
+            # Range check
+            if (stationXY[0] >= regionBounds[0]) and (stationXY[1] >= regionBounds[1]) and \
+               (stationXY[0] <= regionBounds[2]) and (stationXY[1] <= regionBounds[3]):
+                yield row
+         except ValueError:
+            continue
+
+# returns rows where col1 and col2 contain floats only
+def filterNonNumber(splitIndex, part, col1, col2):
+    for row in part:
+        try:
+            float(row[col1])
+            float(row[col2])
+            yield row
+        except ValueError:
+            continue
+
+# prints a formatted row
+def printRow(col0, col1, col2, col3, col4):
+    print "|", format(col0, "28"), "|", format(col1, "21s"), \
+          "|", format(col2, "28s"), "|", format(col3, "21s"), "|", format(col4, "10s"), "|"
+# ###################################################################################################################### #
+# ###################################################################################################################### #
+
+if __name__=='__main__':
+    if len(sys.argv) != 8:
+        print "Usage: <Citi bike CSV File>", \
+              "       <TLC CSV File>", \
+              "       <Search Station Longitude>", \
+              "       <Search Station Latitude>", \
+              "       <Search radius (miles)>", \
+              "       <Search time (minutes)>", \
+              "       <Output path>"
+        sys.exit(-1)
+
+sc = pyspark.SparkContext()
+
+CSV_FILE_CITI_BIKE = sys.argv[1]
+CSV_FILE_TLC = sys.argv[2]
+
+# Test station coordinates
+SEARCH_STATION_LONG = float(sys.argv[3])
+SEARCH_STATION_LAT = float(sys.argv[4])
+
+# 0.25 Miles to meters
+DISTANCE_METERS = float(sys.argv[5]) * 1609.344
+
+# Time range search in mins
+SEARCH_TIME = float(sys.argv[6])
+
+SEARCH_TIME_SECONDS = SEARCH_TIME * 60
+
+# Get bike pickup stations that are around the search station
+# map function before the groupBy is to shrink down the row to the needed information
+rddBikeUniqueStations = sc.textFile(CSV_FILE_CITI_BIKE) \
+                          .mapPartitionsWithIndex(csvParse) \
+                          .mapPartitionsWithIndex(lambda splitIndex, part : filterNonNumber(splitIndex, part, 6, 5)) \
+                          .map(lambda x : ((format(float(x[6]), ".6f"), format(float(x[5]), ".6f")), x[1])) \
+                          .groupBy(lambda x : x[0])
+counter = 0
+
+rTreeIdxTime = index.Index()
+
+for row in rddBikeUniqueStations.collect():
+    # to XY coordinates
+    xy = proj(row[0][0], row[0][1])
+
+    # check if the station (as a point) falls within an existing region
+    lst = list(rTreeIdxTime.intersection((xy[0], xy[1], xy[0], xy[1]), objects=True))
+
+    if len(lst) == 0:
+        # here when the station is not within a region
+        # create a square region and add to r-tree
+        coords = (xy[0] - DISTANCE_METERS, xy[1] - DISTANCE_METERS, xy[0] + DISTANCE_METERS, xy[1] + DISTANCE_METERS)
+        rTreeIdxTime.insert(counter, coords, obj=[row])
+        counter = counter + 1
+
+# Get bike pickup stations that are around the search station
+# map function before the groupBy is to shrink down the row to the needed information
+rddTLCStations = sc.textFile(CSV_FILE_TLC) \
+                   .mapPartitionsWithIndex(csvParse) \
+                   .mapPartitionsWithIndex(lambda splitIndex, part : getRowsWithinSearchRegion(splitIndex, part, 7, 8)) \
+                   .map(lambda x : ((format(float(x[7]), ".6f"), format(float(x[8]), ".6f")), x[2]))
+
+lstResults = ["TLC Dropoff Location", "TLC Dropoff Time", "Bike Pickup Location", "Bike Pickup Time", "Time (Min)"]
+
+for row in rddTLCStations.collect():
+
+    xy = proj(row[0][0], row[0][1])
+
+    # check if the station (as a point) falls within an existing region
+    lst = list(rTreeIdxTime.intersection((xy[0], xy[1], xy[0], xy[1]), objects=True))
+
+    if len(lst) > 0:
+
+        tlcDateTimeObj = datetime.strptime(row[1], '%Y-%m-%d %H:%M:%S')
+        tlcDroppTimeSec = float(time.mktime(tlcDateTimeObj.timetuple()))
+
+        for bikePickupTime in lst[0].object[0][1]:
+            bikePickupTimeObj = datetime.strptime(bikePickupTime[1], '%Y-%m-%d %H:%M:%S')
+            bikePickupTimeSec = time.mktime(bikePickupTimeObj.timetuple())
+
+            if (bikePickupTimeSec > tlcDroppTimeSec) and (bikePickupTimeSec <= (tlcDroppTimeSec + SEARCH_TIME_SECONDS)):
+                length = bikePickupTimeSec - tlcDroppTimeSec
+                lstResults.append([row[0], row[1], lst[0].object[0][0], bikePickupTime[1], str(format(length/60, ".2f"))])
+
+sc.parallelize(lstResults).coalesce(1).saveAsTextFile('%s' % sys.argv[-1])
