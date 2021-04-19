@@ -6,7 +6,7 @@
   </component>
   <component name="ArtifactsWorkspaceSettings">
     <artifacts-to-build>
-      <artifact name="DataSetTools:jar" />
+      <artifact name="FW_Simba" />
     </artifacts-to-build>
   </component>
   <component name="AutoImportSettings">
@@ -14,14 +14,12 @@
   </component>
   <component name="AutomaticModuleUnloader">
     <loaded-modules>
-      <module name="FW_Simba_Source" />
       <module name="DataStructures" />
       <module name="Common" />
       <module name="Common_FW" />
       <module name="Spark_kNN" />
       <module name="SpatialBenchmark" />
       <module name="Research" />
-      <module name="FW_Simba" />
     </loaded-modules>
   </component>
   <component name="BranchesTreeState">
@@ -36,44 +34,10 @@
     </option>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ee761a9d-eff2-4086-b83a-8096819a4548" name="Default Changelist" comment="KDT working with Histogram insert">
-      <change afterPath="$PROJECT_DIR$/DataSetTools/Log.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/DataSetTools/Summary.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/DataSetTools/src/main/java/LogSummary$PartitionCounts.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/DataSetTools/src/main/java/LogSummary.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/DataSetTools/src/main/java/LogSummary.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/HelperProjects_Python/HelperProjects_Python.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/HelperProjects_Python/src/NYCBus.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/HelperProjects_Python/src/NYC_Yellow_Taxi.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/HelperProjects_Python/src/POI_NYC.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/HelperProjects_Python/src/Test_PyProj.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/HelperProjects_Python/src/del.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Spark_kNN/src/main/test/scala/org/cusp/bdi/sknn/test/ShuffleTest.scala" afterDir="false" />
+    <list default="true" id="ee761a9d-eff2-4086-b83a-8096819a4548" name="Default Changelist" comment="- Partition size reaches max avail. mem&#10;- added Core POI NYC local test only &#10;- TPEP vs TPEP @ 3h:22m:21s&#10;&#10;Note: Intellij needs a reinstall">
       <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Common_FW/src/main/scala/org/cusp/bdi/util/InputFileParsers.scala" beforeDir="false" afterPath="$PROJECT_DIR$/Common_FW/src/main/scala/org/cusp/bdi/util/InputFileParsers.scala" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Common_FW/src/main/scala/org/cusp/bdi/util/LocalRunConsts.scala" beforeDir="false" afterPath="$PROJECT_DIR$/Common_FW/src/main/scala/org/cusp/bdi/util/LocalRunConsts.scala" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DataStructures/src/main/scala/org/cusp/bdi/ds/SpatialIndex.scala" beforeDir="false" afterPath="$PROJECT_DIR$/DataStructures/src/main/scala/org/cusp/bdi/ds/SpatialIndex.scala" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DataStructures/src/main/scala/org/cusp/bdi/ds/geom/Geom2D.scala" beforeDir="false" afterPath="$PROJECT_DIR$/DataStructures/src/main/scala/org/cusp/bdi/ds/geom/Geom2D.scala" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DataStructures/src/main/scala/org/cusp/bdi/ds/geom/Point.scala" beforeDir="false" afterPath="$PROJECT_DIR$/DataStructures/src/main/scala/org/cusp/bdi/ds/geom/Point.scala" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DataStructures/src/main/scala/org/cusp/bdi/ds/geom/Rectangle.scala" beforeDir="false" afterPath="$PROJECT_DIR$/DataStructures/src/main/scala/org/cusp/bdi/ds/geom/Rectangle.scala" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DataStructures/src/main/scala/org/cusp/bdi/ds/qt/QuadTree.scala" beforeDir="false" afterPath="$PROJECT_DIR$/DataStructures/src/main/scala/org/cusp/bdi/ds/qt/QuadTree.scala" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/FW_Simba.iml" beforeDir="false" afterPath="$PROJECT_DIR$/FW_Simba/FW_Simba.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/FW_Simba/src/test/scala/org/cusp/bdi/fw/simba/SIM_Example.scala" beforeDir="false" afterPath="$PROJECT_DIR$/FW_Simba/src/test/scala/org/cusp/bdi/fw/simba/SIM_Example.scala" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba/src/test/scala/org/cusp/bdi/fw/simba/Simba_Local_CLArgs.scala" beforeDir="false" afterPath="$PROJECT_DIR$/FW_Simba/src/test/scala/org/cusp/bdi/fw/simba/Simba_Local_CLArgs.scala" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/FW_Simba_Source/FW_Simba_Source.iml" beforeDir="false" afterPath="$PROJECT_DIR$/FW_Simba_Source/FW_Simba_Source.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Research.iml" beforeDir="false" afterPath="$PROJECT_DIR$/Research.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/Spark_kNN.iml" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/Spark_kNN.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/src/main/scala/org/cusp/bdi/sknn/SparkKNN_Objects.scala" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/src/main/scala/org/cusp/bdi/sknn/SparkKNN_Objects.scala" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/src/main/scala/org/cusp/bdi/sknn/SparkKnn.scala" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/src/main/scala/org/cusp/bdi/sknn/SparkKnn.scala" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/src/main/scala/org/cusp/bdi/sknn/ds/util/SpatialIdxOperations.scala" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/src/main/scala/org/cusp/bdi/sknn/ds/util/SpatialIdxOperations.scala" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/src/main/test/scala/Test.scala" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/src/main/test/scala/org/cusp/bdi/sknn/test/SparkKNN_Local_CLArgs.scala" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/src/main/test/scala/org/cusp/bdi/sknn/test/SparkKNN_Local_CLArgs.scala" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Spark_kNN/src/main/test/scala/org/cusp/bdi/sknn/test/TestAllKnnJoin.scala" beforeDir="false" afterPath="$PROJECT_DIR$/Spark_kNN/src/main/test/scala/org/cusp/bdi/sknn/test/TestAllKnnJoin.scala" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SpatialBenchmark/src/main/test/scala/org/cusp/bdi/sb/test/Benchmark_Local_CLArgs.scala" beforeDir="false" afterPath="$PROJECT_DIR$/SpatialBenchmark/src/main/test/scala/org/cusp/bdi/sb/test/Benchmark_Local_CLArgs.scala" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SpatialBenchmark/src/main/test/scala/org/cusp/bdi/sb/test/SpatialBenchmarkSparkKnn.scala" beforeDir="false" afterPath="$PROJECT_DIR$/SpatialBenchmark/src/main/test/scala/org/cusp/bdi/sb/test/SpatialBenchmarkSparkKnn.scala" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -114,9 +78,6 @@
       <filtered-out-file-type name="COMMIT_BY_MESSAGE" />
     </file-type-list>
   </component>
-  <component name="HighlightingSettingsPerFile">
-    <setting file="jar://$MAVEN_REPOSITORY$/org/apache/spark/spark-core_2.11/2.4.0/spark-core_2.11-2.4.0.jar!/org/apache/spark/rdd/PairRDDFunctions.class" root0="FORCE_HIGHLIGHTING" />
-  </component>
   <component name="ProjectCodeStyleSettingsMigration">
     <option name="version" value="1" />
   </component>
@@ -140,8 +101,8 @@
     <property name="TODO_SCOPE" value="All Places" />
     <property name="jdk.selected.PYTHON_MODULE" value="Python 2.7" />
     <property name="last_directory_selection" value="$PROJECT_DIR$/DataStructures/src/main/scala/org/cusp/bdi/ds/kdt" />
-    <property name="last_opened_file_path" value="$MAVEN_REPOSITORY$/org/apache/spark/spark-core_2.11/2.4.0/spark-core_2.11-2.4.0.jar" />
-    <property name="project.structure.last.edited" value="Modules" />
+    <property name="last_opened_file_path" value="$USER_HOME$/.local/share/Trash/files/.m2/repository/aopalliance/aopalliance/1.0/aopalliance-1.0-sources.jar" />
+    <property name="project.structure.last.edited" value="Libraries" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.34280476" />
     <property name="restartRequiresConfirmation" value="false" />
@@ -280,8 +241,9 @@
       <item itemvalue="Application.SpatialBenchmarkSpark_kNN" />
       <item itemvalue="Application.TestAllKnnJoin" />
       <item itemvalue="Application.PartitionLoadCounts" />
-      <item itemvalue="Python.POI_NYC" />
+      <item itemvalue="Application.TestKdTree" />
       <item itemvalue="Application.SIM_Example" />
+      <item itemvalue="Python.POI_NYC" />
     </list>
     <recent_temporary>
       <list>
@@ -314,13 +276,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1594702468860</updated>
-    </task>
-    <task id="LOCAL-00025" summary="Reduced rddRight reads to 3 and used repartitionAndSortWithinPartitions twice instead of once">
-      <created>1598588979119</created>
-      <option name="number" value="00025" />
-      <option name="presentableId" value="LOCAL-00025" />
-      <option name="project" value="LOCAL" />
-      <updated>1598588979119</updated>
     </task>
     <task id="LOCAL-00026" summary="Created Module Datastructures">
       <created>1598851654670</created>
@@ -658,13 +613,22 @@
       <option name="project" value="LOCAL" />
       <updated>1617306458794</updated>
     </task>
-    <option name="localTasksCounter" value="74" />
+    <task id="LOCAL-00074" summary="- Partition size reaches max avail. mem&#10;- added Core POI NYC local test only &#10;- TPEP vs TPEP @ 3h:22m:21s&#10;&#10;Note: Intellij needs a reinstall">
+      <created>1618550133695</created>
+      <option name="number" value="00074" />
+      <option name="presentableId" value="LOCAL-00074" />
+      <option name="project" value="LOCAL" />
+      <updated>1618550133696</updated>
+    </task>
+    <option name="localTasksCounter" value="75" />
     <servers />
   </component>
   <component name="UnloadedModulesList">
     <module name="FW_GeoMatch" />
     <module name="FW_LocationSpark" />
     <module name="FW_LocationSpark_Src" />
+    <module name="FW_Simba" />
+    <module name="FW_Simba_Source" />
     <module name="GeoMatch" />
     <module name="HelperProjects_Python" />
   </component>
@@ -783,7 +747,6 @@
     <ignored-roots>
       <path value="$PROJECT_DIR$" />
     </ignored-roots>
-    <MESSAGE value="mid changes commit: added allKNN join. Not yet tested" />
     <MESSAGE value="Temp commit. Before OOM exception" />
     <MESSAGE value="Local run test 100% accuracy" />
     <MESSAGE value="all kNN tested only @ 100%" />
@@ -808,7 +771,8 @@
     <MESSAGE value="Code Merge. TPEP @3h 17m 12s" />
     <MESSAGE value="Code Merge. TPEP @3h 18m 36s" />
     <MESSAGE value="TPEP kNN @ 3h 20m" />
-    <option name="LAST_COMMIT_MESSAGE" value="TPEP kNN @ 3h 20m" />
+    <MESSAGE value="- Partition size reaches max avail. mem&#10;- added Core POI NYC local test only &#10;- TPEP vs TPEP @ 3h:22m:21s&#10;&#10;Note: Intellij needs a reinstall" />
+    <option name="LAST_COMMIT_MESSAGE" value="- Partition size reaches max avail. mem&#10;- added Core POI NYC local test only &#10;- TPEP vs TPEP @ 3h:22m:21s&#10;&#10;Note: Intellij needs a reinstall" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
