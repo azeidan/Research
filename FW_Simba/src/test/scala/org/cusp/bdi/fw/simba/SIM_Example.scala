@@ -5,7 +5,7 @@ import org.apache.hadoop.io.compress.GzipCodec
 import org.apache.spark.sql.Row
 import org.apache.spark.sql.simba.SimbaSession
 import org.cusp.bdi.fw.simba.Simba_Local_CLArgs.SupportedKnnOperations
-import org.cusp.bdi.util.{Arguments, Helper, InputFileParsers, LocalRunConsts}
+import org.cusp.bdi.util.{Arguments, CLArgsParser, Helper, InputFileParsers, LocalRunConsts}
 
 import scala.collection.mutable
 import scala.collection.mutable.ListBuffer
@@ -28,9 +28,9 @@ object SIM_Example extends Serializable {
     //        val clArgs = SIM_CLArgs.lion_PolyRect_Taxi_Point
     //        val clArgs = SIM_CLArgs.OSM_Point_OSM_Point
 
-//    val clArgs = Simba_Local_CLArgs.random_sample
-    val clArgs = Simba_Local_CLArgs.corePOI_NYC
-    //        val clArgs = CLArgsParser(args, Arguments_Simba.lstArgInfo())
+    //    val clArgs = Simba_Local_CLArgs.random_sample
+    //    val clArgs = Simba_Local_CLArgs.corePOI_NYC
+    val clArgs = CLArgsParser(args, Arguments.lstArgInfo())
 
     val simbaBuilder = SimbaSession.builder()
       .appName(this.getClass.getName)
@@ -71,15 +71,15 @@ object SIM_Example extends Serializable {
       .map(row => PointData(row._2._1.toDouble, row._2._2.toDouble, row._1))
 
     (clArgs.getParamValueString(Arguments.knnJoinType) match {
-      case s if s eq SupportedKnnOperations.allKnn.toString =>
+      case s if s.equalsIgnoreCase(SupportedKnnOperations.allKnn.toString) =>
         DS1.knnJoin(DS2, Array("x", "y"), Array("x", "y"), kParam)
           .union(DS2.knnJoin(DS1, Array("x", "y"), Array("x", "y"), kParam))
-      case s if s eq SupportedKnnOperations.knn.toString =>
+      case s if s.equalsIgnoreCase(SupportedKnnOperations.knn.toString) =>
         DS1.knnJoin(DS2, Array("x", "y"), Array("x", "y"), kParam)
     })
       .mapPartitions(_.map(processRow))
       .rdd
-//      .reduceByKey(_ ++ _)
+      .reduceByKey(_ ++ _)
       .mapPartitions(_.map(row => "%s;%s".format(row._1, row._2.map(row => "%.8f,%s".format(row._1, row._2)).mkString(";"))))
       .saveAsTextFile(clArgs.getParamValueString(Arguments.outDir), classOf[GzipCodec])
 
